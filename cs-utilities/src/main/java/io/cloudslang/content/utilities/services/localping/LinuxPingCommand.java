@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.utilities.services.localping;
@@ -60,15 +61,15 @@ public class LinuxPingCommand implements LocalPingCommand {
 
         if (isEmpty(ipVersion)) {
             if (InetAddressValidator.getInstance().isValidInet6Address(targetHost)) {
-                command.append("ping6 ");
+                command.append("/usr/bin/ping6 ");
             } else {
-                command.append("ping ");
+                command.append("/usr/bin/ping ");
             }
         } else {
             if (ipVersion.equals(IP_VERSION_6)) {
-                command.append("ping6 ");
+                command.append("/usr/bin/ping6 ");
             } else if (ipVersion.equals(IP_VERSION_4)) {
-                command.append("ping ");
+                command.append("/usr/bin/ping ");
             } else {
                 throw new IllegalArgumentException(format(INVALID_ARGUMENT_IP_VERSION, ipVersion));
             }

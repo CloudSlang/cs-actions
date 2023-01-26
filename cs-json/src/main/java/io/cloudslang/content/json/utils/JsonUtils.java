@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.json.utils;
@@ -35,8 +36,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 import static io.cloudslang.content.json.utils.ActionsEnum.insert;
-import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONOBJECT;
-import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONPATH;
+import static io.cloudslang.content.json.utils.Constants.InputNames.EMPTY_STRING;
+import static io.cloudslang.content.json.utils.JsonExceptionValues.*;
 
 /**
  * Created by ioanvranauhp
@@ -67,19 +68,19 @@ public class JsonUtils {
 
     public static void validateEditJsonInputs(String jsonObject, String jsonPath, String action, String name, String value) throws Exception {
         if (StringUtilities.isBlank(jsonObject)) {
-            throw new Exception("Empty jsonObject provided!");
+            throw new Exception(EMPTY_JSONOBJECT);
         }
         if (StringUtilities.isBlank(jsonPath)) {
-            throw new Exception("Empty jsonPath provided!");
+            throw new Exception(EMPTY_JSONPATH);
         }
         if (StringUtilities.isBlank(action)) {
-            throw new Exception("Empty action provided!");
+            throw new Exception(EMPTY_ACTION);
         }
 
         final String actionString = action.toLowerCase().trim();
 
         boolean exists = false;
-        String actionEnumValues = "";
+        String actionEnumValues = EMPTY_STRING;
         for (ActionsEnum actionsEnum : ActionsEnum.values()) {
             final String actionEnumValue = actionsEnum.getValue();
             actionEnumValues += actionEnumValue + " ";

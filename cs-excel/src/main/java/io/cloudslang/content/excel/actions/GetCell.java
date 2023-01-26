@@ -31,45 +31,17 @@ import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
-import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.excel.utils.Constants.DEFAULT_COLUMN_DELIMITER;
-import static io.cloudslang.content.excel.utils.Constants.DEFAULT_ROW_DELIMITER;
-import static io.cloudslang.content.excel.utils.Constants.DEFAULT_WORKSHEET;
-import static io.cloudslang.content.excel.utils.Constants.NEW_LINE;
-import static io.cloudslang.content.excel.utils.Constants.YES;
-import static io.cloudslang.content.excel.utils.Constants.ZERO;
-import static io.cloudslang.content.excel.utils.Descriptions.Common.EXCEL_FILE_NAME_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.Common.WORKSHEET_NAME_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.COLUMNS_COUNT_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.COLUMN_DELIMITER_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.COLUMN_INDEX_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.EXCEPTION_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.FAILURE_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.FIRST_ROW_INDEX_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.HAS_HEADER_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.HEADER_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.RETURN_RESULT_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.ROWS_COUNT_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.ROW_DELIMITER_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.ROW_INDEX_DESC;
-import static io.cloudslang.content.excel.utils.Descriptions.GetCell.SUCCESS_DESC;
+import static io.cloudslang.content.excel.utils.Constants.*;
+import static io.cloudslang.content.excel.utils.Descriptions.Common.*;
+import static io.cloudslang.content.excel.utils.Descriptions.GetCell.*;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.EXCEL_FILE_NAME;
 import static io.cloudslang.content.excel.utils.Inputs.CommonInputs.WORKSHEET_NAME;
-import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.COLUMN_DELIMITER;
-import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.COLUMN_INDEX;
-import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.FIRST_ROW_INDEX;
-import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.HAS_HEADER;
-import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.ROW_DELIMITER;
-import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.ROW_INDEX;
+import static io.cloudslang.content.excel.utils.Inputs.GetCellInputs.*;
 import static io.cloudslang.content.excel.utils.InputsValidation.verifyGetCellInputs;
-import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.COLUMNS_COUNT;
-import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.HEADER;
-import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.ROWS_COUNT;
+import static io.cloudslang.content.excel.utils.Outputs.GetCellOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -99,7 +71,8 @@ public class GetCell {
                                        @Param(value = ROW_INDEX, description = ROW_INDEX_DESC) String rowIndex,
                                        @Param(value = COLUMN_INDEX, description = COLUMN_INDEX_DESC) String columnIndex,
                                        @Param(value = ROW_DELIMITER, description = ROW_DELIMITER_DESC) String rowDelimiter,
-                                       @Param(value = COLUMN_DELIMITER, description = COLUMN_DELIMITER_DESC) String columnDelimiter) {
+                                       @Param(value = COLUMN_DELIMITER, description = COLUMN_DELIMITER_DESC) String columnDelimiter,
+                                       @Param(value = ENABLING_ROUNDING_FUNCTION, description = ENABLING_ROUNDING_FUNCTION_DESC) String enablingRoundingFunction) {
 
         excelFileName = defaultIfEmpty(excelFileName, EMPTY);
         worksheetName = defaultIfEmpty(worksheetName, DEFAULT_WORKSHEET);
@@ -109,8 +82,10 @@ public class GetCell {
         columnIndex = defaultIfEmpty(columnIndex, EMPTY); //its default depends on the document so it will be set later
         rowDelimiter = defaultIfEmpty(rowDelimiter, DEFAULT_ROW_DELIMITER);
         columnDelimiter = defaultIfEmpty(columnDelimiter, DEFAULT_COLUMN_DELIMITER);
+        enablingRoundingFunction = defaultIfEmpty(enablingRoundingFunction, DEFAULT_ENABLING_ROUNDING_FUNCTION);
 
-        final List<String> exceptionMessages = verifyGetCellInputs(excelFileName, hasHeader, firstRowIndex, rowIndex, columnIndex);
+        final List<String> exceptionMessages = verifyGetCellInputs(excelFileName, hasHeader, firstRowIndex, rowIndex,
+                columnIndex, enablingRoundingFunction);
 
 
         if (!exceptionMessages.isEmpty()) {
@@ -129,6 +104,7 @@ public class GetCell {
                     .columnIndex(columnIndex)
                     .rowDelimiter(rowDelimiter)
                     .columnDelimiter(columnDelimiter)
+                    .enablingRoundingFunction(enablingRoundingFunction)
                     .build());
 
         } catch (Exception exception) {

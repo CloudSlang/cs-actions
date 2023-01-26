@@ -133,7 +133,7 @@ public class DateTimeService {
     private static String changeFormatForDateTime(final DateTime inputDateTime, final String outFormat, final String outLocaleLang,
                                                   final String outLocaleCountry) {
         if (DateTimeUtils.isUnix(outFormat)) {
-            Long timestamp = (long) Math.round(inputDateTime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER);
+            Long timestamp = inputDateTime.getMillis() / Constants.Miscellaneous.THOUSAND_MULTIPLIER;
             return timestamp.toString();
         }
         DateTimeFormatter outFormatter = DateTimeUtils.getDateFormatter(outFormat, outLocaleLang, outLocaleCountry);

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
-    * All rights reserved. This program and the accompanying materials
-    * are made available under the terms of the Apache License v2.0 which accompany this distribution.
-    *
-    * The Apache License is available at
-    * http://www.apache.org/licenses/LICENSE-2.0
-    *
-    * Unless required by applicable law or agreed to in writing, software
-    * distributed under the License is distributed on an "AS IS" BASIS,
-    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    * See the License for the specific language governing permissions and
-    * limitations under the License.
+     * (c) Copyright 2022 Micro Focus
+     * All rights reserved. This program and the accompanying materials
+     * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+     *
+     * The Apache License is available at
+     * http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-http-client</artifactId>
-    <version>0.1.78-SNAPSHOT</version>
+    <version>0.1.85-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -88,7 +88,7 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-commons.version>0.0.7</cs-commons.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -111,17 +111,17 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.5</version>
+            <version>4.5.13</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
-            <version>4.4.9</version>
+            <version>4.4.15</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
-            <version>4.5.5</version>
+            <version>4.5.13</version>
         </dependency>
         <dependency>
             <groupId>jcifs</groupId>
@@ -208,6 +208,11 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>${maven-deploy-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -227,7 +232,7 @@
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
-                        <copyright.year>2019</copyright.year>
+                        <copyright.year>2022</copyright.year>
                     </properties>
                     <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>

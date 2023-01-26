@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2023 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 package io.cloudslang.content.office365.actions.userManagement;
 
@@ -57,16 +58,7 @@ import static io.cloudslang.content.office365.utils.Constants.STATUS_CODE;
 import static io.cloudslang.content.office365.utils.Constants.STRICT;
 import static io.cloudslang.content.office365.utils.Constants.UTF8;
 import static io.cloudslang.content.office365.utils.Constants.ZERO;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.CONNECT_TIMEOUT_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_ROUTE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.CONN_MAX_TOTAL_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.KEEP_ALIVE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.RETURN_CODE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.SOCKET_TIMEOUT_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_ALL_ROOTS_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_KEYSTORE_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.TRUST_PASSWORD_DESC;
-import static io.cloudslang.content.office365.utils.Descriptions.Common.X509_DESC;
+import static io.cloudslang.content.office365.utils.Descriptions.Common.*;
 import static io.cloudslang.content.office365.utils.Descriptions.CreateMessage.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.DeleteUser.DELETE_USER_EXCEPTION_DESC;
 import static io.cloudslang.content.office365.utils.Descriptions.DeleteUser.DELETE_USER_RETURN_RESULT_DESC;
@@ -118,7 +110,7 @@ public class DeleteUser {
                                        @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
                                        @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
                                        @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = CONN_MAX_TOTAL_DESC) String responseCharacterSet) {
+                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet) {
         userPrincipalName = defaultIfEmpty(userPrincipalName, EMPTY);
         userId = defaultIfEmpty(userId, EMPTY);
         proxyHost = defaultIfEmpty(proxyHost, EMPTY);

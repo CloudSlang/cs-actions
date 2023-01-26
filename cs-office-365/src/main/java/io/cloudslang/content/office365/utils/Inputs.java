@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2023 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 package io.cloudslang.content.office365.utils;
 
@@ -33,6 +34,7 @@ public final class Inputs extends InputNames {
         public static final String PASSWORD = "password";
         public static final String LOGIN_AUTHORITY = "loginAuthority";
         public static final String RESOURCE = "resource";
+        public static final String SCOPE = "scope";
     }
 
     public static class SendMailInputs {

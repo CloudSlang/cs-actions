@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -14,16 +14,26 @@
  */
 
 
+
 package io.cloudslang.content.utilities.util;
 
+import io.cloudslang.content.utils.NumberUtilities;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.EXCEPTION_EPOCH_TIME;
+import static io.cloudslang.content.utilities.util.Constants.SchedulerTimeConstants.*;
+import static io.cloudslang.content.utils.NumberUtilities.isValidLong;
 
 
 public final class InputsValidation {
@@ -120,5 +130,75 @@ public final class InputsValidation {
                 + Integer.parseInt(numberOfSpecialCharacters);
     }
 
+    @NotNull
+    public static List<String> verifySchedulerInputs(@NotNull final String schedulerTime, @NotNull final String schedulerTimeZone) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifySchedulerTime(exceptionMessages, schedulerTime);
+        addVerifySchedulerTimezone(exceptionMessages, schedulerTimeZone);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    public static List<String> verifyTimeFormatInputs(@NotNull final String epochTime, @NotNull final String timeZone) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyEpochTime(exceptionMessages, epochTime);
+        addVerifySchedulerTimezone(exceptionMessages, timeZone);
+        return exceptionMessages;
+    }
+
+    @NotNull
+    private static List<String> addVerifyEpochTime(@NotNull List<String> exceptions, @NotNull final String input) {
+
+        if (!isValidLong(input)) {
+            exceptions.add(String.format(EXCEPTION_EPOCH_TIME, Constants.EpochTimeFormatConstants.EPOCH_TIME));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifySchedulerTime(@NotNull List<String> exceptions, @NotNull final String input) {
+        String[] timeFormat = input.split(COLON);
+        if (timeFormat.length != 3) {
+            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, Constants.SchedulerTimeConstants.SCHEDULER_TIME));
+        } else {
+            try {
+                int hour = Integer.parseInt(timeFormat[0]);
+                int minutes = Integer.parseInt(timeFormat[1]);
+                int seconds = Integer.parseInt(timeFormat[2]);
+                if (!NumberUtilities.isValidInt(String.valueOf(hour), 0, 24)) {
+                    exceptions.add(String.format(EXCEPTION_SCHEDULER_HOUR_TIME, "Hour"));
+                } else if (!NumberUtilities.isValidInt(String.valueOf(minutes), 0, 60)) {
+                    exceptions.add(String.format(EXCEPTION_SCHEDULER_MINUTES_TIME, "Minutes"));
+                } else if (!NumberUtilities.isValidInt(String.valueOf(seconds), 0, 60)) {
+                    exceptions.add(String.format(EXCEPTION_SCHEDULER_MINUTES_TIME, "Seconds"));
+                }
+            } catch (Exception e) {
+                exceptions.add(String.format(EXCEPTION_SCHEDULER_TIME, Constants.SchedulerTimeConstants.SCHEDULER_TIME));
+            }
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifySchedulerTimezone(@NotNull List<String> exceptions, @NotNull final String input) {
+        boolean flag = false;
+        LocalDateTime localDateTime = LocalDateTime.now();
+        for (String zoneId : ZoneId.getAvailableZoneIds()) {
+
+            ZoneId id = ZoneId.of(zoneId);
+            ZonedDateTime zonedDateTime = localDateTime.atZone(id);
+            ZoneOffset zoneOffset = zonedDateTime.getOffset();
+
+            String offset = zoneOffset.getId().replaceAll("Z", "+00:00");
+            if (input.equalsIgnoreCase(String.format("(UTC%s) %s", offset, id))) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag)
+            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIMEZONE, Constants.SchedulerTimeConstants.TIME_ZONE));
+        return exceptions;
+
+    }
 }
 

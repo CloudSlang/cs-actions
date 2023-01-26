@@ -14,14 +14,16 @@
  */
 
 
-
 package io.cloudslang.content.amazon.utils;
 
 import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.Stack;
+import com.amazonaws.services.rds.model.DBInstance;
+import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
 import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
 import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
@@ -34,6 +36,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.AUTHORIZATION_HEADER_RESULT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.SIGNATURE_RESULT;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.DescribeDBInstanceInputs.AVAILABLE;
 import static io.cloudslang.content.amazon.entities.constants.Outputs.*;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
@@ -171,8 +174,11 @@ public class OutputsUtil {
 
     public static String getStackResourcesToJson(DescribeStackResourcesResult describeStackResources) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         final ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         mapper.writeValue(out, describeStackResources.getStackResources());
+
         final byte[] stackResources = out.toByteArray();
 
         return new String(stackResources);
@@ -180,10 +186,33 @@ public class OutputsUtil {
 
     public static String getStackOutputsToJson(Stack stack) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         final ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         mapper.writeValue(out, stack.getOutputs());
+
         final byte[] stackOutputs = out.toByteArray();
 
         return new String(stackOutputs);
+    }
+
+    public static Map<String, String> getSuccessResultMapDescribedDBInstance(DescribeDBInstancesResult result) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        DBInstance dbInstance = result.getDBInstances().get(0);
+
+
+        Map<String, String> results = getSuccessResultsMap(objectMapper.writeValueAsString(dbInstance));
+        String status = dbInstance.getDBInstanceStatus();
+        results.put(DB_INSTANCE_STATUS, status);
+        if (status.equalsIgnoreCase(AVAILABLE)) {
+            results.put(ENDPOINT_ADDRESS, dbInstance.getEndpoint().getAddress());
+            results.put(DB_INSTANCE_ARN, dbInstance.getDBInstanceArn());
+        }
+        return results;
+    }
+
+    public static Map<String, String> getSuccessResultMapDBInstance(DBInstance result) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return getSuccessResultsMap(objectMapper.writeValueAsString(result));
     }
 }

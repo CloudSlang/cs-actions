@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -23,6 +23,7 @@ import io.cloudslang.content.amazon.factory.helpers.*;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.*;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Ec2QueryApiActions.DESCRIBE_INSTANCE_TYPE_OFFERINGS;
 import static io.cloudslang.content.amazon.entities.constants.Constants.ErrorMessages.UNSUPPORTED_QUERY_API;
 
 /**
@@ -76,6 +77,12 @@ class Ec2QueryParamsMapBuilder {
                 return new ImageUtils().getDescribeImageAttributeQueryParamsMap(wrapper);
             case DESCRIBE_INSTANCES:
                 return new InstanceUtils().getDescribeInstancesQueryParamsMap(wrapper);
+            case DESCRIBE_INSTANCE_TYPE_OFFERINGS:
+                return new InstanceUtils().getDescribeInstanceTypeOfferingsQueryParamsMap(wrapper);
+            case DESCRIBE_SECURITY_GROUPS:
+                return new SecurityGroupUtils().getDescribeSecurityGroupsQueryParamsMap(wrapper);
+            case DESCRIBE_KEYPAIRS:
+                return new KeyPairsUtils().getDescribeKeyPairsQueryParamsMap(wrapper);
             case DESCRIBE_NETWORK_INTERFACES:
                 return new NetworkUtils().getDescribeNetworkInterfacesQueryParamsMap(wrapper);
             case DESCRIBE_REGIONS:
@@ -84,6 +91,8 @@ class Ec2QueryParamsMapBuilder {
                 return new TagUtils().getDescribeTagsQueryParamsMap(wrapper);
             case DESCRIBE_VOLUMES:
                 return new VolumeUtils().getDescribeVolumesQueryParamsMap(wrapper);
+            case DESCRIBE_SUBNETS:
+                return new SubnetUtils().getDescribeSubnetQueryParamsMap(wrapper);
             case DEREGISTER_IMAGE:
                 return new ImageUtils().getDeregisterImageQueryParamsMap(wrapper);
             case DETACH_NETWORK_INTERFACE:
@@ -110,6 +119,8 @@ class Ec2QueryParamsMapBuilder {
                 return new InstanceUtils().getStopInstancesQueryParamsMap(wrapper);
             case TERMINATE_INSTANCES:
                 return new InstanceUtils().getTerminateInstancesQueryParamsMap(wrapper);
+            case DESCRIBE_VPCS:
+                return new VpcUtils().getDescribeVpcsQueryParamsMap(wrapper);
             default:
                 throw new RuntimeException(UNSUPPORTED_QUERY_API);
         }

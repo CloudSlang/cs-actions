@@ -1,17 +1,18 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+  * (c) Copyright 2022 Micro Focus
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+  *
+  * The Apache License is available at
+  * http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
  */
+
 
 
 
@@ -97,13 +98,14 @@ public class HttpClientServiceTest {
         PowerMockito.when(httpComponents.getCookieStore()).thenReturn(cookieStore);
         PowerMockito.when(httpComponents.getConnManager()).thenReturn(connManager);
 
+        PowerMockito.when(httpClientInputs.getExecutionTimeout()).thenReturn("0");
         PowerMockito.when(httpClientInputs.getResponseCharacterSet()).thenReturn(responseCharacterSet);
         PowerMockito.when(httpClientInputs.getDestinationFile()).thenReturn(destinationFile);
         PowerMockito.when(httpClientInputs.getCookieStoreSessionObject()).thenReturn(serializableSessionObject);
     }
 
     @Test
-    public void executeKeepAliveTrue() {
+    public void executeKeepAliveTrue() throws Exception {
         PowerMockito.when(httpClientInputs.getKeepAlive()).thenReturn("true");
         Map<String, String> result1 = httpClientService.execute(httpClientInputs);
         assertEquals(result, result1);
@@ -111,7 +113,7 @@ public class HttpClientServiceTest {
     }
 
     @Test
-    public void executeKeepAliveFalse() throws IOException {
+    public void executeKeepAliveFalse() throws Exception {
         PowerMockito.when(httpClientInputs.getKeepAlive()).thenReturn("false");
         Map<String, String> result1 = httpClientService.execute(httpClientInputs);
         assertEquals(result, result1);

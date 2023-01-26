@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2023 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 package io.cloudslang.content.office365.utils;
 
@@ -44,6 +45,29 @@ public class PopulateAttachmentBody {
             body.addProperty(NAME, contentName);
             body.addProperty(CONTENT_BYTES, contentBytes);
         }
+
+        return new Gson().toJson(body);
+    }
+
+    public static String populateCreateUploadSessionBody(@NotNull final String filePath,
+                                                         @NotNull final String fileName,
+                                                         @NotNull final String fileType,
+                                                         @NotNull long fileSize) throws IOException {
+        final JsonObject body = new JsonObject();
+        final JsonObject attachmentItem = new JsonObject();
+
+        if (isEmpty(fileType))
+            attachmentItem.addProperty(ATTACHMENT_TYPE, ATTACHMENT_TYPE_FILE);
+        else
+            attachmentItem.addProperty(ATTACHMENT_TYPE, fileType);
+
+        if (isEmpty(fileName))
+            attachmentItem.addProperty(ATTACHMENT_NAME, getName(filePath));
+        else
+            attachmentItem.addProperty(ATTACHMENT_NAME, fileName);
+
+        attachmentItem.addProperty(ATTACHMENT_SIZE, fileSize);
+        body.add(ATTACHMENT_ITEM, attachmentItem);
 
         return new Gson().toJson(body);
     }

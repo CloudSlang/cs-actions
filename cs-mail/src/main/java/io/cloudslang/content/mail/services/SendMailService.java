@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.mail.services;
@@ -80,6 +81,9 @@ public class SendMailService {
             java.util.Properties props = new java.util.Properties();
             props.put(String.format(PropNames.MAIL_HOST, Constants.SMTP), input.getHostname());
             props.put(String.format(PropNames.MAIL_PORT, Constants.SMTP), StringUtils.EMPTY + input.getPort());
+
+            if (!input.getAuthToken().isEmpty())
+                props.put(String.format(PropNames.MAIL_AUTH_MECHANISMS, Constants.SMTP), Constants.XOAUTH2);
 
             if (null != input.getUsername() && input.getUsername().length() > 0) {
                 props.put(String.format(PropNames.MAIL_USER, input.getProtocol()), input.getUsername());
@@ -195,7 +199,7 @@ public class SendMailService {
 
             if (StringUtils.isNotEmpty(input.getUsername())) {
                 transport = session.getTransport(input.getProtocol());
-                transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getPassword());
+                transport.connect(input.getHostname(), input.getPort(), input.getUsername(), input.getAuthToken().isEmpty() ? input.getPassword() : input.getAuthToken());
                 transport.sendMessage(msg, msg.getAllRecipients());
             } else {
                 Transport.send(msg);

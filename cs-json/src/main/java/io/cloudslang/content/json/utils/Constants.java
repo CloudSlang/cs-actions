@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.json.utils;
@@ -29,9 +30,10 @@ public final class Constants {
         public static final String NEW_PROPERTY_VALUE = "newPropertyValue";
         public static final String OBJECT = "object";
         public static final String KEY = "key";
-        public static final String ARRAY = "array";
+        public static final String EQUAL = "=";
         public static final String FROM_INDEX = "fromIndex";
         public static final String TO_INDEX = "toIndex";
+        public static final String ARRAY = "array";
         public static final String ARRAY1 = "array1";
         public static final String ARRAY2 = "array2";
         public static final String ACTION = "action";
@@ -44,6 +46,17 @@ public final class Constants {
         public static final String DOUBLE_QUOTES = "\"";
         public static final String BRACKET = "{";
         public static final String SQUARE_BRACKET = "[";
+        public static final String ARRAY1_MESSAGE = " array1=";
+        public static final String ARRAY2_MESSAGE = " array2=";
+        public static final String ZERO = "0";
+        public static final String ONE = "1";
+        public static final String MINUS_ONE = "-1";
+        public static final String NO_MORE = "no more";
+        public static final String FAILED = "failed";
+        public static final String RESULT_STRING = "resultString";
+        public static final String HAS_MORE = "has more";
+        public static final String EMPTY_STRING = "";
+        public static final String SPACE = " ";
     }
 
     static final class EditJsonOperations {
@@ -74,5 +87,15 @@ public final class Constants {
         public static final String INVALID_TO_INDEX_VALUE = "The value for toIndex input exceeded the length of the array.";
 
 
+    }
+
+    public static final class ArrayIteratorAction{
+        public static final String GLOBAL_SESSION_OBJECT = "globalSessionObject";
+        public static final String HAS_MORE = "has more";
+        public static final String NO_MORE = "no more";
+        public static final String RETURN_RESULT = "returnResult";
+        public static final String JSON_ARRAY_OP = "Array Iterator";
+        public static final String INDEX = "index";
+        public static final String LENGTH = "length";
     }
 }

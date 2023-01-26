@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -15,5 +15,5 @@
 package io.cloudslang.content.rft.utils;
 
 public enum SFTPOperation {
-    GET,PUT,GET_CHILDREN;
+    GET, PUT, GET_CHILDREN, COMMAND, DELETE_FILE, CREATE_DIRECTORY, DELETE_DIRECTORY, RENAME;
 }

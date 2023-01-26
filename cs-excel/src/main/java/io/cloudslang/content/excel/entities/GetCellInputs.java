@@ -33,10 +33,12 @@ public class GetCellInputs {
     private final String columnIndex;
     private final String rowDelimiter;
     private final String columnDelimiter;
+    private final String enablingRoundingFunction;
 
-    @ConstructorProperties({"hasHeader", "firstRowIndex", "rowIndex", "columnIndex", "rowDelimiter", "columnDelimiter"})
+    @ConstructorProperties({"hasHeader", "firstRowIndex", "rowIndex", "columnIndex", "rowDelimiter", "columnDelimiter",
+            "enablingRoundingFunction"})
     private GetCellInputs(ExcelCommonInputs commonInputs, String hasHeader, String firstRowIndex, String rowIndex,
-                          String columnIndex, String rowDelimiter, String columnDelimiter) {
+                          String columnIndex, String rowDelimiter, String columnDelimiter, String enablingRoundingFunction) {
         this.commonInputs = commonInputs;
         this.hasHeader = hasHeader;
         this.firstRowIndex = firstRowIndex;
@@ -44,6 +46,7 @@ public class GetCellInputs {
         this.columnIndex = columnIndex;
         this.rowDelimiter = rowDelimiter;
         this.columnDelimiter = columnDelimiter;
+        this.enablingRoundingFunction = enablingRoundingFunction;
     }
 
     @NotNull
@@ -82,6 +85,9 @@ public class GetCellInputs {
     }
 
     @NotNull
+    public String getEnablingRoundingFunction() { return enablingRoundingFunction; }
+
+    @NotNull
     public ExcelCommonInputs getCommonInputs() {
         return this.commonInputs;
     }
@@ -94,6 +100,7 @@ public class GetCellInputs {
         private String columnIndex = EMPTY;
         private String rowDelimiter = EMPTY;
         private String columnDelimiter = EMPTY;
+        private String enablingRoundingFunction = EMPTY;
 
         private GetCellInputsBuilder() {
         }
@@ -141,8 +148,15 @@ public class GetCellInputs {
         }
 
         @NotNull
+        public GetCellInputsBuilder enablingRoundingFunction(@NotNull final String enablingRoundingFunction) {
+            this.enablingRoundingFunction = enablingRoundingFunction;
+            return this;
+        }
+
+        @NotNull
         public GetCellInputs build() {
-            return new GetCellInputs(commonInputs, hasHeader, firstRowIndex, rowIndex, columnIndex, rowDelimiter, columnDelimiter);
+            return new GetCellInputs(commonInputs, hasHeader, firstRowIndex, rowIndex, columnIndex, rowDelimiter,
+                    columnDelimiter, enablingRoundingFunction);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -17,40 +17,45 @@ package io.cloudslang.content.rft.utils;
 import org.junit.Test;
 
 import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 public class SFTPInputsValidationTest {
 
     @Test
     public void verifyValidSFTPPInputs() {
-        List<String> exceptions = InputsValidation.verifyInputsSFTP("someHost",
+        List<String> exceptions = InputsValidation.verifySFTPUploadFileInputs(
+                "someHost",
                 "21",
                 "username",
                 "password",
-                "privateKeyPath",
+                "8080",
                 "UTF-8",
                 "true",
-                SFTPOperation.PUT,
                 "specificinput.txt",
-                "specificinput2.txt");
+                "specificinput2.txt",
+                "60",
+                "60");
         int numberOfExceptions = exceptions.size();
-        assertEquals(numberOfExceptions,0);
+        assertEquals(numberOfExceptions, 0);
     }
 
     @Test
     public void verifyInvalidSFTPInputs() {
-        List<String> exceptions = InputsValidation.verifyInputsSFTP(null,
+        List<String> exceptions = InputsValidation.verifySFTPUploadFileInputs(
+                null,
                 "212222",
                 null,
                 "",
                 "",
                 "",
-                "tsdarue",
-                SFTPOperation.GET,
                 "",
-                "");
+                "",
+                "",
+                "",
+                "invalid");
         int numberOfExceptions = exceptions.size();
-        assertEquals(numberOfExceptions,8);
+        assertEquals(numberOfExceptions, 9);
     }
 
 }

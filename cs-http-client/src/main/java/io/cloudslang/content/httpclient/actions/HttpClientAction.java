@@ -1,17 +1,18 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+  * (c) Copyright 2022 Micro Focus
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+  *
+  * The Apache License is available at
+  * http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
  */
+
 
 
 
@@ -28,21 +29,23 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.Constants.CHANGEIT;
-import static io.cloudslang.content.httpclient.entities.Constants.DEFAULT_JAVA_KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.Constants.TLSv12;
+import static io.cloudslang.content.httpclient.entities.Constants.*;
 import static io.cloudslang.content.httpclient.services.HttpClientService.*;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static io.cloudslang.content.httpclient.utils.HttpValidator.validateInputs;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -123,7 +126,7 @@ public class HttpClientAction {
      *                                           If keepAlive is false, the already open connection will be used and after execution it will close it.
      *                                           The operation will use a connection pool stored in a GlobalSessionObject that will be available throughout
      *                                           the execution (the flow and subflows, between parallel split lanes). Default value: true. Valid values: true, false.
-     * @param connectionsMaxPerRoot              The maximum limit of connections on a per route basis.
+     * @param connectionsMaxPerRoute             The maximum limit of connections on a per route basis.
      *                                           The default will create no more than 2 concurrent connections per given route. Default value: 2
      * @param connectionsMaxTotal                The maximum limit of connections in total.
      *                                           The default will create no more than 2 concurrent connections in total. Default value: 20
@@ -288,9 +291,10 @@ public class HttpClientAction {
             @Param(HttpClientInputs.KEYSTORE_PASSWORD) String keystorePassword,
             @Param(HttpClientInputs.CONNECT_TIMEOUT) String connectTimeout,
             @Param(HttpClientInputs.SOCKET_TIMEOUT) String socketTimeout,
+            @Param(HttpClientInputs.EXECUTION_TIMEOUT) String executionTimeout,
             @Param(HttpClientInputs.USE_COOKIES) String useCookies,
             @Param(HttpClientInputs.KEEP_ALIVE) String keepAlive,
-            @Param(HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoot,
+            @Param(HttpClientInputs.CONNECTIONS_MAX_PER_ROUTE) String connectionsMaxPerRoute,
             @Param(HttpClientInputs.CONNECTIONS_MAX_TOTAL) String connectionsMaxTotal,
             @Param(HttpClientInputs.HEADERS) String headers,
             @Param(HttpClientInputs.RESPONSE_CHARACTER_SET) String responseCharacterSet,
@@ -317,7 +321,7 @@ public class HttpClientAction {
 
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setUrl(url);
-        httpClientInputs.setAuthType(authType);
+        httpClientInputs.setAuthType(defaultIfEmpty(authType, BASIC_AUTH));
         httpClientInputs.setPreemptiveAuth(preemptiveAuth);
         httpClientInputs.setUsername(username);
         httpClientInputs.setPassword(password);
@@ -336,9 +340,16 @@ public class HttpClientAction {
         httpClientInputs.setKeystorePassword(defaultIfEmpty(keystorePassword, CHANGEIT));
         httpClientInputs.setConnectTimeout(connectTimeout);
         httpClientInputs.setSocketTimeout(socketTimeout);
+
+        if (StringUtils.isNotEmpty(executionTimeout)) {
+            httpClientInputs.setExecutionTimeout(executionTimeout);
+        } else {
+            httpClientInputs.setExecutionTimeout("0");
+        }
+
         httpClientInputs.setUseCookies(useCookies);
         httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
+        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoute);
         httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
         httpClientInputs.setHeaders(headers);
         httpClientInputs.setResponseCharacterSet(responseCharacterSet);
@@ -364,6 +375,13 @@ public class HttpClientAction {
         httpClientInputs.setAllowedCyphers(allowedCyphers);
         httpClientInputs.setCookieStoreSessionObject(httpClientCookieSession);
         httpClientInputs.setConnectionPoolSessionObject(httpClientPoolingConnectionManager);
+
+        List<String> exceptions = validateInputs(httpClientInputs);
+
+        if (!exceptions.isEmpty()) {
+            String errorMessage = StringUtilities.join(exceptions, NEW_LINE);
+            return exceptionResult(errorMessage, new Exception(errorMessage));
+        }
 
         if (!isEmpty(tlsVersion)) {
             if (tlsVersion.toUpperCase().contains(TLSv12.toUpperCase()) && tlsVersion.split(",").length > 1) {

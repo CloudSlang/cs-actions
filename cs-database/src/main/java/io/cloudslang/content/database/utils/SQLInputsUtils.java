@@ -21,6 +21,7 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.services.databases.*;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 import io.cloudslang.content.utils.CollectionUtilities;
+import org.apache.commons.lang3.SystemUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.util.*;
 
 import static io.cloudslang.content.database.constants.DBExceptionValues.INVALID_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
+import static io.cloudslang.content.database.utils.Constants.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.isValidDbType;
 import static org.apache.commons.lang3.StringUtils.*;
 
@@ -56,7 +58,28 @@ public class SQLInputsUtils {
             return dbClass;
         }
         if (isValidDbType(dbType)) {
-            return DB_ClASSES.get(dbType);
+            if(dbType.equalsIgnoreCase(MSSQL_DB_TYPE))
+                return DB_ClASSES.get(dbType);
+                //return JTDS_JDBC_DRIVER;
+            else
+                return DB_ClASSES.get(dbType);
+        }
+        return EMPTY;
+    }
+
+    @NotNull
+    public static String getOrDefaultDBClassMSSQLQuery(final String dbClass, final String dbType, final String authType) {
+        if (isNoneEmpty(dbClass)) {
+            return dbClass;
+        }
+        if (isValidDbType(dbType)) {
+            if(dbType.equalsIgnoreCase(MSSQL_DB_TYPE))
+                if(authType.equalsIgnoreCase(AUTH_SQL))
+                      return DB_ClASSES.get(dbType);
+                else if(authType.equalsIgnoreCase(AUTH_WINDOWS))
+                      return JTDS_JDBC_DRIVER;
+            else
+                return DB_ClASSES.get(dbType);
         }
         return EMPTY;
     }
@@ -104,6 +127,30 @@ public class SQLInputsUtils {
         final List<String> dbUrls = new ArrayList<>();
         if (isNoneEmpty(dbUrl)) {
             dbUrls.add(dbUrl);
+        }
+        return dbUrls;
+    }
+
+
+
+    /* This method was created to avoid java.sql.SQLException: Value '0000-00-00 00:00:00' can not be represented as java.sql.Timestamp
+          when using dbUrl input with a MySql database
+     zeroDateTimeBehavior=convertToNull is added to url query if a value for it does not already exists
+     null will be returned when '0000-00-00 00:00:00' is retrieved from database
+     */
+    @NotNull
+    public static List<String> getMySqlDbUrls(final String dbUrl) {
+        final List<String> dbUrls = new ArrayList<>();
+        if (isNoneEmpty(dbUrl)) {
+            StringBuilder dbUrlSb = new StringBuilder(dbUrl);
+            if(dbUrl.contains(QUESTION_MARK)){
+                if(!dbUrl.contains(ZERO_DATE_TIME_BEHAVIOR)){
+                    dbUrlSb.append(AMPERSAND).append(ZERO_DATE_TIME_CONVERT_TO_NULL);
+                }
+            }else{
+                dbUrlSb.append(QUESTION_MARK).append(ZERO_DATE_TIME_CONVERT_TO_NULL);
+            }
+            dbUrls.add(dbUrlSb.toString());
         }
         return dbUrls;
     }

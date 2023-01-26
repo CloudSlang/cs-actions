@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,8 +13,6 @@
  * limitations under the License.
  */
 
-
-
 package io.cloudslang.content.rft.services;
 
 import com.jcraft.jsch.*;
@@ -26,6 +24,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
+
+import static io.cloudslang.content.rft.utils.Constants.BACKSLASH;
 
 /**
  * Date: 7/30/2015
@@ -106,8 +106,8 @@ public class SCPCopier {
             long filesize = srcFile.length();
             command = "C0644 " + filesize + " ";
 
-            if (srcPath.lastIndexOf('/') > 0) {
-                command += srcPath.substring(srcPath.lastIndexOf('/') + 1);
+            if (srcPath.lastIndexOf(BACKSLASH) > 0) {
+                command += srcPath.substring(srcPath.lastIndexOf(BACKSLASH) + 1);
             } else {
                 command += srcPath;
             }

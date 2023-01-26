@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.mail.entities;
 
 
@@ -30,6 +31,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
     private String protocol;
     private String username;
     private String password;
+    private String authToken;
     private boolean trustAllRoots;
     private boolean enableSSL;
     private boolean enableTLS;
@@ -135,7 +137,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
 
     public String getProtocol() {
-        return this.isEnableTLS() && !this.getTlsVersions().isEmpty()?
+        return this.isEnableTLS() && !this.getTlsVersions().isEmpty() && this.getAuthToken().isEmpty() ?
                 protocol + SecurityConstants.SECURE_SUFFIX :
                 protocol;
     }
@@ -148,6 +150,11 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
 
     public String getPassword() {
         return password;
+    }
+
+
+    public String getAuthToken() {
+        return authToken;
     }
 
 
@@ -218,6 +225,7 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
         private String protocol;
         private String username;
         private String password;
+        private String authToken;
         private String trustAllRoots;
         private String enableSSL;
         private String enableTLS;
@@ -332,6 +340,12 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
         }
 
 
+        public Builder authToken(String authToken) {
+            this.authToken = authToken;
+            return this;
+        }
+
+
         public Builder trustAllRoots(String trustAllRoots) {
             this.trustAllRoots = trustAllRoots;
             return this;
@@ -419,6 +433,8 @@ public class GetMailAttachmentInput implements GetMailInput, DecryptableMailInpu
             input.username = buildUsername(username, true);
 
             input.password = buildPassword(password);
+
+            input.authToken = buildAuthToken(authToken);
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 

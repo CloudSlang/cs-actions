@@ -42,11 +42,12 @@ public class Constants {
     public static final String DEFAULT_ROW_DELIMITER = "|";
     public static final String DEFAULT_COLUMN_DELIMITER = ",";
     public static final String DEFAULT_DELIMITER_WORKSHEET_NAMES = ",";
+    public static final String DEFAULT_ENABLING_ROUNDING_FUNCTION = "false";
     public static String FORMAT_XLSX = "XLSX";
     public static String FORMAT_XLS = "XLS";
-    public static final String BAD_CREATE_EXCEL_FILE_MSG = "Invalid file for Excel documents. Expecting file name with extension "
-            + FORMAT_XLS + " or " + FORMAT_XLSX + ".";
     public static String FORMAT_XLSM = "XLSM";
+    public static final String BAD_CREATE_EXCEL_FILE_MSG = "Invalid file for Excel documents. Expecting file name with extension "
+            + FORMAT_XLS + "," + FORMAT_XLSX + " or " + FORMAT_XLSM + ".";
     public static final String BAD_EXCEL_FILE_MSG = "Invalid file for Excel documents. Expecting file name with extension "
-            + FORMAT_XLS + " , " + FORMAT_XLSX + " or " + FORMAT_XLSM + ".";
+            + FORMAT_XLS + "," + FORMAT_XLSX + " or " + FORMAT_XLSM + ".";
 }

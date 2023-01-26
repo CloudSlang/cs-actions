@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.mail.entities;
 
 import io.cloudslang.content.mail.constants.SecurityConstants;
@@ -29,6 +30,7 @@ public class GetMailMessageCountInput implements GetMailInput {
     private String protocol;
     private String username;
     private String password;
+    private String authToken;
     private boolean trustAllRoots;
     private boolean enableSSL;
     private boolean enableTLS;
@@ -61,7 +63,7 @@ public class GetMailMessageCountInput implements GetMailInput {
 
 
     public String getProtocol() {
-        return this.isEnableTLS() && !this.getTlsVersions().isEmpty()?
+        return this.isEnableTLS() && !this.getTlsVersions().isEmpty() && this.getAuthToken().isEmpty() ?
                 protocol + SecurityConstants.SECURE_SUFFIX :
                 protocol;
     }
@@ -74,6 +76,11 @@ public class GetMailMessageCountInput implements GetMailInput {
 
     public String getPassword() {
         return password;
+    }
+
+
+    public String getAuthToken() {
+        return authToken;
     }
 
 
@@ -159,6 +166,7 @@ public class GetMailMessageCountInput implements GetMailInput {
         private String protocol;
         private String username;
         private String password;
+        private String authToken;
         private String trustAllRoots;
         private String enableSSL;
         private String enableTLS;
@@ -220,6 +228,12 @@ public class GetMailMessageCountInput implements GetMailInput {
 
         public Builder password(String password) {
             this.password = password;
+            return this;
+        }
+
+
+        public Builder authToken(String authToken) {
+            this.authToken = authToken;
             return this;
         }
 
@@ -314,6 +328,8 @@ public class GetMailMessageCountInput implements GetMailInput {
             input.username = buildUsername(username, true);
 
             input.password = buildPassword(password);
+
+            input.authToken = buildAuthToken(authToken);
 
             input.trustAllRoots = buildTrustAllRoots(trustAllRoots);
 

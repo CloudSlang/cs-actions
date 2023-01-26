@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2020 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,16 +13,18 @@
  * limitations under the License.
  */
 
-
 package io.cloudslang.content.json.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.cloudslang.content.json.utils.Constants.AddPropertyToObject.EMPTY_JSON;
 import static io.cloudslang.content.json.utils.Constants.AddPropertyToObject.JSON_EXCEPTION;

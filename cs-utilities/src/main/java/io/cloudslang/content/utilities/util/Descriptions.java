@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.utilities.util;
@@ -48,7 +49,7 @@ public class Descriptions {
 
     }
 
-    public static class RandomPasswordGeneratorDescriptions{
+    public static class RandomPasswordGeneratorDescriptions {
         public static final String RANDOM_PASSWORD_GENERATOR = "Random Password Generator";
         public static final String SUCCESS_DESC = "The password was generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to generate the password.";
@@ -66,7 +67,7 @@ public class Descriptions {
         public static final String FORBIDDEN_CHARACTERS_DESC = "A list of characters that the password should not contain. Example: []{}.";
     }
 
-    public static class StringEqualsDescriptions{
+    public static class StringEqualsDescriptions {
         public static final String FIRST_STRING_DESC = "First string to compare.";
         public static final String SECOND_STRING_DESC = "Second string to compare.";
         public static final String IGNORE_CASE_DESC = "If set to 'true', then the comparison ignores case considerations. The two strings are\n" +
@@ -75,8 +76,39 @@ public class Descriptions {
                 "match exactly to be considered equal";
     }
 
-    public static class IsTrueDescriptions{
+    public static class IsTrueDescriptions {
         public static final String BOOL_VALUE_DESC = "Boolean value to check.";
+    }
+
+    public static class Counter {
+        public static final String FAILURE_DESC = "There was an error while executing the request.";
+        public static final String SUCCESS_DESC = "The request was successfully executed.";
+        public static final String RETURN_RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
+        public static final String COUNTER_DESC = "Counts from one number to another number.";
+        public static final String RESULT_STRING_DESC = "The primary result is resultString, Result can also be used. result (All lower case) should not be used as it is the response code.";
+        public static final String RESULT_DESC = "If successful, returns the complete API response. In case of an error this output will contain the error message.";
+        public static final String FROM_DESC = "The number to start counting at.";
+        public static final String TO_DESC = "The number to count to.";
+        public static final String RESET_DESC = "If true, then the counter will restart counting from the beginning.";
+        public static final String INCREMENT_BY_DESC = "The number to increment by while counting. If unspecified this is 1. If you wanted to count 2,4,6,8 this would be 2.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while executing the request.";
+
+
+    }
+
+    public static class SchedulerTime {
+        public static final String SCHEDULER_TIME_OPERATION_DESC = "Converts time with specified timezone and return the scheduler time.";
+        public static final String SCHEDULER_START_TIME_DESC = "Scheduler start time.";
+        public static final String TIME_ZONE_DESC = "Scheduler timeZone.";
+        public static final String TRIGGER_EXPRESSION_DESC = "Scheduler trigger expression.";
+        public static final String SCHEDULER_TIME_DESC = "Scheduler time in HH:MM:SS format";
+        public static final String EXCEPTION_DESC = "Exception if there was an error when executing, empty otherwise.";
+    }
+
+    public static class GetTimeFormat {
+        public static final String CONVERT_EPOCH_TIME_OPERATION_DESC = "This operation converts the unix time into given format.";
+        public static final String EPOCH_TIME_DESC = "Epoch time.";
+        public static final String DATE_FORMAT_DESC = "Date format.";
     }
 
 }

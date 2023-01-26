@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.mail.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -27,6 +28,7 @@ import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
 import io.cloudslang.content.mail.services.GetMailMessageCountService;
 import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -38,6 +40,7 @@ public class GetMailMessageCountAction {
      * @param hostname            The email host.
      * @param username            The username for email host.
      * @param password            The password for email host.
+     * @param authToken                  The OAuth 2.0 token used for connecting to the email host. If given, the password input will be ignored.
      * @param folder              The folder to read the message from (NOTE: POP3 only supports 'INBOX').
      * @param port                The port to connect to host on (normally 110 for POP3, 143 for IMAP4).
      *                            This input can be left empty if the protocol value is 'pop3' or 'imap4':
@@ -84,6 +87,11 @@ public class GetMailMessageCountAction {
      * <br><b>returnResult</b> - The text content of the attachment, if the attachment is in plain text format.
      * <br><b>exception</b> - the exception message if the operation goes to failure.
      */
+
+    //IMPORTANT!
+    //FOR THE oo-base RELEASE THE VERSION FOR org.bouncycastle: bcprov-jdk15on,bcmail-jdk15on,bcpkix-jdk15on
+    //NEEDS TO BE SET AT 1.60
+
     @Action(name = "Get Mail Message Count",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
@@ -101,7 +109,8 @@ public class GetMailMessageCountAction {
     public Map<String, String> execute(
             @Param(value = InputNames.HOST, required = true) String hostname,
             @Param(value = InputNames.USERNAME, required = true) String username,
-            @Param(value = InputNames.PASSWORD, required = true, encrypted = true) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
+            @Param(value = InputNames.AUTH_TOKEN) String authToken,
             @Param(value = InputNames.FOLDER, required = true) String folder,
             @Param(value = InputNames.PORT) String port,
             @Param(value = InputNames.PROTOCOL) String protocol,
@@ -123,6 +132,7 @@ public class GetMailMessageCountAction {
                 .hostname(hostname)
                 .username(username)
                 .password(password)
+                .authToken(authToken)
                 .folder(folder)
                 .port(port)
                 .protocol(protocol)
@@ -140,10 +150,22 @@ public class GetMailMessageCountAction {
                 .timeout(timeout)
                 .tlsVersion(tlsVersion)
                 .allowedCiphers(encryptionAlgorithm);
-        try {
-            return new GetMailMessageCountService().execute(inputBuilder.build());
-        } catch (Exception ex) {
-            return ResultUtils.fromException(ex);
+        if(StringUtils.isEmpty(tlsVersion))
+            try {
+                return new GetMailMessageCountService().execute(inputBuilder.tlsVersion("TLSv1.2").build());
+            } catch (Exception ex) {
+                try {
+                    return new GetMailMessageCountService().execute(inputBuilder.build());
+                } catch (Exception e){
+                    return ResultUtils.fromException(ex);
+                }
+            }
+        else {
+            try {
+                return new GetMailMessageCountService().execute(inputBuilder.build());
+            } catch (Exception e) {
+                return ResultUtils.fromException(e);
+            }
         }
     }
 }

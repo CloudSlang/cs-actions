@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2023 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 package io.cloudslang.content.office365.utils;
 
@@ -66,6 +67,16 @@ public class HttpUtils {
                 .append(BASE_GRAPH_PATH)
                 .append(getLoginType(userPrincipalName, userId))
                 .append(MESSAGES_PATH);
+        return pathString.toString();
+    }
+
+    @NotNull
+    public static String createUploadSessionMessagePath(@NotNull final String messageId) {
+
+        StringBuilder pathString = new StringBuilder()
+                .append(UPLOAD_SESSION_BASE_PATH)
+                .append(messageId)
+                .append(UPLOAD_SESSION_ATTACHMENT_PATH);
         return pathString.toString();
     }
 
@@ -207,6 +218,7 @@ public class HttpUtils {
         headerBuilder.append(AUTHORIZATION).append(BEARER).append(authToken);
         return headerBuilder.toString();
     }
+
 
     @NotNull
     public static String getQueryParams(@NotNull final String topQuery,

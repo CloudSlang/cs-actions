@@ -6,6 +6,14 @@
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-actions</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -65,7 +73,7 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <cs-http-client.version>0.1.74</cs-http-client.version>
         <cs-commons.version>0.0.5</cs-commons.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <apache-poi.version>3.14</apache-poi.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -143,7 +151,7 @@
             <dependency>
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
-                <version>2.12.0</version>
+                <version>2.12.1</version>
             </dependency>
             <dependency>
                 <groupId>com.jayway.jsonpath</groupId>
@@ -314,6 +322,7 @@
     <modules>
         <module>cs-abbyy</module>
         <module>cs-alibaba</module>
+        <module>cs-active-directory</module>
         <module>cs-amazon</module>
         <module>cs-azure</module>
         <module>cs-commons</module>
@@ -322,27 +331,35 @@
         <module>cs-date-time</module>
         <module>cs-dropbox</module>
         <module>cs-excel</module>
+        <module>cs-filesystem</module>
         <module>cs-google</module>
+        <module>cs-hashicorp-terraform</module>
         <module>cs-http-client</module>
+        <module>cs-httpclient-commons</module>
         <module>cs-json</module>
-        <module>cs-ldap</module>  
         <module>cs-lists</module>
         <module>cs-mail</module>
         <module>cs-maps</module>
         <module>cs-microfocus-dca</module>
         <module>cs-microfocus-hcm</module>
+        <module>cs-microsoft-ad</module>
         <module>cs-nutanix-prism</module>
+        <module>cs-oauth</module>
         <module>cs-office-365</module>
         <module>cs-oracle-cloud</module>
+        <module>cs-oracle-cloud-databases</module>
         <module>cs-postgres</module>
         <module>cs-powershell</module>
         <module>cs-rft</module>
+        <module>cs-microfocus-sitescope</module>
         <module>cs-ssh</module>
         <module>cs-tesseract</module>
         <module>cs-utilities</module>
         <module>cs-vmware</module>
+        <module>cs-winrm</module>
         <module>cs-xml</module>
-        <module>cs-hashicorp-terraform</module>
+        <module>cs-cyberark</module>
+        <module>cs-openshift</module>
     </modules>
 
 </project>

@@ -62,10 +62,18 @@ public class DBOtherValues {
     public static final String MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
     public static final String POSTGRESQL_DRIVER = "org.postgresql.Driver";
     public static final String MSSQL_FILE_DRIVER = "sqljdbc_auth.dll";
+    public static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
+    public static final String SQL_JDBC_AUTH_SHA256 = "39ec33dcf67990c5d060be53de8af8419acc2d3252aff9484cee1a7650480fd6";
+    public static final String SQL_JDBC_DRIVER_DIR_PREFIX = "sql-jdbc-driver";
 
     public static final String KEY_COLUMNS = "%s - Columns";
     public static final String KEY_FILES = "%s - Files";
     public static final String KEY_CLOB_NAMES = "%s - CLOBNames";
     public static final String KEY_SKIP = "%s - Skip";
+
+    public static final String QUESTION_MARK = "?";
+    public static final String AMPERSAND ="&";
+    public static final String ZERO_DATE_TIME_BEHAVIOR = "zeroDateTimeBehavior=";
+    public static final String ZERO_DATE_TIME_CONVERT_TO_NULL = "zeroDateTimeBehavior=convertToNull";
 
 }

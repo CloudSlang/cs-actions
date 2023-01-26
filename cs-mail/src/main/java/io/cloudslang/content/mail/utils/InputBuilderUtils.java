@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.mail.utils;
 
 import io.cloudslang.content.mail.constants.*;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
+import static io.cloudslang.content.mail.constants.Constants.ONE_SECOND;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public final class InputBuilderUtils {
@@ -97,6 +99,11 @@ public final class InputBuilderUtils {
     }
 
 
+    public static String buildAuthToken(String authToken) {
+        return (authToken == null) ? StringUtils.EMPTY : authToken;
+    }
+
+
     public static boolean buildTrustAllRoots(String trustAllRoots) {
         return StringUtils.isEmpty(trustAllRoots) ? true : Boolean.parseBoolean(trustAllRoots);
     }
@@ -136,7 +143,7 @@ public final class InputBuilderUtils {
             if (t <= 0) {
                 throw new Exception(ExceptionMsgs.TIMEOUT_MUST_BE_POSITIVE);
             }
-            return Constants.ONE_SECOND; //timeouts in seconds
+            return t * ONE_SECOND; //timeouts in seconds
         }
         return -1;
     }

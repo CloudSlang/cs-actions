@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2023 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,18 +13,25 @@
  * limitations under the License.
  */
 
+
 package io.cloudslang.content.office365.utils;
 
 public final class Constants {
     public static final String API = "api";
     public static final String NATIVE = "native";
     public static final String NEW_LINE = "\n";
-    public static final String DEFAULT_LOGIN_TYPE = "API";
+    public static final String DEFAULT_LOGIN_TYPE = "Native";
     public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_PROXY_PORT = "8080";
+    public static final String DEFAULT_SCOPE = "https://graph.microsoft.com/.default";
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
+    public static final String TLS = "TLS";
+    public static final String STATUS_CODE_201 = "201";
+    public static final String ATTACHMENTS_SPLIT = "Attachments";
+    public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
+    public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
@@ -46,9 +53,15 @@ public final class Constants {
     public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
     public static final String TOP_QUERY_CONST = "10";
     public static final String AUTHORIZATION = "Authorization:";
+    public static final String OCTET_STREAM = "application/octet-stream";
+    public static final String CONTENT_TYPE_FILE = "Content-Type: ";
+    public static final String CONTENT_LENGTH_FILE = "Content-Length: ";
+    public static final String CONTENT_RANGE_FILE = "Content-Range: ";
     public static final String BEARER = "Bearer ";
     public static final String GRAPH_HOST = "graph.microsoft.com";
     public static final String BASE_GRAPH_PATH = "/v1.0/users/";
+    public static final String UPLOAD_SESSION_BASE_PATH = "/v1.0/me/messages/";
+    public static final String UPLOAD_SESSION_ATTACHMENT_PATH = "/attachments/createUploadSession";
     public static final String MESSAGES_PATH = "/messages";
     public static final String PATH_SEPARATOR = "/";
     public static final String MAIL_FOLDERS_PATH = "/mailFolders/";
@@ -73,6 +86,13 @@ public final class Constants {
     public static final String ID = "id";
     public static final String COMMA = ",";
     public static final String NAME = "name";
+    public static final String ATTACHMENT_TYPE = "attachmentType";
+    public static final String ATTACHMENT_TYPE_FILE = "file";
+    public static final String ATTACHMENT_ITEM = "AttachmentItem";
+    public static final String ATTACHMENT_NAME = "name";
+    public static final String ATTACHMENT_SIZE = "size";
+    public static final String UPLOAD_SESSION_URL = "uploadUrl";
+    public static final String METHOD_PUT = "PUT";
     public static final String SIZE = "size";
     public static final String MANAGE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users";
     public static final String DELETE_USER_REQUEST_URL = "https://graph.microsoft.com/v1.0/users/";
@@ -87,15 +107,19 @@ public final class Constants {
     public static final String PASSWORD_BODY = "password";
     public static final String ATTACHMENTS = "/attachments";
     public static final String ATTACHMENTS_PATH = "/attachments/";
-    public static final String VALUE= "value";
+    public static final String VALUE = "value";
     public static final String MESSAGE_ID_LIST_JSON_PATH = "$.value[*].id";
     public static final String FILE_PATH = "filePath";
     public static final String ODATA_TYPE = "@odata.type";
     public static final String MICROSOFT_GRAPH_FILE_ATTACHMENT = "#microsoft.graph.fileAttachment";
-    public static final String LOGIN_AUTHORITY_PREFIX = "https://login.windows.net/";
-    public static final String LOGIN_AUTHORITY_SUFFIX = "/oauth2/token";
+    public static final String LOGIN_AUTHORITY_PREFIX = "https://login.microsoftonline.com/";
+    public static final String LOGIN_AUTHORITY_SUFFIX = "/oauth2/v2.0/token";
     public static final String SEND_MAIL_DEFAULT_IMPORTANCE = "normal";
     public static final String SEND_MAIL_DEFAULT_INFERENCE_CLASSIFICATION = "focused";
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
+    public static final String SEND_EMAIL_ADD_ATTACHMENT = "Could not attach %S";
+    public static final String OPEN_PARANTHESES = "{";
+    public static final String CLOSE_PARANTHESES = "}";
+    public static final String MINUS = "-";
 }

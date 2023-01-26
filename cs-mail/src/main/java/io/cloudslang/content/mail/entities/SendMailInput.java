@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.mail.entities;
@@ -48,6 +49,7 @@ public class SendMailInput implements MailInput {
     private String rowDelimiter;
     private String columnDelimiter;
     private String password;
+    private String authToken;
     private String delimiter;
     private String characterSet;
     private String contentTransferEncoding;
@@ -156,6 +158,11 @@ public class SendMailInput implements MailInput {
     }
 
 
+    public String getAuthToken() {
+        return authToken;
+    }
+
+
     public String getDelimiter() {
         return delimiter;
     }
@@ -222,7 +229,7 @@ public class SendMailInput implements MailInput {
 
 
     public String getProtocol() {
-        return this.isEnableTLS() && !this.getTlsVersions().isEmpty()?
+        return this.isEnableTLS() && !this.getTlsVersions().isEmpty() && this.getAuthToken().isEmpty() ?
                 Constants.SMTP + SecurityConstants.SECURE_SUFFIX :
                 Constants.SMTP;
     }
@@ -275,6 +282,7 @@ public class SendMailInput implements MailInput {
         private String rowDelimiter;
         private String columnDelimiter;
         private String password;
+        private String authToken;
         private String delimiter;
         private String characterSet;
         private String contentTransferEncoding;
@@ -379,6 +387,12 @@ public class SendMailInput implements MailInput {
 
         public Builder password(String password) {
             this.password = password;
+            return this;
+        }
+
+
+        public Builder authToken(String authToken) {
+            this.authToken = authToken;
             return this;
         }
 
@@ -517,6 +531,8 @@ public class SendMailInput implements MailInput {
             input.username = buildUsername(user, false);
 
             input.password = buildPassword(password);
+
+            input.authToken = buildAuthToken(authToken);
 
             input.characterSet = StringUtils.isEmpty(characterSet) ? "UTF-8" : characterSet;
 

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -34,20 +34,22 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUA
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.RETURN_RESULT_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.SFTPDescriptions.*;
+import static io.cloudslang.content.rft.utils.Descriptions.SFTPGetChildrenDescriptions.REMOTE_PATH_GET_CHILDREN_DESC;
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.*;
-import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.PARAM_CLOSE_SESSION;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsSFTP;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyGetChildrenInputsSFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class SFTPGetChildren {
-    @Action(name = "SFTP Get Children Operation",
+    @Action(name = SFTP_GET_CHILDREN,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -59,27 +61,39 @@ public class SFTPGetChildren {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = PARAM_HOST, description = PARAM_HOST_DESC) String host,
-                                       @Param(value = PARAM_PORT, description = PARAM_PORT_DESC) String port,
-                                       @Param(value = PARAM_USERNAME, description = PARAM_USERNAME_DESC) String username,
-                                       @Param(value = PARAM_PASSWORD, description = PARAM_PASSWORD_DESC) String password,
-                                       @Param(value = PARAM_PRIVATE_KEY, description = PARAM_PRIVATE_KEY_DESC) String privateKey,
-                                       @Param(value = PARAM_REMOTE_PATH, description = PARAM_REMOTE_PATH_DESC) String remotePath,
-                                       @Param(value = PARAM_DELIMITER, description = PARAM_DELIMITER_DESC) String delimiter,
-                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = PARAM_GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
-                                       @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet,
-                                       @Param(value = PARAM_CLOSE_SESSION, description = PARAM_CLOSE_SESSION_DESC) String closeSession) {
+    public Map<String, String> execute(@Param(value = HOST, description = HOST_NAME, required = true) String host,
+                                       @Param(value = PORT, description = PORT_DESC) String port,
+                                       @Param(value = USERNAME, description = USERNAME_DESC, required = true) String username,
+                                       @Param(value = PASSWORD, description = PASSWORD_DESC, required = true, encrypted = true) String password,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, description = PROXY_PASSWORD_DESC, encrypted = true) String proxyPassword,
+                                       @Param(value = PRIVATE_KEY, description = PRIVATE_KEY_DESC) String privateKey,
+                                       @Param(value = REMOTE_PATH, description = REMOTE_PATH_GET_CHILDREN_DESC, required = true) String remotePath,
+                                       @Param(value = DELIMITER, description = DELIMITER_DESC) String delimiter,
+                                       @Param(value = SSH_SESSIONS_DEFAULT_ID, description = GLOBAL_SESSION_DESC) GlobalSessionObject<Map<String, SFTPConnection>> globalSessionObject,
+                                       @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet,
+                                       @Param(value = CLOSE_SESSION, description = CLOSE_SESSION_DESC) String closeSession,
+                                       @Param(value = CONNECTION_TIMEOUT, description = CONNECTION_TIMEOUT_DESC) String connectionTimeout,
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         host = defaultIfEmpty(host, EMPTY);
         port = defaultIfEmpty(port, String.valueOf(DEFAULT_PORT));
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
+        proxyPort = defaultIfEmpty(proxyPort, String.valueOf(DEFAULT_PROXY_PORT));
         privateKey = defaultIfEmpty(privateKey, EMPTY);
         remotePath = defaultIfEmpty(remotePath, EMPTY);
+        delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
         characterSet = defaultIfEmpty(characterSet, CHARACTER_SET_UTF8);
         closeSession = defaultIfEmpty(closeSession, BOOLEAN_TRUE);
+        connectionTimeout = defaultIfEmpty(connectionTimeout, DEFAULT_CONNECTION_TIMEOUT);
+        executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
-        final List<String> exceptionMessages = verifyInputsSFTP(host, port, username, password, privateKey, characterSet, closeSession, SFTPOperation.GET_CHILDREN, remotePath, delimiter);
+        final List<String> exceptionMessages = verifyGetChildrenInputsSFTP(host, port, username, password, proxyPort,
+                characterSet, closeSession, remotePath, delimiter, connectionTimeout, executionTimeout);
+
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -92,6 +106,12 @@ public class SFTPGetChildren {
                         .port(port)
                         .username(username)
                         .password(password)
+                        .proxyHost(proxyHost)
+                        .proxyPort(proxyPort)
+                        .proxyUsername(proxyUsername)
+                        .proxyPassword(proxyPassword)
+                        .connectionTimeout(connectionTimeout)
+                        .executionTimeout(executionTimeout)
                         .privateKey(privateKey)
                         .characterSet(characterSet)
                         .closeSession(closeSession)
@@ -99,7 +119,7 @@ public class SFTPGetChildren {
                         .build())
                 .build();
 
-        return new SFTPService().execute(sftpGetChildrenInputs,SFTPOperation.GET_CHILDREN);
+        return new SFTPService().execute(sftpGetChildrenInputs, SFTPOperation.GET_CHILDREN);
 
     }
 }

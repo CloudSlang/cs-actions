@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -17,6 +17,7 @@
 
 package io.cloudslang.content.amazon.factory.helpers;
 
+import io.cloudslang.content.amazon.entities.constants.Constants;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 
 import java.util.HashMap;
@@ -38,11 +39,12 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParams.USER_ID;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DOT;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
-import static io.cloudslang.content.amazon.utils.InputsUtil.getStringsList;
-import static io.cloudslang.content.amazon.utils.InputsUtil.putCollectionInQueryMap;
-import static io.cloudslang.content.amazon.utils.InputsUtil.setCommonQueryParamsMap;
-import static io.cloudslang.content.amazon.utils.InputsUtil.setOptionalMapEntry;
+import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.ImageInputs.OWNERS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.VpcInputs.VPC_IDS;
+import static io.cloudslang.content.amazon.utils.InputsUtil.*;
 import static java.lang.String.valueOf;
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -134,50 +136,36 @@ public class ImageUtils {
     }
 
     public Map<String, String> getDescribeImagesQueryParamsMap(InputsWrapper wrapper) {
-        List<String> imageIds = getStringsList(wrapper.getImageInputs().getImageIdsString(), wrapper.getCommonInputs().getDelimiter());
-        List<String> ownerIds = getStringsList(wrapper.getImageInputs().getOwnersString(), wrapper.getCommonInputs().getDelimiter());
-
         Map<String, String> queryParamsMap = new HashMap<>();
         setCommonQueryParamsMap(queryParamsMap, wrapper.getCommonInputs().getAction(), wrapper.getCommonInputs().getVersion());
         setOptionalMapEntry(queryParamsMap, EXECUTABLE_BY + DOT + ONE, valueOf(wrapper.getCustomInputs().getIdentityId()),
                 isNotBlank(valueOf(wrapper.getCustomInputs().getIdentityId())));
 
+        String[] ownersArray = getArrayWithoutDuplicateEntries(wrapper.getImageInputs().getOwners(),
+                OWNERS, wrapper.getCommonInputs().getDelimiter());
+        if(wrapper.getImageInputs().getOwners()!="Not relevant")
+        {setSpecificQueryParamsMap(queryParamsMap, ownersArray, Constants.AwsParams.OWNERS);}
+        else
+        {
+            queryParamsMap.remove("Owner.1");
+        }
+        String[] executableByArray = getArrayWithoutDuplicateEntries(wrapper.getImageInputs().getExecutableBy(),
+                EXECUTABLE_BY, wrapper.getCommonInputs().getDelimiter());
+        if(wrapper.getImageInputs().getExecutableBy()!="Not relevant")
+        {setSpecificQueryParamsMap(queryParamsMap, executableByArray, EXECUTABLE_BY);}
+        else
+        {
+            queryParamsMap.remove("ExecutableBy.1");
+        }
         int currentIndex = ONE;
-
-        currentIndex = appendOptionalFilters(queryParamsMap, ARCHITECTURE, currentIndex, wrapper.getCustomInputs().getArchitecture());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_DELETE_ON_TERMINATION, currentIndex, wrapper.getCustomInputs().getDeleteOnTermination());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_DEVICE_NAME, currentIndex, wrapper.getCustomInputs().getBlockMappingDeviceName());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_SNAPSHOT_ID, currentIndex, wrapper.getCustomInputs().getBlockDeviceMappingSnapshotId());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_VOLUME_SIZE, currentIndex, wrapper.getCustomInputs().getVolumeSize());
-        currentIndex = appendOptionalFilters(queryParamsMap, BLOCK_DEVICE_MAPPING_VOLUME_TYPE, currentIndex, wrapper.getCustomInputs().getVolumeType());
-        currentIndex = appendOptionalFilters(queryParamsMap, HYPERVISOR, currentIndex, wrapper.getCustomInputs().getHypervisor());
-        currentIndex = appendOptionalFilters(queryParamsMap, IMAGE_ID_FILTER, currentIndex, wrapper.getCustomInputs().getImageId());
-        currentIndex = appendOptionalFilters(queryParamsMap, KERNEL_ID, currentIndex, wrapper.getCustomInputs().getKernelId());
-        currentIndex = appendOptionalFilters(queryParamsMap, OWNER_ALIAS, currentIndex, wrapper.getCustomInputs().getOwnerAlias());
-        currentIndex = appendOptionalFilters(queryParamsMap, OWNER_ID, currentIndex, wrapper.getCustomInputs().getOwnerId());
-        currentIndex = appendOptionalFilters(queryParamsMap, PLATFORM, currentIndex, wrapper.getCustomInputs().getPlatform());
-        currentIndex = appendOptionalFilters(queryParamsMap, PRODUCT_CODE, currentIndex, wrapper.getCustomInputs().getProductCode());
-        currentIndex = appendOptionalFilters(queryParamsMap, PRODUCT_CODE_TYPE, currentIndex, wrapper.getCustomInputs().getProductCodeType());
-        currentIndex = appendOptionalFilters(queryParamsMap, RAMDISK_ID, currentIndex, wrapper.getCustomInputs().getRamdiskId());
-        currentIndex = appendOptionalFilters(queryParamsMap, ROOT_DEVICE_NAME, currentIndex, wrapper.getCustomInputs().getRootDeviceName());
-        currentIndex = appendOptionalFilters(queryParamsMap, ROOT_DEVICE_TYPE, currentIndex, wrapper.getCustomInputs().getRootDeviceType());
-        currentIndex = appendOptionalFilters(queryParamsMap, STATE_REASON_CODE, currentIndex, wrapper.getCustomInputs().getStateReasonCode());
-        currentIndex = appendOptionalFilters(queryParamsMap, STATE_REASON_MESSAGE, currentIndex, wrapper.getCustomInputs().getStateReasonMessage());
-        currentIndex = appendOptionalFilters(queryParamsMap, TAG_KEY, currentIndex, wrapper.getCustomInputs().getKeyTagsString());
-        currentIndex = appendOptionalFilters(queryParamsMap, TAG_VALUE, currentIndex, wrapper.getCustomInputs().getValueTagsString());
-        currentIndex = appendOptionalFilters(queryParamsMap, VIRTUALIZATION_TYPE, currentIndex, wrapper.getCustomInputs().getVirtualizationType());
-        currentIndex = appendOptionalFilters(queryParamsMap, DESCRIPTION_FILTER, currentIndex, wrapper.getImageInputs().getDescription());
-
-        putCollectionInQueryMap(queryParamsMap, IMAGE_ID, imageIds);
-        putCollectionInQueryMap(queryParamsMap, OWNER, ownerIds);
-
-        currentIndex = appendOptionalFilters(queryParamsMap, IMAGE_TYPE, currentIndex, wrapper.getImageInputs().getType());
-        currentIndex = appendOptionalFilters(queryParamsMap, IS_PUBLIC, currentIndex, wrapper.getImageInputs().getIsPublic());
-        currentIndex = appendOptionalFilters(queryParamsMap, MANIFEST_LOCATION, currentIndex, wrapper.getImageInputs().getManifestLocation());
-        currentIndex = appendOptionalFilters(queryParamsMap, NAME_FILTER, currentIndex, wrapper.getImageInputs().getImageName());
-
-        appendOptionalFilters(queryParamsMap, STATE, currentIndex, wrapper.getImageInputs().getState());
-
+        if(wrapper.getCustomInputs().getPlatform()!="Not relevant")
+        {currentIndex = appendOptionalFilters(queryParamsMap, PLATFORM, currentIndex, wrapper.getCustomInputs().getPlatform());}
+        if(wrapper.getCustomInputs().getRootDeviceType()!="Not relevant")
+        {currentIndex = appendOptionalFilters(queryParamsMap, ROOT_DEVICE_TYPE, currentIndex, wrapper.getCustomInputs().getRootDeviceType());}
+        if(wrapper.getImageInputs().getType()!="Not relevant")
+        {currentIndex = appendOptionalFilters(queryParamsMap, IMAGE_TYPE, currentIndex, wrapper.getImageInputs().getType());}
+        if(wrapper.getImageInputs().getState()!="Not relevant")
+        {appendOptionalFilters(queryParamsMap, STATE, currentIndex, wrapper.getImageInputs().getState());}
         return queryParamsMap;
     }
 
@@ -190,6 +178,14 @@ public class ImageUtils {
         }
 
         return filterIndex;
+    }
+
+    private void setSpecificQueryParamsMap(Map<String, String> queryParamsMap, String[] inputArray, String specificString) {
+        if (isNotEmpty(inputArray)) {
+            for (int index = START_INDEX; index < inputArray.length; index++) {
+                queryParamsMap.put(getQueryParamsSpecificString(specificString, index), inputArray[index]);
+            }
+        }
     }
 
     public Map<String, String> getResetImageAttributeQueryParamsMap(InputsWrapper wrapper) {

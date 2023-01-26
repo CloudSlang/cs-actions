@@ -17,6 +17,7 @@
 package io.cloudslang.content.utils;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.IteratorSessionResource;
 import io.cloudslang.content.exceptions.IteratorProcessorException;
 
 import java.util.HashMap;

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -77,6 +77,7 @@ public class Inputs {
         public static final String PRODUCT_CODE_TYPE = "productCodeType";
         public static final String RAMDISK_ID = "ramdiskId";
         public static final String REGIONS_STRING = "regionsString";
+        public static final String SUBNET_IDS = "subnetIdsString";
         public static final String RESOURCE_IDS_STRING = "resourceIdsString";
         public static final String ROOT_DEVICE_NAME = "rootDeviceName";
         public static final String ROOT_DEVICE_TYPE = "rootDeviceType";
@@ -95,6 +96,14 @@ public class Inputs {
         public static final String FUNCTION_NAME = "function";
         public static final String FUNCTION_QUALIFIER = "qualifier";
         public static final String FUNCTION_PAYLOAD = "functionPayload";
+        public static final String DESCRIBE_SUBNET_FILTER_NAMES_STRING = "filterNamesString";
+        public static final String DESCRIBE_SUBNET_FILTER_VALUES_STRING = "filterValuesString";
+        public static final String SECURITY_GROUP_IDS = "securityGroupIdsString";
+        public static final String SECURITY_GROUP_NAMES = "securityGroupNamesString";
+        public static final String SECURITY_GROUP_FILTER_NAMES_STRING = "filterNamesString";
+        public static final String SECURITY_GROUP_FILTER_VALUES_STRING = "filterValuesString";
+        public static final String DESCRIBE_KEYPAIRS_FILTER_NAMES_STRING = "filterNamesString";
+        public static final String DESCRIBE_KEYPAIRS_FILTER_VALUES_STRING = "filterValuesString";
     }
 
     public static class ElasticIpInputs {
@@ -118,6 +127,15 @@ public class Inputs {
         public static final String VOLUME_TYPES_STRING = "volumeTypesString";
     }
 
+    public static class VpcInputs {
+        public static final String VPC_IDS = "vpcIds";
+        public static final String VPC_FILTER_NAMES_STRING = "filterNamesString";
+        public static final String VPC_FILTER_VALUES_STRING = "filterValuesString";
+        public static final String MAX_RESULTS = "maxResults";
+        public static final String NEXT_TOKEN = "nextToken";
+
+    }
+
     public static class IamInputs {
         public static final String IAM_INSTANCE_PROFILE_ARN = "iamInstanceProfileArn";
         public static final String IAM_INSTANCE_PROFILE_NAME = "iamInstanceProfileName";
@@ -139,6 +157,8 @@ public class Inputs {
         public static final String TYPE = "type";
         public static final String USER_GROUPS_STRING = "userGroupsString";
         public static final String USER_IDS_STRING = "userIdsString";
+        public static final String EXECUTABLE_BY = "executableBy";
+        public static final String OWNERS = "owner";
     }
 
     public static class InstanceInputs {
@@ -274,6 +294,7 @@ public class Inputs {
     public static class CloudFormationInputs {
         public static final String STACK_NAME = "stackName";
         public static final String TEMPLATE_BODY = "templateBody";
+        public static final String TEMPLATE_URL = "templateUrl";
         public static final String PARAMETERS = "parameters";
         public static final String CAPABILITIES = "capabilities";
     }
@@ -301,4 +322,34 @@ public class Inputs {
 
     }
 
+    public static class DBInstanceCommonInputs {
+        public static final String DB_INSTANCE_IDENTIFIER = "dbInstanceIdentifier";
+        public static final String ACCESS_KEY_ID = "accessKeyID";
+        public static final String ACCESS_KEY = "accessKey";
+
+    }
+
+    public static class DescribeDBInstanceInputs {
+        public static final String DESCRIBE_DB_INSTANCE = "Describe DB Instance";
+        public static final String AVAILABLE = "available";
+    }
+
+    public static class DeleteDBInstanceInputs {
+        public static final String DELETE_DB_INSTANCE = "Delete DB Instance";
+        public static final String SKIP_FINAL_SNAPSHOT = "skipFinalSnapshot";
+        public static final String FINAL_DB_SNAPSHOT_IDENTIFIER = "finalDBSnapshotIdentifier";
+        public static final String DELETE_AUTOMATED_BACKUPS = "deleteAutomatedBackups";
+    }
+
+
+    public static class CreateDBInstanceInputs {
+        public static final String CREATE_DB_INSTANCE = "Create DB Instance";
+        public static final String DB_ENGINE_NAME = "dbEngineName";
+        public static final String DB_ENGINE_VERSION = "dbEngineVersion";
+        public static final String DB_INSTANCE_SIZE = "dbInstanceSize";
+        public static final String DB_STORAGE_SIZE = "dbStorageSize";
+        public static final String DB_USERNAME = "dbUsername";
+        public static final String DB_PASSWORD = "dbPassword";
+        public static final String LICENSE_MODEL = "licenseModel";
+    }
 }

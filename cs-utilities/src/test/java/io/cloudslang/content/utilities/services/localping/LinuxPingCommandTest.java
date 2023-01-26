@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.utilities.services.localping;
@@ -69,7 +70,7 @@ public class LinuxPingCommandTest {
         LocalPingCommand linuxPingCommand = new LinuxPingCommand();
         String command = linuxPingCommand.createCommand(localPingInputs);
 
-        assertEquals("ping -w 30 -c 5 -s 100 10.0.0.1", command);
+        assertEquals("/usr/bin/ping -w 30 -c 5 -s 100 10.0.0.1", command);
     }
 
     @Test

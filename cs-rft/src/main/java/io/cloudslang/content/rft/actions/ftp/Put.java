@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -34,9 +34,13 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Descriptions.CommonInputsDescriptions.*;
 import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.*;
-import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsFTP;
+import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.FAILURE_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.RETURN_RESULT_DESC;
+import static io.cloudslang.content.rft.utils.Descriptions.FTPDescriptions.SUCCESS_DESC;
 import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.*;
+import static io.cloudslang.content.rft.utils.InputsValidation.verifyInputsFTP;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -54,22 +58,22 @@ public class Put {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = PARAM_HOSTNAME, description = PARAM_HOSTNAME_DESC) String hostName,
-                                       @Param(value = PARAM_PORT, description = PARAM_PORT_DESC) String port,
-                                       @Param(value = PARAM_LOCAL_FILE, description = PARAM_LOCAL_FILE_DESC) String localFile,
-                                       @Param(value = PARAM_REMOTE_FILE, description = PARAM_REMOTE_FILE_DESC) String remoteFile,
-                                       @Param(value = PARAM_USER, description = PARAM_USER_DESC) String user,
-                                       @Param(value = PARAM_PASSWORD, description = PARAM_PASSWORD_DESC) String password,
-                                       @Param(value = PARAM_TYPE, description = PARAM_TYPE_DESC) String type,
-                                       @Param(value = PARAM_PASSIVE, description = PARAM_PASSIVE_DESC) String passive,
-                                       @Param(value = PARAM_CHARACTER_SET, description = PARAM_CHARACTER_SET_DESC) String characterSet) {
+    public Map<String, String> execute(@Param(value = HOST_NAME, description = HOSTNAME_DESC) String hostName,
+                                       @Param(value = PORT, description = PORT_DESC) String port,
+                                       @Param(value = LOCAL_FILE, description = LOCAL_FILE_DESC) String localFile,
+                                       @Param(value = REMOTE_FILE, description = REMOTE_FILE_DESC) String remoteFile,
+                                       @Param(value = USER, description = USER_DESC) String user,
+                                       @Param(value = PASSWORD, description = PASSWORD_DESC) String password,
+                                       @Param(value = TYPE, description = TYPE_DESC) String type,
+                                       @Param(value = PASSIVE, description = PASSIVE_DESC) String passive,
+                                       @Param(value = CHARACTER_SET, description = CHARACTER_SET_DESC) String characterSet) {
 
-        hostName = defaultIfEmpty(hostName,EMPTY);
+        hostName = defaultIfEmpty(hostName, EMPTY);
         port = defaultIfEmpty(port, PORT_21);
-        localFile = defaultIfEmpty(localFile,EMPTY);
-        remoteFile = defaultIfEmpty(remoteFile,EMPTY);
-        user = defaultIfEmpty(user,EMPTY);
-        password = defaultIfEmpty(password,EMPTY);
+        localFile = defaultIfEmpty(localFile, EMPTY);
+        remoteFile = defaultIfEmpty(remoteFile, EMPTY);
+        user = defaultIfEmpty(user, EMPTY);
+        password = defaultIfEmpty(password, EMPTY);
         type = defaultIfEmpty(type, BINARY_FILE_TYPE);
         passive = defaultIfEmpty(passive, BOOLEAN_FALSE);
         passive = passive.toLowerCase();
@@ -79,7 +83,7 @@ public class Put {
         final List<String> exceptionMessages = verifyInputsFTP(hostName, port, localFile, remoteFile, user, password, type, passive, characterSet);
 
         if (!exceptionMessages.isEmpty()) {
-            Map<String,String> result =  getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE)); //REPLY CODE = 501 SYNTAX ERROR IN PARAMETERS OR ARGUMENTS
+            Map<String, String> result = getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE)); //REPLY CODE = 501 SYNTAX ERROR IN PARAMETERS OR ARGUMENTS
             result.put(FTP_REPLY_CODE, "501");
             result.put(FTP_SESSION_LOG, "");
             return result;

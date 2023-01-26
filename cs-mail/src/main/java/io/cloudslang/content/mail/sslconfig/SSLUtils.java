@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.mail.sslconfig;
@@ -100,7 +101,10 @@ public class SSLUtils {
         if(StringUtils.isNotEmpty(input.getProxyHost())) {
             ProxyUtils.setPropertiesProxy(props, input);
         }
-        Authenticator auth = new SimpleAuthenticator(input.getUsername(), input.getPassword());
+        if (!input.getAuthToken().isEmpty()) {
+            props.put(String.format(PropNames.MAIL_AUTH_MECHANISMS, Constants.IMAP), Constants.XOAUTH2);
+        }
+        Authenticator auth = new SimpleAuthenticator(input.getUsername(), input.getAuthToken().isEmpty() ? input.getPassword() : input.getAuthToken());
         Store store;
         if (input.isEnableTLS() || input.isEnableSSL()) {
             addSSLSettings(input.isTrustAllRoots(), input.getKeystore(), input.getKeystorePassword(),
@@ -250,7 +254,8 @@ public class SSLUtils {
         props.setProperty(mailStartTLSRequired, String.valueOf(startTlsRequired));
         if(!input.getTlsVersions().isEmpty()) {
             props.put(mailSocketFactory, socketFactory);
-            props.setProperty(mailSocketFactoryFallback, String.valueOf(socketFactoryFallback));
+            if (input.getAuthToken().isEmpty())
+                props.setProperty(mailSocketFactoryFallback, String.valueOf(socketFactoryFallback));
         }
     }
 

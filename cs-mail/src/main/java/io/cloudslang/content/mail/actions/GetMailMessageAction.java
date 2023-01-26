@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.mail.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -27,6 +28,7 @@ import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.services.GetMailMessageService;
 import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -48,6 +50,7 @@ public class GetMailMessageAction {
      *                                   Valid values: pop3, imap4, imap.
      * @param username                   The username for the mail host. Use the full email address as username.
      * @param password                   The password for the mail host.
+     * @param authToken                  The OAuth 2.0 token used for connecting to the email host. If given, the password input will be ignored.
      * @param folder                     The folder to read the message from (NOTE: POP3 only supports "INBOX").
      * @param trustAllRoots              Specifies whether to trust all SSL certificate authorities. This input is ignored if
      *                                   the enableSSL input is set to false. If false, make sure to have the certificate
@@ -104,6 +107,11 @@ public class GetMailMessageAction {
      * goes to failure.
      * <br><b>exception</b> - the exception message if the operation goes to failure.
      */
+
+    //IMPORTANT!
+    //FOR THE oo-base RELEASE THE VERSION FOR org.bouncycastle: bcprov-jdk15on,bcmail-jdk15on,bcpkix-jdk15on
+    //NEEDS TO BE SET AT 1.60
+
     @Action(name = "Get Mail Message",
             outputs = {
                     @Output(io.cloudslang.content.constants.OutputNames.RETURN_CODE),
@@ -128,7 +136,8 @@ public class GetMailMessageAction {
             @Param(value = InputNames.PORT) String port,
             @Param(value = InputNames.PROTOCOL) String protocol,
             @Param(value = InputNames.USERNAME, required = true) String username,
-            @Param(value = InputNames.PASSWORD, required = true) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
+            @Param(value = InputNames.AUTH_TOKEN) String authToken,
             @Param(value = InputNames.FOLDER, required = true) String folder,
             @Param(value = InputNames.TRUST_ALL_ROOTS) String trustAllRoots,
             @Param(value = InputNames.MESSAGE_NUMBER, required = true) String messageNumber,
@@ -159,6 +168,7 @@ public class GetMailMessageAction {
                 .protocol(protocol)
                 .username(username)
                 .password(password)
+                .authToken(authToken)
                 .folder(folder)
                 .trustAllRoots(trustAllRoots)
                 .messageNumber(messageNumber)
@@ -183,10 +193,22 @@ public class GetMailMessageAction {
                 .proxyPassword(proxyPassword)
                 .tlsVersion(tlsVersion)
                 .allowedCiphers(encryptionAlgorithm);
-        try {
-            return new GetMailMessageService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        if(StringUtils.isEmpty(tlsVersion))
+            try {
+                return new GetMailMessageService().execute(inputBuilder.tlsVersion("TLSv1.2").build());
+            } catch (Exception ex) {
+                try {
+                    return new GetMailMessageService().execute(inputBuilder.build());
+                } catch (Exception e){
+                    return ResultUtils.fromException(ex);
+                }
+            }
+        else {
+            try {
+                return new GetMailMessageService().execute(inputBuilder.build());
+            } catch (Exception e) {
+                return ResultUtils.fromException(e);
+            }
         }
     }
 }

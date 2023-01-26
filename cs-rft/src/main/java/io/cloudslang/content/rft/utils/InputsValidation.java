@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -15,18 +15,29 @@
 package io.cloudslang.content.rft.utils;
 
 
-import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
+import io.cloudslang.content.utils.NumberUtilities;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.cloudslang.content.rft.utils.Constants.*;
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.CONNECTION_TIMEOUT;
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.EXECUTION_TIMEOUT;
+import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.PASSWORD;
 import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.*;
-import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.PARAM_CLOSE_SESSION;
+import static io.cloudslang.content.rft.utils.Inputs.RemoteSecureCopyInputs.DESTINATION_HOST;
+import static io.cloudslang.content.rft.utils.Inputs.RemoteSecureCopyInputs.SOURCE_HOST;
+import static io.cloudslang.content.rft.utils.Inputs.RemoteSecureCopyInputs.SOURCE_PATH;
+import static io.cloudslang.content.rft.utils.Inputs.SCPInputs.LOCAL_FILE;
+import static io.cloudslang.content.rft.utils.Inputs.SCPInputs.REMOTE_FILE;
+import static io.cloudslang.content.rft.utils.Inputs.SCPInputs.*;
+import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs;
+import static io.cloudslang.content.rft.utils.Inputs.SFTPInputs.CLOSE_SESSION;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -46,45 +57,81 @@ public class InputsValidation {
 
         final List<String> exceptionMessages = new ArrayList<>();
 
-        addVerifyNotNullOrEmpty(exceptionMessages, hostName, PARAM_HOSTNAME);
+        addVerifyNotNullOrEmpty(exceptionMessages, hostName, HOST_NAME);
         addVerifyPort(exceptionMessages, port);
-        addVerifyNotNullOrEmpty(exceptionMessages, localFile, PARAM_LOCAL_FILE);
-        addVerifyNotNullOrEmpty(exceptionMessages, remoteFile, PARAM_REMOTE_FILE);
-        addVerifyNotNullOrEmpty(exceptionMessages, user, PARAM_USER);
-        addVerifyNotNullOrEmpty(exceptionMessages, password, PARAM_PASSWORD);
+        addVerifyNotNullOrEmpty(exceptionMessages, localFile, LOCAL_FILE);
+        addVerifyNotNullOrEmpty(exceptionMessages, remoteFile, REMOTE_FILE);
+        addVerifyNotNullOrEmpty(exceptionMessages, user, USER);
+        addVerifyNotNullOrEmpty(exceptionMessages, password, PASSWORD);
         addVerifyType(exceptionMessages, type);
-        addVerifyBoolean(exceptionMessages, passive, PARAM_PASSIVE);
+        addVerifyBoolean(exceptionMessages, passive, PASSIVE);
         addVerifyCharacterSet(exceptionMessages, characterSet);
 
         return exceptionMessages;
     }
 
-
-    public static List<String> verifyInputsSFTP(
+    public static List<String> verifyGetChildrenInputsSFTP(
             @Nullable final String host,
             @Nullable final String port,
             @Nullable final String username,
             @Nullable final String password,
-            @Nullable final String privateKey,
+            @Nullable final String proxyPort,
             @Nullable final String characterSet,
             @Nullable final String closeSession,
-            @Nullable final SFTPOperation sftpOperation,
             @Nullable final String firstSpecificInput,
-            @Nullable final String secondSpecificInput) {
+            @Nullable final String secondSpecificInput,
+            @Nullable final String connectionTimeout,
+            @Nullable final String executionTimeout) {
 
-        final List<String> exceptions = verifyCommonSFTPInputs(host,port,username,password,privateKey,characterSet,closeSession);
-        if (sftpOperation == SFTPOperation.GET) {
-            addVerifyNotNullOrEmpty(exceptions, firstSpecificInput, Inputs.SFTPInputs.PARAM_REMOTE_FILE);
-            addVerifyNotNullOrEmpty(exceptions, secondSpecificInput, Inputs.SFTPInputs.PARAM_LOCAL_LOCATION);
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectionTimeout, executionTimeout);
 
-        } else if (sftpOperation == SFTPOperation.PUT) {
-            addVerifyNotNullOrEmpty(exceptions, firstSpecificInput, Inputs.SFTPInputs.PARAM_REMOTE_LOCATION);
-            addVerifyNotNullOrEmpty(exceptions, secondSpecificInput, Inputs.SFTPInputs.PARAM_LOCAL_FILE);
+        addVerifyNotNullOrEmpty(exceptions, firstSpecificInput, SFTPInputs.REMOTE_PATH);
+        addVerifyNotNullOrEmpty(exceptions, secondSpecificInput, SFTPInputs.DELIMITER);
 
-        } else if (sftpOperation == SFTPOperation.GET_CHILDREN) {
-            addVerifyNotNullOrEmpty(exceptions,firstSpecificInput,Inputs.SFTPInputs.PARAM_REMOTE_PATH);
-            addVerifyNotNullOrEmpty(exceptions,secondSpecificInput,Inputs.SFTPInputs.PARAM_DELIMITER);
-        }
+        return exceptions;
+    }
+
+    public static List<String> verifySFTPUploadFileInputs(
+            @Nullable final String host,
+            @Nullable final String port,
+            @Nullable final String username,
+            @Nullable final String password,
+            @Nullable final String proxyPort,
+            @Nullable final String characterSet,
+            @Nullable final String closeSession,
+            @Nullable final String localPath,
+            @Nullable final String localFile,
+            @Nullable final String connectionTimeout,
+            @Nullable final String executionTimeout) {
+
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectionTimeout, executionTimeout);
+        addVerifyRemotePathAndFile(exceptions, localPath, localFile, SFTPInputs.LOCAL_PATH, SFTPInputs.LOCAL_FILE);
+
+        return exceptions;
+    }
+
+    public static List<String> verifySFTPDownloadFileInputs(
+            @Nullable final String host,
+            @Nullable final String port,
+            @Nullable final String username,
+            @Nullable final String password,
+            @Nullable final String proxyPort,
+            @Nullable final String characterSet,
+            @Nullable final String closeSession,
+            @Nullable final String remoteFile,
+            @Nullable final String remotePath,
+            @Nullable final String localPath,
+            @Nullable final String connectionTimeout,
+            @Nullable final String executionTimeout) {
+
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectionTimeout, executionTimeout);
+
+        addVerifyNotNullOrEmpty(exceptions, localPath, SFTPInputs.LOCAL_PATH);
+        addVerifyRemotePathAndFile(exceptions, remoteFile, remotePath, Inputs.SFTPInputs.REMOTE_FILE, Inputs.SFTPInputs.REMOTE_PATH);
+
         return exceptions;
     }
 
@@ -93,20 +140,101 @@ public class InputsValidation {
             @Nullable final String port,
             @Nullable final String username,
             @Nullable final String password,
-            @Nullable final String privateKey,
+            @Nullable final String proxyPort,
             @Nullable final String characterSet,
-            @Nullable final String closeSession) {
+            @Nullable final String closeSession,
+            @Nullable final String connectionTimeout,
+            @Nullable final String executionTimeout) {
 
         final List<String> exceptions = new ArrayList<>();
-        addVerifyNotNullOrEmpty(exceptions, host, Inputs.SFTPInputs.PARAM_HOST);
+        addVerifyNotNullOrEmpty(exceptions, host, SFTPInputs.HOST);
         addVerifyPort(exceptions, port);
-        addVerifyNotNullOrEmpty(exceptions, username, Inputs.SFTPInputs.PARAM_USERNAME);
-        addVerifyNotNullOrEmpty(exceptions, password, Inputs.SFTPInputs.PARAM_PASSWORD);
+        addVerifyNotNullOrEmpty(exceptions, username, SFTPInputs.USERNAME);
+        addVerifyNotNullOrEmpty(exceptions, password, SFTPInputs.PASSWORD);
+        addVerifyPort(exceptions, proxyPort);
         addVerifyCharacterSet(exceptions, characterSet);
-        addVerifyBoolean(exceptions,closeSession, PARAM_CLOSE_SESSION);
+        addVerifyBoolean(exceptions, closeSession, CLOSE_SESSION);
+        addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
+        addVerifyNumber(exceptions, executionTimeout, EXECUTION_TIMEOUT);
 
         return exceptions;
+    }
 
+    public static List<String> verifyRemoteCopyInputs(
+            @Nullable final String sourceHost,
+            @Nullable final String sourcePort,
+            @Nullable final String sourcePath,
+            @Nullable final String sourceProtocol,
+            @Nullable final String sourceCharacterSet,
+            @Nullable final String destinationHost,
+            @Nullable final String destinationPort,
+            @Nullable final String destinationPath,
+            @Nullable final String destinationProtocol,
+            @Nullable final String destinationCharacterSet,
+            @Nullable final String connectionTimeout,
+            @Nullable final String executionTimeout) {
+
+        final List<String> exceptions = new ArrayList<>();
+        addVerifyNotNullOrEmpty(exceptions, sourceHost, SOURCE_HOST);
+        addVerifyNotNullOrEmpty(exceptions, destinationHost, DESTINATION_HOST);
+        addVerifyPort(exceptions, sourcePort);
+        addVerifyPort(exceptions, destinationPort);
+        addVerifyNotNullOrEmpty(exceptions, sourcePath, SOURCE_PATH);
+        addVerifyNotNullOrEmpty(exceptions, destinationPath, SOURCE_PATH);
+        addVerifyProtocol(exceptions, sourceProtocol);
+        addVerifyProtocol(exceptions, destinationProtocol);
+        addVerifyCharacterSet(exceptions, sourceCharacterSet);
+        addVerifyCharacterSet(exceptions, destinationCharacterSet);
+        addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
+        addVerifyNumber(exceptions, executionTimeout, EXECUTION_TIMEOUT);
+
+        return exceptions;
+    }
+
+    public static List<String> verifySCPRemoteCopyFileInputs(
+            @Nullable final String sourceHost,
+            @Nullable final String sourcePort,
+            @Nullable final String sourcePath,
+            @Nullable final String destinationHost,
+            @Nullable final String destinationPort,
+            @Nullable final String destinationPath,
+            @Nullable final String connectionTimeout,
+            @Nullable final String executionTimeout,
+            @Nullable final String knownHostsPolicy) {
+
+        final List<String> exceptions = new ArrayList<>();
+        addVerifyNotNullOrEmpty(exceptions, sourceHost, SOURCE_HOST);
+        addVerifyNotNullOrEmpty(exceptions, destinationHost, DESTINATION_HOST);
+        addVerifyPort(exceptions, sourcePort);
+        addVerifyPort(exceptions, destinationPort);
+        addVerifyNotNullOrEmpty(exceptions, sourcePath, SOURCE_PATH);
+        addVerifyNotNullOrEmpty(exceptions, destinationPath, SOURCE_PATH);
+        addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
+        addVerifyNumber(exceptions, executionTimeout, EXECUTION_TIMEOUT);
+        addVerifyKnownHostsPolicies(exceptions, knownHostsPolicy);
+        return exceptions;
+    }
+
+    public static List<String> verifySCPCopyFileInputs(
+            @Nullable final String host,
+            @Nullable final String port,
+            @Nullable final String localFile,
+            @Nullable final String copyAction,
+            @Nullable final String remoteFile,
+            @Nullable final String connectionTimeout,
+            @Nullable final String executionTimeout,
+            @Nullable final String knownHostsPolicy) {
+
+        final List<String> exceptions = new ArrayList<>();
+        addVerifyNotNullOrEmpty(exceptions, host, HOST);
+        addVerifyNotNullOrEmpty(exceptions, localFile, LOCAL_FILE);
+        addVerifyNotNullOrEmpty(exceptions, remoteFile, REMOTE_FILE);
+        addVerifyCopyAction(exceptions, copyAction);
+        addVerifyPort(exceptions, port);
+        addVerifyNumber(exceptions, connectionTimeout, CONNECTION_TIMEOUT);
+        addVerifyNumber(exceptions, executionTimeout, EXECUTION_TIMEOUT);
+        addVerifyKnownHostsPolicies(exceptions, knownHostsPolicy);
+        return exceptions;
     }
 
     private static void addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
@@ -139,7 +267,7 @@ public class InputsValidation {
 
     private static void addVerifyType(@NotNull List<String> exceptions, @Nullable final String input) {
         if (!isValidType(input))
-            exceptions.add(String.format(EXCEPTION_INVALID_TYPE, input, PARAM_TYPE));
+            exceptions.add(String.format(EXCEPTION_INVALID_TYPE, input, TYPE));
     }
 
     private static boolean isValidType(@Nullable final String type) {
@@ -159,5 +287,137 @@ public class InputsValidation {
         }
     }
 
+    @NotNull
+    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+        if (isEmpty(input)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        } else if (!NumberUtilities.isValidInt(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+        } else if (Integer.parseInt(input) < 0) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NEGATIVE_NUMBER, input, inputName));
+        }
+        return exceptions;
+    }
 
+    private static void addVerifyProtocol(@NotNull List<String> exceptions, @Nullable final String input) {
+        String[] protocols = {"local", "scp", "sftp", "smb3"};
+        if (!Arrays.asList(protocols).contains(input.toLowerCase())) {
+            exceptions.add(String.format(EXCEPTION_INVALID_PROTOCOL, input));
+        }
+    }
+
+    private static List<String> addVerifyCopyAction(@NotNull List<String> exceptions, @Nullable final String input) {
+        String[] copyActions = {"to", "from"};
+        if (!Arrays.asList(copyActions).contains(input.toLowerCase())) {
+            exceptions.add(String.format(EXCEPTION_INVALID_COPY_ACTION, input));
+        }
+        return exceptions;
+    }
+
+    private static void addVerifyRemotePathAndFile(@NotNull List<String> exceptions, @Nullable final String remotePath, @Nullable final String remoteFile,
+                                                   @NotNull final String remotePathInput, @NotNull final String remoteFileInput) {
+        if ((isEmpty(remotePath)) && (isEmpty(remoteFile))) {
+            exceptions.add(String.format(EXCEPTION_REMOTE_PATH_FILE, remotePathInput, remoteFileInput));
+        }
+    }
+
+    private static void addVerifyKnownHostsPolicies(@NotNull List<String> exceptions, @Nullable final String input) {
+        String[] protocols = {"allow", "strict", "add"};
+        if (!Arrays.asList(protocols).contains(input.toLowerCase())) {
+            exceptions.add(String.format(EXCEPTION_INVALID_KNOWN_HOSTS_POLICIES, input));
+        }
+    }
+
+    public static List<String> verifyInputsSFTPCommand(String remotePath,
+                                                       String newRemotePath,
+                                                       String mode,
+                                                       String host,
+                                                       String port,
+                                                       String username,
+                                                       String password,
+                                                       String proxyPort,
+                                                       String characterSet,
+                                                       String closeSession,
+                                                       String connectionTimeout,
+                                                       String executionTimeout) {
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectionTimeout, executionTimeout);
+
+        addVerifyNotNullOrEmpty(exceptions, remotePath, Inputs.SFTPInputs.REMOTE_PATH);
+
+        return exceptions;
+    }
+
+    public static List<String> verifyInputsSFTP(String remoteFile,
+                                                String remotePath,
+                                                String host,
+                                                String port,
+                                                String username,
+                                                String password,
+                                                String proxyPort,
+                                                String characterSet,
+                                                String closeSession,
+                                                String connectionTimeout,
+                                                String executionTimeout) {
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectionTimeout, executionTimeout);
+        addVerifyRemotePathAndFile(exceptions, remotePath, remoteFile, Inputs.SFTPInputs.REMOTE_PATH, Inputs.SFTPInputs.REMOTE_FILE);
+        return exceptions;
+    }
+
+    public static List<String> verifyDeleteFileInputs(String remoteFile,
+                                                String remotePath,
+                                                String host,
+                                                String port,
+                                                String username,
+                                                String password,
+                                                String proxyPort,
+                                                String characterSet,
+                                                String closeSession,
+                                                String connectionTimeout,
+                                                String executionTimeout) {
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectionTimeout, executionTimeout);
+
+        addVerifyNotNullOrEmpty(exceptions, remotePath, SFTPInputs.REMOTE_PATH);
+        addVerifyNotNullOrEmpty(exceptions, remoteFile, SFTPInputs.REMOTE_FILE);
+        return exceptions;
+    }
+
+    public static List<String> verifyInputsSFTPRename(String remotePath,
+                                                      String newRemotePath,
+                                                      String host,
+                                                      String port,
+                                                      String username,
+                                                      String password,
+                                                      String proxyPort,
+                                                      String characterSet,
+                                                      String closeSession,
+                                                      String connectionTimeout,
+                                                      String executionTimeout) {
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectionTimeout, executionTimeout);
+
+        addVerifyNotNullOrEmpty(exceptions, remotePath, SFTPInputs.REMOTE_PATH);
+        addVerifyNotNullOrEmpty(exceptions, newRemotePath, SFTPInputs.NEW_REMOTE_PATH);
+
+        return exceptions;
+    }
+
+    public static List<String> verifyInputsFolders(String remotePath,
+                                                   String host,
+                                                   String port,
+                                                   String username,
+                                                   String password,
+                                                   String proxyPort,
+                                                   String characterSet,
+                                                   String closeSession,
+                                                   String connectionTimeout,
+                                                   String executionTimeout) {
+
+        final List<String> exceptions = verifyCommonSFTPInputs(host, port, username, password, proxyPort,
+                characterSet, closeSession, connectionTimeout, executionTimeout);
+        addVerifyNotNullOrEmpty(exceptions, remotePath, SFTPInputs.REMOTE_PATH);
+        return exceptions;
+    }
 }

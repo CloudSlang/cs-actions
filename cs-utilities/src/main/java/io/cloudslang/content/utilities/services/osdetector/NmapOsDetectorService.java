@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 
@@ -31,8 +32,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;

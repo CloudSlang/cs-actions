@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2023 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 package io.cloudslang.content.office365.utils;
 
@@ -47,7 +48,7 @@ public class Descriptions {
                 "represents an infinite timeout.";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout.";
-        public static final String RESPONSC_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
+        public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
@@ -100,6 +101,11 @@ public class Descriptions {
                 "tenant.";
         public static final String RESOURCES_DESC = "The resource URL\n" +
                 "Default: 'https://graph.microsoft.com'";
+        public static final String SCOPE_DESC = "The scope URL. The scope consists of a series of resource permissions separated " +
+                "by a comma (,), i.e.: 'https://graph.microsoft.com/User.Read, https://graph.microsoft.com/Sites.Read'. " +
+                "The 'https://graph.microsoft.com/.default' scope means that the user consent to all of the configured permissions " +
+                "present on the specific Azure AD Application. For the 'API' loginType, '/.default' scope should be used. \n" +
+                "Default: 'https://graph.microsoft.com/.default'";
 
         public static final String RETURN_RESULT_DESC = "The authorization token for Office 365.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";

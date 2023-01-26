@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.rft.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -23,18 +22,17 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.rft.entities.RemoteSecureCopyInputs;
 import io.cloudslang.content.rft.services.RemoteSecureCopyService;
 
+import java.util.Map;
+
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-
-
-import java.util.Map;
-
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.rft.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.rft.utils.Inputs.RemoteSecureCopyInputs.*;
 
 /**

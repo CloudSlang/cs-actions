@@ -1,17 +1,18 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+  * (c) Copyright 2022 Micro Focus
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+  *
+  * The Apache License is available at
+  * http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
  */
+
 
 
 
@@ -32,6 +33,7 @@ import io.cloudslang.content.httpclient.consume.HeadersConsumer;
 import io.cloudslang.content.httpclient.consume.HttpResponseConsumer;
 import io.cloudslang.content.httpclient.consume.StatusConsumer;
 import io.cloudslang.content.httpclient.execute.HttpClientExecutor;
+import io.cloudslang.content.httpclient.utils.ExecutionTimeout;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -57,6 +59,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -93,28 +96,53 @@ public class HttpClientService {
     private HeadersConsumer headersConsumer;
     private StatusConsumer statusConsumer;
 
-    public Map<String, String> execute(HttpClientInputs httpClientInputs) {
+    public Map<String, String> execute(HttpClientInputs httpClientInputs) throws Exception {
         initSessionsObjects(httpClientInputs);
         HttpComponents httpComponents = buildHttpComponents(httpClientInputs);
+        final Map<String, String>[] result = new Map[]{new HashMap<>()};
 
-        CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
-                httpComponents.getHttpRequestBase(),
-                httpComponents.getHttpClientContext());
+        if (httpClientInputs.getExecutionTimeout().equals("0")) {
+                    CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
+                            httpComponents.getHttpRequestBase(),
+                            httpComponents.getHttpClientContext());
 
-        Map<String, String> result = parseResponse(httpResponse,
-                httpClientInputs.getResponseCharacterSet(),
-                httpClientInputs.getDestinationFile(),
-                httpComponents.getUri(),
-                httpComponents.getHttpClientContext(),
-                httpComponents.getCookieStore(),
-                httpClientInputs.getCookieStoreSessionObject());
+                     result[0] = parseResponse(httpResponse,
+                            httpClientInputs.getResponseCharacterSet(),
+                            httpClientInputs.getDestinationFile(),
+                            httpComponents.getUri(),
+                            httpComponents.getHttpClientContext(),
+                            httpComponents.getCookieStore(),
+                            httpClientInputs.getCookieStoreSessionObject());
 
-        checkKeepAlive(httpComponents.getHttpRequestBase(),
-                httpComponents.getConnManager(),
-                httpClientInputs.getKeepAlive(),
-                httpResponse);
+                    checkKeepAlive(httpComponents.getHttpRequestBase(),
+                            httpComponents.getConnManager(),
+                            httpClientInputs.getKeepAlive(),
+                            httpResponse);
+        } else {
+            ExecutionTimeout.runWithTimeout(new Runnable() {
+                @Override
+                public void run() {
+                    CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
+                            httpComponents.getHttpRequestBase(),
+                            httpComponents.getHttpClientContext());
 
-        return result;
+                     result[0] = parseResponse(httpResponse,
+                            httpClientInputs.getResponseCharacterSet(),
+                            httpClientInputs.getDestinationFile(),
+                            httpComponents.getUri(),
+                            httpComponents.getHttpClientContext(),
+                            httpComponents.getCookieStore(),
+                            httpClientInputs.getCookieStoreSessionObject());
+
+                    checkKeepAlive(httpComponents.getHttpRequestBase(),
+                            httpComponents.getConnManager(),
+                            httpClientInputs.getKeepAlive(),
+                            httpResponse);
+                }
+            }, Integer.parseInt(httpClientInputs.getExecutionTimeout()), TimeUnit.SECONDS);
+        }
+
+        return result[0];
     }
 
     private void initSessionsObjects(HttpClientInputs httpClientInputs) {
@@ -204,6 +232,8 @@ public class HttpClientService {
                 .setKerberosLoginConfigFile(httpClientInputs.getKerberosLoginConfFile())
                 .setUsername(httpClientInputs.getUsername())
                 .setPassword(httpClientInputs.getPassword())
+                .setProxyUsername(httpClientInputs.getProxyUsername())
+                .setProxyPassword(httpClientInputs.getProxyPassword())
                 .buildAuthSchemeProviderLookup();
         httpClientBuilder.setDefaultAuthSchemeRegistry(authSchemeLookup);
 

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -21,11 +21,11 @@ import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
 import io.cloudslang.content.rft.services.SFTPCopier;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.CacheUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -37,6 +37,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CacheUtils.class)
+@PowerMockIgnore("jdk.internal.reflect.*")
 public class SFTPTest {
 
     @Mock
@@ -48,14 +49,14 @@ public class SFTPTest {
     @Mock
     private GlobalSessionObject<Map<String,SFTPConnection>> globalSessionObjectMock;
 
-    private SFTPGet sftpGet;
-    private SFTPPut sftpPut;
+    private SFTPDownloadFile sftpDownloadFile;
+    private SFTPUploadFile sftpUploadFile;
     private SFTPGetChildren sftpGetChildren;
 
     @Before
     public void setUp()  {
-        sftpGet = new SFTPGet();
-        sftpPut = new SFTPPut();
+        sftpDownloadFile = new SFTPDownloadFile();
+        sftpUploadFile = new SFTPUploadFile();
         sftpGetChildren = new SFTPGetChildren();
     }
 

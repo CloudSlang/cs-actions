@@ -169,4 +169,60 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The product was successfully unprovisioned.";
         public static final String FAILURE_DESC = "An error has occurred while trying to unprovision the product.";
     }
+
+    public static class DBInstanceCommon {
+        public static final String DB_INSTANCE_IDENTIFIER_DESC = "Name of the RDS DB instance identifier.";
+        public static final String ACCESS_KEY_ID_DESC  = "ID of the secret access key associated with your Amazon AWS or IAM account." +
+                "Example: 'AKIAIOSFODNN7EXAMPLE'";
+        public static final String ACCESS_KEY_DESC = "Secret access key associated with your Amazon AWS or IAM account." +
+                "Example: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'";
+    }
+    public static class DescribeDBInstanceAction {
+
+        public static final String DESCRIBE_DB_INSTANCE_DESC = "Returns information about provisioned RDS instances.";
+        public static final String DB_INSTANCE_STATUS_DESC = "Specifies the current state of this database.";
+        public static final String ENDPOINT_ADDRESS_DESC = "Specifies the DNS address of the DB instance.";
+        public static final String DB_INSTANCE_ARN_DESC = "The Amazon Resource Name (ARN) for the DB instance.";
+    }
+
+    public static class DeleteDBInstanceAction {
+        public static final String DELETE_DB_INSTANCE_DESC = "Delete a new DB instance.";
+        public static final String SKIP_FINAL_SNAPSHOT_DESC = "A value that indicates whether to skip the creation of a final" +
+                " DB snapshot before deleting the instance. If you enable this parameter, RDS doesn't create a DB snapshot." +
+                " If you don't enable this parameter, RDS creates a DB snapshot before the DB instance is deleted.";
+        public static final String FINAL_DB_SNAPSHOT_IDENTIFIER_DESC = "The DBSnapshotIdentifier of the new DBSnapshot " +
+                "created when the SkipFinalSnapshot parameter is disabled.";
+        public static final String DELETE_AUTOMATED_BACKUPS_DESC = "A value that indicates whether to remove automated " +
+                "backups immediately after the DB instance is deleted.";
+    }
+
+    public static class CreateDBInstanceAction {
+        public static final String LICENSE_MODEL_DESC = "License model information for this DB instance.\n" +
+                "Valid values: license-included | bring-your-own-license | general-public-license.";
+        public static final String CREATE_DB_INSTANCE_DESC = "Creates a new DB instance.";
+        public static final String DB_STORAGE_SIZE_DESC = "The amount of storage in gibibytes (GiB) to allocate for the DB instance.";
+        public static final String AVAILABILITY_ZONE_DESC = "The Availability Zone (AZ) where the database will be created.";
+        public static final String DB_INSTANCE_SIZE_DESC ="The compute and memory capacity of the DB instance.";
+        public static final String DB_ENGINE_NAME_DESC = "The name of the database engine to be used for this instance.";
+        public static final String DB_ENGINE_VERSION_DESC = "The version number of the database engine to use.";
+        public static final String DB_USERNAME_DESC = "The name for the master user.";
+        public static final String DB_PASSWORD_DESC = "The password for the master user.";
+
+    }
+
+    public static class SchedulerTime {
+
+        public static final String SCHEDULER_TIME_OPERATION_DESC = "Converts time with specified timezone and return the scheduler time.";
+        public static final String SCHEDULER_START_TIME_DESC = "Scheduler start time.";
+        public static final String TIME_ZONE_DESC = "Scheduler timeZone.";
+        public static final String TRIGGER_EXPRESSION_DESC = "Scheduler trigger expression.";
+        public static final String SCHEDULER_TIME_DESC = "Scheduler time in HH:MM:SS format";
+
+    }
+
+    public static class GetTimeFormat {
+        public static final String GET_TIME_FORMAT_OPERATION_DESC = "This operation converts the unix time into given format.";
+        public static final String EPOCH_TIME_DESC = "Epoch time.";
+        public static final String DATE_FORMAT_DESC = "Date format.";
+    }
 }

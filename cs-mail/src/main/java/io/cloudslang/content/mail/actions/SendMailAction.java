@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 package io.cloudslang.content.mail.actions;
@@ -29,6 +30,7 @@ import io.cloudslang.content.mail.entities.SendMailInput;
 import io.cloudslang.content.mail.services.SendMailService;
 import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.utils.ResultUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -58,6 +60,7 @@ public class SendMailAction {
      * @param attachments                A delimited separated list of files to attach (must be full path).
      * @param user                       If SMTP authentication is needed, the username to use.
      * @param password                   If SMTP authentication is needed, the password to use.
+     * @param authToken                  The OAuth 2.0 token used for connecting to the email host. If given, the password input will be ignored.
      * @param delimiter                  A delimiter to separate the email recipients and the attachments. Default value: ','.
      * @param characterSet               The character set encoding for the entire email which includes subject, body,
      *                                   attached file name and the attached file.
@@ -96,6 +99,11 @@ public class SendMailAction {
      * operation goes to failure.
      * <br><b>exception</b> - the exception message if the operation goes to failure.
      */
+
+    //IMPORTANT!
+    //FOR THE oo-base RELEASE THE VERSION FOR org.bouncycastle: bcprov-jdk15on,bcmail-jdk15on,bcpkix-jdk15on
+    //NEEDS TO BE SET AT 1.60
+    
     @Action(name = "Send Mail",
             outputs = {
                     @Output(OutputNames.RETURN_RESULT),
@@ -126,7 +134,8 @@ public class SendMailAction {
             @Param(value = InputNames.HEADERS_ROW_DELIMITER) String rowDelimiter,
             @Param(value = InputNames.HEADERS_COLUMN_DELIMITER) String columnDelimiter,
             @Param(value = InputNames.USERNAME) String user,
-            @Param(value = InputNames.PASSWORD) String password,
+            @Param(value = InputNames.PASSWORD, encrypted = true) String password,
+            @Param(value = InputNames.AUTH_TOKEN) String authToken,
             @Param(value = InputNames.DELIMITER) String delimiter,
             @Param(value = InputNames.CHARACTER_SET) String characterSet,
             @Param(value = InputNames.CONTENT_TRANSFER_ENCODING) String contentTransferEncoding,
@@ -158,6 +167,7 @@ public class SendMailAction {
                 .columnDelimiter(columnDelimiter)
                 .user(user)
                 .password(password)
+                .authToken(authToken)
                 .delimiter(delimiter)
                 .characterSet(characterSet)
                 .contentTransferEncoding(contentTransferEncoding)
@@ -173,10 +183,23 @@ public class SendMailAction {
                 .proxyPassword(proxyPassword)
                 .tlsVersion(tlsVersion)
                 .allowedCiphers(encryptionAlgorithm);
-        try {
-            return new SendMailService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        if(StringUtils.isEmpty(tlsVersion))
+            try {
+                return new SendMailService().execute(inputBuilder.tlsVersion("TLSv1.2").build());
+            } catch (Exception e) {
+                try{
+                    return new SendMailService().execute(inputBuilder.build());
+                } catch (Exception ex) {
+                    return ResultUtils.fromException(ex);
+                }
+            }
+        else {
+            try {
+                return new SendMailService().execute(inputBuilder.build());
+            } catch (Exception e) {
+                return ResultUtils.fromException(e);
+            }
         }
+
     }
 }

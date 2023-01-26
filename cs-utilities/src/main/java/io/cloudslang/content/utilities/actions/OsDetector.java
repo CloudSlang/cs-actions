@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2022 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 
 
@@ -43,20 +44,20 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.entities.InputDefaults.X_509_HOSTNAME_VERIFIER;
-import static io.cloudslang.content.httpclient.HttpClientInputs.AUTH_TYPE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KERBEROS_CONFIG_FILE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KERBEROS_LOGIN_CONFIG_FILE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KERBEROS_SKIP_PORT_CHECK;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.KEYSTORE_PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_PORT;
-import static io.cloudslang.content.httpclient.HttpClientInputs.PROXY_USERNAME;
-import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_KEYSTORE;
-import static io.cloudslang.content.httpclient.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.HttpClientInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.AUTH_TYPE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KERBEROS_CONFIG_FILE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KERBEROS_LOGIN_CONFIG_FILE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KERBEROS_SKIP_PORT_CHECK;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.ssh.utils.Constants.ALLOWED_CIPHERS;
 import static io.cloudslang.content.ssh.utils.Constants.DEFAULT_CONNECT_TIMEOUT;
 import static io.cloudslang.content.ssh.utils.Constants.DEFAULT_KNOWN_HOSTS_PATH;

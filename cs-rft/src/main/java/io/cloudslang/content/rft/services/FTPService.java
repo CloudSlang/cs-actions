@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -29,7 +29,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.PARAM_TYPE;
+import static io.cloudslang.content.rft.utils.Inputs.FTPInputs.TYPE;
 import static io.cloudslang.content.rft.utils.Constants.*;
 
 public class FTPService {
@@ -168,7 +168,7 @@ public class FTPService {
         } else if (type.equalsIgnoreCase("ascii")) {
             setASCIIFileType(ftp);
         } else {
-            throw new FTPException(String.format(EXCEPTION_INVALID_TYPE, type, PARAM_TYPE));
+            throw new FTPException(String.format(EXCEPTION_INVALID_TYPE, type, TYPE));
         }
     }
 

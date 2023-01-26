@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 Micro Focus, L.P.
+ * (c) Copyright 2023 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 
 package io.cloudslang.content.office365.utils;
 
@@ -79,7 +80,6 @@ public final class InputsValidation {
 
     @NotNull
     public static List<String> verifySendEmailInputs(@Nullable final String clientId,
-                                                     @Nullable final String clientSecret,
                                                      @NotNull final String proxyPort,
                                                      @Nullable final String userPrincipalName,
                                                      @Nullable final String userId,
@@ -93,7 +93,6 @@ public final class InputsValidation {
         final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trust_all_roots,
                 connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
 
-        addVerifyNotNullOrEmpty(exceptionMessages, clientSecret, CLIENT_SECRET);
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         addVerifyNotNullOrEmpty(exceptionMessages, clientId, CLIENT_ID);
 

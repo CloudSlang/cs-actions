@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2021 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.cloudslang.content.mail.constants;
 
 public final class PropNames {
@@ -35,4 +36,5 @@ public final class PropNames {
     public static final String MAIL_PROXY_PORT = "mail.%s.proxy.port";
     public static final String MAIL_PROXY_USER = "mail.%s.proxy.user";
     public static final String MAIL_PROXY_PASSWORD = "mail.%s.proxy.password";
+    public static final String MAIL_AUTH_MECHANISMS = "mail.%s.auth.mechanisms";
 }
