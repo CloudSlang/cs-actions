@@ -57,6 +57,14 @@ public final class Outputs extends OutputNames {
         public static final String ROUTE_LIST = "routeList";
         public static final String ROUTE_ARRAY = "routeArray";
 
+        //Get Deployment List
+        public static final String DEPLOYMENT_LIST ="deploymentList";
+        public static final String DEPLOYMENT_ARRAY = "deploymentArray";
+
+        //Get Deployment Details
+        public static final String METADATA = "metadata";
+        public static final String SPEC = "spec";
+        public static final String STATUS = "status";
     }
 }
 
