@@ -314,7 +314,6 @@ public class Descriptions {
         public static final String NAMESPACE_OUTPUT_DESC = "The deployment namespace.";
         public static final String UID_OUTPUT_DESC = "The deployment uid.";
         public static final String KIND_OUTPUT_DESC = "The deployment kind.";
-        public static final String METADATA_DESC = "The deployment metadata.";
         public static final String SPEC_DESC = "The deployment spec.";
         public static final String STATUS_DESC = "The deployment status.";
     }

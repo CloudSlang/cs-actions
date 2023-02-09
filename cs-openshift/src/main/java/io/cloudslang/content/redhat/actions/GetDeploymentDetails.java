@@ -45,13 +45,8 @@ public class GetDeploymentDetails {
                     @Output(value = NAMESPACE_OUTPUT, description = NAMESPACE_OUTPUT_DESC),
                     @Output(value = UID_OUTPUT, description = UID_OUTPUT_DESC),
 
-                    @Output(value = METADATA, description = DOCUMENT_OUTPUT_DESC),
-                    @Output(value = SPEC, description = KIND_OUTPUT_DESC),
-                    @Output(value = STATUS, description = NAME_OUTPUT_DESC),
-
-
-
-            },
+                    @Output(value = SPEC, description = SPEC_DESC),
+                    @Output(value = STATUS, description = STATUS_DESC),},
             responses = {
                     @Response(text = ResponseNames.SUCCESS, field = OutputNames.RETURN_CODE, value = ReturnCodes.SUCCESS,
                             matchType = MatchType.COMPARE_EQUAL, responseType = ResponseType.RESOLVED, description = SUCCESS_DESC),
@@ -63,7 +58,7 @@ public class GetDeploymentDetails {
             //Specific input
             @Param(value = HOST, description = HOST_DESC, required = true) String host,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
-            @Param(value = NAME, description = NAME_DESC, required = true) String deploymentName,
+            @Param(value = NAME, description = NAME_DESC, required = true) String name,
             @Param(value = NAMESPACE, description = NAMESPACE_DESC, required = true) String namespace,
 
             //Common Inputs
@@ -87,7 +82,7 @@ public class GetDeploymentDetails {
         try {
 
             result = new HttpClientGetAction().execute(
-                    host + GET_DEPLOYMENT_STATUS_ENDPOINT_1 + namespace + GET_DEPLOYMENT_STATUS_ENDPOINT_2 + deploymentName,
+                    host + GET_DEPLOYMENT_STATUS_ENDPOINT_1 + namespace + GET_DEPLOYMENT_STATUS_ENDPOINT_2 + name,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,

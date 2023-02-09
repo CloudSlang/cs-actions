@@ -379,15 +379,10 @@ public class OpenshiftService {
                 String uidPathResponse = JsonPath.read(jsonResponse.toString(), uidPath);
                 httpResults.put(UID_OUTPUT, uidPathResponse);
 
-                //Metadata output
-                String metadataPath = "$.metadata";
-                LinkedHashMap<String,String> metadataPathResponse = JsonPath.read(jsonResponse.toString(), metadataPath);
-                httpResults.put(METADATA,  new JSONObject(metadataPathResponse).toString());
-
                 //Spec output
                 String specPath = "$.spec";
                 LinkedHashMap<String,String> specPathResponse = JsonPath.read(jsonResponse.toString(), specPath);
-                httpResults.put(SPEC, new JSONObject(specPathResponse).toString());
+                httpResults.put(SPEC, new JSONObject(specPathResponse).toString().replace("\\",""));
 
                 //Status output
                 String statusPath = "$.status";
