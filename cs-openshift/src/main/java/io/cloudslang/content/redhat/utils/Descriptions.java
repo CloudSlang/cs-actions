@@ -304,7 +304,7 @@ public class Descriptions {
         public static final String GET_DEPLOYMENT_DETAILS = "Get Deployment Details";
         public static final String GET_DEPLOYMENT_DETAILS_DESC = "This operation returns the details of a given deployment name.";
         public static final String NAMESPACE_DESC = "The object name and auth scope, such as for teams and projects.";
-        public static final String DEPLOYMENT_NAME_DESC = "The deployment name from which to get the details";
+        public static final String NAME_DESC = "The deployment name from which to get the details";
         public static final String DOCUMENT_OUTPUT_DESC = "All the information related to the deployment in json format.";
         public static final String SUCCESS_DESC = "The deployment details were returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the deployment details.";

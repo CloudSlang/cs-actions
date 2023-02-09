@@ -63,8 +63,8 @@ public class GetDeploymentDetails {
             //Specific input
             @Param(value = HOST, description = HOST_DESC, required = true) String host,
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
+            @Param(value = NAME, description = NAME_DESC, required = true) String deploymentName,
             @Param(value = NAMESPACE, description = NAMESPACE_DESC, required = true) String namespace,
-            @Param(value = DEPLOYMENT_NAME, description = DEPLOYMENT_NAME_DESC, required = true) String deploymentName,
 
             //Common Inputs
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
