@@ -25,7 +25,7 @@ import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.*;
 import static io.cloudslang.content.redhat.utils.Constants.CommonConstants.AUTH_TOKEN;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.*;
 import static io.cloudslang.content.redhat.utils.Descriptions.Common.STATUS_CODE_DESC;
-import static io.cloudslang.content.redhat.utils.Descriptions.GetDeplomentList.*;
+import static io.cloudslang.content.redhat.utils.Descriptions.GetDeploymentList.*;
 import static io.cloudslang.content.redhat.utils.Outputs.OutputNames.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 

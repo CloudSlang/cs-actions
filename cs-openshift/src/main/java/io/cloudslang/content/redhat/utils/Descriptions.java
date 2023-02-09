@@ -287,7 +287,7 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while deleting the route.";
     }
 
-    public static class GetDeplomentList {
+    public static class GetDeploymentList {
         public static final String GET_DEPLOYMENT_LIST = "Get Deployment List";
         public static final String GET_DEPLOYMENT_LIST_DESCRIPTION = "This operation returns a list of deployments present in a given namespace.";
         public static final String NAMESPACE_DESC = "The object name and auth scope, such as for teams and projects.";
