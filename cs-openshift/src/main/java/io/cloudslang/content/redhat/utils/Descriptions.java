@@ -317,37 +317,6 @@ public class Descriptions {
         public static final String SPEC_DESC = "The deployment spec.";
         public static final String STATUS_DESC = "The deployment status.";
     }
-
-    public static class GetDeploymentList {
-        public static final String GET_DEPLOYMENT_LIST = "Get Deployment List";
-        public static final String GET_DEPLOYMENT_LIST_DESCRIPTION = "This operation returns a list of deployments present in a given namespace.";
-        public static final String NAMESPACE_DESC = "The object name and auth scope, such as for teams and projects.";
-        public static final String DOCUMENT_OUTPUT_DESC = "All the information related to the deployment list in json format.";
-        public static final String SUCCESS_DESC = "The deployment list was returned successfully.";
-        public static final String FAILURE_DESC = "There was an error while trying to retrieve the deployment list.";
-        public static final String DEPLOYMENT_LIST_DESC = "The comma separated list of deployments uids.";
-        public static final String DEPLOYMENT_ARRAY_DESC = "A list containing pairs of deployments name and uids in JSON format.";
-        public static final String RETURN_RESULT_DESC = "The deployment list was returned successfully.";
-        public static final String EXCEPTION_DESC = "An issue was encountered during your query. Please check the exception output for more information.";
-    }
-
-    public static class  GetDeploymentDetails{
-        public static final String GET_DEPLOYMENT_DETAILS = "Get Deployment Details";
-        public static final String GET_DEPLOYMENT_DETAILS_DESC = "This operation returns the details of a given deployment name.";
-        public static final String NAMESPACE_DESC = "The object name and auth scope, such as for teams and projects.";
-        public static final String NAME_DESC = "The deployment name from which to get the details";
-        public static final String DOCUMENT_OUTPUT_DESC = "All the information related to the deployment in json format.";
-        public static final String SUCCESS_DESC = "The deployment details were returned successfully.";
-        public static final String FAILURE_DESC = "There was an error while trying to retrieve the deployment details.";
-        public static final String RETURN_RESULT_DESC = "The deployment details were returned successfully.";
-        public static final String EXCEPTION_DESC = "An issue was encountered during your query. Please check the exception output for more information.";
-        public static final String NAME_OUTPUT_DESC = "The deployment name.";
-        public static final String NAMESPACE_OUTPUT_DESC = "The deployment namespace.";
-        public static final String UID_OUTPUT_DESC = "The deployment uid.";
-        public static final String KIND_OUTPUT_DESC = "The deployment kind.";
-        public static final String SPEC_DESC = "The deployment spec.";
-        public static final String STATUS_DESC = "The deployment status.";
-    }
     public static class  UpdateDeployment{
         public static final String UPDATE_DEPLOYMENT = "Get Deployment Details";
         public static final String UPDATE_DEPLOYMENT_DESC = "This operation partially update the specified given deployment.";
