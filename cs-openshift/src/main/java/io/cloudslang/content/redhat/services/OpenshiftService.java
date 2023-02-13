@@ -163,6 +163,32 @@ public class OpenshiftService {
         }
 
     }
+    public static void addDeploymentListResults(Map<String, String> httpResults) {
+        try {
+            if (!(httpResults.get(RETURN_RESULT).isEmpty())) {
+
+                StringBuilder deploymentList = new StringBuilder();
+                List<JsonObject> deploymentPairList = new ArrayList<>();
+
+                extractValue(httpResults, deploymentList, deploymentPairList);
+
+                //populate the podList and podArray outputs
+                httpResults.put(DEPLOYMENT_LIST, deploymentList.toString());
+                httpResults.put(DEPLOYMENT_ARRAY, deploymentPairList.toString());
+
+                //overwrite the returnResult output with a success message
+                httpResults.put(RETURN_RESULT, SUCCESSFUL_RETURN_RESULT);
+
+            }
+
+        } catch (Exception e) {
+            //in case an error arises during the parsing, populate the custom outputs with empty values
+            setFailureCustomResults(httpResults, DEPLOYMENT_LIST, DEPLOYMENT_ARRAY, DOCUMENT_OUTPUT);
+
+            throw new RuntimeException(e);
+        }
+
+    }
 
     public static void addPodTemplateListResults(Map<String, String> httpResults) {
         try {
