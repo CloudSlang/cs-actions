@@ -138,6 +138,7 @@ public class OpenshiftService {
         }
 
     }
+
     public static void addDeploymentListResults(Map<String, String> httpResults) {
         try {
             if (!(httpResults.get(RETURN_RESULT).isEmpty())) {
