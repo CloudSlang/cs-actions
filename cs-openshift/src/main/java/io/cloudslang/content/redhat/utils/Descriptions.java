@@ -317,4 +317,15 @@ public class Descriptions {
         public static final String SPEC_DESC = "The deployment spec.";
         public static final String STATUS_DESC = "The deployment status.";
     }
+    public static class  UpdateDeployment{
+        public static final String UPDATE_DEPLOYMENT = "Get Deployment Details";
+        public static final String UPDATE_DEPLOYMENT_DESC = "This operation partially update the specified given deployment.";
+        public static final String NAMESPACE_DESC = "The object name and auth scope, such as for teams and projects.";
+        public static final String NAME_DESC = "The deployment name to update.";
+        public static final String SUCCESS_DESC = "The deployment was updated successfully.";
+        public static final String DEFINITION_DESCRIPTION = "JSON definitions consisting of the deployment specifications.";
+        public static final String FAILURE_DESC = "There was an error while trying to update the deployment.";
+        public static final String RETURN_RESULT_DESC = "The deployment was updated successfully.";
+        public static final String EXCEPTION_DESC = "An issue was encountered during your query. Please check the exception output for more information.";
+    }
 }
