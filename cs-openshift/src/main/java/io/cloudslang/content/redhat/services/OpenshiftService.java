@@ -153,7 +153,7 @@ public class OpenshiftService {
                 httpResults.put(DEPLOYMENT_ARRAY, deploymentPairList.toString());
 
                 //overwrite the returnResult output with a success message
-                httpResults.put(RETURN_RESULT, SUCCESSFUL_RETURN_RESULT);
+                httpResults.put(RETURN_RESULT, Descriptions.GetDeploymentList.RETURN_RESULT_DESC);
 
             }
 
