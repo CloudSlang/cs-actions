@@ -66,7 +66,7 @@
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <junit.version>4.12</junit.version>
         <cs-commons.version>0.0.7</cs-commons.version>
-        <winrm4j.version>0.13.0-mf</winrm4j.version>
+        <winrm4j.version>0.13.1-mf</winrm4j.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
