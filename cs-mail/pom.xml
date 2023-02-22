@@ -15,7 +15,8 @@
     * limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -123,44 +124,38 @@
             <artifactId>javax.mail</artifactId>
             <version>1.6.0</version>
         </dependency>
-        <!--
-                IMPORTANT!
-                FOR THE oo-base RELEASE THE VERSION FOR org.bouncycastle: bcprov-jdk15on,bcmail-jdk15on,bcpkix-jdk15on
-                NEEDS TO BE SET AT 1.60
-        -->
-        
-                <dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcmail-jdk15on</artifactId>
+            <version>1.70</version>
+            <exclusions>
+                <exclusion>
                     <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcprov-jdk15on</artifactId>
-                    <version>1.70</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcmail-jdk15on</artifactId>
-                    <version>1.70</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>org.bouncycastle</groupId>
-                            <artifactId>bcprov-jdk16</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                <dependency>
-                    <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcpkix-jdk15on</artifactId>
-                    <version>1.70</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.htmlparser</groupId>
-                    <artifactId>htmlparser</artifactId>
-                    <version>2.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>io.cloudslang.content</groupId>
-                    <artifactId>cs-commons</artifactId>
-                    <version>${cs-commons.version}</version>
-                </dependency>
-                <!-- Testing -->
+                    <artifactId>bcprov-jdk16</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
+        <dependency>
+            <groupId>org.htmlparser</groupId>
+            <artifactId>htmlparser</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>${cs-commons.version}</version>
+        </dependency>
+        <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
