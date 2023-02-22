@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.mail.actions;
 
 import com.hp.oo.sdk.content.annotations.Action;
@@ -150,6 +149,14 @@ public class SendMailAction {
             @Param(value = InputNames.PROXY_USERNAME) String proxyUsername,
             @Param(value = InputNames.PROXY_PASSWORD) String proxyPassword,
             @Param(value = InputNames.TLS_VERSION) String tlsVersion) {
+
+        try {
+            String encryptionAlgorithmPropertyValue = System.getProperty("mail.encryptionAlgorithm");
+            if (StringUtils.isNotEmpty(encryptionAlgorithmPropertyValue)) {
+                encryptionAlgorithm = encryptionAlgorithmPropertyValue;
+            }
+        } catch (Exception e) { }
+
         SendMailInput.Builder inputBuilder = new SendMailInput.Builder()
                 .hostname(hostname)
                 .port(port)
