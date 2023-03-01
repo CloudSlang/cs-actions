@@ -82,7 +82,7 @@ public class TagUtils {
         String[] valueTagsStringArray = getStringsArray(valueTagsString, EMPTY, delimiter);
         validateAgainstDifferentArraysLength(keyTagsStringArray, valueTagsStringArray, KEY_TAGS_STRING, VALUE_TAGS_STRING);
 
-        if (isNotEmpty(keyTagsStringArray) && isNotEmpty(valueTagsStringArray)) {
+        if (isNotEmpty(keyTagsStringArray) ) {
 
             if (keyTagsStringArray.length > MAXIMUM_TAGS_ALLOWED) {
                 throw new RuntimeException(MORE_THAN_50_TAGS_ERROR_MESSAGE);
@@ -93,10 +93,10 @@ public class TagUtils {
                         false, KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
                 queryParamsMap.put(getQueryParamsSpecificString(KEY, index), currentKey);
 
-                String emptyOrRelevant = NOT_RELEVANT.equalsIgnoreCase(valueTagsStringArray[index]) ? EMPTY : valueTagsStringArray[index];
-                String currentValue = getValidKeyOrValueTag(emptyOrRelevant, EMPTY, false, false, false,
-                        KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);
-                queryParamsMap.put(getQueryParamsSpecificString(VALUE, index), currentValue);
+               // String emptyOrRelevant = NOT_RELEVANT.equalsIgnoreCase(valueTagsStringArray[index]) ? EMPTY : valueTagsStringArray[index];
+                /*String currentValue = getValidKeyOrValueTag(emptyOrRelevant, EMPTY, false, false, false,
+                        KEY_TAG_LENGTH_CONSTRAIN, VALUE_TAG_LENGTH_CONSTRAIN);*/
+                queryParamsMap.put(getQueryParamsSpecificString(VALUE, index), "");
             }
         }
     }
