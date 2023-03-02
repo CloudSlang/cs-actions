@@ -360,6 +360,7 @@
         <module>cs-xml</module>
         <module>cs-cyberark</module>
         <module>cs-openshift</module>
+        <module>cs-sharepoint</module>
     </modules>
 
 </project>
