@@ -19,6 +19,16 @@ public class Constants {
     public static final String API = "api";
     public static final String NATIVE = "native";
     public static final String NEW_LINE = "\n";
+    public static final String SLASH ="/";
+    public static final String ZERO = "0";
+    public static final String CHANGE_IT="changeit";
+    public static final String UTF8 = "UTF-8";
+    public static final String SEARCH = "search";
+    public static final String NEGATIVE_RETURN_CODE = "-1";
+    public static final String ID = "id";
+    public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
+    public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
+    public static final String AUTHORIZATION_BEARER = "Authorization: Bearer ";
     public static final String DEFAULT_LOGIN_TYPE = "Native";
     public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_PROXY_PORT = "8080";
@@ -26,10 +36,15 @@ public class Constants {
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
     public static final String STRICT = "strict";
+    public static final String ALLOW_ALL = "allow_all";
     public static final String TLS = "TLS";
     public static final String STATUS_CODE_201 = "201";
     public static final String ATTACHMENTS_SPLIT = "Attachments";
     public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
+
+    public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
+    public static final String SITES_ENDPOINT = "/sites";
+
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
@@ -37,6 +52,8 @@ public class Constants {
     public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+    public static final String EXCEPTION_INVALID_HOSTNAME_VERIFIER = "%s for %s input is not a valid x509HostnameVerifier value. The valid values are: 'strict','allow_all'.";
+
     public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
     public static final String POST = "POST";
