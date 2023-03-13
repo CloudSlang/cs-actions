@@ -156,12 +156,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>msal4j</artifactId>
-            <version>1.11.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-httpclient-commons</artifactId>
             <version>0.0.3-SNAPSHOT</version>
