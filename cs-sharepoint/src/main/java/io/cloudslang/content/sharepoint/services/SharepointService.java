@@ -1,24 +1,40 @@
 package io.cloudslang.content.sharepoint.services;
 
-import org.apache.commons.lang3.StringUtils;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.jayway.jsonpath.JsonPath;
 
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.sharepoint.utils.Constants.EXCEPTION;
+import static io.cloudslang.content.sharepoint.utils.Constants.EXCEPTION_SITE_ID;
 import static io.cloudslang.content.sharepoint.utils.Constants.NEGATIVE_RETURN_CODE;
-import static io.cloudslang.content.sharepoint.utils.Outputs.STATUS_CODE;
+import static io.cloudslang.content.sharepoint.utils.Outputs.SITE_ID;
 
 public class SharepointService {
-    public static void processHttpResult(Map<String, String> httpResults) {
+    public static void processHttpGetSideIdByName(Map<String, String> httpResults) {
 
-        String statusCode = httpResults.get(STATUS_CODE);
+        //Process the return result output
+        String returnResult = httpResults.get(RETURN_RESULT);
+        try {
+            if (!(returnResult.isEmpty())) {
+                httpResults.put(RETURN_RESULT, returnResult);
 
-        if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
-            if (StringUtils.isEmpty(httpResults.get(EXCEPTION)))
-                httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
-            httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
+                JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
+
+                try {
+                    String namespacePath = "$.value[0].id";
+                    String namespacePathResponse = JsonPath.read(jsonResponse.toString(), namespacePath);
+                    httpResults.put(SITE_ID, namespacePathResponse);
+                } catch (Exception e) {
+                    httpResults.put(SITE_ID, EXCEPTION_SITE_ID);
+                    httpResults.put(RETURN_CODE,NEGATIVE_RETURN_CODE);
+                }
+            }
+        } catch (
+                Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
