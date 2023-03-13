@@ -51,8 +51,39 @@ public class Descriptions {
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
                 "default value will be used. You should not use this for method=HEAD or OPTIONS.\n" +
                 "Default value: UTF-8";
-
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String HOST_DESC = "The url of the service to which API calls are made.\n" +
+                "Example: https://api.domain:6443";
+        public static final String AUTH_TOKEN_DESC = "Token used to authenticate to the Sharepoint environment.";
+        public static final String TLS_VERSION_DESC = "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
+                "is set to 'HTTP'. This capability is provided “as is”, please see product documentation for further information." +
+                "Valid values: TLSv1, TLSv1.1, TLSv1.2. \n" +
+                "Default value: TLSv1.2.  \n";
+        public static final String ALLOWED_CIPHERS_DESC = "A list of ciphers to use. The value of this input will be ignored " +
+                "if 'tlsVersion' does " +
+                "not contain 'TLSv1.2'. This capability is provided “as is”, please see product documentation for further security considerations." +
+                "In order to connect successfully to the target host, it should accept at least one of the following ciphers. If this is not the case, it is " +
+                "the user's responsibility to configure the host accordingly or to update the list of allowed ciphers. \n" +
+                "Default value: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, " +
+                "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, " +
+                "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, " +
+                "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256, " +
+                "TLS_RSA_WITH_AES_128_CBC_SHA256.";
+        public static final String X509_HOSTNAME_VERIFIER_DESC = "Specifies the way the server hostname must match a domain name in " +
+                "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
+                "\"allow_all\" to skip any checking. For the value \"browser_compatible\" the hostname verifier " +
+                "works the same way as Curl and Firefox. The hostname must match either the first CN, or any of " +
+                "the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only " +
+                "difference between \"browser_compatible\" and \"strict\" is that a wildcard (such as \"*.foo.com\") " +
+                "with \"browser_compatible\" matches all subdomains, including \"a.b.foo.com\".";
+        public static final String KEYSTORE_DESC = "The pathname of the Java KeyStore file. You only need this if " +
+                "the server requires client authentication. If the protocol (specified by the 'url') is not 'https' " +
+                "or if trustAllRoots is 'true' this input is ignored. Format: Java KeyStore (JKS)";
+        public static final String KEYSTORE_PASSWORD_DESC = "The password associated with the KeyStore file. If " +
+                "trustAllRoots is false and keystore is empty, keystorePassword default will be supplied.";
+        public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in seconds) to allow the client to complete the execution " +
+                "of an API call. A value of '0' disables this feature. \n" +
+                "Default: 60  \n";
     }
 
     public static class GetAuthorizationToken {
