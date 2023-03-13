@@ -56,17 +56,13 @@ public class InputsValidation {
                                                   @Nullable final String trustAllRoots,
                                                   @Nullable final String x509HostnameVerifier,
                                                   @Nullable final String connectTimeout,
-                                                  @Nullable final String socketTimeout,
-                                                  @NotNull final String connectionsMaxPerRoute,
-                                                  @NotNull final String connectionsMaxTotal) {
+                                                  @Nullable final String socketTimeout) {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
         addVerifyBoolean(exceptionMessages, trustAllRoots, TRUST_ALL_ROOTS);
         addVerifyx509HostnameVerifier(exceptionMessages, x509HostnameVerifier, X509_HOSTNAME_VERIFIER);
         addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
         addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
-        addVerifyNumber(exceptionMessages, connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE);
-        addVerifyNumber(exceptionMessages, connectionsMaxTotal, CONNECTIONS_MAX_TOTAL);
         return exceptionMessages;
     }
 

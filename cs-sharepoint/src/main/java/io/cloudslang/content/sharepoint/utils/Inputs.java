@@ -26,12 +26,11 @@ public class Inputs {
         public static final String TRUST_PASSWORD = "trustPassword";
         public static final String CONNECT_TIMEOUT = "connectTimeout";
         public static final String SOCKET_TIMEOUT = "socketTimeout";
-        public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
-        public static final String CONNECTIONS_MAX_TOTAL = "connectionsMaxTotal";
-        public static final String RESPONSE_CHARACTER_SET = "responseCharacterSet";
         public static final String SESSION_COOKIES = "httpClientCookieSession";
         public static final String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
+        public static final String TLS_VERSION = "tlsVersion";
+        public static final String ALLOWED_CIPHERS = "allowedCiphers";
     }
 
     public static class AuthorizationInputs {

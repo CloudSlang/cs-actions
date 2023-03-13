@@ -41,6 +41,7 @@ public class GetSiteIdByName {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
+                    @Output(value = SITE_ID, description = SITE_ID_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)},
             responses =
                     {
@@ -60,13 +61,11 @@ public class GetSiteIdByName {
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
                                        @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
                                        @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
-                                       @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
-                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal,
-                                       @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet,
+                                       @Param(value = TLS_VERSION, description = TLS_VERSION_DESCRIPTION) String tlsVersion,
+                                       @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESCRIPTION) String allowedCiphers,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC)
-                                       SerializableSessionObject sessionCookies,
+                                       @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC)
                                        GlobalSessionObject sessionConnectionPool) {
         {
@@ -79,22 +78,15 @@ public class GetSiteIdByName {
             proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
             trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
             x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
-            trustPassword = defaultIfEmpty(trustPassword, CHANGE_IT);
-            connectTimeout = defaultIfEmpty(connectTimeout, ZERO);
-            executionTimeout = defaultIfEmpty(executionTimeout, ZERO);
-            connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
-            connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
-            responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+            connectTimeout = defaultIfEmpty(connectTimeout, DEFAULT_TIMEOUT);
+            executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
 
-            final List<String> exceptionMessages = verifyCommonInputs(proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, executionTimeout, connectionsMaxPerRoute, connectionsMaxTotal);
-            if (!exceptionMessages.isEmpty()) {
+            final List<String> exceptionMessages = verifyCommonInputs(proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, executionTimeout);
+            if (!exceptionMessages.isEmpty())
                 return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-            }
 
-            Map<String, String> result = new HashMap<>();
-
+            Map<String, String> result;
             try {
-
                 result = new HttpClientGetAction().execute(
                         GRAPH_API_ENDPOINT + SITES_ENDPOINT,
                         ANONYMOUS,

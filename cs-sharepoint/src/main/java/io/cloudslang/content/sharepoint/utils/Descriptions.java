@@ -54,6 +54,20 @@ public class Descriptions {
         public static final String SESSION_CONNECTION_POOL_DESC = "The GlobalSessionObject that holds the http client pooling connection manager.";
         public static final String SESSION_COOKIES_DESC = "The session object that holds the cookies if the useCookies input is true.";
 
+        public static final String TLS_VERSION_DESCRIPTION = "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
+                "is set to 'HTTP'. This capability is provided “as is”, please see product documentation for further information." +
+                "Valid values: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3 \n" +
+                "Default value: TLSv1.2  \n";
+        public static final String ALLOWED_CIPHERS_DESCRIPTION = "A list of ciphers to use. The value of this input will be ignored " +
+                "if 'tlsVersion' does " +
+                "not contain 'TLSv1.2'. This capability is provided “as is”, please see product documentation for further security considerations." +
+                "In order to connect successfully to the target host, it should accept at least one of the following ciphers. If this is not the case, it is " +
+                "the user's responsibility to configure the host accordingly or to update the list of allowed ciphers. \n" +
+                "Default value: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, " +
+                "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, " +
+                "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, " +
+                "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256, " +
+                "TLS_RSA_WITH_AES_128_CBC_SHA256.";
     }
 
     public static class GetAuthorizationToken {
@@ -84,12 +98,12 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
 
-    public static class GetSideIdByName{
-        public static final String RETURN_RESULT_DESC = "Site id given by name";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while retrieving the site id.";
+    public static class GetSideIdByName {
+        public static final String RETURN_RESULT_DESC = "Information related to the specific site in json format";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site id.";
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
         public static final String SITE_NAME_DESC = "Name of the site from which ID can be obtained";
-
+        public static final String SITE_ID_DESC = "The id of the site for which the name was provided.";
         public static final String SUCCESS_DESC = "Site id was returned successfully";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve site id.";
     }

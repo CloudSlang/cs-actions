@@ -21,8 +21,7 @@ public class Constants {
     public static final String NEW_LINE = "\n";
     public static final String SLASH ="/";
     public static final String ZERO = "0";
-    public static final String CHANGE_IT="changeit";
-    public static final String UTF8 = "UTF-8";
+    public static final String DEFAULT_TIMEOUT = "60";
     public static final String SEARCH = "search";
     public static final String NEGATIVE_RETURN_CODE = "-1";
     public static final String ID = "id";
@@ -30,7 +29,6 @@ public class Constants {
     public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
     public static final String AUTHORIZATION_BEARER = "Authorization: Bearer ";
     public static final String DEFAULT_LOGIN_TYPE = "Native";
-    public static final String DEFAULT_RESOURCE = "https://graph.microsoft.com";
     public static final String DEFAULT_PROXY_PORT = "8080";
     public static final String DEFAULT_SCOPE = "https://graph.microsoft.com/.default";
     public static final String BOOLEAN_FALSE = "false";
@@ -53,7 +51,7 @@ public class Constants {
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String EXCEPTION_INVALID_HOSTNAME_VERIFIER = "%s for %s input is not a valid x509HostnameVerifier value. The valid values are: 'strict','allow_all'.";
-
+    public static final String EXCEPTION_SITE_ID = "Site id was not found in the JSON response.";
     public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
     public static final String POST = "POST";
