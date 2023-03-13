@@ -106,5 +106,7 @@ public class Descriptions {
         public static final String SITE_ID_DESC = "The id of the site for which the name was provided.";
         public static final String SUCCESS_DESC = "Site id was returned successfully";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve site id.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+
     }
 }
