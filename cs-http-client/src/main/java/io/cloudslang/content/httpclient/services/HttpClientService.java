@@ -276,7 +276,6 @@ public class HttpClientService {
             httpClientBuilder.setConnectionReuseStrategy(DefaultConnectionReuseStrategy.INSTANCE);
         } else {
             httpClientBuilder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE);
-            httpClientBuilder.disableConnectionState();
         }
 
         httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
