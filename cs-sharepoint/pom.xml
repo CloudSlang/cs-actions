@@ -167,12 +167,6 @@
             <version>2.10</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.10</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <build>
