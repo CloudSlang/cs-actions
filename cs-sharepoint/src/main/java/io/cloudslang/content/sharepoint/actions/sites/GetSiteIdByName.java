@@ -50,7 +50,7 @@ public class GetSiteIdByName {
                             @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
                     })
 
-    public Map<String, String> execute(@Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC) String authToken,
+    public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = SITE_NAME, required = true, description = SITE_NAME_DESC) String siteName,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -98,8 +98,8 @@ public class GetSiteIdByName {
                         proxyPort,
                         proxyUsername,
                         proxyPassword,
-                        EMPTY,
-                        EMPTY,
+                        tlsVersion,
+                        allowedCiphers,
                         trustAllRoots,
                         x509HostnameVerifier,
                         trustKeystore,
