@@ -39,9 +39,12 @@ public class Constants {
     public static final String STATUS_CODE_201 = "201";
     public static final String ATTACHMENTS_SPLIT = "Attachments";
     public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
+    public static final String PARENT_REFERENCE = "parentReference";
+    public static final String NAME = "name";
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
-    public static final String SITES_ENDPOINT = "/sites";
+    public static final String SITES_ENDPOINT = "/sites/";
+    public static final String ROOT_DRIVE_ENDPOINT = "/drive/root";
 
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
@@ -57,26 +60,4 @@ public class Constants {
     public static final String POST = "POST";
     public static final String PATCH = "PATCH";
     public static final String DELETE = "DELETE";
-    public static final String HOST = "host";
-    public static final String TLS_VERSION = "tlsVersion";
-    public static final String ALLOWED_CIPHERS = "allowedCiphers";
-    public static final String TRUST_ALL_ROOTS = "trustAllRoots";
-    public static final String X509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
-    public static final String TRUST_KEYSTORE = "trustKeystore";
-    public static final String TRUST_PASSWORD = "trustPassword";
-    public static final String KEYSTORE = "keystore";
-    public static final String KEYSTORE_PASSWORD = "keystorePassword";
-    public static final String CONNECT_TIMEOUT = "connectTimeout";
-    public static final String EXECUTION_TIMEOUT = "executionTimeout";
-    public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
-    public static final String CONNECTIONS_MAX_TOTAL = "connectionsMaxTotal";
-    public static final String SESSION_COOKIES = "httpClientCookieSession";
-    public static final String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
-    public static final String APPLICATION_JSON = "application/json";
-    public static final String CONTENT_TYPE = "Content-Type:";
-    public static final String AUTHORIZATION_BEARER = "Authorization: Bearer ";
-    public static final String CONNECTIONS_MAX_PER_ROUTE_VALUE = "20";
-    public static final String CONNECTIONS_MAX_TOTAL_VALUE = "200";
-    public static final String NEGATIVE_RETURN_CODE = "-1";
-    public static final String EXCEPTION = "exception";
 }
