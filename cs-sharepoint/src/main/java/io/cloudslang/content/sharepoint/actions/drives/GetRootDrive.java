@@ -37,13 +37,14 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetRootDrive;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpResult;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.NAME;
-import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.EXCEPTION_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.STATUS_CODE_DESC;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -55,7 +56,7 @@ public class GetRootDrive {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = WEB_URL, description = WEB_URL_DESC),
                     @Output(value = DRIVE_NAME, description = DRIVE_NAME_DESC),
@@ -138,7 +139,7 @@ public class GetRootDrive {
                     sessionConnectionPool
             );
 
-            processHttpGetRootDrive(result);
+            processHttpGetRootDrive(result, EXCEPTION_DESC);
             return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

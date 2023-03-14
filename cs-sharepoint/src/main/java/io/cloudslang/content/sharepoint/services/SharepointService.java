@@ -17,13 +17,15 @@ import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 
 public class SharepointService {
 
-    public static void processHttpResult(Map<String, String> httpResults) {
+    public static void processHttpResult(Map<String, String> httpResults, String exceptionMessage) {
 
         String statusCode = httpResults.get(STATUS_CODE);
 
         if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
-            if (StringUtils.isEmpty(httpResults.get(EXCEPTION)))
+            if (StringUtils.isEmpty(httpResults.get(EXCEPTION))) {
                 httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
+                httpResults.put(RETURN_RESULT, exceptionMessage);
+            }
             httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
         }
     }
@@ -53,9 +55,9 @@ public class SharepointService {
         }
     }
 
-    public static void processHttpGetRootDrive(Map<String, String> httpResults) throws JsonProcessingException {
+    public static void processHttpGetRootDrive(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
 
-        processHttpResult(httpResults);
+        processHttpResult(httpResults, exceptionMessage);
 
         if (!httpResults.get(STATUS_CODE).equals("200"))
             return;
