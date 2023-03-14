@@ -87,7 +87,7 @@ public class InputsValidation {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValidIpPort(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_PROXY, PROXY_PORT));
+            exceptions.add(String.format(EXCEPTION_INVALID_PROXY, input));
         }
         return exceptions;
     }

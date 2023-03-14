@@ -53,4 +53,7 @@ public class Inputs {
     public static class GetRootDrive{
         public static final String SITE_ID = "siteId";
     }
+    public static class GetSiteNameById{
+        public static final String SITE_ID = "siteId";
+    }
 }
