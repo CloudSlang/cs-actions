@@ -45,6 +45,9 @@ public class Inputs {
         public static final String RESOURCE = "resource";
         public static final String SCOPE = "scope";
     }
+    public static class GetRootSiteInputs{
+        public static final String AUTH_TOKEN = "authToken";
+    }
 
     public static class GetSiteIdByName{
         public static final String SITE_NAME = "siteName";
