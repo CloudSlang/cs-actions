@@ -18,4 +18,8 @@ public class Outputs {
     public static final String STATUS_CODE = "statusCode";
     public static final String EXCEPTION = "exception";
     public static final String AUTH_TOKEN = "authToken";
+
+    public static final String SITE_ID = "siteId";
+    public static final String SITE_NAME = "siteName";
+    public static final String WEB_URL = "webUrl";
 }
