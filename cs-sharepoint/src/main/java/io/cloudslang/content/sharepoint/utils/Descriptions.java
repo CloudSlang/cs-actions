@@ -129,4 +129,14 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Root drive was returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the root drive.";
     }
+
+    public static class GetSiteNameById{
+        public static final String SITE_ID_DESC = "ID of the site from which display name can be obtained";
+        public static final String SUCCESS_DESC = "Site name was returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the site name.";
+        public static final String RETURN_RESULT_DESC = "Information related to the specific site in JSON format";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site display name.";
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+    }
 }

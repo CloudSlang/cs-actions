@@ -36,8 +36,6 @@ public class SharepointService {
         String returnResult = httpResults.get(RETURN_RESULT);
         try {
             if (!(returnResult.isEmpty())) {
-                httpResults.put(RETURN_RESULT, returnResult);
-
                 JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
 
                 try {
@@ -46,6 +44,29 @@ public class SharepointService {
                     httpResults.put(SITE_ID, namespacePathResponse);
                 } catch (Exception e) {
                     httpResults.put(SITE_ID, EXCEPTION_SITE_ID);
+                    httpResults.put(RETURN_CODE,NEGATIVE_RETURN_CODE);
+                }
+            }
+        } catch (
+                Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void processHttpGetSiteNameById(Map<String, String> httpResults) {
+
+        //Process the return result output
+        String returnResult = httpResults.get(RETURN_RESULT);
+        try {
+            if (!(returnResult.isEmpty())) {
+                JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
+
+                try {
+                    String namespacePath = "$.displayName";
+                    String namespacePathResponse = JsonPath.read(jsonResponse.toString(), namespacePath);
+                    httpResults.put(SITE_NAME, namespacePathResponse);
+                } catch (Exception e) {
+                    httpResults.put(SITE_NAME, EXCEPTION_SITE_ID);
                     httpResults.put(RETURN_CODE,NEGATIVE_RETURN_CODE);
                 }
             }
