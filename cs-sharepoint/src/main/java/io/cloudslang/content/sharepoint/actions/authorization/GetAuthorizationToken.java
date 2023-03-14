@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions;
+package io.cloudslang.content.sharepoint.actions.authorization;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +40,7 @@ import static io.cloudslang.content.sharepoint.utils.Inputs.AuthorizationInputs.
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyAuthorizationInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
+import static io.cloudslang.content.sharepoint.utils.Outputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Outputs.EXCEPTION;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;

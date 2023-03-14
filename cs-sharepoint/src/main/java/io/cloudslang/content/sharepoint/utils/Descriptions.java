@@ -25,11 +25,7 @@ public class Descriptions {
                 "A certificate is trusted even if no trusted certification authority issued it.";
         public static final String X509_DESC = "Specifies the way the server hostname must match a domain name in " +
                 "the subject's Common Name (CN) or subjectAltName field of the X.509 certificate. Set this to " +
-                "\"allow_all\" to skip any checking. For the value \"browser_compatible\" the hostname verifier " +
-                "works the same way as Curl and Firefox. The hostname must match either the first CN, or any of " +
-                "the subject-alts. A wildcard can occur in the CN, and in any of the subject-alts. The only " +
-                "difference between \"browser_compatible\" and \"strict\" is that a wildcard (such as \"*.foo.com\") " +
-                "with \"browser_compatible\" matches all subdomains, including \"a.b.foo.com\".";
+                "\"allow_all\" to skip any checking";
         public static final String TRUST_KEYSTORE_DESC = "The pathname of the Java TrustStore file. This contains " +
                 "certificates from other parties that you expect to communicate with, or from Certificate Authorities" +
                 " that you trust to identify other parties.  If the protocol (specified by the 'url') is not 'https' " +
@@ -38,14 +34,15 @@ public class Descriptions {
                 "trustAllRoots is false and trustKeystore is empty, trustPassword default will be supplied.";
         public static final String CONN_MAX_TOTAL_DESC = "The maximum limit of connections in total.";
         public static final String CONN_MAX_ROUTE_DESC = "The maximum limit of connections on a per route basis.";
-        public static final String KEEP_ALIVE_DESC = "Specifies whether to create a shared connection that will be " +
-                "used in subsequent calls. If keepAlive is false, the already open connection will be used and after" +
-                " execution it will close it.";
+
         public static final String SOCKET_TIMEOUT_DESC = "The timeout for waiting for data (a maximum period " +
                 "inactivity between two consecutive data packets), in seconds. A socketTimeout value of '0' " +
                 "represents an infinite timeout.";
         public static final String CONNECT_TIMEOUT_DESC = "The time to wait for a connection to be established, " +
                 "in seconds. A timeout value of '0' represents an infinite timeout.";
+        public static final String EXECUTION_TIMEOUT_DESC = "The amount of time (in seconds) to allow the client to complete the execution." +
+                " A value of '0' disables this feature. \n" +
+                "Default: 60  \n";
         public static final String RESPONSE_CHARACTER_SET_DESC = "The character encoding to be used for the HTTP response. " +
                 "If responseCharacterSet is empty, the charset from the 'Content-Type' HTTP response header will be used. " +
                 "If responseCharacterSet is empty and the charset from the HTTP response Content-Type header is empty, the " +
@@ -53,6 +50,24 @@ public class Descriptions {
                 "Default value: UTF-8";
 
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+
+        public static final String SESSION_CONNECTION_POOL_DESC = "The GlobalSessionObject that holds the http client pooling connection manager.";
+        public static final String SESSION_COOKIES_DESC = "The session object that holds the cookies if the useCookies input is true.";
+
+        public static final String TLS_VERSION_DESCRIPTION = "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
+                "is set to 'HTTP'. This capability is provided “as is”, please see product documentation for further information." +
+                "Valid values: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3 \n" +
+                "Default value: TLSv1.2  \n";
+        public static final String ALLOWED_CIPHERS_DESCRIPTION = "A list of ciphers to use. The value of this input will be ignored " +
+                "if 'tlsVersion' does " +
+                "not contain 'TLSv1.2'. This capability is provided “as is”, please see product documentation for further security considerations." +
+                "In order to connect successfully to the target host, it should accept at least one of the following ciphers. If this is not the case, it is " +
+                "the user's responsibility to configure the host accordingly or to update the list of allowed ciphers. \n" +
+                "Default value: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, " +
+                "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, " +
+                "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, " +
+                "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256, " +
+                "TLS_RSA_WITH_AES_128_CBC_SHA256.";
     }
 
     public static class GetAuthorizationToken {
@@ -77,7 +92,6 @@ public class Descriptions {
         public static final String RETURN_RESULT_DESC = "The authorization token for Office 365.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
-        public static final String AUTH_TOKEN_TYPE_DESC = "The authentication token type.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the token.";
 
         public static final String SUCCESS_DESC = "Token generated successfully.";
@@ -93,6 +107,47 @@ public class Descriptions {
         public static final String AUTH_TOKEN_DESC = "The auth token for login.";
         public static final String SITE_ID_DESC = "ID of the requested site.";
         public static final String SITE_NAME_DESC = "Name of the site.";
-        public static final String WEB_URL_DESC = "URL of the site.";
+        public static final String WEB_URL_DESC = "URL of the site."
+
+    public static class GetSideIdByName {
+        public static final String RETURN_RESULT_DESC = "Information related to the specific site in json format";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site id.";
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+        public static final String SITE_NAME_DESC = "Name of the site from which ID can be obtained";
+        public static final String SITE_ID_DESC = "The id of the site for which the name was provided.";
+        public static final String SUCCESS_DESC = "Site id was returned successfully";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve site id.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+
+    }
+
+    public static class GetRootDrive {
+
+        public static final String NAME = "Get the root drive metadata by site id";
+
+        public static final String SITE_ID_DESC = "The id of the site from which to retrieve the root drive";
+
+        public static final String RETURN_RESULT_DESC = "Information related to the specific root drive metadata in json format";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the root drive.";
+        public static final String WEB_URL_DESC = "Root drive's web url";
+        public static final String DRIVE_NAME_DESC = "Root drive's name";
+        public static final String DRIVE_TYPE_DESC = "Root drive's type";
+        public static final String DRIVE_ID_DESC = "Root drive's id";
+
+        public static final String AUTH_TOKEN_DESC = "The authentication token";
+
+        public static final String SUCCESS_DESC = "Root drive was returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the root drive.";
+    }
+
+    public static class GetSiteNameById{
+        public static final String SITE_ID_DESC = "ID of the site from which display name can be obtained";
+        public static final String SUCCESS_DESC = "Site name was returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the site name.";
+        public static final String RETURN_RESULT_DESC = "Information related to the specific site in JSON format";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site display name.";
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
     }
 }

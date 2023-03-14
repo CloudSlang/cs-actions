@@ -20,6 +20,19 @@ public class Inputs {
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
+        public static final String TRUST_ALL_ROOTS = "trustAllRoots";
+        public static final String X509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
+        public static final String TRUST_KEYSTORE = "trustKeystore";
+        public static final String TRUST_PASSWORD = "trustPassword";
+        public static final String CONNECT_TIMEOUT = "connectTimeout";
+        public static final String SOCKET_TIMEOUT = "socketTimeout";
+        public static final String SESSION_COOKIES = "httpClientCookieSession";
+        public static final String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
+        public static final String EXECUTION_TIMEOUT = "executionTimeout";
+        public static final String TLS_VERSION = "tlsVersion";
+        public static final String ALLOWED_CIPHERS = "allowedCiphers";
+
+        public static final String AUTH_TOKEN = "authToken";
     }
 
     public static class AuthorizationInputs {
@@ -36,4 +49,14 @@ public class Inputs {
         public static final String AUTH_TOKEN = "authToken";
     }
 
+    public static class GetSiteIdByName{
+        public static final String SITE_NAME = "siteName";
+    }
+
+    public static class GetRootDrive{
+        public static final String SITE_ID = "siteId";
+    }
+    public static class GetSiteNameById{
+        public static final String SITE_ID = "siteId";
+    }
 }

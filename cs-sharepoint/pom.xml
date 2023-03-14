@@ -143,6 +143,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>io.cloudslang.content</groupId>
+            <artifactId>cs-commons</artifactId>
+            <version>${cs-commons.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
