@@ -39,9 +39,12 @@ public class Constants {
     public static final String STATUS_CODE_201 = "201";
     public static final String ATTACHMENTS_SPLIT = "Attachments";
     public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
+    public static final String PARENT_REFERENCE = "parentReference";
+    public static final String NAME = "name";
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
-    public static final String SITES_ENDPOINT = "/sites";
+    public static final String SITES_ENDPOINT = "/sites/";
+    public static final String ROOT_DRIVE_ENDPOINT = "/drive/root";
 
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";

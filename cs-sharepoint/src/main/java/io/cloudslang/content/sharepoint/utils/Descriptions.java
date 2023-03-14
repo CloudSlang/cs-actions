@@ -109,4 +109,24 @@ public class Descriptions {
         public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
 
     }
+
+    public static class GetRootDrive {
+
+        public static final String NAME = "Get the root drive metadata by site id";
+
+        public static final String SITE_ID_DESC = "The id of the site from which to retrieve the root drive";
+
+        public static final String RETURN_RESULT_DESC = "Information related to the specific root drive metadata in json format";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the root drive.";
+        public static final String WEB_URL_DESC = "Root drive's web url";
+        public static final String DRIVE_NAME_DESC = "Root drive's name";
+        public static final String DRIVE_TYPE_DESC = "Root drive's type";
+        public static final String DRIVE_ID_DESC = "Root drive's id";
+
+        public static final String AUTH_TOKEN_DESC = "The authentication token";
+
+        public static final String SUCCESS_DESC = "Root drive was returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the root drive.";
+    }
 }
