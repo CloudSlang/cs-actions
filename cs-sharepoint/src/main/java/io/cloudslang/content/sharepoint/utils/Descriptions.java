@@ -111,7 +111,7 @@ public class Descriptions {
         public static final String WEB_URL_DESC = "URL of the site.";
     }
 
-    public static class GetSideIdByName {
+    public static class GetSiteIdByName {
         public static final String RETURN_RESULT_DESC = "Information related to the specific site in json format";
         public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site id.";
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
