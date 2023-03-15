@@ -111,7 +111,7 @@ public class Descriptions {
         public static final String WEB_URL_DESC = "URL of the site.";
     }
 
-    public static class GetSiteIdByName {
+    public static class GetSideIdByName {
         public static final String RETURN_RESULT_DESC = "Information related to the specific site in json format";
         public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site id.";
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
@@ -149,5 +149,25 @@ public class Descriptions {
         public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
         public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site display name.";
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
+    }
+
+    public static class GetSiteDetails {
+
+        public static final String NAME = "Get the details of a site.";
+
+        public static final String SITE_ID_DESC = "The id of the site from which to retrieve the details.";
+
+        public static final String RETURN_RESULT_DESC = "Details of the site.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site details.";
+        public static final String WEB_URL_DESC = "Web url of the site.";
+        public static final String SITE_NAME_DESC = "Name of the site.";
+        public static final String SITE_ID_OUT_DESC = "Id of the site.";
+        public static final String SITE_DISPLAY_NAME_DESC = "Display name of the site.";
+
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+
+        public static final String SUCCESS_DESC = "Site details were returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the site details.";
     }
 }

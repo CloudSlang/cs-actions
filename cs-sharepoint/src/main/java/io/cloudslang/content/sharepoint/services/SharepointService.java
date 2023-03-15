@@ -97,4 +97,19 @@ public class SharepointService {
         httpResults.put(DRIVE_TYPE, json.get(PARENT_REFERENCE).get(DRIVE_TYPE).asText());
         httpResults.put(DRIVE_ID, json.get(PARENT_REFERENCE).get(DRIVE_ID).asText());
     }
+
+    public static void processHttpSiteDetails(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        httpResults.put(WEB_URL, json.get(WEB_URL).asText());
+        httpResults.put(SITE_ID, json.get(ID).asText());
+        httpResults.put(SITE_NAME, json.get(NAME).asText());
+        httpResults.put(SITE_DISPLAY_NAME, json.get(DISPLAY_NAME).asText());
+    }
 }

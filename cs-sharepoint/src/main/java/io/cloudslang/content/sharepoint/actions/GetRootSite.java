@@ -115,8 +115,8 @@ public class GetRootSite {
                     EMPTY,
 
                     FALSE,
-                    CONNECTION_MAX_PER_ROUTE,
-                    CONNECTIONS_MAX_TOTAL_VALUE,
+                    CONNECTIONS_MAX_PER_ROUTE_CONST,
+                    CONNECTIONS_MAX_TOTAL_CONST,
 
                     EMPTY,
                     EMPTY,
