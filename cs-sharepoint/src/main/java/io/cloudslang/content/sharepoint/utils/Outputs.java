@@ -23,4 +23,6 @@ public class Outputs {
     public static final String SITE_NAME = "siteName";
     public static final String SITE_DISPLAY_NAME = "siteDisplayName";
     public static final String WEB_URL = "webUrl";
+    public static final String SITE_IDS = "siteIds";
+    public static final String SITE_URLS = "siteUrls";
 }

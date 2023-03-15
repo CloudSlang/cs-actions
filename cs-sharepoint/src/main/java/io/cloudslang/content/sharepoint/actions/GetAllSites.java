@@ -23,8 +23,6 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.utils.OutputUtilities;
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 
 import java.util.Map;
 
@@ -41,10 +39,14 @@ import static io.cloudslang.content.httpclient.utils.Constants.ANONYMOUS;
 import static io.cloudslang.content.httpclient.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
+import static io.cloudslang.content.sharepoint.services.GetAllSitesService.addAllSitesResult;
+import static io.cloudslang.content.sharepoint.services.GetAllSitesService.setFailureCustomResults;
 import static io.cloudslang.content.sharepoint.services.GetRootSiteService.processHttpResult;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.Endpoints.GET_ALL_SITES;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.RETURN_CODE_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAllSites.SITE_IDS_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAllSites.SITE_URLS_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootSite.EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootSite.FAILURE_DESC;
@@ -59,10 +61,8 @@ public class GetAllSites {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = SITE_ID, description = SITE_ID_DESC),
-                    @Output(value = SITE_NAME, description = SITE_NAME_DESC),
-                    @Output(value = SITE_DISPLAY_NAME, description = SITE_DISPLAY_NAME_DESC),
-                    @Output(value = WEB_URL, description = WEB_URL_DESC),
+                    @Output(value = SITE_IDS, description = SITE_IDS_DESC),
+                    @Output(value = SITE_URLS, description = SITE_URLS_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
@@ -138,12 +138,19 @@ public class GetAllSites {
             );
 
             processHttpResult(result);
-            JSONObject jsonObject = (JSONObject) JSONValue.parse(result.get(RETURN_RESULT));
-            result.put(SITE_ID, jsonObject.getAsString("id"));
-            result.put(SITE_NAME, jsonObject.getAsString("name"));
-            result.put(SITE_DISPLAY_NAME, jsonObject.getAsString("displayName"));
-            result.put(WEB_URL, jsonObject.getAsString("webUrl"));
 
+            if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
+                if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
+                    addAllSitesResult(result);
+                else {
+                    setFailureCustomResults(result, SITE_IDS, SITE_URLS);
+                    result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
+                    result.put(EXCEPTION, result.get(RETURN_RESULT));
+                    result.put(RETURN_RESULT, EXCEPTION_DESC);
+                }
+
+            } else
+                setFailureCustomResults(result, SITE_IDS, SITE_URLS);
             return result;
 
         } catch (Exception exception) {
