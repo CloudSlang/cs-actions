@@ -17,9 +17,12 @@ package io.cloudslang.content.sharepoint.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.sharepoint.utils.Descriptions;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
@@ -29,6 +32,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class SharepointService {
 
@@ -126,4 +130,60 @@ public class SharepointService {
         httpResults.put(SITE_NAME, json.get(NAME).asText());
         httpResults.put(SITE_DISPLAY_NAME, json.get(DISPLAY_NAME).asText());
     }
+    public static class GetAllSitesService{
+        public static void processHttpAllSites(Map<String,String> result){
+            processHttpResult(result, Descriptions.GetSiteDetails.EXCEPTION_DESC);
+
+            if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
+                if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
+                    addAllSitesResult(result);
+                else {
+                    setFailureCustomResults(result, SITE_IDS, SITE_URLS);
+                    result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
+                    result.put(EXCEPTION, result.get(RETURN_RESULT));
+                    result.put(RETURN_RESULT, Descriptions.GetRootSite.EXCEPTION_DESC);
+                }
+
+            } else
+                setFailureCustomResults(result, SITE_IDS, SITE_URLS);
+        }
+
+        private static String DISPLAY_NAME = "displayName";
+        private static String ID = "id";
+        private static String WEB_URL = "webUrl";
+        public static void addAllSitesResult(Map<String, String> result){
+            JsonObject jsonResponse = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
+            JsonArray elementArray = jsonResponse.getAsJsonArray("value");
+
+            // arrays that store the pairs
+            JsonArray siteIds = new JsonArray();
+            JsonArray siteUrls = new JsonArray();
+
+            for(JsonElement jsonElement : elementArray){
+                //create objects to be added in array
+                JsonObject siteId = new JsonObject();
+                JsonObject siteUrl = new JsonObject();
+
+                //add fields to object and add object to array
+                siteId.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME) );
+                siteId.add(ID, jsonElement.getAsJsonObject().get(ID) );
+                siteIds.add(siteId);
+
+                //add fields to object and add object to array
+                siteUrl.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME) );
+                siteUrl.add(WEB_URL, jsonElement.getAsJsonObject().get(WEB_URL) );
+                siteUrls.add(siteUrl);
+            }
+            //put the arrays as strings in the final result
+            result.put(SITE_IDS, siteIds.toString());
+            result.put(SITE_URLS, siteUrls.toString());
+
+        }
+        public static void setFailureCustomResults(Map<String, String> httpResults, String... inputs) {
+
+            for (String input : inputs)
+                httpResults.put(input, EMPTY);
+        }
+    }
+
 }

@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions;
+package io.cloudslang.content.sharepoint.actions.sites;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -41,7 +41,7 @@ import static io.cloudslang.content.httpclient.utils.Constants.ANONYMOUS;
 import static io.cloudslang.content.httpclient.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
-import static io.cloudslang.content.sharepoint.services.GetRootSiteService.processHttpResult;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpResult;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.Endpoints.GET_ROOT_SITE;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.RETURN_CODE_DESC;
@@ -137,7 +137,7 @@ public class GetRootSite {
                     sessionConnectionPool
             );
 
-            processHttpResult(result);
+            processHttpResult(result, EXCEPTION_DESC);
             JSONObject jsonObject = (JSONObject) JSONValue.parse(result.get(RETURN_RESULT));
             result.put(SITE_ID, jsonObject.getAsString("id"));
             result.put(SITE_NAME, jsonObject.getAsString("name"));
