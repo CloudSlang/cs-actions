@@ -14,6 +14,7 @@
  */
 package io.cloudslang.content.sharepoint.utils;
 
+import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,11 +24,18 @@ import java.util.List;
 
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.AuthorizationInputs.*;
-import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class InputsValidation {
+
+    private static List<String> x509HostnameVerifiers = new ArrayList<String>() {{
+        add(STRICT);
+        add(ALLOW_ALL);
+    }};
+
     @NotNull
     public static List<String> verifyAuthorizationInputs(@Nullable final String loginType, @Nullable final String clientId, @Nullable final String clientSecret, @Nullable final String username, @Nullable final String password, @NotNull final String proxyPort) {
         final List<String> exceptionMessages = new ArrayList<>();
@@ -41,6 +49,20 @@ public class InputsValidation {
             addVerifyNotNullOrEmpty(exceptionMessages, clientSecret, CLIENT_SECRET);
         }
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
+        return exceptionMessages;
+    }
+    @NotNull
+    public static List<String> verifyCommonInputs(@Nullable final String proxyPort,
+                                                  @Nullable final String trustAllRoots,
+                                                  @Nullable final String x509HostnameVerifier,
+                                                  @Nullable final String connectTimeout,
+                                                  @Nullable final String socketTimeout) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
+        addVerifyBoolean(exceptionMessages, trustAllRoots, TRUST_ALL_ROOTS);
+        addVerifyx509HostnameVerifier(exceptionMessages, x509HostnameVerifier, X509_HOSTNAME_VERIFIER);
+        addVerifyNumber(exceptionMessages, connectTimeout, CONNECT_TIMEOUT);
+        addVerifyNumber(exceptionMessages, socketTimeout, SOCKET_TIMEOUT);
         return exceptionMessages;
     }
 
@@ -65,8 +87,35 @@ public class InputsValidation {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValidIpPort(input)) {
-            exceptions.add(String.format(EXCEPTION_INVALID_PROXY, PROXY_PORT));
+            exceptions.add(String.format(EXCEPTION_INVALID_PROXY, input));
         }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+        if (isEmpty(input)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        } else if (!isValid(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_BOOLEAN, input, inputName));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyNumber(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+        if (isEmpty(input)) {
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
+        } else if (!NumberUtilities.isValidInt(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyx509HostnameVerifier(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        if (x509HostnameVerifiers.stream().noneMatch(input::equalsIgnoreCase))
+            exceptions.add(String.format(EXCEPTION_INVALID_HOSTNAME_VERIFIER, input, inputName));
         return exceptions;
     }
 
