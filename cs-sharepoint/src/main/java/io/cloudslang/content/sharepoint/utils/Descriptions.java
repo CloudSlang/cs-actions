@@ -97,6 +97,7 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Token generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
+
     public static class GetRootSite {
         public static final String RETURN_RESULT_DESC = "The root site for Office 365.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
@@ -109,6 +110,7 @@ public class Descriptions {
         public static final String SITE_NAME_DESC = "Name of the site.";
         public static final String WEB_URL_DESC = "URL of the site.";
     }
+
     public static class GetSideIdByName {
         public static final String RETURN_RESULT_DESC = "Information related to the specific site in json format";
         public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site id.";
@@ -124,9 +126,7 @@ public class Descriptions {
     public static class GetRootDrive {
 
         public static final String NAME = "Get the root drive metadata by site id";
-
         public static final String SITE_ID_DESC = "The id of the site from which to retrieve the root drive";
-
         public static final String RETURN_RESULT_DESC = "Information related to the specific root drive metadata in json format";
         public static final String STATUS_CODE_DESC = "The HTTP status code for the request";
         public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the root drive.";
@@ -134,15 +134,15 @@ public class Descriptions {
         public static final String DRIVE_NAME_DESC = "Root drive's name";
         public static final String DRIVE_TYPE_DESC = "Root drive's type";
         public static final String DRIVE_ID_DESC = "Root drive's id";
-
         public static final String AUTH_TOKEN_DESC = "The authentication token";
-
         public static final String SUCCESS_DESC = "Root drive was returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the root drive.";
     }
 
-    public static class GetSiteNameById{
+    public static class GetSiteNameById {
         public static final String SITE_ID_DESC = "ID of the site from which display name can be obtained";
+        public static final String SITE_NAME_DESC = "The name of the site for which the id was provided.";
+        public static final String SITE_DISPLAY_NAME_DESC = "The display name of the site for which the id was provided.";
         public static final String SUCCESS_DESC = "Site name was returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the site name.";
         public static final String RETURN_RESULT_DESC = "Information related to the specific site in JSON format";

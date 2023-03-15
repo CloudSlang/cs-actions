@@ -23,10 +23,10 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSideIdByName;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSiteIdByName;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSideIdByName.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteIdByName.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.GetSiteIdByName.SITE_NAME;
@@ -127,7 +127,7 @@ public class GetSiteIdByName {
 
                 if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
                     if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
-                        processHttpGetSideIdByName(result);
+                        processHttpGetSiteIdByName(result);
                     else {
                         result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
                         result.put(EXCEPTION, result.get(RETURN_RESULT));
