@@ -11,7 +11,6 @@ import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.utils.OutputUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,17 +22,14 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSideIdByName;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSiteNameById;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
-import static io.cloudslang.content.sharepoint.utils.Constants.NEGATIVE_RETURN_CODE;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.*;
-import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
-import static io.cloudslang.content.sharepoint.utils.Utils.getQueryParamsString;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -43,7 +39,8 @@ public class GetSiteNameById {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = SITE_ID, description = SITE_ID_DESC),
+                    @Output(value = SITE_NAME, description = SITE_NAME_DESC),
+                    @Output(value = SITE_DISPLAY_NAME, description = SITE_DISPLAY_NAME_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)},
             responses =

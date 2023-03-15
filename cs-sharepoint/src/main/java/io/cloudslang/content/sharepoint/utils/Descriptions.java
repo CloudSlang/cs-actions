@@ -97,7 +97,8 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Token generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
-    public static class GetRootSite{
+
+    public static class GetRootSite {
         public static final String RETURN_RESULT_DESC = "The root site for Office 365.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while getting the root site.";
@@ -107,7 +108,8 @@ public class Descriptions {
         public static final String AUTH_TOKEN_DESC = "The auth token for login.";
         public static final String SITE_ID_DESC = "ID of the requested site.";
         public static final String SITE_NAME_DESC = "Name of the site.";
-        public static final String WEB_URL_DESC = "URL of the site."
+        public static final String WEB_URL_DESC = "URL of the site.";
+    }
 
     public static class GetSiteIdByName {
         public static final String RETURN_RESULT_DESC = "Information related to the specific site in json format";
@@ -120,6 +122,7 @@ public class Descriptions {
         public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
 
     }
+
     public static class GetRootDrive {
 
         public static final String NAME = "Get the root drive metadata by site id";
@@ -136,8 +139,10 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the root drive.";
     }
 
-    public static class GetSiteNameById{
+    public static class GetSiteNameById {
         public static final String SITE_ID_DESC = "ID of the site from which display name can be obtained";
+        public static final String SITE_NAME_DESC = "The name of the site for which the id was provided.";
+        public static final String SITE_DISPLAY_NAME_DESC = "The display name of the site for which the id was provided.";
         public static final String SUCCESS_DESC = "Site name was returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the site name.";
         public static final String RETURN_RESULT_DESC = "Information related to the specific site in JSON format";
