@@ -41,6 +41,7 @@ public class Constants {
     public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
     public static final String PARENT_REFERENCE = "parentReference";
     public static final String NAME = "name";
+    public static final String DISPLAY_NAME = "displayName";
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
     public static final String SITES_ENDPOINT = "/sites/";
@@ -60,9 +61,6 @@ public class Constants {
     public static final String POST = "POST";
     public static final String PATCH = "PATCH";
     public static final String DELETE = "DELETE";
-    public static final String CONNECTION_MAX_PER_ROUTE = "20";
-    public static final String CONNECTIONS_MAX_TOTAL_VALUE = "200";
-    public static final String APPLICATION_JSON = "application/json";
 
     public static class Endpoints{
         public static String GET_ROOT_SITE = "https://graph.microsoft.com/v1.0/sites/root";
