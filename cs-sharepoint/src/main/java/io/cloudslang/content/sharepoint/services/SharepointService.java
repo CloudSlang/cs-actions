@@ -130,6 +130,18 @@ public class SharepointService {
         httpResults.put(SITE_NAME, json.get(NAME).asText());
         httpResults.put(SITE_DISPLAY_NAME, json.get(DISPLAY_NAME).asText());
     }
+
+    public static void processHttpGetDriveNameById(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+        httpResults.put(DRIVE_NAME, json.get(NAME).asText());
+    }
+
     public static class GetAllSitesService{
         public static void processHttpAllSites(Map<String,String> result){
             processHttpResult(result, Descriptions.GetSiteDetails.EXCEPTION_DESC);

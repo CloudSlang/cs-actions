@@ -46,6 +46,7 @@ public class Constants {
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
     public static final String SITES_ENDPOINT = "/sites/";
     public static final String ROOT_DRIVE_ENDPOINT = "/drive/root";
+    public static final String DRIVES_ENDPOINT = "/drives/";
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";

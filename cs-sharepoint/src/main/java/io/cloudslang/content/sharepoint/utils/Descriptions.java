@@ -129,7 +129,7 @@ public class Descriptions {
 
     public static class GetRootDrive {
 
-        public static final String NAME = "Get the root drive metadata by site id";
+        public static final String NAME = "get_rot_drive";
         public static final String SITE_ID_DESC = "The id of the site from which to retrieve the root drive";
         public static final String RETURN_RESULT_DESC = "Information related to the specific root drive metadata in json format";
         public static final String STATUS_CODE_DESC = "The HTTP status code for the request";
@@ -157,7 +157,7 @@ public class Descriptions {
 
     public static class GetSiteDetails {
 
-        public static final String NAME = "Get the details of a site.";
+        public static final String NAME = "get_site_details";
 
         public static final String SITE_ID_DESC = "The id of the site from which to retrieve the details.";
 
@@ -173,5 +173,22 @@ public class Descriptions {
 
         public static final String SUCCESS_DESC = "Site details were returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the site details.";
+    }
+
+    public static class GetDriveNameById {
+
+        public static final String NAME = "get_drive_name_by_id";
+
+        public static final String DRIVE_ID_DESC = "The id of the drive from which to retrieve the name.";
+
+        public static final String RETURN_RESULT_DESC = "Details of the drive.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the drive name.";
+        public static final String DRIVE_NAME_DESC = "Name of the drive.";
+
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+
+        public static final String SUCCESS_DESC = "Drive name was returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the drive name.";
     }
 }
