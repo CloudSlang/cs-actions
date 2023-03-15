@@ -19,6 +19,8 @@ public class Outputs {
     public static final String EXCEPTION = "exception";
     public static final String AUTH_TOKEN = "authToken";
     public static final String SITE_ID = "siteId";
+    public static final String SITE_IDS = "siteIds";
+    public static final String SITE_URLS = "siteUrls";
     public static final String WEB_URL = "webUrl";
     public static final String DRIVE_NAME = "driveName";
     public static final String DRIVE_TYPE = "driveType";

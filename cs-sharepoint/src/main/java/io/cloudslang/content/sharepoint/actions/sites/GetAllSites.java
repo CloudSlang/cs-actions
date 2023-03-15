@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions;
+package io.cloudslang.content.sharepoint.actions.sites;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -23,8 +23,6 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.utils.OutputUtilities;
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 
 import java.util.Map;
 
@@ -41,10 +39,12 @@ import static io.cloudslang.content.httpclient.utils.Constants.ANONYMOUS;
 import static io.cloudslang.content.httpclient.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
-import static io.cloudslang.content.sharepoint.services.GetRootSiteService.processHttpResult;
+import static io.cloudslang.content.sharepoint.services.SharepointService.GetAllSitesService.processHttpAllSites;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
-import static io.cloudslang.content.sharepoint.utils.Constants.Endpoints.GET_ROOT_SITE;
+import static io.cloudslang.content.sharepoint.utils.Constants.Endpoints.GET_ALL_SITES;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.RETURN_CODE_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAllSites.SITE_IDS_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAllSites.SITE_URLS_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootSite.EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootSite.FAILURE_DESC;
@@ -54,15 +54,13 @@ import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetRootSite {
-    @Action(name = "Get the root Office 365 Sharepoint site within a tenant",
+public class GetAllSites {
+    @Action(name = "Get all Office 365 Sharepoint sites within a tenant",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = SITE_ID, description = SITE_ID_DESC),
-                    @Output(value = SITE_NAME, description = SITE_NAME_DESC),
-                    @Output(value = SITE_DISPLAY_NAME, description = SITE_DISPLAY_NAME_DESC),
-                    @Output(value = WEB_URL, description = WEB_URL_DESC),
+                    @Output(value = SITE_IDS, description = SITE_IDS_DESC),
+                    @Output(value = SITE_URLS, description = SITE_URLS_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)
             },
@@ -94,7 +92,7 @@ public class GetRootSite {
         try {
 
             Map<String, String> result = new HttpClientGetAction().execute(
-                    GET_ROOT_SITE,
+                    GET_ALL_SITES,
 
                     ANONYMOUS,
                     EMPTY,
@@ -116,8 +114,8 @@ public class GetRootSite {
                     EMPTY,
 
                     FALSE,
-                    CONNECTIONS_MAX_PER_ROUTE_CONST,
-                    CONNECTIONS_MAX_TOTAL_CONST,
+                    CONNECTION_MAX_PER_ROUTE,
+                    CONNECTIONS_MAX_TOTAL_VALUE,
 
                     EMPTY,
                     EMPTY,
@@ -137,13 +135,7 @@ public class GetRootSite {
                     sessionConnectionPool
             );
 
-            processHttpResult(result);
-            JSONObject jsonObject = (JSONObject) JSONValue.parse(result.get(RETURN_RESULT));
-            result.put(SITE_ID, jsonObject.getAsString("id"));
-            result.put(SITE_NAME, jsonObject.getAsString("name"));
-            result.put(SITE_DISPLAY_NAME, jsonObject.getAsString("displayName"));
-            result.put(WEB_URL, jsonObject.getAsString("webUrl"));
-
+            processHttpAllSites(result);
             return result;
 
         } catch (Exception exception) {
