@@ -93,6 +93,7 @@ public class Descriptions {
         public static final String AUTH_TOKEN_DESC = "The auth token for login.";
         public static final String SITE_ID_DESC = "ID of the requested site.";
         public static final String SITE_NAME_DESC = "Name of the site.";
+        public static final String SITE_DISPLAY_NAME_DESC = "The display name of the site.";
         public static final String WEB_URL_DESC = "URL of the site.";
     }
 }

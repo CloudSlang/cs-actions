@@ -50,5 +50,6 @@ public class Constants {
 
     public static class Endpoints{
         public static String GET_ROOT_SITE = "https://graph.microsoft.com/v1.0/sites/root";
+        public static String GET_ALL_SITES = "https://graph.microsoft.com/v1.0/sites/";
     }
 }

@@ -43,7 +43,7 @@ import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 import static io.cloudslang.content.sharepoint.services.GetRootSiteService.processHttpResult;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
-import static io.cloudslang.content.sharepoint.utils.Constants.Endpoints.GET_ROOT_SITE;
+import static io.cloudslang.content.sharepoint.utils.Constants.Endpoints.GET_ALL_SITES;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.RETURN_CODE_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAuthorizationToken.SUCCESS_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootSite.EXCEPTION_DESC;
@@ -54,8 +54,8 @@ import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetRootSite {
-    @Action(name = "Get the root Office 365 Sharepoint site within a tenant",
+public class GetAllSites {
+    @Action(name = "Get all Office 365 Sharepoint sites within a tenant",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -94,7 +94,7 @@ public class GetRootSite {
         try {
 
             Map<String, String> result = new HttpClientGetAction().execute(
-                    GET_ROOT_SITE,
+                    GET_ALL_SITES,
 
                     ANONYMOUS,
                     EMPTY,
