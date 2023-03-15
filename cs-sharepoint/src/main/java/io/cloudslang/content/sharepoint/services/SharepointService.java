@@ -13,6 +13,7 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 
 public class SharepointService {
@@ -30,12 +31,14 @@ public class SharepointService {
         }
     }
 
-    public static void processHttpGetSideIdByName(Map<String, String> httpResults) {
+    public static void processHttpGetSiteIdByName(Map<String, String> httpResults) {
 
         //Process the return result output
         String returnResult = httpResults.get(RETURN_RESULT);
         try {
             if (!(returnResult.isEmpty())) {
+                httpResults.put(RETURN_RESULT, returnResult);
+
                 JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
 
                 try {
@@ -62,11 +65,15 @@ public class SharepointService {
                 JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
 
                 try {
-                    String namespacePath = "$.displayName";
-                    String namespacePathResponse = JsonPath.read(jsonResponse.toString(), namespacePath);
-                    httpResults.put(SITE_NAME, namespacePathResponse);
+                    String displayNamePath = "$.displayName";
+                    String displayNamePathResponse = JsonPath.read(jsonResponse.toString(), displayNamePath);
+                    httpResults.put(SITE_DISPLAY_NAME, displayNamePathResponse);
+
+                    String namePath = "$.name";
+                    String namePathResponse = JsonPath.read(jsonResponse.toString(), namePath);
+                    httpResults.put(SITE_NAME, namePathResponse);
                 } catch (Exception e) {
-                    httpResults.put(SITE_NAME, EXCEPTION_SITE_ID);
+                    httpResults.put(SITE_NAME, EXCEPTION_DESC);
                     httpResults.put(RETURN_CODE,NEGATIVE_RETURN_CODE);
                 }
             }
