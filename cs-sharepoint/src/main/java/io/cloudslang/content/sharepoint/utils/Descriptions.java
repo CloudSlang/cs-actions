@@ -89,7 +89,7 @@ public class Descriptions {
                 "present on the specific Azure AD Application. For the 'API' loginType, '/.default' scope should be used. \n" +
                 "Default: 'https://graph.microsoft.com/.default'";
 
-        public static final String RETURN_RESULT_DESC = "The authorization token for Office 365.";
+        public static final String RETURN_RESULT_DESC = "The authorization token for Office 365 Sharepoint.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while generating the token.";
@@ -97,8 +97,7 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Token generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
-
-    public static class GetRootSite {
+    public static class GetRootSite{
         public static final String RETURN_RESULT_DESC = "The root site for Office 365.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
         public static final String EXCEPTION_DESC = "An error message in case there was an error while getting the root site.";
@@ -108,7 +107,12 @@ public class Descriptions {
         public static final String AUTH_TOKEN_DESC = "The auth token for login.";
         public static final String SITE_ID_DESC = "ID of the requested site.";
         public static final String SITE_NAME_DESC = "Name of the site.";
+        public static final String SITE_DISPLAY_NAME_DESC = "The display name of the site.";
         public static final String WEB_URL_DESC = "URL of the site.";
+    }
+    public static class GetAllSites{
+        public static final String SITE_IDS_DESC = "An array of pairs: displayName and id.";
+        public static final String SITE_URLS_DESC = "An array of pairs: displayName and url.";
     }
 
     public static class GetSiteIdByName {
