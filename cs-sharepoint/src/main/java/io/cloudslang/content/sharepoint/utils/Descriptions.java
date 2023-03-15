@@ -97,6 +97,17 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Token generated successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve token.";
     }
+    public static class GetRootSite{
+        public static final String RETURN_RESULT_DESC = "The root site for Office 365.";
+        public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
+        public static final String EXCEPTION_DESC = "An error message in case there was an error while getting the root site.";
+
+        public static final String SUCCESS_DESC = "Root site retrieved successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to get the root site.";
+        public static final String AUTH_TOKEN_DESC = "The auth token for login.";
+        public static final String SITE_ID_DESC = "ID of the requested site.";
+        public static final String SITE_NAME_DESC = "Name of the site.";
+        public static final String WEB_URL_DESC = "URL of the site."
 
     public static class GetSideIdByName {
         public static final String RETURN_RESULT_DESC = "Information related to the specific site in json format";
@@ -128,5 +139,15 @@ public class Descriptions {
 
         public static final String SUCCESS_DESC = "Root drive was returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the root drive.";
+    }
+
+    public static class GetSiteNameById{
+        public static final String SITE_ID_DESC = "ID of the site from which display name can be obtained";
+        public static final String SUCCESS_DESC = "Site name was returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the site name.";
+        public static final String RETURN_RESULT_DESC = "Information related to the specific site in JSON format";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site display name.";
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
     }
 }
