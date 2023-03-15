@@ -61,11 +61,6 @@ public class Constants {
     public static final String POST = "POST";
     public static final String PATCH = "PATCH";
     public static final String DELETE = "DELETE";
-    public static final String CONNECTION_MAX_PER_ROUTE = "20";
-    public static final String CONNECTIONS_MAX_TOTAL_VALUE = "200";
-    public static final String AUTHORIZATION_BEARER = "Authorization: Bearer ";
-    public static final String APPLICATION_JSON = "application/json";
-    public static final String NEGATIVE_RETURN_CODE = "-1";
 
     public static class Endpoints{
         public static String GET_ROOT_SITE = "https://graph.microsoft.com/v1.0/sites/root";
