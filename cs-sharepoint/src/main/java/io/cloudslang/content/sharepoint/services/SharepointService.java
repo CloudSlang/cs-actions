@@ -103,6 +103,6 @@ public class SharepointService {
         httpResults.put(WEB_URL, json.get(WEB_URL).asText());
         httpResults.put(SITE_ID, json.get(ID).asText());
         httpResults.put(SITE_NAME, json.get(NAME).asText());
-        httpResults.put(DISPLAY_NAME, json.get(DISPLAY_NAME).asText());
+        httpResults.put(SITE_DISPLAY_NAME, json.get(DISPLAY_NAME).asText());
     }
 }

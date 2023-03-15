@@ -59,7 +59,7 @@ public class GetSiteDetails {
                     @Output(value = WEB_URL, description = WEB_URL_DESC),
                     @Output(value = SITE_ID, description = SITE_ID_OUT_DESC),
                     @Output(value = SITE_NAME, description = SITE_NAME_DESC),
-                    @Output(value = DISPLAY_NAME, description = DISPLAY_NAME_DESC)
+                    @Output(value = SITE_DISPLAY_NAME, description = SITE_DISPLAY_NAME_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),

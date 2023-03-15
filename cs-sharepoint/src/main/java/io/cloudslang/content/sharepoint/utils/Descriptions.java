@@ -163,7 +163,7 @@ public class Descriptions {
         public static final String WEB_URL_DESC = "Web url of the site.";
         public static final String SITE_NAME_DESC = "Name of the site.";
         public static final String SITE_ID_OUT_DESC = "Id of the site.";
-        public static final String DISPLAY_NAME_DESC = "Display name of the site.";
+        public static final String SITE_DISPLAY_NAME_DESC = "Display name of the site.";
 
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
 

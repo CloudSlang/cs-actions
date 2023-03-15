@@ -41,6 +41,7 @@ public class Constants {
     public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
     public static final String PARENT_REFERENCE = "parentReference";
     public static final String NAME = "name";
+    public static final String DISPLAY_NAME = "displayName";
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
     public static final String SITES_ENDPOINT = "/sites/";
