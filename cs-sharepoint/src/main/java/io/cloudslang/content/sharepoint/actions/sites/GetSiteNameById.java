@@ -23,13 +23,14 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSiteIdByName;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSideIdByName;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSiteNameById;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
+import static io.cloudslang.content.sharepoint.utils.Constants.NEGATIVE_RETURN_CODE;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteIdByName.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
-import static io.cloudslang.content.sharepoint.utils.Inputs.GetSiteIdByName.SITE_NAME;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.sharepoint.utils.Utils.getQueryParamsString;
@@ -37,8 +38,8 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetSiteIdByName {
-    @Action(name = "Get site id by name",
+public class GetSiteNameById {
+    @Action(name = "Get site name by id",
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
@@ -52,7 +53,7 @@ public class GetSiteIdByName {
                     })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = SITE_NAME, required = true, description = SITE_NAME_DESC) String siteName,
+                                       @Param(value = SITE_ID, required = true, description = SITE_ID_DESC) String siteId,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -72,8 +73,6 @@ public class GetSiteIdByName {
                                        GlobalSessionObject sessionConnectionPool) {
         {
 
-            Map<String, String> queryParams = new HashMap<>();
-            queryParams.put(SEARCH, siteName);
             proxyHost = defaultIfEmpty(proxyHost, EMPTY);
             proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
             proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
@@ -90,7 +89,7 @@ public class GetSiteIdByName {
             Map<String, String> result;
             try {
                 result = new HttpClientGetAction().execute(
-                        GRAPH_API_ENDPOINT + SITES_ENDPOINT,
+                        GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId,
                         ANONYMOUS,
                         EMPTY,
                         EMPTY,
@@ -115,7 +114,7 @@ public class GetSiteIdByName {
                         AUTHORIZATION_BEARER + authToken,
                         EMPTY,
                         EMPTY,
-                        getQueryParamsString(queryParams),
+                        EMPTY,
                         EMPTY,
                         EMPTY,
                         connectTimeout,
@@ -127,7 +126,7 @@ public class GetSiteIdByName {
 
                 if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
                     if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
-                        processHttpGetSiteIdByName(result);
+                        processHttpGetSiteNameById(result);
                     else {
                         result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
                         result.put(EXCEPTION, result.get(RETURN_RESULT));

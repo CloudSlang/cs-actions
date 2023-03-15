@@ -31,6 +31,7 @@ public class Inputs {
         public static final String EXECUTION_TIMEOUT = "executionTimeout";
         public static final String TLS_VERSION = "tlsVersion";
         public static final String ALLOWED_CIPHERS = "allowedCiphers";
+        public static final String AUTH_TOKEN = "authToken";
     }
 
     public static class AuthorizationInputs {
@@ -46,5 +47,14 @@ public class Inputs {
     public static class GetSiteIdByName{
         public static final String SITE_NAME = "siteName";
     }
+    public static class GetRootSiteInputs{
+        public static final String AUTH_TOKEN = "authToken";
+    }
 
+    public static class GetRootDrive{
+        public static final String SITE_ID = "siteId";
+    }
+    public static class GetSiteNameById{
+        public static final String SITE_ID = "siteId";
+    }
 }

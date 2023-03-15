@@ -39,22 +39,32 @@ public class Constants {
     public static final String STATUS_CODE_201 = "201";
     public static final String ATTACHMENTS_SPLIT = "Attachments";
     public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
+    public static final String PARENT_REFERENCE = "parentReference";
+    public static final String NAME = "name";
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
-    public static final String SITES_ENDPOINT = "/sites";
-
+    public static final String SITES_ENDPOINT = "/sites/";
+    public static final String ROOT_DRIVE_ENDPOINT = "/drive/root";
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";
     public static final String EXCEPTION_NULL_EMPTY = "The %s can't be null or empty.";
-    public static final String EXCEPTION_INVALID_PROXY = "The %s is not a valid port.";
+    public static final String EXCEPTION_INVALID_PROXY = "The proxy port %s is not a valid port.";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
     public static final String EXCEPTION_INVALID_HOSTNAME_VERIFIER = "%s for %s input is not a valid x509HostnameVerifier value. The valid values are: 'strict','allow_all'.";
     public static final String EXCEPTION_SITE_ID = "Site id was not found in the JSON response.";
-    public static final String ANONYMOUS = "anonymous";
+    public static final String EXCEPTION_SITE_NAME = "Site display name was not found in the JSON response.";
+   public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String PATCH = "PATCH";
     public static final String DELETE = "DELETE";
+    public static final String CONNECTION_MAX_PER_ROUTE = "20";
+    public static final String CONNECTIONS_MAX_TOTAL_VALUE = "200";
+    public static final String APPLICATION_JSON = "application/json";
+
+    public static class Endpoints{
+        public static String GET_ROOT_SITE = "https://graph.microsoft.com/v1.0/sites/root";
+    }
 }
