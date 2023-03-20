@@ -191,4 +191,41 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Drive name was returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the drive name.";
     }
+
+    public static class GetAllDrives {
+
+        public static final String NAME = "get_all_drives";
+
+        public static final String SITE_ID_DESC = "The id of the site from which to retrieve the drives.";
+
+        public static final String RETURN_RESULT_DESC = "List of all drives that can be found on the site with the specified id.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the drives.";
+        public static final String DRIVE_IDS_DESC = "List of pairs containing the drive's name and the corresponding id.";
+        public static final String DRIVE_URLS_DESC = "List of pairs containing the drive's name and the corresponding url.";
+
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+
+        public static final String SUCCESS_DESC = "Drives were returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the drive.";
+    }
+    public static class GetDriveIdByName {
+
+        public static final String NAME = "get_drive_name_by_id";
+
+        public static final String DRIVE_ID_DESC = "The id of the drive from which to retrieve the name.";
+
+        public static final String RETURN_RESULT_DESC = "Details of the drive.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the drive name.";
+        public static final String DRIVE_NAME_DESC = "Name of the drive.";
+        public static final String SITE_ID_DESC = "Id of the site.";
+
+
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+
+        public static final String SUCCESS_DESC = "Drive name was returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the drive name.";
+        public static final String NO_DRIVE_FOUND = "There is no drive with the specified name";
+    }
 }
