@@ -31,6 +31,7 @@ import java.util.stream.StreamSupport;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NO_DRIVE_FOUND;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -172,6 +173,22 @@ public class SharepointService {
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
         httpResults.put(DRIVE_NAME, json.get(NAME).asText());
+    }
+    public static void processHttpGetDriveIdByName(Map<String, String> httpResults, String driveName, String exceptionMessage) {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200"))
+            return;
+
+        JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
+        JsonArray elementArray = jsonResponse.getAsJsonArray("value");
+        for(JsonElement jsonElement : elementArray)
+            if(jsonElement.getAsJsonObject().get("name").getAsString().equals(driveName)){
+                httpResults.put(DRIVE_ID, jsonElement.getAsJsonObject().get("id").getAsString());
+                return;
+            }
+        httpResults.put(RETURN_RESULT, NO_DRIVE_FOUND);
     }
 
     public static class GetAllSitesService{
