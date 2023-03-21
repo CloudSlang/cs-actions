@@ -27,4 +27,6 @@ public class Outputs {
     public static final String DRIVE_ID = "driveId";
     public static final String SITE_NAME = "siteName";
     public static final String SITE_DISPLAY_NAME = "siteDisplayName";
+    public static final String DRIVE_IDS = "driveIds";
+    public static final String DRIVE_URLS = "driveUrls";
 }
