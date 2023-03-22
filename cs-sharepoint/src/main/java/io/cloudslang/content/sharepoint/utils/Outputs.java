@@ -32,4 +32,5 @@ public class Outputs {
     public static final String ENTITY_IDS = "entityIds";
     public static final String ENTITY_URLS = "entityUrls";
     public static final String ENTITY_TYPES = "entityTypes";
+    public static final String FILE_ID = "fileId";
 }

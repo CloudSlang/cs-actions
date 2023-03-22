@@ -68,6 +68,8 @@ public class Descriptions {
                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, " +
                 "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256, " +
                 "TLS_RSA_WITH_AES_128_CBC_SHA256.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request";
+        public static final String AUTH_TOKEN_DESC = "The authentication token";
     }
 
     public static class GetAuthorizationToken {
@@ -248,5 +250,16 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Drive name was returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the drive name.";
         public static final String NO_DRIVE_FOUND = "There is no drive with the specified name";
+    }
+    public static class UploadFile{
+        public static final String SITE_ID_DESC = "Id of the site where the file will be uploaded.";
+        public static final String FILE_PATH_DESC = "The absolute path to the file that will be attached.";
+        public static final String DRIVE_ID_DESC = "Id of the drive where the file will be uploaded.";
+        public static final String FOLDER_ID_DESC = "Id of the folder where the file will be uploaded.";
+        public static final String FILE_ID_DESC ="The Id of the file that was uploaded.";
+        public static final String RETURN_RESULT_DESC = "The full API response in case of success.";
+        public static final String SUCCESS_DESC = "The file was uploaded successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to upload the file.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to upload the file.";
     }
 }
