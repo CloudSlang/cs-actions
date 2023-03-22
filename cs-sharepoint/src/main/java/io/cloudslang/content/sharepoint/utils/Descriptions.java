@@ -100,7 +100,7 @@ public class Descriptions {
     public static class GetRootSite{
         public static final String RETURN_RESULT_DESC = "The root site for Office 365.";
         public static final String RETURN_CODE_DESC = "0 if success, -1 otherwise.";
-        public static final String EXCEPTION_DESC = "An error message in case there was an error while getting the root site.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the root site.";
 
         public static final String SUCCESS_DESC = "Root site retrieved successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to get the root site.";
@@ -113,6 +113,8 @@ public class Descriptions {
     public static class GetAllSites{
         public static final String SITE_IDS_DESC = "An array of pairs: displayName and id.";
         public static final String SITE_URLS_DESC = "An array of pairs: displayName and url.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the sites details.";
+
     }
 
     public static class GetSiteIdByName {

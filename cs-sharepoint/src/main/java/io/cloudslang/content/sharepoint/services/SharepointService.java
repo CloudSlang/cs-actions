@@ -28,6 +28,8 @@ import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
+import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -112,6 +114,16 @@ public class SharepointService {
         } catch (
                 Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+    public static void processHttpGetRootSite(Map<String,String> result, String exceptionMessage){
+        processHttpResult(result, exceptionMessage);
+        if(!exceptionMessage.equals(Descriptions.GetRootSite.EXCEPTION_DESC)) {
+            JSONObject jsonObject = (JSONObject) JSONValue.parse(result.get(RETURN_RESULT));
+            result.put(SITE_ID, jsonObject.getAsString("id"));
+            result.put(SITE_NAME, jsonObject.getAsString("name"));
+            result.put(SITE_DISPLAY_NAME, jsonObject.getAsString("displayName"));
+            result.put(WEB_URL, jsonObject.getAsString("webUrl"));
         }
     }
 
@@ -363,7 +375,7 @@ public class SharepointService {
     }
     public static class GetAllSitesService{
         public static void processHttpAllSites(Map<String,String> result){
-            processHttpResult(result, Descriptions.GetSiteDetails.EXCEPTION_DESC);
+            processHttpResult(result, Descriptions.GetAllSites.EXCEPTION_DESC);
 
             if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
                 if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)

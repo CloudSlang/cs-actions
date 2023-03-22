@@ -41,6 +41,7 @@ import static io.cloudslang.content.httpclient.utils.Constants.ANONYMOUS;
 import static io.cloudslang.content.httpclient.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetRootSite;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpResult;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.Endpoints.GET_ROOT_SITE;
@@ -137,12 +138,7 @@ public class GetRootSite {
                     sessionConnectionPool
             );
 
-            processHttpResult(result, EXCEPTION_DESC);
-            JSONObject jsonObject = (JSONObject) JSONValue.parse(result.get(RETURN_RESULT));
-            result.put(SITE_ID, jsonObject.getAsString("id"));
-            result.put(SITE_NAME, jsonObject.getAsString("name"));
-            result.put(SITE_DISPLAY_NAME, jsonObject.getAsString("displayName"));
-            result.put(WEB_URL, jsonObject.getAsString("webUrl"));
+            processHttpGetRootSite(result, EXCEPTION_DESC);
 
             return result;
 
