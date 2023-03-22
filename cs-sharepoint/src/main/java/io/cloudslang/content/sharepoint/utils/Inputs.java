@@ -57,4 +57,9 @@ public class Inputs {
     public static class GetSiteNameById{
         public static final String SITE_ID = "siteId";
     }
+
+    public static class GetEntitiesFromDrive {
+        public static final String PATH = "path";
+        public static final String ENTITIES_TYPE = "entitiesType";
+    }
 }

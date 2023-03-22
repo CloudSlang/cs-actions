@@ -21,19 +21,32 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
+import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NO_DRIVE_FOUND;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
+import static io.cloudslang.content.sharepoint.utils.Inputs.GetEntitiesFromDrive.ENTITIES_TYPE;
+import static io.cloudslang.content.sharepoint.utils.InputsValidation.addVerifyEntitiesType;
+import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class SharepointService {
 
@@ -117,7 +130,38 @@ public class SharepointService {
         httpResults.put(DRIVE_ID, json.get(PARENT_REFERENCE).get(DRIVE_ID).asText());
     }
 
-    public static void processHttpSiteDetails(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+    public static void processHttpGetAllDrives(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        JsonArray driveIds = new JsonArray();
+        JsonArray driveUrls = new JsonArray();
+
+        StreamSupport
+                .stream(json.get(VALUE).spliterator(), true)
+                .forEach(drive -> {
+
+                    JsonObject driveId = new JsonObject();
+                    driveId.addProperty(NAME, drive.get(NAME).asText());
+                    driveId.addProperty(ID, drive.get(ID).asText());
+                    driveIds.add(driveId);
+
+                    JsonObject driveUrl = new JsonObject();
+                    driveUrl.addProperty(NAME, drive.get(NAME).asText());
+                    driveUrl.addProperty(WEB_URL, drive.get(WEB_URL).asText());
+                    driveUrls.add(driveUrl);
+                });
+
+        httpResults.put(DRIVE_IDS, driveIds.toString());
+        httpResults.put(DRIVE_URLS, driveUrls.toString());
+    }
+
+    public static void processHttpGetSiteDetails(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
 
         processHttpResult(httpResults, exceptionMessage);
 
