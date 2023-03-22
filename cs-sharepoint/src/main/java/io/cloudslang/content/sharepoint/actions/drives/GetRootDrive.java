@@ -39,6 +39,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetRootDrive;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.NAME;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.EXCEPTION_DESC;

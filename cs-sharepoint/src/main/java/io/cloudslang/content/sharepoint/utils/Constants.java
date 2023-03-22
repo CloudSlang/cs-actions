@@ -24,6 +24,8 @@ public class Constants {
     public static final String DEFAULT_TIMEOUT = "60";
     public static final String SEARCH = "search";
     public static final String NEGATIVE_RETURN_CODE = "-1";
+    public static final String UTF_8 ="UTF-8";
+    public static final String CONTENT_TYPE_TEXT_PLAIN ="text/plain";
     public static final String ID = "id";
     public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
     public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
