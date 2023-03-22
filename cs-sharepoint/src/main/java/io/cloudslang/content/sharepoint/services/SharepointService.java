@@ -157,6 +157,7 @@ public class SharepointService {
                 return;
             }
         httpResults.put(RETURN_RESULT, NO_DRIVE_FOUND);
+        httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
     }
 
     public static class GetAllSitesService{
