@@ -21,20 +21,32 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
+import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NO_DRIVE_FOUND;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
+import static io.cloudslang.content.sharepoint.utils.Inputs.GetEntitiesFromDrive.ENTITIES_TYPE;
+import static io.cloudslang.content.sharepoint.utils.InputsValidation.addVerifyEntitiesType;
+import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class SharepointService {
 
@@ -240,6 +252,114 @@ public class SharepointService {
         httpResults.put(ENTITY_IDS, entityIds.toString());
         httpResults.put(ENTITY_URLS, entityUrls.toString());
         httpResults.put(ENTITY_TYPES, entityTypes.toString());
+    }
+
+    public static Map<String, String> getEntitiesFromDrive(
+            String authToken,
+            String driveId,
+            String path,
+            String entitiesType,
+            String proxyHost,
+            String proxyPort,
+            String proxyUsername,
+            String proxyPassword,
+            String trustAllRoots,
+            String x509HostnameVerifier,
+            String trustKeystore,
+            String trustPassword,
+            String tlsVersion,
+            String allowedCiphers,
+            String connectTimeout,
+            String executionTimeout,
+            SerializableSessionObject sessionCookies,
+            GlobalSessionObject sessionConnectionPool) {
+
+        try {
+
+            String endpoint = path == null || path.isEmpty() ? ROOT_CHILDREN_ENDPOINT : ROOT_PATH_ENDPOINT + path + CHILDREN_PATH_ENDPOINT;
+
+            Map<String, String> result = new HttpClientGetAction().execute(
+                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + endpoint,
+                    ANONYMOUS,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    proxyHost,
+                    proxyPort,
+                    proxyUsername,
+                    proxyPassword,
+                    tlsVersion,
+                    allowedCiphers,
+                    trustAllRoots,
+                    x509HostnameVerifier,
+                    trustKeystore,
+                    trustPassword,
+                    EMPTY,
+                    EMPTY,
+                    FALSE,
+                    CONNECTIONS_MAX_PER_ROUTE_CONST,
+                    CONNECTIONS_MAX_TOTAL_CONST,
+                    EMPTY,
+                    EMPTY,
+                    AUTHORIZATION_BEARER + authToken,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    connectTimeout,
+                    EMPTY,
+                    executionTimeout,
+                    sessionCookies,
+                    sessionConnectionPool
+            );
+
+            processHttpResult(result, Descriptions.GetEntitiesFromDrive.EXCEPTION_DESC);
+
+            if (result.get(RETURN_CODE).equals(NEGATIVE_RETURN_CODE))
+                return result;
+
+            JsonObject returnResult = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
+
+            StreamSupport
+                    .stream(returnResult.get(VALUE).getAsJsonArray().spliterator(), true)
+                    .filter(entity -> entity.getAsJsonObject().has(FOLDER))
+                    .forEach(folder -> {
+
+                        Map<String, String> folderResult = getEntitiesFromDrive(
+                                authToken,
+                                driveId,
+                                path + SLASH + folder.getAsJsonObject().get(Constants.NAME).getAsString(),
+                                entitiesType,
+                                proxyHost,
+                                proxyPort,
+                                proxyUsername,
+                                proxyPassword,
+                                trustAllRoots,
+                                x509HostnameVerifier,
+                                trustKeystore,
+                                trustPassword,
+                                tlsVersion,
+                                allowedCiphers,
+                                connectTimeout,
+                                executionTimeout,
+                                sessionCookies,
+                                sessionConnectionPool
+                        );
+
+                        returnResult
+                                .get(VALUE)
+                                .getAsJsonArray()
+                                .addAll(JsonParser.parseString(folderResult.get(RETURN_RESULT)).getAsJsonObject().get(VALUE).getAsJsonArray());
+                    });
+
+            result.put(RETURN_RESULT, returnResult.toString());
+
+            processHttpGetEntitiesFromDrive(result, Descriptions.GetEntitiesFromDrive.EXCEPTION_DESC, entitiesType);
+            return result;
+        } catch (Exception exception) {
+            return getFailureResultsMap(exception);
+        }
     }
 
     public static class GetAllSitesService{

@@ -14,8 +14,6 @@
  */
 package io.cloudslang.content.sharepoint.actions.files;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -23,25 +21,20 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
-import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.StreamSupport;
 
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetEntitiesFromDrive;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpResult;
+import static io.cloudslang.content.sharepoint.services.SharepointService.getEntitiesFromDrive;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntitiesFromDrive.NAME;
@@ -95,116 +88,40 @@ public class GetEntitiesFromDrive {
             @Param(value = SESSION_CONNECTION_POOL, description = Descriptions.Common.SESSION_CONNECTION_POOL_DESC)
             GlobalSessionObject sessionConnectionPool) {
 
-        try {
+        proxyHost = defaultIfEmpty(proxyHost, EMPTY);
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
+        proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
+        x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
+        connectTimeout = defaultIfEmpty(connectTimeout, DEFAULT_TIMEOUT);
+        executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
+        entitiesType = defaultIfEmpty(entitiesType, ALL);
 
-            proxyHost = defaultIfEmpty(proxyHost, EMPTY);
-            proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
-            proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
-            proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
-            trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
-            x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
-            connectTimeout = defaultIfEmpty(connectTimeout, DEFAULT_TIMEOUT);
-            executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
-            entitiesType = defaultIfEmpty(entitiesType, ALL);
+        List<String> exceptionMessages = verifyCommonInputs(proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, executionTimeout);
+        exceptionMessages = addVerifyEntitiesType(exceptionMessages, entitiesType, ENTITIES_TYPE);
+        if (!exceptionMessages.isEmpty())
+            return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
-            List<String> exceptionMessages = verifyCommonInputs(proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, executionTimeout);
-            exceptionMessages = addVerifyEntitiesType(exceptionMessages, entitiesType, ENTITIES_TYPE);
-            if (!exceptionMessages.isEmpty())
-                return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
-
-            String endpoint = path == null || path.isEmpty() ? ROOT_CHILDREN_ENDPOINT : ROOT_PATH_ENDPOINT + path + CHILDREN_PATH_ENDPOINT;
-
-            Map<String, String> result = new HttpClientGetAction().execute(
-                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + endpoint,
-                    ANONYMOUS,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    proxyHost,
-                    proxyPort,
-                    proxyUsername,
-                    proxyPassword,
-                    tlsVersion,
-                    allowedCiphers,
-                    trustAllRoots,
-                    x509HostnameVerifier,
-                    trustKeystore,
-                    trustPassword,
-                    EMPTY,
-                    EMPTY,
-                    FALSE,
-                    CONNECTIONS_MAX_PER_ROUTE_CONST,
-                    CONNECTIONS_MAX_TOTAL_CONST,
-                    EMPTY,
-                    EMPTY,
-                    AUTHORIZATION_BEARER + authToken,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    connectTimeout,
-                    EMPTY,
-                    executionTimeout,
-                    sessionCookies,
-                    sessionConnectionPool
-            );
-
-            processHttpResult(result, EXCEPTION_DESC);
-
-            if (result.get(RETURN_CODE).equals(NEGATIVE_RETURN_CODE))
-                return result;
-
-            JsonObject returnResult = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
-
-            String finalProxyHost = proxyHost;
-            String finalProxyPort = proxyPort;
-            String finalProxyUsername = proxyUsername;
-            String finalProxyPassword = proxyPassword;
-            String finalX509HostnameVerifier = x509HostnameVerifier;
-            String finalTrustAllRoots = trustAllRoots;
-            String finalExecutionTimeout = executionTimeout;
-            String finalConnectTimeout = connectTimeout;
-            String finalEntitiesType = entitiesType;
-
-            StreamSupport
-                    .stream(returnResult.get(VALUE).getAsJsonArray().spliterator(), true)
-                    .filter(entity -> entity.getAsJsonObject().has(FOLDER))
-                    .forEach(folder -> {
-
-                            Map<String, String> folderResult = execute(
-                                    authToken,
-                                    driveId,
-                                    path + SLASH + folder.getAsJsonObject().get(Constants.NAME).getAsString(),
-                                    finalEntitiesType,
-                                    finalProxyHost,
-                                    finalProxyPort,
-                                    finalProxyUsername,
-                                    finalProxyPassword,
-                                    finalTrustAllRoots,
-                                    finalX509HostnameVerifier,
-                                    trustKeystore,
-                                    trustPassword,
-                                    tlsVersion,
-                                    allowedCiphers,
-                                    finalConnectTimeout,
-                                    finalExecutionTimeout,
-                                    sessionCookies,
-                                    sessionConnectionPool
-                            );
-
-                            returnResult
-                                    .get(VALUE)
-                                    .getAsJsonArray()
-                                    .addAll(JsonParser.parseString(folderResult.get(RETURN_RESULT)).getAsJsonObject().get(VALUE).getAsJsonArray());
-                    });
-
-            result.put(RETURN_RESULT, returnResult.toString());
-
-            processHttpGetEntitiesFromDrive(result, EXCEPTION_DESC, entitiesType);
-            return result;
-        } catch (Exception exception) {
-            return getFailureResultsMap(exception);
-        }
+        return getEntitiesFromDrive(
+                authToken,
+                driveId,
+                path,
+                entitiesType,
+                proxyHost,
+                proxyPort,
+                proxyUsername,
+                proxyPassword,
+                trustAllRoots,
+                x509HostnameVerifier,
+                trustKeystore,
+                trustPassword,
+                tlsVersion,
+                allowedCiphers,
+                connectTimeout,
+                executionTimeout,
+                sessionCookies,
+                sessionConnectionPool
+        );
     }
 }
