@@ -39,6 +39,8 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSiteNameById;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.STATUS_CODE_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;

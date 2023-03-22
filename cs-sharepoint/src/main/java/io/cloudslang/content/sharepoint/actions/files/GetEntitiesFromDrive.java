@@ -37,6 +37,8 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.SharepointService.getEntitiesFromDrive;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.STATUS_CODE_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntitiesFromDrive.NAME;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntitiesFromDrive.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
