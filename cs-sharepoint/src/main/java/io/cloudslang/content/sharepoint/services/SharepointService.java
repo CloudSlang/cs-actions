@@ -203,7 +203,164 @@ public class SharepointService {
         httpResults.put(RETURN_RESULT, NO_DRIVE_FOUND);
         httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
     }
+    public static void processHttpGetEntitiesFromDrive(Map<String, String> httpResults, String exceptionMessage, String entitiesType) throws JsonProcessingException {
 
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        JsonArray entityIds = new JsonArray();
+        JsonArray entityUrls = new JsonArray();
+        JsonArray entityTypes = new JsonArray();
+
+        StreamSupport
+                .stream(json.get(VALUE).spliterator(), true)
+                .filter(entity -> {
+
+                    if (entitiesType.equals(FILES))
+                        return entity.has(FILE);
+
+                    if (entitiesType.equals(FOLDERS))
+                        return entity.has(FOLDER);
+
+                    return true;
+                })
+                .forEach(entity -> {
+
+                    JsonObject entityId = new JsonObject();
+                    entityId.addProperty(NAME, entity.get(NAME).asText());
+                    entityId.addProperty(ID, entity.get(ID).asText());
+                    entityIds.add(entityId);
+
+                    JsonObject entityUrl = new JsonObject();
+                    entityUrl.addProperty(NAME, entity.get(NAME).asText());
+                    entityUrl.addProperty(WEB_URL, entity.get(WEB_URL).asText());
+                    entityUrls.add(entityUrl);
+
+                    JsonObject entityType = new JsonObject();
+                    entityType.addProperty(NAME, entity.get(NAME).asText());
+                    if (entity.has(FOLDER))
+                        entityType.addProperty(TYPE, FOLDER);
+                    else
+                        entityType.addProperty(TYPE, entity.get(FILE).get(MIME_TYPE).asText());
+                    entityTypes.add(entityType);
+                });
+
+        httpResults.put(ENTITY_IDS, entityIds.toString());
+        httpResults.put(ENTITY_URLS, entityUrls.toString());
+        httpResults.put(ENTITY_TYPES, entityTypes.toString());
+    }
+
+    public static Map<String, String> getEntitiesFromDrive(
+            String authToken,
+            String driveId,
+            String path,
+            String entitiesType,
+            String proxyHost,
+            String proxyPort,
+            String proxyUsername,
+            String proxyPassword,
+            String trustAllRoots,
+            String x509HostnameVerifier,
+            String trustKeystore,
+            String trustPassword,
+            String tlsVersion,
+            String allowedCiphers,
+            String connectTimeout,
+            String executionTimeout,
+            SerializableSessionObject sessionCookies,
+            GlobalSessionObject sessionConnectionPool) {
+
+        try {
+
+            String endpoint = path == null || path.isEmpty() ? ROOT_CHILDREN_ENDPOINT : ROOT_PATH_ENDPOINT + path + CHILDREN_PATH_ENDPOINT;
+
+            Map<String, String> result = new HttpClientGetAction().execute(
+                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + endpoint,
+                    ANONYMOUS,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    proxyHost,
+                    proxyPort,
+                    proxyUsername,
+                    proxyPassword,
+                    tlsVersion,
+                    allowedCiphers,
+                    trustAllRoots,
+                    x509HostnameVerifier,
+                    trustKeystore,
+                    trustPassword,
+                    EMPTY,
+                    EMPTY,
+                    FALSE,
+                    CONNECTIONS_MAX_PER_ROUTE_CONST,
+                    CONNECTIONS_MAX_TOTAL_CONST,
+                    EMPTY,
+                    EMPTY,
+                    AUTHORIZATION_BEARER + authToken,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    connectTimeout,
+                    EMPTY,
+                    executionTimeout,
+                    sessionCookies,
+                    sessionConnectionPool
+            );
+
+            processHttpResult(result, Descriptions.GetEntitiesFromDrive.EXCEPTION_DESC);
+
+            if (result.get(RETURN_CODE).equals(NEGATIVE_RETURN_CODE))
+                return result;
+
+            JsonObject returnResult = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
+
+            StreamSupport
+                    .stream(returnResult.get(VALUE).getAsJsonArray().spliterator(), true)
+                    .filter(entity -> entity.getAsJsonObject().has(FOLDER))
+                    .forEach(folder -> {
+
+                        Map<String, String> folderResult = getEntitiesFromDrive(
+                                authToken,
+                                driveId,
+                                path + SLASH + folder.getAsJsonObject().get(Constants.NAME).getAsString(),
+                                entitiesType,
+                                proxyHost,
+                                proxyPort,
+                                proxyUsername,
+                                proxyPassword,
+                                trustAllRoots,
+                                x509HostnameVerifier,
+                                trustKeystore,
+                                trustPassword,
+                                tlsVersion,
+                                allowedCiphers,
+                                connectTimeout,
+                                executionTimeout,
+                                sessionCookies,
+                                sessionConnectionPool
+                        );
+
+                        returnResult
+                                .get(VALUE)
+                                .getAsJsonArray()
+                                .addAll(JsonParser.parseString(folderResult.get(RETURN_RESULT)).getAsJsonObject().get(VALUE).getAsJsonArray());
+                    });
+
+            result.put(RETURN_RESULT, returnResult.toString());
+
+            processHttpGetEntitiesFromDrive(result, Descriptions.GetEntitiesFromDrive.EXCEPTION_DESC, entitiesType);
+            return result;
+        } catch (Exception exception) {
+            return getFailureResultsMap(exception);
+        }
+    }
     public static class GetAllSitesService{
         public static void processHttpAllSites(Map<String,String> result){
             processHttpResult(result, Descriptions.GetSiteDetails.EXCEPTION_DESC);
