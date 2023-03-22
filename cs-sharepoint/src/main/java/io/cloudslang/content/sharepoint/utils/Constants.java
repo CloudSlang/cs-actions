@@ -43,10 +43,20 @@ public class Constants {
     public static final String NAME = "name";
     public static final String DISPLAY_NAME = "displayName";
     public static final String VALUE = "value";
+    public static final String FOLDER = "folder";
+    public static final String TYPE = "type";
+    public static final String FILE = "file";
+    public static final String MIME_TYPE = "mimeType";
+    public static final String FOLDERS = "folders";
+    public static final String FILES = "files";
+    public static final String ALL = "all";
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
     public static final String SITES_ENDPOINT = "/sites/";
     public static final String ROOT_DRIVE_ENDPOINT = "/drive/root";
+    public static final String ROOT_CHILDREN_ENDPOINT = "/root/children";
+    public static final String ROOT_PATH_ENDPOINT = "/root:/";
+    public static final String CHILDREN_PATH_ENDPOINT = ":/children";
     public static final String DRIVES_ENDPOINT = "/drives/";
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
@@ -58,6 +68,7 @@ public class Constants {
     public static final String EXCEPTION_INVALID_HOSTNAME_VERIFIER = "%s for %s input is not a valid x509HostnameVerifier value. The valid values are: 'strict','allow_all'.";
     public static final String EXCEPTION_SITE_ID = "Site id was not found in the JSON response.";
     public static final String EXCEPTION_SITE_NAME = "Site display name was not found in the JSON response.";
+    public static final String EXCEPTION_INVALID_ENTITIES_TYPE = "The %s for %s input is not a valid entities type value. The valid values are 'folders', 'files', 'all'.";
    public static final String ANONYMOUS = "anonymous";
     public static final String GET = "GET";
     public static final String POST = "POST";

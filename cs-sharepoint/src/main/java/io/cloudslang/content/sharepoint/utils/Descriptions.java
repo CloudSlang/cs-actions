@@ -192,6 +192,27 @@ public class Descriptions {
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the drive name.";
     }
 
+    public static class GetEntitiesFromDrive {
+
+        public static final String NAME = "get_entities_from_drive";
+
+        public static final String DRIVE_ID_DESC = "The id of the drive from which to retrieve the entities.";
+        public static final String PATH_DESC = "The path to drive entities relative to root. Leave empty for root.";
+        public static final String ENTITIES_TYPE_DESC = "Type of drive entities. Valid values: 'folders', 'files', 'all'.";
+
+        public static final String RETURN_RESULT_DESC = "Json containing a list of all retrieved drive entities.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the drive entities.";
+        public static final String ENTITY_IDS_DESC = "List of pairs containing the entity's name and the corresponding id.";
+        public static final String ENTITY_URLS_DESC = "List of pairs containing the entity's name and the corresponding url.";
+        public static final String ENTITY_TYPES_DESC = "List of pairs containing the entity's name and the corresponding type.";
+
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+
+        public static final String SUCCESS_DESC = "Drive entities were returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the drive entities.";
+    }
+
     public static class GetAllDrives {
 
         public static final String NAME = "get_all_drives";

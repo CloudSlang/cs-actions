@@ -174,6 +174,57 @@ public class SharepointService {
         httpResults.put(DRIVE_NAME, json.get(NAME).asText());
     }
 
+    public static void processHttpGetEntitiesFromDrive(Map<String, String> httpResults, String exceptionMessage, String entitiesType) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        JsonArray entityIds = new JsonArray();
+        JsonArray entityUrls = new JsonArray();
+        JsonArray entityTypes = new JsonArray();
+
+        StreamSupport
+                .stream(json.get(VALUE).spliterator(), true)
+                .filter(entity -> {
+
+                    if (entitiesType.equals(FILES))
+                        return entity.has(FILE);
+
+                    if (entitiesType.equals(FOLDERS))
+                        return entity.has(FOLDER);
+
+                    return true;
+                })
+                .forEach(entity -> {
+
+                    JsonObject entityId = new JsonObject();
+                    entityId.addProperty(NAME, entity.get(NAME).asText());
+                    entityId.addProperty(ID, entity.get(ID).asText());
+                    entityIds.add(entityId);
+
+                    JsonObject entityUrl = new JsonObject();
+                    entityUrl.addProperty(NAME, entity.get(NAME).asText());
+                    entityUrl.addProperty(WEB_URL, entity.get(WEB_URL).asText());
+                    entityUrls.add(entityUrl);
+
+                    JsonObject entityType = new JsonObject();
+                    entityType.addProperty(NAME, entity.get(NAME).asText());
+                    if (entity.has(FOLDER))
+                        entityType.addProperty(TYPE, FOLDER);
+                    else
+                        entityType.addProperty(TYPE, entity.get(FILE).get(MIME_TYPE).asText());
+                    entityTypes.add(entityType);
+                });
+
+        httpResults.put(ENTITY_IDS, entityIds.toString());
+        httpResults.put(ENTITY_URLS, entityUrls.toString());
+        httpResults.put(ENTITY_TYPES, entityTypes.toString());
+    }
+
     public static class GetAllSitesService{
         public static void processHttpAllSites(Map<String,String> result){
             processHttpResult(result, Descriptions.GetSiteDetails.EXCEPTION_DESC);

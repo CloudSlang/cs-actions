@@ -29,4 +29,7 @@ public class Outputs {
     public static final String SITE_DISPLAY_NAME = "siteDisplayName";
     public static final String DRIVE_IDS = "driveIds";
     public static final String DRIVE_URLS = "driveUrls";
+    public static final String ENTITY_IDS = "entityIds";
+    public static final String ENTITY_URLS = "entityUrls";
+    public static final String ENTITY_TYPES = "entityTypes";
 }
