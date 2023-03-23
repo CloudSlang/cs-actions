@@ -167,7 +167,7 @@ public class Descriptions {
 
         public static final String RETURN_RESULT_DESC = "Details of the site.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
-        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the site details.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the all sites.";
         public static final String WEB_URL_DESC = "Web url of the site.";
         public static final String SITE_NAME_DESC = "Name of the site.";
         public static final String SITE_ID_OUT_DESC = "Id of the site.";
