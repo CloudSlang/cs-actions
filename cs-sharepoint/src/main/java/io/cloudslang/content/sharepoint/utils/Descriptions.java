@@ -115,7 +115,7 @@ public class Descriptions {
     public static class GetAllSites{
         public static final String SITE_IDS_DESC = "An array of pairs: displayName and id.";
         public static final String SITE_URLS_DESC = "An array of pairs: displayName and url.";
-        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the sites details.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve all the sites details.";
 
     }
 
