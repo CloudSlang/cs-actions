@@ -59,6 +59,7 @@ public class Constants {
     public static final String ROOT_CHILDREN_ENDPOINT = "/root/children";
     public static final String ROOT_PATH_ENDPOINT = "/root:/";
     public static final String CHILDREN_PATH_ENDPOINT = ":/children";
+    public static final String CHILDREN_ENDPOINT = "/children";
     public static final String DRIVES_ENDPOINT = "/drives/";
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";

@@ -27,12 +27,10 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
-import io.cloudslang.content.utils.StringUtilities;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
@@ -42,13 +40,9 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NO_DRIVE_FOUND;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
-import static io.cloudslang.content.sharepoint.utils.Inputs.GetEntitiesFromDrive.ENTITIES_TYPE;
-import static io.cloudslang.content.sharepoint.utils.InputsValidation.addVerifyEntitiesType;
-import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class SharepointService {
 
@@ -81,7 +75,7 @@ public class SharepointService {
                     httpResults.put(SITE_ID, namespacePathResponse);
                 } catch (Exception e) {
                     httpResults.put(SITE_ID, EXCEPTION_SITE_ID);
-                    httpResults.put(RETURN_CODE,NEGATIVE_RETURN_CODE);
+                    httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
                 }
             }
         } catch (
@@ -108,7 +102,7 @@ public class SharepointService {
                     httpResults.put(SITE_NAME, namePathResponse);
                 } catch (Exception e) {
                     httpResults.put(SITE_NAME, EXCEPTION_DESC);
-                    httpResults.put(RETURN_CODE,NEGATIVE_RETURN_CODE);
+                    httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
                 }
             }
         } catch (
@@ -116,9 +110,10 @@ public class SharepointService {
             throw new RuntimeException(e);
         }
     }
-    public static void processHttpGetRootSite(Map<String,String> result, String exceptionMessage){
+
+    public static void processHttpGetRootSite(Map<String, String> result, String exceptionMessage) {
         processHttpResult(result, exceptionMessage);
-        if(!exceptionMessage.equals(Descriptions.GetRootSite.EXCEPTION_DESC)) {
+        if (!exceptionMessage.equals(Descriptions.GetRootSite.EXCEPTION_DESC)) {
             JSONObject jsonObject = (JSONObject) JSONValue.parse(result.get(RETURN_RESULT));
             result.put(SITE_ID, jsonObject.getAsString("id"));
             result.put(SITE_NAME, jsonObject.getAsString("name"));
@@ -198,6 +193,7 @@ public class SharepointService {
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
         httpResults.put(DRIVE_NAME, json.get(NAME).asText());
     }
+
     public static void processHttpGetDriveIdByName(Map<String, String> httpResults, String driveName, String exceptionMessage) {
 
         processHttpResult(httpResults, exceptionMessage);
@@ -207,14 +203,15 @@ public class SharepointService {
 
         JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
         JsonArray elementArray = jsonResponse.getAsJsonArray("value");
-        for(JsonElement jsonElement : elementArray)
-            if(jsonElement.getAsJsonObject().get("name").getAsString().equals(driveName)){
+        for (JsonElement jsonElement : elementArray)
+            if (jsonElement.getAsJsonObject().get("name").getAsString().equals(driveName)) {
                 httpResults.put(DRIVE_ID, jsonElement.getAsJsonObject().get("id").getAsString());
                 return;
             }
         httpResults.put(RETURN_RESULT, NO_DRIVE_FOUND);
         httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
     }
+
     public static void processHttpGetEntitiesFromDrive(Map<String, String> httpResults, String exceptionMessage, String entitiesType) throws JsonProcessingException {
 
         processHttpResult(httpResults, exceptionMessage);
@@ -373,8 +370,9 @@ public class SharepointService {
             return getFailureResultsMap(exception);
         }
     }
-    public static class GetAllSitesService{
-        public static void processHttpAllSites(Map<String,String> result){
+
+    public static class GetAllSitesService {
+        public static void processHttpAllSites(Map<String, String> result) {
             processHttpResult(result, Descriptions.GetAllSites.EXCEPTION_DESC);
 
             if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
@@ -394,7 +392,8 @@ public class SharepointService {
         private static String DISPLAY_NAME = "displayName";
         private static String ID = "id";
         private static String WEB_URL = "webUrl";
-        public static void addAllSitesResult(Map<String, String> result){
+
+        public static void addAllSitesResult(Map<String, String> result) {
             JsonObject jsonResponse = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
             JsonArray elementArray = jsonResponse.getAsJsonArray("value");
 
@@ -402,19 +401,19 @@ public class SharepointService {
             JsonArray siteIds = new JsonArray();
             JsonArray siteUrls = new JsonArray();
 
-            for(JsonElement jsonElement : elementArray){
+            for (JsonElement jsonElement : elementArray) {
                 //create objects to be added in array
                 JsonObject siteId = new JsonObject();
                 JsonObject siteUrl = new JsonObject();
 
                 //add fields to object and add object to array
-                siteId.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME) );
-                siteId.add(ID, jsonElement.getAsJsonObject().get(ID) );
+                siteId.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME));
+                siteId.add(ID, jsonElement.getAsJsonObject().get(ID));
                 siteIds.add(siteId);
 
                 //add fields to object and add object to array
-                siteUrl.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME) );
-                siteUrl.add(WEB_URL, jsonElement.getAsJsonObject().get(WEB_URL) );
+                siteUrl.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME));
+                siteUrl.add(WEB_URL, jsonElement.getAsJsonObject().get(WEB_URL));
                 siteUrls.add(siteUrl);
             }
             //put the arrays as strings in the final result
@@ -422,10 +421,24 @@ public class SharepointService {
             result.put(SITE_URLS, siteUrls.toString());
 
         }
+
         public static void setFailureCustomResults(Map<String, String> httpResults, String... inputs) {
 
             for (String input : inputs)
                 httpResults.put(input, EMPTY);
+        }
+
+        public static void processHttpCreateFolder(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+            processHttpResult(httpResults, exceptionMessage);
+
+            if (!httpResults.get(STATUS_CODE).equals("201"))
+                return;
+
+            JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+            httpResults.put(WEB_URL, json.get(WEB_URL).asText());
+            httpResults.put(ID, json.get(ID).asText());
         }
     }
 
