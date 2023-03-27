@@ -26,6 +26,7 @@ public class Constants {
     public static final String NEGATIVE_RETURN_CODE = "-1";
     public static final String UTF_8 ="UTF-8";
     public static final String CONTENT_TYPE_TEXT_PLAIN ="text/plain";
+    public static final String APPLICATION_JSON = "application/json";
     public static final String ID = "id";
     public static final String CONNECTIONS_MAX_PER_ROUTE_CONST = "2";
     public static final String CONNECTIONS_MAX_TOTAL_CONST = "20";
@@ -52,6 +53,7 @@ public class Constants {
     public static final String FOLDERS = "folders";
     public static final String FILES = "files";
     public static final String ALL = "all";
+    public static final String LINK = "link";
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
     public static final String SITES_ENDPOINT = "/sites/";
@@ -61,6 +63,9 @@ public class Constants {
     public static final String CHILDREN_PATH_ENDPOINT = ":/children";
     public static final String CHILDREN_ENDPOINT = "/children";
     public static final String DRIVES_ENDPOINT = "/drives/";
+    public static final String DRIVE_ITEMS_ENDPOINT = "/drive/items/";
+    public static final String ITEMS_ENDPOINT = "/items/";
+    public static final String CREATE_LINK_ENDPOINT = "/createLink";
     public static final String EXCEPTION_ACQUIRE_TOKEN_FAILED = "Request to acquire token failed.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE = "The %s must be either 'API' or 'Native'.";
     public static final String EXCEPTION_INVALID_LOGIN_TYPE_REST = "The %s or %s is required for login.";

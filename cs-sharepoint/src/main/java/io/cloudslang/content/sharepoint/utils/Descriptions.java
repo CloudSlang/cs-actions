@@ -117,7 +117,7 @@ public class Descriptions {
     public static class GetAllSites {
         public static final String SITE_IDS_DESC = "An array of pairs: displayName and id.";
         public static final String SITE_URLS_DESC = "An array of pairs: displayName and url.";
-        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve all the sites details.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the sites.";
 
     }
 
@@ -280,5 +280,47 @@ public class Descriptions {
         public static final String ID_DESC = "The id of the folder created.";
         public static final String WEB_URL_DESC = "The web url of the folder created.";
 
+    }
+
+    public static class GetFileShareLink {
+
+        public static final String NAME = "get_item_share_link";
+
+        public static final String ITEM_ID_DESC = "The id of the item for which to generate the share link.";
+        public static final String SITE_ID_DESC = "The id of the site where the item is located. Mutually exclusive " +
+                "with the drive Id input. Ignored if the drive Id was provided.";
+        public static final String DRIVE_ID_DESC = "The id of the drive where the item is located. Mutually exclusive with the site Id input.";
+        public static final String TYPE_DESC = "The type of sharing link to create.\n" +
+                "view: Creates a read-only link to the DriveItem.\n" +
+                "edit: Creates a read-write link to the DriveItem.\n" +
+                "embed: Creates an embeddable link to the DriveItem. This option is only available for files in OneDrive personal.\n" +
+                "Valid values: view, edit, embed.";
+        public static final String PASSWORD_DESC = "The password of the sharing link that is set by the creator. Optional and OneDrive Personal only.";
+        public static final String EXPIRATION_DATE_TIME_DESC = "A String with format of yyyy-MM-ddTHH:mm:ssZ of " +
+                "DateTime indicates the expiration time of the permission.";
+        public static final String RETAIN_INHERITED_PERMISSIONS_DESC = "If true, any existing " +
+                "inherited permissions are retained on the shared item when sharing this item for the first time. " +
+                "If false, all existing permissions are removed when sharing for the first time.\n" +
+                "Valid value: true, false\n" +
+                "Default value: true";
+        public static final String SCOPE_DESC = "The scope of link to create. If the scope parameter is not specified, " +
+                "the default link type for the organization is created.\n" +
+                "anonymous: Anyone with the link has access, without needing to sign in. This may include people " +
+                "outside of your organization. Anonymous link support may be disabled by an administrator.\n" +
+                "organization: Anyone signed into your organization (tenant) can use the link to get access. Only " +
+                "available in OneDrive for Business and SharePoint.\n" +
+                "users: Share only with people you choose inside or outside the organization.\n" +
+                "Valid values: anonymous, organization, users.";
+
+        public static final String RETURN_RESULT_DESC = "Details related to the generated share link.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to get the share link.";
+        public static final String SHARE_LINK_DESC = "The web URL of the share link.";
+        public static final String SHARE_ID_DESC = "The id of the share link.";
+
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+
+        public static final String SUCCESS_DESC = "Share link was returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the share link.";
     }
 }

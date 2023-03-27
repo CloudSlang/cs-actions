@@ -77,4 +77,13 @@ public class Inputs {
         public static final String FOLDER_NAME = "folderName";
         public static final String BODY = "body";
     }
+
+    public static class GetFileShareLink {
+        public static final String ITEM_ID = "itemId";
+        public static final String TYPE = "type";
+        public static final String PASSWORD = "password";
+        public static final String EXPIRATION_DATE_TIME = "expirationDateTime";
+        public static final String RETAIN_INHERITED_PERMISSIONS = "retainInheritedPermissions";
+        public static final String SCOPE = "scope";
+    }
 }

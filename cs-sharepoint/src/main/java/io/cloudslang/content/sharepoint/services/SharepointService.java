@@ -263,6 +263,19 @@ public class SharepointService {
         httpResults.put(ENTITY_TYPES, entityTypes.toString());
     }
 
+    public static void processHttpGetItemShareLink(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200") && !httpResults.get(STATUS_CODE).equals("201"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        httpResults.put(SHARE_LINK, json.get(LINK).get(WEB_URL).asText());
+        httpResults.put(SHARE_ID, json.get(SHARE_ID).asText());
+    }
+
     public static Map<String, String> getEntitiesFromDrive(
             String authToken,
             String driveId,
@@ -356,10 +369,12 @@ public class SharepointService {
                                 sessionConnectionPool
                         );
 
-                        returnResult
-                                .get(VALUE)
-                                .getAsJsonArray()
-                                .addAll(JsonParser.parseString(folderResult.get(RETURN_RESULT)).getAsJsonObject().get(VALUE).getAsJsonArray());
+                        try {
+                            returnResult
+                                    .get(VALUE)
+                                    .getAsJsonArray()
+                                    .addAll(JsonParser.parseString(folderResult.get(RETURN_RESULT)).getAsJsonObject().get(VALUE).getAsJsonArray());
+                        }catch (Exception ignored) {}
                     });
 
             result.put(RETURN_RESULT, returnResult.toString());
@@ -370,7 +385,6 @@ public class SharepointService {
             return getFailureResultsMap(exception);
         }
     }
-
     public static class GetAllSitesService {
         public static void processHttpAllSites(Map<String, String> result) {
             processHttpResult(result, Descriptions.GetAllSites.EXCEPTION_DESC);
