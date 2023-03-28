@@ -53,7 +53,7 @@ public class UploadFile {
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
                                        @Param(value = FILE_PATH, required = true, description = FILE_PATH_DESC) String filePath,
-                                       @Param(value = SITE_ID, required = true, description = SITE_ID_DESC) String siteId,
+                                       @Param(value = SITE_ID, description = SITE_ID_DESC) String siteId,
                                        @Param(value = DRIVE_ID, description = DRIVE_ID_DESC) String driveId,
                                        @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
 
