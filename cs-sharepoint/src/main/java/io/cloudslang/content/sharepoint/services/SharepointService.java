@@ -30,7 +30,11 @@ import io.cloudslang.content.sharepoint.utils.Descriptions;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
@@ -46,6 +50,9 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class SharepointService {
 
+    public static String encodeFileName(String fileName) throws URISyntaxException {
+        return new URI(null, null, fileName, null).toASCIIString();
+    }
     public static void processHttpResult(Map<String, String> httpResults, String exceptionMessage) {
 
         String statusCode = httpResults.get(STATUS_CODE);
@@ -298,7 +305,7 @@ public class SharepointService {
 
         try {
 
-            String endpoint = path == null || path.isEmpty() ? ROOT_CHILDREN_ENDPOINT : ROOT_PATH_ENDPOINT + path + CHILDREN_PATH_ENDPOINT;
+            String endpoint = path == null || path.isEmpty() ? ROOT_CHILDREN_ENDPOINT : ROOT_PATH_ENDPOINT + encodeFileName(path) + CHILDREN_PATH_ENDPOINT;
 
             Map<String, String> result = new HttpClientGetAction().execute(
                     GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + endpoint,
@@ -442,5 +449,24 @@ public class SharepointService {
                 httpResults.put(input, EMPTY);
         }
     }
-
+    public static class UploadFileService{
+        public static String populateEndpointUploadFile(@NotNull final String siteId,
+                                                        @NotNull final String driveId,
+                                                        @NotNull final String folderId,
+                                                        @NotNull final String fileName) throws URISyntaxException {
+            String endpoint = GRAPH_API_ENDPOINT;
+            if (!siteId.isEmpty())
+                endpoint += SITES_ENDPOINT + siteId;
+            if (!driveId.isEmpty())
+                endpoint += DRIVES_ENDPOINT + driveId + ITEMS_ENDPOINT;
+            else
+                endpoint += DRIVE_ENDPOINT +  ITEMS_ENDPOINT;
+            if (!folderId.isEmpty())
+                endpoint += folderId + PATH_ENDPOINT;
+            else
+                endpoint += ROOT_PATH_ENDPOINT_2;
+            endpoint += encodeFileName(fileName) + CONTENT_ENDPOINT;
+            return endpoint;
+        }
+    }
 }
