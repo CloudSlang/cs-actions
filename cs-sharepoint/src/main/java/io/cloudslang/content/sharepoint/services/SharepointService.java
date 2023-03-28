@@ -273,7 +273,7 @@ public class SharepointService {
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
 
         httpResults.put(SHARE_LINK, json.get(LINK).get(WEB_URL).asText());
-        httpResults.put(SHARE_ID, json.get(SHARE_ID).asText());
+        httpResults.put(SHARE_ID, json.get(ID).asText());
     }
 
     public static Map<String, String> getEntitiesFromDrive(
