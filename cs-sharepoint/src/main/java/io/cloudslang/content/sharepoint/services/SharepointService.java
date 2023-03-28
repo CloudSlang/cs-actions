@@ -32,7 +32,6 @@ import net.minidev.json.JSONValue;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -53,6 +52,7 @@ public class SharepointService {
     public static String encodeFileName(String fileName) throws URISyntaxException {
         return new URI(null, null, fileName, null).toASCIIString();
     }
+
     public static void processHttpResult(Map<String, String> httpResults, String exceptionMessage) {
 
         String statusCode = httpResults.get(STATUS_CODE);
@@ -381,7 +381,8 @@ public class SharepointService {
                                     .get(VALUE)
                                     .getAsJsonArray()
                                     .addAll(JsonParser.parseString(folderResult.get(RETURN_RESULT)).getAsJsonObject().get(VALUE).getAsJsonArray());
-                        }catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
                     });
 
             result.put(RETURN_RESULT, returnResult.toString());
@@ -392,6 +393,7 @@ public class SharepointService {
             return getFailureResultsMap(exception);
         }
     }
+
     public static class GetAllSitesService {
         public static void processHttpAllSites(Map<String, String> result) {
             processHttpResult(result, Descriptions.GetAllSites.EXCEPTION_DESC);
@@ -449,7 +451,19 @@ public class SharepointService {
                 httpResults.put(input, EMPTY);
         }
     }
-    public static class UploadFileService{
+
+    public static class UploadFileService {
+        public static void processHttpResultUploadFile(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+            processHttpResult(httpResults, exceptionMessage);
+
+            if (StringUtils.isEmpty(httpResults.get(STATUS_CODE)) || Integer.parseInt(httpResults.get(STATUS_CODE)) < 200 || Integer.parseInt(httpResults.get(STATUS_CODE)) >= 300)
+                return;
+            JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+            httpResults.put(FILE_ID, json.get(ID).asText());
+            httpResults.put(WEB_URL, json.get(WEB_URL).asText());
+        }
+
         public static String populateEndpointUploadFile(@NotNull final String siteId,
                                                         @NotNull final String driveId,
                                                         @NotNull final String folderId,
@@ -460,7 +474,7 @@ public class SharepointService {
             if (!driveId.isEmpty())
                 endpoint += DRIVES_ENDPOINT + driveId + ITEMS_ENDPOINT;
             else
-                endpoint += DRIVE_ENDPOINT +  ITEMS_ENDPOINT;
+                endpoint += DRIVE_ENDPOINT + ITEMS_ENDPOINT;
             if (!folderId.isEmpty())
                 endpoint += folderId + PATH_ENDPOINT;
             else

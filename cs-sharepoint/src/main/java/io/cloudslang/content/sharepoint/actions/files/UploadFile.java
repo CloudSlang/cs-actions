@@ -22,6 +22,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.SharepointService.UploadFileService.populateEndpointUploadFile;
+import static io.cloudslang.content.sharepoint.services.SharepointService.UploadFileService.processHttpResultUploadFile;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.UploadFile.*;
@@ -43,6 +44,7 @@ public class UploadFile {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = FILE_ID, description = FILE_ID_DESC),
+                    @Output(value = WEB_URL, description = WEB_URL_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)},
             responses =
@@ -130,7 +132,7 @@ public class UploadFile {
                         sessionCookies,
                         sessionConnectionPool);
 
-               // processHttpResult(result);
+                processHttpResultUploadFile(result,EXCEPTION_DESC);
                 return result;
 
             } catch (Exception exception) {
