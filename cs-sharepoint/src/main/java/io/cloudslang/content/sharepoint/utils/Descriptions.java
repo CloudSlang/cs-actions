@@ -306,4 +306,34 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Share link was returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the share link.";
     }
+
+    public static class DownloadFile {
+
+        public static final String NAME = "download_file";
+
+        public static final String FILE_ID_DESC = "The id of the file to download.";
+        public static final String SITE_ID_DESC = "The id of the site where the file is located. Mutually exclusive " +
+                "with the drive Id input. Ignored if the drive Id was provided.";
+        public static final String DRIVE_ID_DESC = "The id of the drive where the file is located. Mutually exclusive with the site Id input.";
+        public static final String PATH_DESC = "The folder where the file will be downloaded.";
+        public static final String OVERWRITE_DESC = "If this input is true and a file with the same name already exists in the specified path, " +
+                "overwrite it with the downloaded file. Create a new file without overwriting if false.\n" +
+                "Valid values: true, false\n" +
+                "Default value: true";
+
+        public static final String RETURN_RESULT_DESC = "Details related to the downloaded file.";
+        public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to download the file.";
+        public static final String SIZE_DESC = "Size of the downloaded file.";
+        public static final String CREATED_DATE_TIME_DESC = "Created date and time of the downloaded file.";
+        public static final String LAST_MODIFIED_DATE_TIME_DESC = "Last modified date and time of the downloaded file.";
+        public static final String LAST_MODIFIED_BY_DESC = "Last user that modified the downloaded file.";
+        public static final String FILE_TYPE_DESC = "Type of the downloaded file.";
+        public static final String FILE_NAME_DESC = "Name of the downloaded file";
+
+        public static final String AUTH_TOKEN_DESC = "The authentication token.";
+
+        public static final String SUCCESS_DESC = "File downloaded successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to download the file.";
+    }
 }
