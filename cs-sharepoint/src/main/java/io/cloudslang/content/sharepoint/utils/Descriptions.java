@@ -276,9 +276,13 @@ public class Descriptions {
 
         public static final String BODY_DESC = "The body to be sent in the request. If empty, folder name input must contain a name for the folder.";
         public static final String SITE_ID_DESC = "The id of the site where the folder will be created.";
+        public static final String USER_ID_DESC = "The id of the user for which the folder will be created.";
+        public static final String DRIVE_ID_DESC = "The id of the drive where which the folder will be created.";
+        public static final String PARENT_ITEM_ID_DESC = "The id of the parent item for which the folder will be created.";
+        public static final String GROUP_ID_DESC = "The id of the group where the folder will be created.";
         public static final String EXCEPTION_DESC = "There was an error while trying to create the folder.";
-        public static final String ID_DESC = "The id of the folder created.";
-        public static final String WEB_URL_DESC = "The web url of the folder created.";
+        public static final String ID_DESC = "The id of the created folder.";
+        public static final String WEB_URL_DESC = "The web url of the created folder.";
 
     }
 

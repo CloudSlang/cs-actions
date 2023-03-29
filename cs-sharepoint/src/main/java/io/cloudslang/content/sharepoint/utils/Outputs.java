@@ -25,6 +25,9 @@ public class Outputs {
     public static final String DRIVE_NAME = "driveName";
     public static final String DRIVE_TYPE = "driveType";
     public static final String DRIVE_ID = "driveId";
+    public static final String USER_ID = "userId";
+    public static final String GROUP_ID = "groupId";
+    public static final String PARENT_ITEM_ID = "parentItemId";
     public static final String SITE_NAME = "siteName";
     public static final String SITE_DISPLAY_NAME = "siteDisplayName";
     public static final String DRIVE_IDS = "driveIds";

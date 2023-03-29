@@ -12,6 +12,7 @@ import io.cloudslang.content.httpclient.actions.HttpClientPostAction;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
 import io.cloudslang.content.utils.OutputUtilities;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.azure.core.http.ContentType.APPLICATION_JSON;
@@ -23,7 +24,8 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.sharepoint.services.SharepointService.GetAllSitesService.processHttpCreateFolder;
+import static io.cloudslang.content.sharepoint.services.SharepointService.CreateFolerService.processHost;
+import static io.cloudslang.content.sharepoint.services.SharepointService.CreateFolerService.processHttpCreateFolder;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.STATUS_CODE_DESC;
@@ -58,7 +60,11 @@ public class CreateFolder {
             })
     public Map<String, String> execute(
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
+            @Param(value = DRIVE_ID, description = DRIVE_ID_DESC, required = true, encrypted = true) String driveId,
+            @Param(value = GROUP_ID, description = GROUP_ID_DESC, required = true, encrypted = true) String groupId,
             @Param(value = SITE_ID, description = SITE_ID_DESC, required = true, encrypted = true) String siteId,
+            @Param(value = USER_ID, description = USER_ID_DESC, required = true, encrypted = true) String userId,
+            @Param(value = PARENT_ITEM_ID, description = PARENT_ITEM_ID_DESC, required = true, encrypted = true) String parentItemId,
             @Param(value = FOLDER_NAME, description = FOLDER_NAME_DESC, required = true) String folderName,
             @Param(value = BODY, description = BODY_DESC, required = true) String body,
 
@@ -78,6 +84,8 @@ public class CreateFolder {
             @Param(value = SESSION_CONNECTION_POOL, description = Descriptions.Common.SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool) {
 
         try {
+
+            // process
             if (body.isEmpty()) {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("name", folderName);
@@ -86,7 +94,7 @@ public class CreateFolder {
             }
 
             Map<String, String> result = new HttpClientPostAction().execute(
-                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + ROOT_DRIVE_ENDPOINT + CHILDREN_ENDPOINT,
+                    processHost(Arrays.asList(driveId, groupId, siteId, userId), parentItemId),
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,

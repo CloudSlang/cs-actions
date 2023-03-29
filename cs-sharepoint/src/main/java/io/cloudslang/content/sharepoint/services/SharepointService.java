@@ -31,6 +31,8 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
@@ -374,7 +376,8 @@ public class SharepointService {
                                     .get(VALUE)
                                     .getAsJsonArray()
                                     .addAll(JsonParser.parseString(folderResult.get(RETURN_RESULT)).getAsJsonObject().get(VALUE).getAsJsonArray());
-                        }catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
                     });
 
             result.put(RETURN_RESULT, returnResult.toString());
@@ -385,6 +388,7 @@ public class SharepointService {
             return getFailureResultsMap(exception);
         }
     }
+
     public static class GetAllSitesService {
         public static void processHttpAllSites(Map<String, String> result) {
             processHttpResult(result, Descriptions.GetAllSites.EXCEPTION_DESC);
@@ -436,10 +440,48 @@ public class SharepointService {
 
         }
 
+
         public static void setFailureCustomResults(Map<String, String> httpResults, String... inputs) {
 
             for (String input : inputs)
                 httpResults.put(input, EMPTY);
+        }
+    }
+
+    public static class CreateFolerService {
+
+        public static String processHost(List<String> ids, String parentItemId) {
+
+            // case when no ids were provided
+            int pos = ids.size();
+
+            for (String id : ids) {
+                if (!id.isEmpty()) {
+                    // when an input was found, store it and leave
+                    pos = ids.indexOf(id);
+                    break;
+                }
+            }
+            // create the list of endpoints
+            List<String> endpoints = Arrays.asList(DRIVES_ENDPOINT, GROUPS_ENDPOINT, SITES_ENDPOINT, USERS_ENDPOINT, ME_ENDPOINT);
+
+            // start building the host
+            StringBuilder hostBuilder = new StringBuilder(GRAPH_API_ENDPOINT);
+
+            // append the corresponding parts of the host
+            hostBuilder.append(endpoints.get(pos));
+
+            // if all ids are empty, no id to append
+            if (pos < ids.size())
+                hostBuilder.append(ids.get(pos));
+
+            hostBuilder.append(pos == 0 ? ITEMS_ENDPOINT : DRIVE_ITEMS_ENDPOINT);
+
+            // append common part
+            hostBuilder.append(parentItemId).append(CHILDREN_ENDPOINT);
+
+            return hostBuilder.toString();
+
         }
 
         public static void processHttpCreateFolder(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
@@ -454,6 +496,8 @@ public class SharepointService {
             httpResults.put(WEB_URL, json.get(WEB_URL).asText());
             httpResults.put(ID, json.get(ID).asText());
         }
+
     }
+
 
 }
