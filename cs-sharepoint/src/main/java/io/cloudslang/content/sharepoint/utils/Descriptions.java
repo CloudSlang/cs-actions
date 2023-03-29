@@ -257,7 +257,7 @@ public class Descriptions {
         public static final String SITE_ID_DESC = "Id of the site where the file will be uploaded.";
         public static final String WEB_URL_DESC = "Web url of the uploaded file";
 
-        public static final String FILE_PATH_DESC = "The absolute path to the file that will be attached.";
+        public static final String FILE_PATH_DESC = "The absolute path to the file that will be uploaded.";
         public static final String DRIVE_ID_DESC = "Id of the drive where the file will be uploaded.";
         public static final String FOLDER_ID_DESC = "Id of the folder where the file will be uploaded.";
         public static final String FILE_ID_DESC ="The Id of the file that was uploaded.";
