@@ -29,13 +29,17 @@ import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
+import java.net.URL;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
@@ -46,6 +50,7 @@ import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NO_DRIVE_FOUND;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
+import static io.cloudslang.content.sharepoint.utils.Utils.getFirstAvailableFileName;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -144,6 +149,31 @@ public class SharepointService {
         httpResults.put(DRIVE_NAME, json.get(NAME).asText());
         httpResults.put(DRIVE_TYPE, json.get(PARENT_REFERENCE).get(DRIVE_TYPE).asText());
         httpResults.put(DRIVE_ID, json.get(PARENT_REFERENCE).get(DRIVE_ID).asText());
+    }
+
+    public static void processHttpDownloadFile(Map<String, String> httpResults, String exceptionMessage, String path, boolean overwrite) throws IOException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        httpResults.put(SIZE, json.get(SIZE).asText());
+        httpResults.put(CREATED_DATE_TIME, json.get(FILE_SYSTEM_INFO).get(CREATED_DATE_TIME).asText());
+        httpResults.put(LAST_MODIFIED_DATE_TIME, json.get(FILE_SYSTEM_INFO).get(LAST_MODIFIED_DATE_TIME).asText());
+        httpResults.put(LAST_MODIFIED_BY, json.get(LAST_MODIFIED_BY).get(USER).get(DISPLAY_NAME).asText());
+        httpResults.put(FILE_TYPE, json.get(FILE).get(MIME_TYPE).asText());
+        httpResults.put(FILE_NAME, json.get(NAME).asText());
+
+        String downloadUrl = json.get(MICROSOFT_GRAPH_DOWNLOAD_URL).asText();
+        String fileName = path + "\\" + json.get(NAME).asText();
+
+        if (!overwrite)
+            fileName = getFirstAvailableFileName(fileName);
+
+        FileUtils.copyURLToFile(new URL(downloadUrl), new File(fileName));
     }
 
     public static void processHttpGetAllDrives(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
