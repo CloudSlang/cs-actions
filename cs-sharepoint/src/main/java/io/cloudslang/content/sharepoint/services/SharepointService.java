@@ -372,18 +372,12 @@ public class SharepointService {
                                                     @NotNull final String driveId,
                                                     @NotNull final String folderId,
                                                     @NotNull final String fileName) throws URISyntaxException {
-        String endpoint = GRAPH_API_ENDPOINT;
+        StringBuilder endpoint = new StringBuilder(GRAPH_API_ENDPOINT);
         if (!siteId.isEmpty())
-            endpoint += SITES_ENDPOINT + siteId;
-        if (!driveId.isEmpty())
-            endpoint += DRIVES_ENDPOINT + driveId + ITEMS_ENDPOINT;
-        else
-            endpoint += DRIVE_ENDPOINT + ITEMS_ENDPOINT;
-        if (!folderId.isEmpty())
-            endpoint += folderId + PATH_ENDPOINT;
-        else
-            endpoint += ROOT_PATH_ENDPOINT_2;
-        endpoint += encodeFileName(fileName) + CONTENT_ENDPOINT;
-        return endpoint;
+            endpoint.append(SITES_ENDPOINT).append(siteId);
+        endpoint.append(!driveId.isEmpty() ? DRIVES_ENDPOINT + driveId : DRIVE_ENDPOINT).append(ITEMS_ENDPOINT);
+        endpoint.append(!folderId.isEmpty() ? folderId + PATH_ENDPOINT : ROOT_PATH_ENDPOINT_2);
+        endpoint.append(encodeFileName(fileName)).append(CONTENT_ENDPOINT);
+        return endpoint.toString();
     }
 }
