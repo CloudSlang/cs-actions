@@ -57,11 +57,14 @@ public class Constants {
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
     public static final String SITES_ENDPOINT = "/sites/";
+    public static final String PATH_ENDPOINT =":/";
+    public static final String CONTENT_ENDPOINT= ":/content";
     public static final String ROOT_DRIVE_ENDPOINT = "/drive/root";
     public static final String ROOT_CHILDREN_ENDPOINT = "/root/children";
     public static final String ROOT_PATH_ENDPOINT = "/root:/";
+    public static final String ROOT_PATH_ENDPOINT_2 = "root:/";
     public static final String CHILDREN_PATH_ENDPOINT = ":/children";
-    public static final String CHILDREN_ENDPOINT = "/children";
+    public static final String DRIVE_ENDPOINT = "/drive";
     public static final String DRIVES_ENDPOINT = "/drives/";
     public static final String GROUPS_ENDPOINT = "/groups/";
     public static final String USERS_ENDPOINT = "/users/";
