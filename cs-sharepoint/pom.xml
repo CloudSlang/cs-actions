@@ -20,7 +20,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-sharepoint</artifactId>
-    <version>0.0.1-RC18</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
