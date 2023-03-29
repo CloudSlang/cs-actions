@@ -39,7 +39,7 @@ import static io.cloudslang.content.httpclient.utils.Constants.ANONYMOUS;
 import static io.cloudslang.content.httpclient.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
-import static io.cloudslang.content.sharepoint.services.SharepointService.GetAllSitesService.processHttpAllSites;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpAllSites;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.Endpoints.GET_ALL_SITES;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.RETURN_CODE_DESC;

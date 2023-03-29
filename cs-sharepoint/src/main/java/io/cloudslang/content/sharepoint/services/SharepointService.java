@@ -21,11 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import com.jayway.jsonpath.JsonPath;
-import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
-import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
@@ -41,7 +37,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
@@ -49,13 +44,18 @@ import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByNa
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.sharepoint.utils.Utils.getFirstAvailableFileName;
-import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class SharepointService {
 
     public static String encodeFileName(String fileName) throws URISyntaxException {
         return new URI(null, null, fileName, null).toASCIIString();
+    }
+
+    public static void setFailureCustomResults(Map<String, String> httpResults, String... inputs) {
+
+        for (String input : inputs)
+            httpResults.put(input, EMPTY);
     }
 
     public static void processHttpResult(Map<String, String> httpResults, String exceptionMessage) {
@@ -301,7 +301,6 @@ public class SharepointService {
     }
 
     public static void processHttpGetItemShareLink(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
-
         processHttpResult(httpResults, exceptionMessage);
 
         if (!httpResults.get(STATUS_CODE).equals("200") && !httpResults.get(STATUS_CODE).equals("201"))
@@ -313,204 +312,78 @@ public class SharepointService {
         httpResults.put(SHARE_ID, json.get(ID).asText());
     }
 
-    public static Map<String, String> getEntitiesFromDrive(
-            String authToken,
-            String driveId,
-            String path,
-            String entitiesType,
-            String proxyHost,
-            String proxyPort,
-            String proxyUsername,
-            String proxyPassword,
-            String trustAllRoots,
-            String x509HostnameVerifier,
-            String trustKeystore,
-            String trustPassword,
-            String tlsVersion,
-            String allowedCiphers,
-            String connectTimeout,
-            String executionTimeout,
-            SerializableSessionObject sessionCookies,
-            GlobalSessionObject sessionConnectionPool) {
+    public static void processHttpAllSites(Map<String, String> result) {
+        processHttpResult(result, Descriptions.GetAllSites.EXCEPTION_DESC);
 
-        try {
-
-            String endpoint = path == null || path.isEmpty() ? ROOT_CHILDREN_ENDPOINT : ROOT_PATH_ENDPOINT + encodeFileName(path) + CHILDREN_PATH_ENDPOINT;
-
-            Map<String, String> result = new HttpClientGetAction().execute(
-                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + endpoint,
-                    ANONYMOUS,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    proxyHost,
-                    proxyPort,
-                    proxyUsername,
-                    proxyPassword,
-                    tlsVersion,
-                    allowedCiphers,
-                    trustAllRoots,
-                    x509HostnameVerifier,
-                    trustKeystore,
-                    trustPassword,
-                    EMPTY,
-                    EMPTY,
-                    FALSE,
-                    CONNECTIONS_MAX_PER_ROUTE_CONST,
-                    CONNECTIONS_MAX_TOTAL_CONST,
-                    EMPTY,
-                    EMPTY,
-                    AUTHORIZATION_BEARER + authToken,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    EMPTY,
-                    connectTimeout,
-                    EMPTY,
-                    executionTimeout,
-                    sessionCookies,
-                    sessionConnectionPool
-            );
-
-            processHttpResult(result, Descriptions.GetEntitiesFromDrive.EXCEPTION_DESC);
-
-            if (result.get(RETURN_CODE).equals(NEGATIVE_RETURN_CODE))
-                return result;
-
-            JsonObject returnResult = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
-
-            StreamSupport
-                    .stream(returnResult.get(VALUE).getAsJsonArray().spliterator(), true)
-                    .filter(entity -> entity.getAsJsonObject().has(FOLDER))
-                    .forEach(folder -> {
-
-                        Map<String, String> folderResult = getEntitiesFromDrive(
-                                authToken,
-                                driveId,
-                                path + SLASH + folder.getAsJsonObject().get(Constants.NAME).getAsString(),
-                                entitiesType,
-                                proxyHost,
-                                proxyPort,
-                                proxyUsername,
-                                proxyPassword,
-                                trustAllRoots,
-                                x509HostnameVerifier,
-                                trustKeystore,
-                                trustPassword,
-                                tlsVersion,
-                                allowedCiphers,
-                                connectTimeout,
-                                executionTimeout,
-                                sessionCookies,
-                                sessionConnectionPool
-                        );
-
-                        try {
-                            returnResult
-                                    .get(VALUE)
-                                    .getAsJsonArray()
-                                    .addAll(JsonParser.parseString(folderResult.get(RETURN_RESULT)).getAsJsonObject().get(VALUE).getAsJsonArray());
-                        } catch (Exception ignored) {
-                        }
-                    });
-
-            result.put(RETURN_RESULT, returnResult.toString());
-
-            processHttpGetEntitiesFromDrive(result, Descriptions.GetEntitiesFromDrive.EXCEPTION_DESC, entitiesType);
-            return result;
-        } catch (Exception exception) {
-            return getFailureResultsMap(exception);
-        }
-    }
-
-    public static class GetAllSitesService {
-        public static void processHttpAllSites(Map<String, String> result) {
-            processHttpResult(result, Descriptions.GetAllSites.EXCEPTION_DESC);
-
-            if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
-                if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
-                    addAllSitesResult(result);
-                else {
-                    setFailureCustomResults(result, SITE_IDS, SITE_URLS);
-                    result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
-                    result.put(EXCEPTION, result.get(RETURN_RESULT));
-                    result.put(RETURN_RESULT, Descriptions.GetRootSite.EXCEPTION_DESC);
-                }
-
-            } else
+        if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
+            if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
+                addAllSitesResult(result);
+            else {
                 setFailureCustomResults(result, SITE_IDS, SITE_URLS);
-        }
-
-        private static String DISPLAY_NAME = "displayName";
-        private static String ID = "id";
-        private static String WEB_URL = "webUrl";
-
-        public static void addAllSitesResult(Map<String, String> result) {
-            JsonObject jsonResponse = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
-            JsonArray elementArray = jsonResponse.getAsJsonArray("value");
-
-            // arrays that store the pairs
-            JsonArray siteIds = new JsonArray();
-            JsonArray siteUrls = new JsonArray();
-
-            for (JsonElement jsonElement : elementArray) {
-                //create objects to be added in array
-                JsonObject siteId = new JsonObject();
-                JsonObject siteUrl = new JsonObject();
-
-                //add fields to object and add object to array
-                siteId.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME));
-                siteId.add(ID, jsonElement.getAsJsonObject().get(ID));
-                siteIds.add(siteId);
-
-                //add fields to object and add object to array
-                siteUrl.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME));
-                siteUrl.add(WEB_URL, jsonElement.getAsJsonObject().get(WEB_URL));
-                siteUrls.add(siteUrl);
+                result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
+                result.put(EXCEPTION, result.get(RETURN_RESULT));
+                result.put(RETURN_RESULT, Descriptions.GetRootSite.EXCEPTION_DESC);
             }
-            //put the arrays as strings in the final result
-            result.put(SITE_IDS, siteIds.toString());
-            result.put(SITE_URLS, siteUrls.toString());
 
-        }
-
-        public static void setFailureCustomResults(Map<String, String> httpResults, String... inputs) {
-
-            for (String input : inputs)
-                httpResults.put(input, EMPTY);
-        }
+        } else
+            setFailureCustomResults(result, SITE_IDS, SITE_URLS);
     }
 
-    public static class UploadFileService {
-        public static void processHttpResultUploadFile(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+    public static void addAllSitesResult(Map<String, String> result) {
+        JsonObject jsonResponse = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
+        JsonArray elementArray = jsonResponse.getAsJsonArray("value");
 
-            processHttpResult(httpResults, exceptionMessage);
+        // arrays that store the pairs
+        JsonArray siteIds = new JsonArray();
+        JsonArray siteUrls = new JsonArray();
 
-            if (StringUtils.isEmpty(httpResults.get(STATUS_CODE)) || Integer.parseInt(httpResults.get(STATUS_CODE)) < 200 || Integer.parseInt(httpResults.get(STATUS_CODE)) >= 300)
-                return;
-            JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
-            httpResults.put(FILE_ID, json.get(ID).asText());
-            httpResults.put(WEB_URL, json.get(WEB_URL).asText());
+        for (JsonElement jsonElement : elementArray) {
+            //create objects to be added in array
+            JsonObject siteId = new JsonObject();
+            JsonObject siteUrl = new JsonObject();
+
+            //add fields to object and add object to array
+            siteId.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME));
+            siteId.add(ID, jsonElement.getAsJsonObject().get(ID));
+            siteIds.add(siteId);
+
+            //add fields to object and add object to array
+            siteUrl.add(DISPLAY_NAME, jsonElement.getAsJsonObject().get(DISPLAY_NAME));
+            siteUrl.add(WEB_URL, jsonElement.getAsJsonObject().get(WEB_URL));
+            siteUrls.add(siteUrl);
         }
+        //put the arrays as strings in the final result
+        result.put(SITE_IDS, siteIds.toString());
+        result.put(SITE_URLS, siteUrls.toString());
+    }
 
-        public static String populateEndpointUploadFile(@NotNull final String siteId,
-                                                        @NotNull final String driveId,
-                                                        @NotNull final String folderId,
-                                                        @NotNull final String fileName) throws URISyntaxException {
-            String endpoint = GRAPH_API_ENDPOINT;
-            if (!siteId.isEmpty())
-                endpoint += SITES_ENDPOINT + siteId;
-            if (!driveId.isEmpty())
-                endpoint += DRIVES_ENDPOINT + driveId + ITEMS_ENDPOINT;
-            else
-                endpoint += DRIVE_ENDPOINT + ITEMS_ENDPOINT;
-            if (!folderId.isEmpty())
-                endpoint += folderId + PATH_ENDPOINT;
-            else
-                endpoint += ROOT_PATH_ENDPOINT_2;
-            endpoint += encodeFileName(fileName) + CONTENT_ENDPOINT;
-            return endpoint;
-        }
+    public static void processHttpResultUploadFile(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (StringUtils.isEmpty(httpResults.get(STATUS_CODE)) || Integer.parseInt(httpResults.get(STATUS_CODE)) < 200 || Integer.parseInt(httpResults.get(STATUS_CODE)) >= 300)
+            return;
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+        httpResults.put(FILE_ID, json.get(ID).asText());
+        httpResults.put(WEB_URL, json.get(WEB_URL).asText());
+    }
+
+    public static String populateEndpointUploadFile(@NotNull final String siteId,
+                                                    @NotNull final String driveId,
+                                                    @NotNull final String folderId,
+                                                    @NotNull final String fileName) throws URISyntaxException {
+        String endpoint = GRAPH_API_ENDPOINT;
+        if (!siteId.isEmpty())
+            endpoint += SITES_ENDPOINT + siteId;
+        if (!driveId.isEmpty())
+            endpoint += DRIVES_ENDPOINT + driveId + ITEMS_ENDPOINT;
+        else
+            endpoint += DRIVE_ENDPOINT + ITEMS_ENDPOINT;
+        if (!folderId.isEmpty())
+            endpoint += folderId + PATH_ENDPOINT;
+        else
+            endpoint += ROOT_PATH_ENDPOINT_2;
+        endpoint += encodeFileName(fileName) + CONTENT_ENDPOINT;
+        return endpoint;
     }
 }
