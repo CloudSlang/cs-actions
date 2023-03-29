@@ -35,4 +35,10 @@ public class Outputs {
     public static final String FILE_ID = "fileId";
     public static final String SHARE_LINK = "shareLink";
     public static final String SHARE_ID = "shareId";
+    public static final String SIZE = "size";
+    public static final String CREATED_DATE_TIME = "createdDateTime";
+    public static final String LAST_MODIFIED_DATE_TIME = "lastModifiedDateTime";
+    public static final String LAST_MODIFIED_BY = "lastModifiedBy";
+    public static final String FILE_TYPE = "fileType";
+    public static final String FILE_NAME = "fileName";
 }
