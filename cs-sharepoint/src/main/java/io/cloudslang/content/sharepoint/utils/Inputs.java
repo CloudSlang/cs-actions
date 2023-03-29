@@ -64,7 +64,7 @@ public class Inputs {
     }
     public static class UploadFile{
         public static final String SITE_ID = "siteId";
-        public static final String DRIVE_ID = "driveID";
+        public static final String DRIVE_ID = "driveId";
         public static final String FOLDER_ID = "folderId";
         public static final String FILE_PATH = "filePath";
     }
