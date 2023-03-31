@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
+import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
@@ -48,6 +49,7 @@ import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByNa
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.sharepoint.utils.Utils.getFirstAvailableFileName;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class SharepointService {
@@ -305,6 +307,7 @@ public class SharepointService {
     }
 
     public static void processHttpGetItemShareLink(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
         processHttpResult(httpResults, exceptionMessage);
 
         if (!httpResults.get(STATUS_CODE).equals("200") && !httpResults.get(STATUS_CODE).equals("201"))
