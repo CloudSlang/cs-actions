@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
+import io.cloudslang.content.sharepoint.utils.Utils;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 import org.apache.commons.io.FileUtils;
@@ -42,6 +43,7 @@ import java.util.stream.StreamSupport;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.CreateFolder.HOST_EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NO_DRIVE_FOUND;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
@@ -361,68 +363,6 @@ public class SharepointService {
 
     public static void processHttpResultUploadFile(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
 
-        public static void setFailureCustomResults(Map<String, String> httpResults, String... inputs) {
-
-            for (String input : inputs)
-                httpResults.put(input, EMPTY);
-        }
-    }
-
-    public static class CreateFolerService {
-
-        public static String processHost(List<String> ids, String parentItemId) {
-
-            // case when no ids were provided
-            int pos = ids.size();
-
-            for (String id : ids) {
-                if (!id.isEmpty()) {
-                    // when an input was found, store it and leave
-                    pos = ids.indexOf(id);
-                    break;
-                }
-            }
-            // create the list of endpoints
-            List<String> endpoints = Arrays.asList(DRIVES_ENDPOINT, GROUPS_ENDPOINT, SITES_ENDPOINT, USERS_ENDPOINT, ME_ENDPOINT);
-
-            // start building the host
-            StringBuilder hostBuilder = new StringBuilder(GRAPH_API_ENDPOINT);
-
-            // append the corresponding parts of the host
-            hostBuilder.append(endpoints.get(pos));
-
-            // if all ids are empty, no id to append
-            if (pos < ids.size())
-                hostBuilder.append(ids.get(pos));
-
-            hostBuilder.append(pos == 0 ? ITEMS_ENDPOINT : DRIVE_ITEMS_ENDPOINT);
-
-            // append common part
-            hostBuilder.append(parentItemId).append(CHILDREN_PATH_ENDPOINT);
-
-            return hostBuilder.toString();
-
-        }
-
-        public static void processHttpCreateFolder(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
-
-            processHttpResult(httpResults, exceptionMessage);
-
-            if (!httpResults.get(STATUS_CODE).equals("201"))
-                return;
-
-            JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
-
-            httpResults.put(WEB_URL, json.get(WEB_URL).asText());
-            httpResults.put(ID, json.get(ID).asText());
-        }
-
-    }
-
-
-    public static class UploadFileService {
-        public static void processHttpResultUploadFile(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
-
         processHttpResult(httpResults, exceptionMessage);
 
         if (StringUtils.isEmpty(httpResults.get(STATUS_CODE)) || Integer.parseInt(httpResults.get(STATUS_CODE)) < 200 || Integer.parseInt(httpResults.get(STATUS_CODE)) >= 300)
@@ -444,4 +384,61 @@ public class SharepointService {
         endpoint.append(encodeFileName(fileName)).append(CONTENT_ENDPOINT);
         return endpoint.toString();
     }
+
+    public static String processHost(List<String> ids, String parentItemId) throws Utils.HostException {
+        boolean found = false;
+        for(String id:ids){
+            if (!id.isEmpty()){
+                if(!found)
+                    found=true;
+                else
+                    throw new Utils.HostException(HOST_EXCEPTION_DESC);
+            }
+        }
+
+        // case when no ids were provided
+        int pos = ids.size();
+
+        for (String id : ids) {
+            if (!id.isEmpty()) {
+                // when an input was found, store it and leave
+                pos = ids.indexOf(id);
+                break;
+            }
+        }
+        // create the list of endpoints
+        List<String> endpoints = Arrays.asList(DRIVES_ENDPOINT, GROUPS_ENDPOINT, SITES_ENDPOINT, USERS_ENDPOINT, ME_ENDPOINT);
+
+        // start building the host
+        StringBuilder hostBuilder = new StringBuilder(GRAPH_API_ENDPOINT);
+
+        // append the corresponding parts of the host
+        hostBuilder.append(endpoints.get(pos));
+
+        // if all ids are empty, no id to append
+        if (pos < ids.size())
+            hostBuilder.append(ids.get(pos));
+
+        hostBuilder.append(pos == 0 ? ITEMS_ENDPOINT : DRIVE_ITEMS_ENDPOINT);
+
+        // append common part
+        hostBuilder.append(parentItemId).append(CHILDREN_PATH_ENDPOINT);
+
+        return hostBuilder.toString();
+
+    }
+
+    public static void processHttpCreateFolder(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("201"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        httpResults.put(WEB_URL, json.get(WEB_URL).asText());
+        httpResults.put(ID, json.get(ID).asText());
+    }
+
 }
