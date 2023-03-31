@@ -69,6 +69,9 @@ public class Constants {
     public static final String CHILDREN_PATH_ENDPOINT = ":/children";
     public static final String DRIVE_ENDPOINT = "/drive";
     public static final String DRIVES_ENDPOINT = "/drives/";
+    public static final String GROUPS_ENDPOINT = "/groups/";
+    public static final String USERS_ENDPOINT = "/users/";
+    public static final String ME_ENDPOINT = "/me";
     public static final String DRIVE_ITEMS_ENDPOINT = "/drive/items/";
     public static final String ITEMS_ENDPOINT = "/items/";
     public static final String CREATE_LINK_ENDPOINT = "/createLink";

@@ -46,4 +46,9 @@ public class Utils {
 
         return newPath;
     }
+    public static class HostException extends Exception{
+        public HostException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
 }

@@ -44,17 +44,20 @@ public class Inputs {
         public static final String RESOURCE = "resource";
         public static final String SCOPE = "scope";
     }
-    public static class GetSiteIdByName{
+
+    public static class GetSiteIdByName {
         public static final String SITE_NAME = "siteName";
     }
-    public static class GetRootSiteInputs{
+
+    public static class GetRootSiteInputs {
         public static final String AUTH_TOKEN = "authToken";
     }
 
-    public static class GetRootDrive{
+    public static class GetRootDrive {
         public static final String SITE_ID = "siteId";
     }
-    public static class GetSiteNameById{
+
+    public static class GetSiteNameById {
         public static final String SITE_ID = "siteId";
     }
 
@@ -62,11 +65,17 @@ public class Inputs {
         public static final String PATH = "path";
         public static final String ENTITIES_TYPE = "entitiesType";
     }
-    public static class UploadFile{
+
+    public static class UploadFile {
         public static final String SITE_ID = "siteId";
         public static final String DRIVE_ID = "driveId";
         public static final String FOLDER_ID = "folderId";
         public static final String FILE_PATH = "filePath";
+    }
+
+    public static class CreateFolder {
+        public static final String FOLDER_NAME = "folderName";
+        public static final String BODY = "body";
     }
 
     public static class GetFileShareLink {
