@@ -86,4 +86,9 @@ public class Inputs {
         public static final String RETAIN_INHERITED_PERMISSIONS = "retainInheritedPermissions";
         public static final String SCOPE = "scope";
     }
+
+    public static class DownloadFile{
+        public static final String PATH = "path";
+        public static final String OVERWRITE = "overwrite";
+    }
 }
