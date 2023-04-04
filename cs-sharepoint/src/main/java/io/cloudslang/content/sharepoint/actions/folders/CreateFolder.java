@@ -50,8 +50,7 @@ import static io.cloudslang.content.sharepoint.utils.Descriptions.CreateFolder.*
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAllDrives.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sharepoint.utils.Inputs.CreateFolder.BODY;
-import static io.cloudslang.content.sharepoint.utils.Inputs.CreateFolder.FOLDER_NAME;
+import static io.cloudslang.content.sharepoint.utils.Inputs.CreateFolder.*;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -74,13 +73,13 @@ public class CreateFolder {
             })
     public Map<String, String> execute(
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
-            @Param(value = DRIVE_ID, description = DRIVE_ID_DESC, required = true, encrypted = true) String driveId,
-            @Param(value = GROUP_ID, description = GROUP_ID_DESC, required = true, encrypted = true) String groupId,
-            @Param(value = SITE_ID, description = SITE_ID_DESC, required = true, encrypted = true) String siteId,
-            @Param(value = USER_ID, description = USER_ID_DESC, required = true, encrypted = true) String userId,
-            @Param(value = PARENT_ITEM_ID, description = PARENT_ITEM_ID_DESC, required = true, encrypted = true) String parentItemId,
-            @Param(value = FOLDER_NAME, description = FOLDER_NAME_DESC, required = true) String folderName,
-            @Param(value = BODY, description = BODY_DESC, required = true) String body,
+            @Param(value = DRIVE_ID, encrypted = true, description = DRIVE_ID_DESC) String driveId,
+            @Param(value = GROUP_ID, encrypted = true, description = GROUP_ID_DESC) String groupId,
+            @Param(value = SITE_ID, encrypted = true, description = SITE_ID_DESC) String siteId,
+            @Param(value = USER_ID, encrypted = true, description = USER_ID_DESC) String userId,
+            @Param(value = PARENT_ITEM_ID, encrypted = true, description = PARENT_ITEM_ID_DESC) String parentItemId,
+            @Param(value = FOLDER_NAME, description = FOLDER_NAME_DESC) String folderName,
+            @Param(value = JSON_BODY, description = JSON_BODY_DESC) String jsonBody,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -100,11 +99,11 @@ public class CreateFolder {
         try {
 
             // process
-            if (body.isEmpty()) {
+            if (jsonBody.isEmpty()) {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("name", folderName);
                 jsonObject.add("folder", new JsonObject());
-                body = jsonObject.toString();
+                jsonBody = jsonObject.toString();
             }
 
             Map<String, String> result = new HttpClientPostAction().execute(
@@ -139,7 +138,7 @@ public class CreateFolder {
                     EMPTY,
                     EMPTY,
                     EMPTY,
-                    body,
+                    jsonBody,
                     APPLICATION_JSON,
                     EMPTY,
                     connectTimeout,
