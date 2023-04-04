@@ -425,7 +425,7 @@ public class SharepointService {
         hostBuilder.append(pos == 0 ? ITEMS_ENDPOINT : DRIVE_ITEMS_ENDPOINT);
 
         // append common part
-        hostBuilder.append(parentItemId).append(CHILDREN_PATH_ENDPOINT);
+        hostBuilder.append(parentItemId).append(CHILDREN_ENDPOINT);
 
         return hostBuilder.toString();
 
