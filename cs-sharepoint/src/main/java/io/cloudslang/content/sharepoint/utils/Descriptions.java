@@ -276,7 +276,7 @@ public class Descriptions {
         public static final String CREATE_FOLDER_DESC = "Creates an Office 365 Sharepoint folder.";
         public static final String FOLDER_NAME_DESC = "The name of the folder to be created. If body input is not empty, this input is ignored.";
 
-        public static final String BODY_DESC = "The body to be sent in the request. If empty, folder name input must contain a name for the folder.";
+        public static final String JSON_BODY_DESC = "The body to be sent in the request. If empty, folder name input must contain a name for the folder.";
         public static final String SITE_ID_DESC = "The id of the site where the folder will be created.";
         public static final String USER_ID_DESC = "The id of the user for which the folder will be created.";
         public static final String DRIVE_ID_DESC = "The id of the drive where which the folder will be created.";

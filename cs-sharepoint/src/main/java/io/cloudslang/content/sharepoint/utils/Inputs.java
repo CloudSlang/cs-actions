@@ -75,7 +75,7 @@ public class Inputs {
 
     public static class CreateFolder {
         public static final String FOLDER_NAME = "folderName";
-        public static final String BODY = "body";
+        public static final String JSON_BODY = "jsonBody";
     }
 
     public static class GetFileShareLink {
