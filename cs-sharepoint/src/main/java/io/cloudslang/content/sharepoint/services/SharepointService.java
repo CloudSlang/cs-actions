@@ -47,7 +47,6 @@ import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.CreateFolder.HOST_EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NO_DRIVE_FOUND;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
-import static io.cloudslang.content.sharepoint.utils.Inputs.GetFileShareLink.ENTITY_ID;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.sharepoint.utils.Utils.getFirstAvailableFileName;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
