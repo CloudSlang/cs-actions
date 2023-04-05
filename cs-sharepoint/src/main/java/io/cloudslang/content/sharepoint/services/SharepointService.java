@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.utils.Constants.COLON;
@@ -48,9 +47,9 @@ import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.CreateFolder.HOST_EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NO_DRIVE_FOUND;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.EXCEPTION_DESC;
+import static io.cloudslang.content.sharepoint.utils.Inputs.GetFileShareLink.ENTITY_ID;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.sharepoint.utils.Utils.getFirstAvailableFileName;
-import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class SharepointService {
@@ -68,6 +67,9 @@ public class SharepointService {
     public static void processHttpResult(Map<String, String> httpResults, String exceptionMessage) {
 
         String statusCode = httpResults.get(STATUS_CODE);
+
+        if (StringUtils.isEmpty(statusCode))
+            statusCode = EMPTY;
 
         if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
             if (StringUtils.isEmpty(httpResults.get(EXCEPTION))) {
@@ -328,17 +330,29 @@ public class SharepointService {
         httpResults.put(SHARE_ID, json.get(ID).asText());
     }
 
-    public static void processHttpGetEntityIdByName(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+    public static String getEntityPath(Map<String, String> httpResults, String entityName, String parentFolder) throws JsonProcessingException {
 
-        processHttpResult(httpResults, exceptionMessage);
+        if (!httpResults.get(STATUS_CODE).equals("200"))
+            return EMPTY;
 
-        if (!httpResults.get(STATUS_CODE).equals("200") && !httpResults.get(STATUS_CODE).equals("201"))
-            return;
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(ENTITY_PATHS));
 
-        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
-
-        httpResults.put(SHARE_LINK, json.get(LINK).get(WEB_URL).asText());
-        httpResults.put(SHARE_ID, json.get(ID).asText());
+        return StreamSupport
+                .stream(json.spliterator(), true)
+                .filter(entity ->
+                        entity
+                                .get(NAME)
+                                .asText()
+                                .equals(entityName) &&
+                        (parentFolder.equals(EMPTY) ||
+                        entity
+                                .get(PATH)
+                                .asText()
+                                .endsWith(SLASH + parentFolder))
+                )
+                .map(entity -> entity.get(PATH).asText() + SLASH + entity.get(NAME).asText())
+                .findFirst()
+                .orElse(EMPTY);
     }
 
     public static void processHttpAllSites(Map<String, String> result) {
@@ -466,4 +480,16 @@ public class SharepointService {
         httpResults.put(ID, json.get(ID).asText());
     }
 
+    public static void processHttpGetEntityIdByName(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        httpResults.put(WEB_URL, json.get(WEB_URL).asText());
+        httpResults.put(ENTITY_ID, json.get(ID).asText());
+    }
 }
