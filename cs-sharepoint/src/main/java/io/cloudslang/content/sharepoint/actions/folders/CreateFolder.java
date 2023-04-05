@@ -73,11 +73,11 @@ public class CreateFolder {
             })
     public Map<String, String> execute(
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
-            @Param(value = DRIVE_ID, description = DRIVE_ID_DESC, encrypted = true) String driveId,
-            @Param(value = GROUP_ID, description = GROUP_ID_DESC, encrypted = true) String groupId,
-            @Param(value = SITE_ID, description = SITE_ID_DESC, encrypted = true) String siteId,
-            @Param(value = USER_ID, description = USER_ID_DESC, encrypted = true) String userId,
-            @Param(value = PARENT_ITEM_ID, description = PARENT_ITEM_ID_DESC, encrypted = true) String parentItemId,
+            @Param(value = DRIVE_ID, encrypted = true, description = DRIVE_ID_DESC) String driveId,
+            @Param(value = GROUP_ID, encrypted = true, description = GROUP_ID_DESC) String groupId,
+            @Param(value = SITE_ID, encrypted = true, description = SITE_ID_DESC) String siteId,
+            @Param(value = USER_ID, encrypted = true, description = USER_ID_DESC) String userId,
+            @Param(value = PARENT_ITEM_ID, encrypted = true, description = PARENT_ITEM_ID_DESC) String parentItemId,
             @Param(value = FOLDER_NAME, description = FOLDER_NAME_DESC) String folderName,
             @Param(value = JSON_BODY, description = JSON_BODY_DESC) String jsonBody,
 
