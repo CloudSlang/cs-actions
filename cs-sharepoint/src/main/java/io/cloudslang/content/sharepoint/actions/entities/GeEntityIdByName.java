@@ -141,8 +141,8 @@ public class GeEntityIdByName {
             }
 
             String endpoint = driveId.isEmpty() ?
-                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ENDPOINT + ROOT_PATH_ENDPOINT + entityPath :
-                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ROOT_PATH_ENDPOINT + entityPath;
+                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ENDPOINT + ROOT_PATH_ENDPOINT + encodeFileName(entityPath) :
+                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ROOT_PATH_ENDPOINT + encodeFileName(entityPath);
 
             Map<String, String> result = new HttpClientGetAction().execute(
                     endpoint,
