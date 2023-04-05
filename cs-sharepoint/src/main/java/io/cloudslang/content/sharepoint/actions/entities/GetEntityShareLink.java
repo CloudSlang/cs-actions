@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions.files;
+package io.cloudslang.content.sharepoint.actions.entities;
 
 import com.google.gson.JsonObject;
 import com.hp.oo.sdk.content.annotations.Action;
@@ -37,15 +37,14 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetItemShareLink;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpResult;
+import static io.cloudslang.content.sharepoint.services.SharepointService.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetFileShareLink.NAME;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetFileShareLink.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetFileShareLink.EXCEPTION_DESC;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetFileShareLink.STATUS_CODE_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShareLink.NAME;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShareLink.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShareLink.EXCEPTION_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShareLink.STATUS_CODE_DESC;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.GetFileShareLink.*;
@@ -56,7 +55,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetItemShareLink {
+public class GetEntityShareLink {
     @Action(name = NAME,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -72,7 +71,7 @@ public class GetItemShareLink {
             })
     public Map<String, String> execute(
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
-            @Param(value = ITEM_ID, description = ITEM_ID_DESC, required = true) String itemId,
+            @Param(value = ENTITY_ID, description = ENTITY_ID_DESC, required = true) String entityId,
             @Param(value = DRIVE_ID, description = DRIVE_ID_DESC) String driveId,
             @Param(value = SITE_ID, description = SITE_ID_DESC) String siteId,
 
@@ -115,8 +114,8 @@ public class GetItemShareLink {
                 return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
             String endpoint = driveId == null || driveId.isEmpty() ?
-                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ITEMS_ENDPOINT + itemId + CREATE_LINK_ENDPOINT :
-                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ITEMS_ENDPOINT + itemId + CREATE_LINK_ENDPOINT;
+                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ITEMS_ENDPOINT + entityId + CREATE_LINK_ENDPOINT :
+                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ITEMS_ENDPOINT + entityId + CREATE_LINK_ENDPOINT;
 
             JsonObject body = new JsonObject();
 
@@ -177,7 +176,7 @@ public class GetItemShareLink {
                     sessionConnectionPool
             );
 
-            processHttpGetItemShareLink(result, EXCEPTION_DESC);
+            processHttpGetEntityShareLink(result, EXCEPTION_DESC);
             return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

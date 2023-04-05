@@ -79,7 +79,7 @@ public class Inputs {
     }
 
     public static class GetFileShareLink {
-        public static final String ITEM_ID = "itemId";
+        public static final String ENTITY_ID = "itemId";
         public static final String TYPE = "type";
         public static final String PASSWORD = "password";
         public static final String EXPIRATION_DATE_TIME = "expirationDateTime";
@@ -87,8 +87,14 @@ public class Inputs {
         public static final String SCOPE = "scope";
     }
 
-    public static class DownloadFile{
+    public static class DownloadFile {
         public static final String PATH = "path";
         public static final String OVERWRITE = "overwrite";
+    }
+
+    public static class GetEntityIdByName {
+        public static final String ENTITY_NAME = "entityName";
+        public static final String PARENT_FOLDER = "parentFolder";
+        public static final String ENTITY_PATH = "entityPath";
     }
 }

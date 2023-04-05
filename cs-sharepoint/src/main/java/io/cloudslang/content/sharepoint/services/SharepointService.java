@@ -43,6 +43,7 @@ import java.util.stream.StreamSupport;
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.httpclient.utils.Constants.COLON;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.CreateFolder.HOST_EXCEPTION_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NO_DRIVE_FOUND;
@@ -267,6 +268,7 @@ public class SharepointService {
         JsonArray entityIds = new JsonArray();
         JsonArray entityUrls = new JsonArray();
         JsonArray entityTypes = new JsonArray();
+        JsonArray entityPaths = new JsonArray();
 
         StreamSupport
                 .stream(json.get(VALUE).spliterator(), true)
@@ -292,6 +294,12 @@ public class SharepointService {
                     entityUrl.addProperty(WEB_URL, entity.get(WEB_URL).asText());
                     entityUrls.add(entityUrl);
 
+                    JsonObject entityPath = new JsonObject();
+                    entityPath.addProperty(NAME, entity.get(NAME).asText());
+                    String path = entity.get(PARENT_REFERENCE).get(PATH).asText();
+                    entityPath.addProperty(PATH, path.substring(path.indexOf(COLON) + 1));
+                    entityPaths.add(entityPath);
+
                     JsonObject entityType = new JsonObject();
                     entityType.addProperty(NAME, entity.get(NAME).asText());
                     if (entity.has(FOLDER))
@@ -304,9 +312,23 @@ public class SharepointService {
         httpResults.put(ENTITY_IDS, entityIds.toString());
         httpResults.put(ENTITY_URLS, entityUrls.toString());
         httpResults.put(ENTITY_TYPES, entityTypes.toString());
+        httpResults.put(ENTITY_PATHS, entityPaths.toString());
     }
 
-    public static void processHttpGetItemShareLink(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+    public static void processHttpGetEntityShareLink(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("200") && !httpResults.get(STATUS_CODE).equals("201"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        httpResults.put(SHARE_LINK, json.get(LINK).get(WEB_URL).asText());
+        httpResults.put(SHARE_ID, json.get(ID).asText());
+    }
+
+    public static void processHttpGetEntityIdByName(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
 
         processHttpResult(httpResults, exceptionMessage);
 

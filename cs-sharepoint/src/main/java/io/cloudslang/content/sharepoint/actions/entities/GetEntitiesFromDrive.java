@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions.files;
+package io.cloudslang.content.sharepoint.actions.entities;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -62,6 +62,7 @@ public class GetEntitiesFromDrive {
                     @Output(value = ENTITY_IDS, description = ENTITY_IDS_DESC),
                     @Output(value = ENTITY_URLS, description = ENTITY_URLS_DESC),
                     @Output(value = ENTITY_TYPES, description = ENTITY_TYPES_DESC),
+                    @Output(value = ENTITY_PATHS, description = ENTITY_PATHS_DESC),
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),

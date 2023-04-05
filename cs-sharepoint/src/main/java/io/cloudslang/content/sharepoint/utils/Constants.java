@@ -57,6 +57,7 @@ public class Constants {
     public static final String MICROSOFT_GRAPH_DOWNLOAD_URL = "@microsoft.graph.downloadUrl";
     public static final String FILE_SYSTEM_INFO = "fileSystemInfo";
     public static final String USER = "user";
+    public static final String PATH = "path";
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
     public static final String SITES_ENDPOINT = "/sites/";

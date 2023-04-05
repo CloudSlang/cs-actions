@@ -35,6 +35,7 @@ public class Outputs {
     public static final String ENTITY_IDS = "entityIds";
     public static final String ENTITY_URLS = "entityUrls";
     public static final String ENTITY_TYPES = "entityTypes";
+    public static final String ENTITY_PATHS = "entityPaths";
     public static final String FILE_ID = "fileId";
     public static final String SHARE_LINK = "shareLink";
     public static final String SHARE_ID = "shareId";
