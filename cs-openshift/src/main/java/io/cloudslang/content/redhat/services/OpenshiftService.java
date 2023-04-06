@@ -8,12 +8,14 @@ import io.cloudslang.content.redhat.entities.HttpInput;
 import com.google.gson.JsonPrimitive;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.redhat.utils.Descriptions;
+import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -131,6 +133,33 @@ public class OpenshiftService {
         } catch (Exception e) {
             //in case an error arises during the parsing, populate the custom outputs with empty values
             setFailureCustomResults(httpResults, POD_LIST, POD_ARRAY, DOCUMENT_OUTPUT);
+
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public static void addDeploymentListResults(Map<String, String> httpResults) {
+        try {
+            if (!(httpResults.get(RETURN_RESULT).isEmpty())) {
+
+                StringBuilder deploymentList = new StringBuilder();
+                List<JsonObject> deploymentPairList = new ArrayList<>();
+
+                extractValue(httpResults, deploymentList, deploymentPairList);
+
+                //populate the podList and podArray outputs
+                httpResults.put(DEPLOYMENT_LIST, deploymentList.toString());
+                httpResults.put(DEPLOYMENT_ARRAY, deploymentPairList.toString());
+
+                //overwrite the returnResult output with a success message
+                httpResults.put(RETURN_RESULT, Descriptions.GetDeploymentList.RETURN_RESULT_DESC);
+
+            }
+
+        } catch (Exception e) {
+            //in case an error arises during the parsing, populate the custom outputs with empty values
+            setFailureCustomResults(httpResults, DEPLOYMENT_LIST, DEPLOYMENT_ARRAY, DOCUMENT_OUTPUT);
 
             throw new RuntimeException(e);
         }
@@ -322,4 +351,49 @@ public class OpenshiftService {
         }
     }
 
+    public static void processHttpGetDeploymentDetailsResult(Map<String, String> httpResults) {
+
+        //Process the return result output
+        String returnResult = httpResults.get(RETURN_RESULT);
+        try {
+
+            if (!(returnResult.isEmpty())) {
+                httpResults.put(DOCUMENT_OUTPUT, returnResult);
+
+                JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
+
+                //Kind output
+                httpResults.put(KIND_OUTPUT,JsonPath.read(jsonResponse.toString(), "$.kind").toString());
+
+                //Name outputs
+                String namePath = "$.metadata.name";
+                String namePathResponse = JsonPath.read(jsonResponse.toString(), namePath);
+                httpResults.put(NAME_OUTPUT, namePathResponse);
+
+                //Namespace outputs
+                String namespacePath = "$.metadata.namespace";
+                String namespacePathResponse = JsonPath.read(jsonResponse.toString(), namespacePath);
+                httpResults.put(NAMESPACE_OUTPUT, namespacePathResponse);
+
+                //Uid outputs
+                String uidPath = "$.metadata.uid";
+                String uidPathResponse = JsonPath.read(jsonResponse.toString(), uidPath);
+                httpResults.put(UID_OUTPUT, uidPathResponse);
+
+                //Spec output
+                String specPath = "$.spec";
+                LinkedHashMap<String,String> specPathResponse = JsonPath.read(jsonResponse.toString(), specPath);
+                httpResults.put(SPEC, new JSONObject(specPathResponse).toString().replace("\\",""));
+
+                //Status output
+                String statusPath = "$.status";
+                LinkedHashMap<String,String> statusPathResponse = JsonPath.read(jsonResponse.toString(), statusPath);
+                httpResults.put(STATUS, new JSONObject(statusPathResponse).toString());
+
+                httpResults.put(RETURN_RESULT, RETURN_RESULT_MESSAGE_DESC);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

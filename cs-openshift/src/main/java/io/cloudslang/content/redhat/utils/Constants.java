@@ -39,6 +39,7 @@ public final class Constants {
         public static final String NAME = "name";
         public static final String NAMESPACE = "namespace";
         public static final String DEPLOYMENT = "deployment";
+        public static final String DEPLOYMENT_NAME= "deploymentName";
         public static final String PROXY_HOST = "proxyHost";
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
@@ -60,6 +61,7 @@ public final class Constants {
 
         //
         public static final String BASIC = "BASIC";
+        public static final String CONTENT_TYPE_PATCH = "application/strategic-merge-patch+json";
         public static final String APPLICATION_JSON = "application/json";
         public static final String CONTENT_TYPE = "Content-Type:";
         public static final String TRUE = "true";
@@ -105,6 +107,8 @@ public final class Constants {
         public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_1 = "/apis/apps/v1/namespaces/";
         public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_2 = "/deployments/";
         public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_3 = "/status";
+        public static final String GET_DEPLOYMENT_STATUS_ENDPOINT_4 = "/deployments";
+
 
         public static final String POD_ENDPOINT_1 = "/api/v1/namespaces/";
         public static final String POD_ENDPOINT_2 = "/pods";

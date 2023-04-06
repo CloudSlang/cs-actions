@@ -1,0 +1,107 @@
+/*
+ * (c) Copyright 2023 Micro Focus, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.cloudslang.content.sharepoint.services;
+
+import com.microsoft.aad.msal4j.*;
+import io.cloudslang.content.sharepoint.entities.GetAuthorizationTokenInputs;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+
+import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.Proxy;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+
+import static io.cloudslang.content.sharepoint.utils.Constants.API;
+import static io.cloudslang.content.sharepoint.utils.Constants.EXCEPTION_ACQUIRE_TOKEN_FAILED;
+
+
+public class GetAuthorizationTokenImpl {
+    @NotNull
+    public static IAuthenticationResult getToken(@NotNull final GetAuthorizationTokenInputs inputs) throws Exception {
+        Set<String> scopes = new HashSet<>(Arrays.asList(inputs.getScope().split(",")));
+
+        //Verifying if loginType is API to instantiate ClientCredential object
+        if (inputs.getLoginType().equalsIgnoreCase(API)) {
+            ConfidentialClientApplication clientApplication = ConfidentialClientApplication.builder(
+                            inputs.getClientId(), ClientCredentialFactory.createFromSecret(inputs.getClientSecret()))
+                    .authority(inputs.getAuthority()).proxy(getProxy(inputs)).build();
+
+            ClientCredentialParameters clientCredentialParam = ClientCredentialParameters.builder(
+                            scopes)
+                    .build();
+
+            return acquireToken(clientApplication, clientCredentialParam);
+        } else {
+            //Otherwise, the loginType is Native since the verification was already made in the @Action
+            PublicClientApplication clientApplication = PublicClientApplication.builder(inputs.getClientId()).authority(inputs.getAuthority()).proxy(getProxy(inputs)).build();
+
+            UserNamePasswordParameters userNamePasswordParameters = UserNamePasswordParameters.builder(scopes, inputs.getUsername(), inputs.getPassword().toCharArray()).build();
+
+            return acquireToken(clientApplication, userNamePasswordParameters);
+        }
+    }
+
+    private static IAuthenticationResult acquireToken(@NotNull final ConfidentialClientApplication clientApplication, @NotNull final ClientCredentialParameters clientCredentialParam) throws Exception {
+        //ClientCredentialParameters
+
+        final CompletableFuture<IAuthenticationResult> future = clientApplication.acquireToken(clientCredentialParam);
+        try{
+            return future.get();
+        }catch(Exception e){
+            if (e.getMessage().equals("java.lang.NullPointerException"))
+                throw new Exception(EXCEPTION_ACQUIRE_TOKEN_FAILED);
+            else throw new Exception(e.getMessage());
+        }
+    }
+
+    private static IAuthenticationResult acquireToken(@NotNull final  PublicClientApplication  clientApplication, @NotNull final UserNamePasswordParameters userNamePasswordParameters) throws Exception {
+        //UsernamePasswordParameters
+
+        final CompletableFuture<IAuthenticationResult> future = clientApplication.acquireToken(userNamePasswordParameters);
+        try{
+            return future.get();
+        }catch(Exception e){
+            if (e.getMessage().equals("java.lang.NullPointerException"))
+                throw new Exception(EXCEPTION_ACQUIRE_TOKEN_FAILED);
+            else throw new Exception(e.getMessage());
+        }
+    }
+
+    private static Proxy getProxy(@NotNull final GetAuthorizationTokenInputs inputs) {
+        Proxy proxy;
+        if (!StringUtils.isEmpty(inputs.getProxyHost())) {
+            proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(inputs.getProxyHost(), inputs.getProxyPort()));
+            if (!inputs.getProxyUsername().isEmpty() && !inputs.getPassword().isEmpty()) {
+                Authenticator authenticator = new Authenticator() {
+
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return (new PasswordAuthentication(inputs.getProxyUsername(), inputs.getProxyPassword().toCharArray()));
+                    }
+                };
+                Authenticator.setDefault(authenticator);
+            }
+        } else
+            proxy = Proxy.NO_PROXY;
+
+        return proxy;
+    }
+
+}
