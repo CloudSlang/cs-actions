@@ -38,6 +38,7 @@ public class Outputs {
     public static final String ENTITY_PATHS = "entityPaths";
     public static final String FILE_ID = "fileId";
     public static final String SHARE_LINK = "shareLink";
+    public static final String NEXT_LINK = "nextLink";
     public static final String SHARE_ID = "shareId";
     public static final String SIZE = "size";
     public static final String CREATED_DATE_TIME = "createdDateTime";

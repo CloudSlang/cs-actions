@@ -97,4 +97,8 @@ public class Inputs {
         public static final String PARENT_FOLDER = "parentFolder";
         public static final String ENTITY_PATH = "entityPath";
     }
+    public static class SearchForEntities {
+        public static final String SEARCH_TEXT = "searchText";
+        public static final String OPTIONAL_PARAMETERS = "optionalParameters";
+    }
 }
