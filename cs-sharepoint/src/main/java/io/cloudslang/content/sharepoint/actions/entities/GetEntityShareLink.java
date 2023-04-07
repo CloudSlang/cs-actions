@@ -47,10 +47,11 @@ import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShare
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShareLink.STATUS_CODE_DESC;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sharepoint.utils.Inputs.GetFileShareLink.*;
-import static io.cloudslang.content.sharepoint.utils.Inputs.GetFileShareLink.TYPE;
+import static io.cloudslang.content.sharepoint.utils.Inputs.GetEntityShareLink.*;
+import static io.cloudslang.content.sharepoint.utils.Inputs.GetEntityShareLink.TYPE;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
+import static io.cloudslang.content.sharepoint.utils.Outputs.ENTITY_ID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;

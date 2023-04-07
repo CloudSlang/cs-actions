@@ -46,4 +46,5 @@ public class Outputs {
     public static final String LAST_MODIFIED_BY = "lastModifiedBy";
     public static final String FILE_TYPE = "fileType";
     public static final String FILE_NAME = "fileName";
+    public static final String ENTITY_ID = "entityId";
 }

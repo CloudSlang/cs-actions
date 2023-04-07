@@ -78,8 +78,7 @@ public class Inputs {
         public static final String JSON_BODY = "jsonBody";
     }
 
-    public static class GetFileShareLink {
-        public static final String ENTITY_ID = "itemId";
+    public static class GetEntityShareLink {
         public static final String TYPE = "type";
         public static final String PASSWORD = "password";
         public static final String EXPIRATION_DATE_TIME = "expirationDateTime";

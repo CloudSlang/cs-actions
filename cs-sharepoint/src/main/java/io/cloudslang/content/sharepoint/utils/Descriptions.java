@@ -364,29 +364,30 @@ public class Descriptions {
 
     public static class GetEntityIdByName {
 
-        public static final String NAME = "download_file";
+        public static final String NAME = "get_entity_id_by_name";
 
-        public static final String ENTITY_NAME_DESC = "The id of the file to download.";
-        public static final String PARENT_FOLDER_DESC = "The id of the file to download.";
-        public static final String ENTITY_PATH_DESC = "The id of the file to download.";
-        public static final String SITE_ID_DESC = "The id of the site where the file is located. Mutually exclusive " +
+        public static final String ENTITY_NAME_DESC = "The name of the entity from which to retrieve the id. Only works " +
+                "with the drive Id input provided. Mutually exclusive with the entity path input. Ignored if entity path was provided.";
+        public static final String PARENT_FOLDER_DESC = "The parent folder of the entity from which to retrieve the id. " +
+                "Use this in case there are multiple entities with the same name, but with different parent folders. Only " +
+                "works with the drive Id input provided. Mutually exclusive with the entity path input. Ignored if entity path was provided.";
+        public static final String ENTITY_PATH_DESC = "The full path of the entity from which to retrieve the id. " +
+                "Mutually exclusive with the entity name and parent folder inputs.";
+        public static final String SITE_ID_DESC = "The id of the site where the entity is located. Site Id only allows " +
+                "full path searches, so the entity name and parent folder inputs will be ignored. Mutually exclusive " +
                 "with the drive Id input. Ignored if the drive Id was provided.";
-        public static final String DRIVE_ID_DESC = "The id of the drive where the file is located. Mutually exclusive with the site Id input.";
+        public static final String DRIVE_ID_DESC = "The id of the drive where the entity is located. Mutually exclusive with the site Id input.";
 
-        public static final String RETURN_RESULT_DESC = "Details related to the downloaded file.";
+        public static final String RETURN_RESULT_DESC = "Details related to the retrieved entity.";
         public static final String STATUS_CODE_DESC = "The HTTP status code for the request.";
-        public static final String EXCEPTION_DESC = "There was an error while trying to download the file.";
-        public static final String SIZE_DESC = "Size of the downloaded file.";
-        public static final String CREATED_DATE_TIME_DESC = "Created date and time of the downloaded file.";
-        public static final String LAST_MODIFIED_DATE_TIME_DESC = "Last modified date and time of the downloaded file.";
-        public static final String LAST_MODIFIED_BY_DESC = "Last user that modified the downloaded file.";
-        public static final String FILE_TYPE_DESC = "Type of the downloaded file.";
-        public static final String FILE_NAME_DESC = "Name of the downloaded file";
+        public static final String EXCEPTION_DESC = "There was an error while trying to retrieve the entity id.";
+        public static final String ENTITY_ID_DESC = "The id of the entity.";
+        public static final String WEB_URL_DESC = "The URL of the entity.";
 
         public static final String AUTH_TOKEN_DESC = "The authentication token.";
 
-        public static final String SUCCESS_DESC = "File downloaded successfully.";
-        public static final String FAILURE_DESC = "There was an error while trying to download the file.";
+        public static final String SUCCESS_DESC = "Entity id was returned successfully.";
+        public static final String FAILURE_DESC = "There was an error while trying to retrieve the entity id.";
     }
 
     public static class SearchForEntities {

@@ -22,6 +22,7 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,7 +37,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.GetEntitiesFromDriveService.getEntitiesFromDrive;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpResult;
+import static io.cloudslang.content.sharepoint.services.SharepointService.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.STATUS_CODE_DESC;
@@ -57,7 +58,8 @@ public class GeEntityIdByName {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = SITE_ID, description = SITE_ID_DESC),
+                    @Output(value = ENTITY_ID, description = ENTITY_ID_DESC),
+                    @Output(value = WEB_URL, description = WEB_URL_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)},
             responses =
@@ -100,56 +102,20 @@ public class GeEntityIdByName {
             connectTimeout = defaultIfEmpty(connectTimeout, DEFAULT_TIMEOUT);
             executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
 
+            entityName = defaultIfEmpty(entityName, EMPTY);
+            parentFolder = defaultIfEmpty(parentFolder, EMPTY);
+            entityPath = defaultIfEmpty(entityPath, EMPTY);
+            driveId = defaultIfEmpty(driveId, EMPTY);
+            siteId = defaultIfEmpty(siteId, EMPTY);
+
             final List<String> exceptionMessages = verifyCommonInputs(proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, executionTimeout);
             if (!exceptionMessages.isEmpty())
                 return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
-            Map<String, String> result;
 
-            if (entityPath != null && !entityPath.isEmpty()) {
+            if (entityPath.isEmpty() && !driveId.isEmpty()) {
 
-                String endpoint = driveId == null || driveId.isEmpty() ?
-                        GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ENDPOINT + ROOT_PATH_ENDPOINT + entityPath :
-                        GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ROOT_PATH_ENDPOINT + entityPath;
-
-                result = new HttpClientGetAction().execute(
-                        endpoint,
-                        ANONYMOUS,
-                        EMPTY,
-                        EMPTY,
-                        EMPTY,
-                        proxyHost,
-                        proxyPort,
-                        proxyUsername,
-                        proxyPassword,
-                        tlsVersion,
-                        allowedCiphers,
-                        trustAllRoots,
-                        x509HostnameVerifier,
-                        trustKeystore,
-                        trustPassword,
-                        EMPTY,
-                        EMPTY,
-                        FALSE,
-                        CONNECTIONS_MAX_PER_ROUTE_CONST,
-                        CONNECTIONS_MAX_TOTAL_CONST,
-                        EMPTY,
-                        EMPTY,
-                        AUTHORIZATION_BEARER + authToken,
-                        EMPTY,
-                        EMPTY,
-                        EMPTY,
-                        EMPTY,
-                        EMPTY,
-                        connectTimeout,
-                        EMPTY,
-                        executionTimeout,
-                        sessionCookies,
-                        sessionConnectionPool
-                );
-            } else {
-
-                result = getEntitiesFromDrive(
+                Map<String, String> entities = getEntitiesFromDrive(
                         authToken,
                         driveId,
                         EMPTY,
@@ -170,10 +136,51 @@ public class GeEntityIdByName {
                         sessionConnectionPool
                 );
 
-
+                processHttpGetEntitiesFromDrive(entities, EXCEPTION_DESC, ALL);
+                entityPath = getEntityPath(entities, entityName, parentFolder);
             }
 
-            processHttpResult(result, EXCEPTION_DESC);
+            String endpoint = driveId.isEmpty() ?
+                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ENDPOINT + ROOT_PATH_ENDPOINT + encodeFileName(entityPath) :
+                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ROOT_PATH_ENDPOINT + encodeFileName(entityPath);
+
+            Map<String, String> result = new HttpClientGetAction().execute(
+                    endpoint,
+                    ANONYMOUS,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    proxyHost,
+                    proxyPort,
+                    proxyUsername,
+                    proxyPassword,
+                    tlsVersion,
+                    allowedCiphers,
+                    trustAllRoots,
+                    x509HostnameVerifier,
+                    trustKeystore,
+                    trustPassword,
+                    EMPTY,
+                    EMPTY,
+                    FALSE,
+                    CONNECTIONS_MAX_PER_ROUTE_CONST,
+                    CONNECTIONS_MAX_TOTAL_CONST,
+                    EMPTY,
+                    EMPTY,
+                    AUTHORIZATION_BEARER + authToken,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    connectTimeout,
+                    EMPTY,
+                    executionTimeout,
+                    sessionCookies,
+                    sessionConnectionPool
+            );
+
+            processHttpGetEntityIdByName(result, EXCEPTION_DESC);
             return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
