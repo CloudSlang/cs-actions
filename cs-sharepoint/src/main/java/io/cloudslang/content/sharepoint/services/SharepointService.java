@@ -466,7 +466,61 @@ public class SharepointService {
 
     }
 
+    public static String processHostDeleteFolder(List<String> ids, String folderName) throws Utils.HostException {
+        boolean found = false;
+        for(String id:ids){
+            if (!id.isEmpty()){
+                if(!found)
+                    found=true;
+                else
+                    throw new Utils.HostException(HOST_EXCEPTION_DESC);
+            }
+        }
+
+        // case when no ids were provided
+        int pos = ids.size();
+
+        for (String id : ids) {
+            if (!id.isEmpty()) {
+                // when an input was found, store it and leave
+                pos = ids.indexOf(id);
+                break;
+            }
+        }
+        // create the list of endpoints
+        List<String> endpoints = Arrays.asList(DRIVES_ENDPOINT, GROUPS_ENDPOINT, SITES_ENDPOINT, USERS_ENDPOINT, ME_ENDPOINT);
+
+        // start building the host
+        StringBuilder hostBuilder = new StringBuilder(GRAPH_API_ENDPOINT);
+
+        // append the corresponding parts of the host
+        hostBuilder.append(endpoints.get(pos));
+
+        // if all ids are empty, no id to append
+        if (pos < ids.size())
+            hostBuilder.append(ids.get(pos));
+
+        hostBuilder.append(pos == 0 ? ITEMS_ENDPOINT : DRIVE_ITEMS_ENDPOINT);
+        hostBuilder.append(folderName);
+
+        return hostBuilder.toString();
+
+    }
+
     public static void processHttpCreateFolder(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        if (!httpResults.get(STATUS_CODE).equals("201"))
+            return;
+
+        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
+
+        httpResults.put(WEB_URL, json.get(WEB_URL).asText());
+        httpResults.put(ID, json.get(ID).asText());
+    }
+
+    public static void processHttpDeleteFolder(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
 
         processHttpResult(httpResults, exceptionMessage);
 
