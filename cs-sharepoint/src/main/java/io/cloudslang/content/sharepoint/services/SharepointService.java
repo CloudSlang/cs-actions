@@ -425,15 +425,14 @@ public class SharepointService {
 
     public static String processHost(List<String> ids, String parentItemId) throws Utils.HostException {
         boolean found = false;
+
         for(String id:ids){
-            if (!id.isEmpty()){
-                if(!found)
-                    found=true;
-                else
-                    throw new Utils.HostException(HOST_EXCEPTION_DESC);
+            if(!id.isEmpty()){
+                found=true;
             }
         }
-
+        if(!found)
+            throw new Utils.HostException(HOST_EXCEPTION_DESC);
         // case when no ids were provided
         int pos = ids.size();
 
@@ -468,14 +467,14 @@ public class SharepointService {
 
     public static String processHostDeleteFolder(List<String> ids, String folderName) throws Utils.HostException {
         boolean found = false;
+
         for(String id:ids){
-            if (!id.isEmpty()){
-                if(!found)
-                    found=true;
-                else
-                    throw new Utils.HostException(HOST_EXCEPTION_DESC);
+            if(!id.isEmpty()){
+                found=true;
             }
         }
+        if(!found)
+            throw new Utils.HostException(HOST_EXCEPTION_DESC);
 
         // case when no ids were provided
         int pos = ids.size();

@@ -79,11 +79,11 @@ public class DeleteFolder {
 
     public Map<String, String> execute(
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
-            @Param(value = SITE_ID, encrypted = true, description = SITE_ID_DELETE_FOLDER_DESC) String siteId,
-            @Param(value = DRIVE_ID, encrypted = true, description = DRIVE_ID_DELETE_FOLDER_DESC) String driveId,
-            @Param(value = GROUP_ID, encrypted = true, description = GROUP_ID_DESC) String groupId,
-            @Param(value = USER_ID, encrypted = true, description = USER_ID_DESC) String userId,
-            @Param(value = FOLDER_ID, description = FOLDER_ID_DESC) String folderId,
+            @Param(value = SITE_ID, description = SITE_ID_DELETE_FOLDER_DESC) String siteId,
+            @Param(value = DRIVE_ID, description = DRIVE_ID_DELETE_FOLDER_DESC) String driveId,
+            @Param(value = GROUP_ID, description = GROUP_ID_DESC) String groupId,
+            @Param(value = USER_ID, description = USER_ID_DESC) String userId,
+            @Param(value = FOLDER_ID, description = FOLDER_ID_DESC, required = true) String folderId,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
