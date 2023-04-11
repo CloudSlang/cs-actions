@@ -50,6 +50,7 @@ import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameByI
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.sharepoint.utils.Utils.getFirstAvailableFileName;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isAsciiPrintable;
 
 public class SharepointService {
 
@@ -509,7 +510,8 @@ public class SharepointService {
     public static void processHttpCreateFolder(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
 
         processHttpResult(httpResults, exceptionMessage);
-
+        String status_c = httpResults.get(STATUS_CODE);
+     if(!StringUtils.isEmpty(status_c))
         if (!httpResults.get(STATUS_CODE).equals("201"))
             return;
 
