@@ -405,4 +405,18 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "Entity id was returned successfully.";
         public static final String FAILURE_DESC = "There was an error while trying to retrieve the entity id.";
     }
+
+    public static class SearchForEntities {
+        public static final String SEARCH_FOR_ENTITIES = "Search for entities";
+        public static final String SEARCH_FOR_ENTITIES_DESC = "Retrieve all drive items in SharePoint that match the search query.";
+        public static final String SITE_ID_DESC = "The id of the site where the entities will be searched.";
+        public static final String USER_ID_DESC = "The id of the user for which the entities will be searched.";
+        public static final String DRIVE_ID_DESC = "The id of the drive where the entities will be searched.";
+        public static final String GROUP_ID_DESC = "The id of the group where the entities will be searched.";
+        public static final String SEARCH_TEXT_DESC = "The search query text to search for entities.";
+        public static final String OPTIONAL_PARAMETERS_DESC = "The optional query parameters to search for entities.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to search for entities.";
+        public static final String NEXT_LINK_DESC = "The link to the next page of results in case there are too many matches.";
+
+    }
 }
