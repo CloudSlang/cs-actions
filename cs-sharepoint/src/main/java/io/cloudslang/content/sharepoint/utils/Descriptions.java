@@ -290,6 +290,22 @@ public class Descriptions {
 
     }
 
+    public static class DeleteFolder{
+        public static final String DELETE_FOLDER = "Delete folder";
+        public static final String DELETE_FOLDER_DESC = "Deletes an Office 365 Sharepoint folder.";
+        public static final String SITE_ID_DESC = "The id of the site where the folder will be deleted.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to delete the folder.";
+        public static final String SITE_ID_DELETE_FOLDER_DESC = "The id of the site from where the folder will be deleted.";
+        public static final String DRIVE_ID_DELETE_FOLDER_DESC = "The id of the drive from where the folder will be deleted.";
+        public static final String DELETE_FOLDER_SUCCESS_DESC = "The folder was deleted successfully.";
+
+        public static final String FOLDER_ID_DESC = "The id of the folder to be deleted.";
+        public static final String USER_ID_DESC = "The id of the user for which the folder will be deleted.";
+        public static final String GROUP_ID_DESC = "The id of the group where the folder will be deleted.";
+
+
+    }
+
     public static class GetEntityShareLink {
 
         public static final String NAME = "get_entity_share_link";

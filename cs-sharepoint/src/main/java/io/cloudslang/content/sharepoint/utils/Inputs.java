@@ -77,6 +77,9 @@ public class Inputs {
         public static final String FOLDER_NAME = "folderName";
         public static final String JSON_BODY = "jsonBody";
     }
+    public static class DeleteFolder {
+        public static final String FOLDER_ID = "folderId";
+    }
 
     public static class GetEntityShareLink {
         public static final String TYPE = "type";
