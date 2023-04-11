@@ -124,7 +124,7 @@
         <dependency>
             <groupId>net.minidev</groupId>
             <artifactId>json-smart</artifactId>
-            <version>2.4.7</version>
+            <version>2.4.10</version>
         </dependency>
         <!-- Json provider required for Jayway in order to handle single quoted JSONs-->
         <dependency>
