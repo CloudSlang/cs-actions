@@ -50,7 +50,7 @@ import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameByI
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.sharepoint.utils.Utils.getFirstAvailableFileName;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isAsciiPrintable;
+
 
 public class SharepointService {
 
@@ -147,7 +147,7 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("200"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
             return;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
@@ -162,7 +162,7 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("200"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
             return;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
@@ -187,7 +187,7 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("200"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
             return;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
@@ -218,7 +218,7 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("200"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
             return;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
@@ -233,7 +233,7 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("200"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
             return;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
@@ -244,11 +244,11 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("200"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
             return;
 
         JsonObject jsonResponse = JsonParser.parseString(httpResults.get(RETURN_RESULT)).getAsJsonObject();
-        JsonArray elementArray = jsonResponse.getAsJsonArray("value");
+        JsonArray elementArray = jsonResponse.getAsJsonArray(VALUE);
         for (JsonElement jsonElement : elementArray)
             if (jsonElement.getAsJsonObject().get("name").getAsString().equals(driveName)) {
                 httpResults.put(DRIVE_ID, jsonElement.getAsJsonObject().get("id").getAsString());
@@ -262,7 +262,7 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("200"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
             return;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
@@ -321,7 +321,7 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("200") && !httpResults.get(STATUS_CODE).equals("201"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200) && !httpResults.get(STATUS_CODE).equals(STATUS_CODE_201))
             return;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
@@ -332,7 +332,7 @@ public class SharepointService {
 
     public static String getEntityPath(Map<String, String> httpResults, String entityName, String parentFolder) throws JsonProcessingException {
 
-        if (!httpResults.get(STATUS_CODE).equals("200"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
             return EMPTY;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(ENTITY_PATHS));
@@ -374,7 +374,7 @@ public class SharepointService {
 
     public static void addAllSitesResult(Map<String, String> result) {
         JsonObject jsonResponse = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
-        JsonArray elementArray = jsonResponse.getAsJsonArray("value");
+        JsonArray elementArray = jsonResponse.getAsJsonArray(VALUE);
 
         // arrays that store the pairs
         JsonArray siteIds = new JsonArray();
@@ -511,8 +511,8 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
         String status_c = httpResults.get(STATUS_CODE);
-     if(!StringUtils.isEmpty(status_c))
-        if (!httpResults.get(STATUS_CODE).equals("201"))
+     if(status_c != null)
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_201))
             return;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
@@ -525,13 +525,12 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("201"))
-            return;
+        String statusCode = httpResults.get(STATUS_CODE);
 
-        JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));
 
-        httpResults.put(WEB_URL, json.get(WEB_URL).asText());
-        httpResults.put(ID, json.get(ID).asText());
+        if (Integer.parseInt(statusCode) == 204) {
+            httpResults.put(RETURN_RESULT,"Folder was deleted successfully.");
+        }
     }
 
     public static String processHostWithQuery(List<String> ids, String searchText, String optionalParameters) throws Utils.HostException {
@@ -584,11 +583,11 @@ public class SharepointService {
 
         processHttpResult(result, exceptionMessage);
 
-        if (!result.get(STATUS_CODE).equals("200"))
+        if (!result.get(STATUS_CODE).equals(STATUS_CODE_200))
             return;
 
         JsonObject jsonResponse = JsonParser.parseString(result.get(RETURN_RESULT)).getAsJsonObject();
-        JsonArray elementArray = jsonResponse.getAsJsonArray("value");
+        JsonArray elementArray = jsonResponse.getAsJsonArray(VALUE);
 
         // array that store the pair
         JsonArray entityIds = new JsonArray();
@@ -612,7 +611,7 @@ public class SharepointService {
 
         processHttpResult(httpResults, exceptionMessage);
 
-        if (!httpResults.get(STATUS_CODE).equals("200"))
+        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
             return;
 
         JsonNode json = new ObjectMapper().readTree(httpResults.get(RETURN_RESULT));

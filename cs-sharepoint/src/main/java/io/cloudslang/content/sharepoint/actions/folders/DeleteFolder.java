@@ -151,8 +151,8 @@ public class DeleteFolder {
 
             );
 
-            final Map<String, String> successResultsMap = getSuccessResultsMap(DELETE_FOLDER_SUCCESS_DESC);
-            return successResultsMap;
+            processHttpDeleteFolder(result, EXCEPTION_DESC);
+            return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

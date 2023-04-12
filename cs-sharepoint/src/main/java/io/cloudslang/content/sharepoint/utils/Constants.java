@@ -40,6 +40,7 @@ public class Constants {
     public static final String ALLOW_ALL = "allow_all";
     public static final String TLS = "TLS";
     public static final String STATUS_CODE_201 = "201";
+    public static final String STATUS_CODE_200 = "200";
     public static final String ATTACHMENTS_SPLIT = "Attachments";
     public static final int ATTACHMENT_SIZE_THRESHOLD = 3000000;
     public static final String PARENT_REFERENCE = "parentReference";
