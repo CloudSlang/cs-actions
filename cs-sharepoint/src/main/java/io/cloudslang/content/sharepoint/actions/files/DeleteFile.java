@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions.folders;
+package io.cloudslang.content.sharepoint.actions.files;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -39,41 +39,40 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHostDeleteFolder;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpDeleteFolder;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpDeleteFile;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.DeleteFolder.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.DeleteFile.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sharepoint.utils.Inputs.DeleteFolder.FOLDER_ID;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class DeleteFolder {
+public class DeleteFile {
 
-    @Action(name = DELETE_FOLDER,
-            description = DELETE_FOLDER_DESC,
+    @Action(name = DELETE_FILE,
+            description = DELETE_FILE_DESC,
             outputs = {
-                    @Output(value = RETURN_RESULT, description = DELETE_FOLDER_SUCCESS_DESC),
+                    @Output(value = RETURN_RESULT, description = DELETE_FILE_SUCCESS_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
             },
             responses = {
-                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = DELETE_FOLDER_SUCCESS_DESC),
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = DELETE_FILE_SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, isOnFail = true, description = EXCEPTION_DESC)
             })
 
     public Map<String, String> execute(
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
-            @Param(value = SITE_ID, description = SITE_ID_DELETE_FOLDER_DESC) String siteId,
-            @Param(value = DRIVE_ID, description = DRIVE_ID_DELETE_FOLDER_DESC) String driveId,
+            @Param(value = SITE_ID, description = SITE_ID_DELETE_FILE_DESC) String siteId,
+            @Param(value = DRIVE_ID, description = DRIVE_ID_DELETE_FILE_DESC) String driveId,
             @Param(value = GROUP_ID, description = GROUP_ID_DESC) String groupId,
             @Param(value = USER_ID, description = USER_ID_DESC) String userId,
-            @Param(value = FOLDER_ID, description = FOLDER_ID_DESC, required = true) String folderId,
+            @Param(value = FILE_ID, description = FILE_ID_DESC, required = true) String fileId,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -109,7 +108,7 @@ public class DeleteFolder {
                 return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
             Map<String, String> result = new HttpClientDeleteAction().execute(
-                    processHostDeleteFolder(Arrays.asList(driveId, groupId, siteId, userId), folderId),
+                    processHostDeleteFolder(Arrays.asList(driveId, groupId, siteId, userId), fileId),
                     ANONYMOUS,
                     EMPTY ,
                     EMPTY,
@@ -141,7 +140,7 @@ public class DeleteFolder {
 
             );
 
-            processHttpDeleteFolder(result, EXCEPTION_DESC);
+            processHttpDeleteFile(result, EXCEPTION_DESC);
             return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

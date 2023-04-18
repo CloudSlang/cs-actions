@@ -521,7 +521,7 @@ public class SharepointService {
         httpResults.put(ID, json.get(ID).asText());
     }
 
-    public static void processHttpDeleteFolder(Map<String, String> httpResults, String exceptionMessage) throws JsonProcessingException {
+    public static void processHttpDeleteFolder(Map<String, String> httpResults, String exceptionMessage) {
 
         processHttpResult(httpResults, exceptionMessage);
 
@@ -529,7 +529,19 @@ public class SharepointService {
 
 
         if (Integer.parseInt(statusCode) == 204) {
-            httpResults.put(RETURN_RESULT,"Folder was deleted successfully.");
+            httpResults.put(RETURN_RESULT, "Folder was deleted successfully.");
+        }
+    }
+
+    public static void processHttpDeleteFile(Map<String, String> httpResults, String exceptionMessage) {
+
+        processHttpResult(httpResults, exceptionMessage);
+
+        String statusCode = httpResults.get(STATUS_CODE);
+
+
+        if (Integer.parseInt(statusCode) == 204) {
+            httpResults.put(RETURN_RESULT, "File was deleted successfully.");
         }
     }
 

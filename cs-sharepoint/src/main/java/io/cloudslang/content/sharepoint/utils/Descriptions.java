@@ -290,7 +290,7 @@ public class Descriptions {
 
     }
 
-    public static class DeleteFolder{
+    public static class DeleteFolder {
         public static final String DELETE_FOLDER = "Delete folder";
         public static final String DELETE_FOLDER_DESC = "Deletes an Office 365 Sharepoint folder.";
         public static final String SITE_ID_DESC = "The id of the site where the folder will be deleted.";
@@ -302,8 +302,20 @@ public class Descriptions {
         public static final String FOLDER_ID_DESC = "The id of the folder to be deleted.";
         public static final String USER_ID_DESC = "The id of the user for which the folder will be deleted.";
         public static final String GROUP_ID_DESC = "The id of the group where the folder will be deleted.";
+    }
 
+    public static class DeleteFile {
+        public static final String DELETE_FILE = "Delete file";
+        public static final String DELETE_FILE_DESC = "Deletes an Office 365 Sharepoint file.";
+        public static final String SITE_ID_DESC = "The id of the site where the file will be deleted.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to delete the file.";
+        public static final String SITE_ID_DELETE_FILE_DESC = "The id of the site from where the file will be deleted.";
+        public static final String DRIVE_ID_DELETE_FILE_DESC = "The id of the drive from where the file will be deleted.";
+        public static final String DELETE_FILE_SUCCESS_DESC = "The file was deleted successfully.";
 
+        public static final String FILE_ID_DESC = "The id of the file to be deleted.";
+        public static final String USER_ID_DESC = "The id of the user for which the file will be deleted.";
+        public static final String GROUP_ID_DESC = "The id of the group where the file will be deleted.";
     }
 
     public static class GetEntityShareLink {
