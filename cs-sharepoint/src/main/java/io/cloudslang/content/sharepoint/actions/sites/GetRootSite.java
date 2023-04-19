@@ -138,7 +138,7 @@ public class GetRootSite {
                     sessionConnectionPool
             );
 
-            processHttpGetRootSite(result, defaultIfEmpty(result.get("exception"), EMPTY));
+            processHttpGetRootSite(result, EXCEPTION_DESC);
 
             return result;
 

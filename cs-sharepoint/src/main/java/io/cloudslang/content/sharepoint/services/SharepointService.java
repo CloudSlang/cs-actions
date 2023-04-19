@@ -134,7 +134,7 @@ public class SharepointService {
 
     public static void processHttpGetRootSite(Map<String, String> result, String exceptionMessage) {
         processHttpResult(result, exceptionMessage);
-        if (!exceptionMessage.equals(Descriptions.GetRootSite.EXCEPTION_DESC)) {
+        if (result.containsKey(STATUS_CODE) && result.get(STATUS_CODE).equals(STATUS_CODE_200)) {
             JSONObject jsonObject = (JSONObject) JSONValue.parse(result.get(RETURN_RESULT));
             result.put(SITE_ID, jsonObject.getAsString("id"));
             result.put(SITE_NAME, jsonObject.getAsString("name"));
