@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-json</artifactId>
-    <version>0.0.24-SNAPSHOT</version>
+    <version>0.0.25-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -119,6 +119,10 @@
                     <groupId>net.minidev</groupId>
                     <artifactId>json-smart</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -142,6 +146,11 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20200518</version>
         </dependency>
 
     </dependencies>
