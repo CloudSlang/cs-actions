@@ -286,7 +286,7 @@ public class Descriptions {
         public static final String EXCEPTION_DESC = "There was an error while trying to create the folder.";
         public static final String ID_DESC = "The id of the created folder.";
         public static final String WEB_URL_DESC = "The web url of the created folder.";
-        public static final String HOST_EXCEPTION_DESC = "You must provide only one input on the ids inputs(drive_id, group_id, site_id, user_id).";
+        public static final String HOST_EXCEPTION_DESC = "You must provide exactly one input on the ids inputs(drive_id, group_id, site_id, user_id).";
 
     }
 
