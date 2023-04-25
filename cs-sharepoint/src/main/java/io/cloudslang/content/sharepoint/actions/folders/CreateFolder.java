@@ -62,7 +62,7 @@ public class CreateFolder {
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = ID, description = ID_DESC),
+                    @Output(value = FOLDER_ID, description = ID_DESC),
                     @Output(value = WEB_URL, description = WEB_URL_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC)
