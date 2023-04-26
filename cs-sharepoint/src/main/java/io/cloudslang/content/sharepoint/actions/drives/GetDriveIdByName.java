@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions.sites;
+package io.cloudslang.content.sharepoint.actions.drives;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -41,8 +41,9 @@ import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.STATUS_CODE_DESC;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteDetails.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteDetails.NAME;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.SITE_ID_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.NAME;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetDriveIdByName.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
@@ -51,17 +52,14 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetSiteDetails {
+public class GetDriveIdByName {
     @Action(name = NAME,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = WEB_URL, description = WEB_URL_DESC),
-                    @Output(value = SITE_ID, description = SITE_ID_OUT_DESC),
-                    @Output(value = SITE_NAME, description = SITE_NAME_DESC),
-                    @Output(value = SITE_DISPLAY_NAME, description = SITE_DISPLAY_NAME_DESC)
+                    @Output(value = DRIVE_ID, description = DRIVE_ID_DESC),
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -69,6 +67,7 @@ public class GetSiteDetails {
             })
     public Map<String, String> execute(
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
+            @Param(value = DRIVE_NAME, description = DRIVE_NAME_DESC, required = true) String driveName,
             @Param(value = SITE_ID, description = SITE_ID_DESC, required = true) String siteId,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
@@ -104,7 +103,7 @@ public class GetSiteDetails {
                 return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
             Map<String, String> result = new HttpClientGetAction().execute(
-                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId,
+                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVES_ENDPOINT ,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -139,7 +138,7 @@ public class GetSiteDetails {
                     sessionConnectionPool
             );
 
-            processHttpGetSiteDetails(result, EXCEPTION_DESC);
+            processHttpGetDriveIdByName(result, driveName, EXCEPTION_DESC);
             return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

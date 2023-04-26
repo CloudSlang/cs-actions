@@ -36,6 +36,12 @@ public class InputsValidation {
         add(ALLOW_ALL);
     }};
 
+    private static List<String> entitiesTypeVerifiers = new ArrayList<String>() {{
+        add(FOLDERS);
+        add(FILES);
+        add(ALL);
+    }};
+
     @NotNull
     public static List<String> verifyAuthorizationInputs(@Nullable final String loginType, @Nullable final String clientId, @Nullable final String clientSecret, @Nullable final String username, @Nullable final String password, @NotNull final String proxyPort) {
         final List<String> exceptionMessages = new ArrayList<>();
@@ -93,7 +99,7 @@ public class InputsValidation {
     }
 
     @NotNull
-    private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    public static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValid(input)) {
@@ -119,4 +125,10 @@ public class InputsValidation {
         return exceptions;
     }
 
+    @NotNull
+    public static List<String> addVerifyEntitiesType(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        if (entitiesTypeVerifiers.stream().noneMatch(input::equalsIgnoreCase))
+            exceptions.add(String.format(EXCEPTION_INVALID_ENTITIES_TYPE, input, inputName));
+        return exceptions;
+    }
 }

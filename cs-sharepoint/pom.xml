@@ -39,7 +39,7 @@
         <connection>scm:git:https://CloudSlang/cs-actions.git</connection>
         <developerConnection>scm:git:git@github.com:CloudSlang/cs-actions.git</developerConnection>
         <url>https://github.com/CloudSlang/cs-actions.git</url>
-        <tag>master</tag>
+        <tag>cs-sharepoint-0.0.1-RC18</tag>
     </scm>
 
     <distributionManagement>
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>net.minidev</groupId>
             <artifactId>json-smart</artifactId>
-            <version>2.4.8</version>
+            <version>2.4.10</version>
         </dependency>
         <dependency>
             <groupId>net.minidev</groupId>
