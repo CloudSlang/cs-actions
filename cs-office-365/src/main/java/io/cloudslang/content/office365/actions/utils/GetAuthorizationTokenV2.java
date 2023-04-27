@@ -103,7 +103,6 @@ public class GetAuthorizationTokenV2 {
     public Map<String, String> execute(@Param(value = LOGIN_TYPE, description = LOGIN_TYPE_DESC) String loginType,
                                        @Param(value = CLIENT_ID, required = true, description = CLIENT_ID_DESC) String clientId,
                                        @Param(value = CLIENT_SECRET, encrypted = true, description = CLIENT_SECRET_DESC) String clientSecret,
-                                       @Param(value = RESOURCE, description = RESOURCES_DESC) String resource,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = LOGIN_AUTHORITY, required = true, description = LOGIN_AUTHORITY_DESC) String loginAuthority,
@@ -126,11 +125,6 @@ public class GetAuthorizationTokenV2 {
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
-
-        if(!resource.isEmpty()){
-            scope = resource;
-        }
-
         try {
             final IAuthenticationResult result = AuthorizationTokenV2Impl.getToken(AuthorizationTokenInputs.builder()
                     .loginType(loginType)
