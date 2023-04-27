@@ -22,7 +22,6 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
-import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -53,7 +52,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GeEntityIdByName {
+public class GetEntityIdByName {
     @Action(name = NAME,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -73,7 +72,6 @@ public class GeEntityIdByName {
                                        @Param(value = PARENT_FOLDER, description = PARENT_FOLDER_DESC) String parentFolder,
                                        @Param(value = ENTITY_PATH, description = ENTITY_PATH_DESC) String entityPath,
                                        @Param(value = DRIVE_ID, description = DRIVE_ID_DESC) String driveId,
-                                       @Param(value = SITE_ID, description = SITE_ID_DESC) String siteId,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -106,7 +104,6 @@ public class GeEntityIdByName {
             parentFolder = defaultIfEmpty(parentFolder, EMPTY);
             entityPath = defaultIfEmpty(entityPath, EMPTY);
             driveId = defaultIfEmpty(driveId, EMPTY);
-            siteId = defaultIfEmpty(siteId, EMPTY);
 
             final List<String> exceptionMessages = verifyCommonInputs(proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, executionTimeout);
             if (!exceptionMessages.isEmpty())
@@ -141,7 +138,7 @@ public class GeEntityIdByName {
             }
 
             String endpoint = driveId.isEmpty() ?
-                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ENDPOINT + ROOT_PATH_ENDPOINT + encodeFileName(entityPath) :
+                    null :
                     GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ROOT_PATH_ENDPOINT + encodeFileName(entityPath);
 
             Map<String, String> result = new HttpClientGetAction().execute(
