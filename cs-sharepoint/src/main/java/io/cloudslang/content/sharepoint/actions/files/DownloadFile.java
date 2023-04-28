@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions.sites;
+package io.cloudslang.content.sharepoint.actions.files;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -36,32 +36,37 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.sharepoint.services.SharepointService.*;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpDownloadFile;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.STATUS_CODE_DESC;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteDetails.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteDetails.NAME;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.DownloadFile.NAME;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.DownloadFile.STATUS_CODE_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.DownloadFile.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.sharepoint.utils.Inputs.DownloadFile.OVERWRITE;
+import static io.cloudslang.content.sharepoint.utils.Inputs.DownloadFile.PATH;
+import static io.cloudslang.content.sharepoint.utils.InputsValidation.addVerifyBoolean;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetSiteDetails {
+public class DownloadFile {
     @Action(name = NAME,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = WEB_URL, description = WEB_URL_DESC),
-                    @Output(value = SITE_ID, description = SITE_ID_OUT_DESC),
-                    @Output(value = SITE_NAME, description = SITE_NAME_DESC),
-                    @Output(value = SITE_DISPLAY_NAME, description = SITE_DISPLAY_NAME_DESC)
+                    @Output(value = SIZE, description = SIZE_DESC),
+                    @Output(value = CREATED_DATE_TIME, description = CREATED_DATE_TIME_DESC),
+                    @Output(value = LAST_MODIFIED_DATE_TIME, description = LAST_MODIFIED_DATE_TIME_DESC),
+                    @Output(value = LAST_MODIFIED_BY, description = LAST_MODIFIED_BY_DESC),
+                    @Output(value = FILE_TYPE, description = FILE_TYPE_DESC),
+                    @Output(value = FILE_NAME, description = FILE_NAME_DESC),
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -69,7 +74,11 @@ public class GetSiteDetails {
             })
     public Map<String, String> execute(
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
-            @Param(value = SITE_ID, description = SITE_ID_DESC, required = true) String siteId,
+            @Param(value = FILE_ID, description = FILE_ID_DESC, required = true) String itemId,
+            @Param(value = PATH, description = PATH_DESC, required = true) String path,
+            @Param(value = DRIVE_ID, description = DRIVE_ID_DESC) String driveId,
+            @Param(value = SITE_ID, description = SITE_ID_DESC) String siteId,
+            @Param(value = OVERWRITE, description = OVERWRITE_DESC) String overwrite,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -86,7 +95,7 @@ public class GetSiteDetails {
             @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
             @Param(value = SESSION_COOKIES, description = Descriptions.Common.SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
             @Param(value = SESSION_CONNECTION_POOL, description = Descriptions.Common.SESSION_CONNECTION_POOL_DESC)
-            GlobalSessionObject sessionConnectionPool) {
+                    GlobalSessionObject sessionConnectionPool) {
 
         try {
 
@@ -100,11 +109,17 @@ public class GetSiteDetails {
             executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
 
             final List<String> exceptionMessages = verifyCommonInputs(proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, executionTimeout);
+            addVerifyBoolean(exceptionMessages, overwrite, OVERWRITE);
+
             if (!exceptionMessages.isEmpty())
                 return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
+            String endpoint = driveId == null || driveId.isEmpty() ?
+                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ITEMS_ENDPOINT + itemId :
+                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ITEMS_ENDPOINT + itemId;
+
             Map<String, String> result = new HttpClientGetAction().execute(
-                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId,
+                    endpoint,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -139,7 +154,7 @@ public class GetSiteDetails {
                     sessionConnectionPool
             );
 
-            processHttpGetSiteDetails(result, EXCEPTION_DESC);
+            processHttpDownloadFile(result, EXCEPTION_DESC, path, Boolean.parseBoolean(overwrite));
             return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

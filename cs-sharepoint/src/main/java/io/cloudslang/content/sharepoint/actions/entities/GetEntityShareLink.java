@@ -12,8 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions.sites;
+package io.cloudslang.content.sharepoint.actions.entities;
 
+import com.google.gson.JsonObject;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -21,7 +22,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.httpclient.actions.HttpClientPostAction;
 import io.cloudslang.content.sharepoint.utils.Descriptions;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -40,28 +41,30 @@ import static io.cloudslang.content.sharepoint.services.SharepointService.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.STATUS_CODE_DESC;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteDetails.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteDetails.NAME;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShareLink.NAME;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShareLink.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShareLink.EXCEPTION_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityShareLink.STATUS_CODE_DESC;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.sharepoint.utils.Inputs.GetEntityShareLink.*;
+import static io.cloudslang.content.sharepoint.utils.Inputs.GetEntityShareLink.TYPE;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
+import static io.cloudslang.content.sharepoint.utils.Outputs.ENTITY_ID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetSiteDetails {
+public class GetEntityShareLink {
     @Action(name = NAME,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC),
-                    @Output(value = WEB_URL, description = WEB_URL_DESC),
-                    @Output(value = SITE_ID, description = SITE_ID_OUT_DESC),
-                    @Output(value = SITE_NAME, description = SITE_NAME_DESC),
-                    @Output(value = SITE_DISPLAY_NAME, description = SITE_DISPLAY_NAME_DESC)
+                    @Output(value = SHARE_LINK, description = SHARE_LINK_DESC),
+                    @Output(value = SHARE_ID, description = SHARE_ID_DESC)
             },
             responses = {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
@@ -69,7 +72,15 @@ public class GetSiteDetails {
             })
     public Map<String, String> execute(
             @Param(value = AUTH_TOKEN, description = AUTH_TOKEN_DESC, required = true, encrypted = true) String authToken,
-            @Param(value = SITE_ID, description = SITE_ID_DESC, required = true) String siteId,
+            @Param(value = ENTITY_ID, description = ENTITY_ID_DESC, required = true) String entityId,
+            @Param(value = DRIVE_ID, description = DRIVE_ID_DESC) String driveId,
+            @Param(value = SITE_ID, description = SITE_ID_DESC) String siteId,
+
+            @Param(value = TYPE, description = TYPE_DESC) String type,
+            @Param(value = PASSWORD, description = PASSWORD_DESC) String password,
+            @Param(value = EXPIRATION_DATE_TIME, description = EXPIRATION_DATE_TIME_DESC) String expirationDateTime,
+            @Param(value = RETAIN_INHERITED_PERMISSIONS, description = RETAIN_INHERITED_PERMISSIONS_DESC) String retainInheritedPermissions,
+            @Param(value = SCOPE, description = SCOPE_DESC) String scope,
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -86,7 +97,7 @@ public class GetSiteDetails {
             @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
             @Param(value = SESSION_COOKIES, description = Descriptions.Common.SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
             @Param(value = SESSION_CONNECTION_POOL, description = Descriptions.Common.SESSION_CONNECTION_POOL_DESC)
-            GlobalSessionObject sessionConnectionPool) {
+                    GlobalSessionObject sessionConnectionPool) {
 
         try {
 
@@ -103,8 +114,29 @@ public class GetSiteDetails {
             if (!exceptionMessages.isEmpty())
                 return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
-            Map<String, String> result = new HttpClientGetAction().execute(
-                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId,
+            String endpoint = driveId == null || driveId.isEmpty() ?
+                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ITEMS_ENDPOINT + entityId + CREATE_LINK_ENDPOINT :
+                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ITEMS_ENDPOINT + entityId + CREATE_LINK_ENDPOINT;
+
+            JsonObject body = new JsonObject();
+
+            if (type != null && !type.isEmpty())
+                body.addProperty(TYPE, type);
+
+            if (password != null && !password.isEmpty())
+                body.addProperty(PASSWORD, password);
+
+            if (expirationDateTime != null && !expirationDateTime.isEmpty())
+                body.addProperty(EXPIRATION_DATE_TIME, expirationDateTime);
+
+            if (retainInheritedPermissions != null && !retainInheritedPermissions.isEmpty())
+                body.addProperty(RETAIN_INHERITED_PERMISSIONS, retainInheritedPermissions);
+
+            if (scope != null && !scope.isEmpty())
+                body.addProperty(SCOPE, scope);
+
+            Map<String, String> result = new HttpClientPostAction().execute(
+                    endpoint,
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
@@ -132,6 +164,12 @@ public class GetSiteDetails {
                     EMPTY,
                     EMPTY,
                     EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    body.toString(),
+                    APPLICATION_JSON,
+                    EMPTY,
                     connectTimeout,
                     EMPTY,
                     executionTimeout,
@@ -139,7 +177,7 @@ public class GetSiteDetails {
                     sessionConnectionPool
             );
 
-            processHttpGetSiteDetails(result, EXCEPTION_DESC);
+            processHttpGetEntityShareLink(result, EXCEPTION_DESC);
             return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);

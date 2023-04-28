@@ -34,6 +34,7 @@ import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAuthorizationToken.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetAuthorizationToken.RETURN_CODE_DESC;
 import static io.cloudslang.content.sharepoint.utils.Inputs.AuthorizationInputs.*;

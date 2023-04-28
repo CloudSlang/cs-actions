@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions;
+package io.cloudslang.content.sharepoint.actions.sites;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -39,9 +39,7 @@ import static io.cloudslang.content.httpclient.utils.Constants.ANONYMOUS;
 import static io.cloudslang.content.httpclient.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
-import static io.cloudslang.content.sharepoint.services.GetAllSitesService.addAllSitesResult;
-import static io.cloudslang.content.sharepoint.services.GetAllSitesService.setFailureCustomResults;
-import static io.cloudslang.content.sharepoint.services.GetRootSiteService.processHttpResult;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpAllSites;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.Endpoints.GET_ALL_SITES;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.RETURN_CODE_DESC;
@@ -137,20 +135,7 @@ public class GetAllSites {
                     sessionConnectionPool
             );
 
-            processHttpResult(result);
-
-            if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
-                if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
-                    addAllSitesResult(result);
-                else {
-                    setFailureCustomResults(result, SITE_IDS, SITE_URLS);
-                    result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
-                    result.put(EXCEPTION, result.get(RETURN_RESULT));
-                    result.put(RETURN_RESULT, EXCEPTION_DESC);
-                }
-
-            } else
-                setFailureCustomResults(result, SITE_IDS, SITE_URLS);
+            processHttpAllSites(result);
             return result;
 
         } catch (Exception exception) {

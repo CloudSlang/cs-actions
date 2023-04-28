@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.cloudslang.content.sharepoint.actions.sites;
+package io.cloudslang.content.sharepoint.actions.entities;
 
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
@@ -22,7 +22,7 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
-import io.cloudslang.content.utils.OutputUtilities;
+import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -36,27 +36,30 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSiteNameById;
+import static io.cloudslang.content.sharepoint.services.GetEntitiesFromDriveService.getEntitiesFromDrive;
+import static io.cloudslang.content.sharepoint.services.SharepointService.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.STATUS_CODE_DESC;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityIdByName.NAME;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.GetEntityIdByName.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.sharepoint.utils.Inputs.GetEntityIdByName.*;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetSiteNameById {
-    @Action(name = "Get site name by id",
+public class GeEntityIdByName {
+    @Action(name = NAME,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = RETURN_CODE, description = RETURN_CODE_DESC),
-                    @Output(value = SITE_NAME, description = SITE_NAME_DESC),
-                    @Output(value = SITE_DISPLAY_NAME, description = SITE_DISPLAY_NAME_DESC),
+                    @Output(value = ENTITY_ID, description = ENTITY_ID_DESC),
+                    @Output(value = WEB_URL, description = WEB_URL_DESC),
                     @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
                     @Output(value = EXCEPTION, description = EXCEPTION_DESC)},
             responses =
@@ -66,7 +69,11 @@ public class GetSiteNameById {
                     })
 
     public Map<String, String> execute(@Param(value = AUTH_TOKEN, required = true, encrypted = true, description = AUTH_TOKEN_DESC) String authToken,
-                                       @Param(value = SITE_ID, required = true, description = SITE_ID_DESC) String siteId,
+                                       @Param(value = ENTITY_NAME, description = ENTITY_NAME_DESC) String entityName,
+                                       @Param(value = PARENT_FOLDER, description = PARENT_FOLDER_DESC) String parentFolder,
+                                       @Param(value = ENTITY_PATH, description = ENTITY_PATH_DESC) String entityPath,
+                                       @Param(value = DRIVE_ID, description = DRIVE_ID_DESC) String driveId,
+                                       @Param(value = SITE_ID, description = SITE_ID_DESC) String siteId,
 
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -84,7 +91,7 @@ public class GetSiteNameById {
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
                                        @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC)
                                        GlobalSessionObject sessionConnectionPool) {
-        {
+        try {
 
             proxyHost = defaultIfEmpty(proxyHost, EMPTY);
             proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -95,62 +102,88 @@ public class GetSiteNameById {
             connectTimeout = defaultIfEmpty(connectTimeout, DEFAULT_TIMEOUT);
             executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_TIMEOUT);
 
+            entityName = defaultIfEmpty(entityName, EMPTY);
+            parentFolder = defaultIfEmpty(parentFolder, EMPTY);
+            entityPath = defaultIfEmpty(entityPath, EMPTY);
+            driveId = defaultIfEmpty(driveId, EMPTY);
+            siteId = defaultIfEmpty(siteId, EMPTY);
+
             final List<String> exceptionMessages = verifyCommonInputs(proxyPort, trustAllRoots, x509HostnameVerifier, connectTimeout, executionTimeout);
             if (!exceptionMessages.isEmpty())
                 return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
-            Map<String, String> result;
-            try {
-                result = new HttpClientGetAction().execute(
-                        GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId,
-                        ANONYMOUS,
+
+            if (entityPath.isEmpty() && !driveId.isEmpty()) {
+
+                Map<String, String> entities = getEntitiesFromDrive(
+                        authToken,
+                        driveId,
                         EMPTY,
-                        EMPTY,
-                        EMPTY,
+                        ALL,
                         proxyHost,
                         proxyPort,
                         proxyUsername,
                         proxyPassword,
-                        tlsVersion,
-                        allowedCiphers,
                         trustAllRoots,
                         x509HostnameVerifier,
                         trustKeystore,
                         trustPassword,
-                        EMPTY,
-                        EMPTY,
-                        FALSE,
-                        CONNECTIONS_MAX_PER_ROUTE_CONST,
-                        CONNECTIONS_MAX_TOTAL_CONST,
-                        EMPTY,
-                        EMPTY,
-                        AUTHORIZATION_BEARER + authToken,
-                        EMPTY,
-                        EMPTY,
-                        EMPTY,
-                        EMPTY,
-                        EMPTY,
+                        tlsVersion,
+                        allowedCiphers,
                         connectTimeout,
-                        EMPTY,
                         executionTimeout,
                         sessionCookies,
                         sessionConnectionPool
                 );
 
-                if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
-                    if (Integer.parseInt(result.get(STATUS_CODE)) >= 200 && Integer.parseInt(result.get(STATUS_CODE)) < 300)
-                        processHttpGetSiteNameById(result);
-                    else {
-                        result.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
-                        result.put(EXCEPTION, result.get(RETURN_RESULT));
-                        result.put(RETURN_RESULT, EXCEPTION_DESC);
-                    }
-                }
-                return result;
-
-            } catch (Exception exception) {
-                return OutputUtilities.getFailureResultsMap(exception);
+                processHttpGetEntitiesFromDrive(entities, EXCEPTION_DESC, ALL);
+                entityPath = getEntityPath(entities, entityName, parentFolder);
             }
+
+            String endpoint = driveId.isEmpty() ?
+                    GRAPH_API_ENDPOINT + SITES_ENDPOINT + siteId + DRIVE_ENDPOINT + ROOT_PATH_ENDPOINT + encodeFileName(entityPath) :
+                    GRAPH_API_ENDPOINT + DRIVES_ENDPOINT + driveId + ROOT_PATH_ENDPOINT + encodeFileName(entityPath);
+
+            Map<String, String> result = new HttpClientGetAction().execute(
+                    endpoint,
+                    ANONYMOUS,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    proxyHost,
+                    proxyPort,
+                    proxyUsername,
+                    proxyPassword,
+                    tlsVersion,
+                    allowedCiphers,
+                    trustAllRoots,
+                    x509HostnameVerifier,
+                    trustKeystore,
+                    trustPassword,
+                    EMPTY,
+                    EMPTY,
+                    FALSE,
+                    CONNECTIONS_MAX_PER_ROUTE_CONST,
+                    CONNECTIONS_MAX_TOTAL_CONST,
+                    EMPTY,
+                    EMPTY,
+                    AUTHORIZATION_BEARER + authToken,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    connectTimeout,
+                    EMPTY,
+                    executionTimeout,
+                    sessionCookies,
+                    sessionConnectionPool
+            );
+
+            processHttpGetEntityIdByName(result, EXCEPTION_DESC);
+            return result;
+        } catch (Exception exception) {
+            return getFailureResultsMap(exception);
         }
     }
 }
