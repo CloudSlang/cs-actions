@@ -39,6 +39,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetRootDrive;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.NAME;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetRootDrive.EXCEPTION_DESC;
@@ -83,10 +84,7 @@ public class GetRootDrive {
             @Param(value = TLS_VERSION, description = TLS_VERSION_DESCRIPTION) String tlsVersion,
             @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESCRIPTION) String allowedCiphers,
             @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
-            @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-            @Param(value = SESSION_COOKIES, description = Descriptions.Common.SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
-            @Param(value = SESSION_CONNECTION_POOL, description = Descriptions.Common.SESSION_CONNECTION_POOL_DESC)
-            GlobalSessionObject sessionConnectionPool) {
+            @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
 
         try {
 
@@ -135,8 +133,8 @@ public class GetRootDrive {
                     connectTimeout,
                     EMPTY,
                     executionTimeout,
-                    sessionCookies,
-                    sessionConnectionPool
+                    null,
+                    null
             );
 
             processHttpGetRootDrive(result, EXCEPTION_DESC);

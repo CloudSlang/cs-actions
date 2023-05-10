@@ -44,17 +44,64 @@ public class Inputs {
         public static final String RESOURCE = "resource";
         public static final String SCOPE = "scope";
     }
-    public static class GetSiteIdByName{
+
+    public static class GetSiteIdByName {
         public static final String SITE_NAME = "siteName";
     }
-    public static class GetRootSiteInputs{
+
+    public static class GetRootSiteInputs {
         public static final String AUTH_TOKEN = "authToken";
     }
 
-    public static class GetRootDrive{
+    public static class GetRootDrive {
         public static final String SITE_ID = "siteId";
     }
-    public static class GetSiteNameById{
+
+    public static class GetSiteNameById {
         public static final String SITE_ID = "siteId";
+    }
+
+    public static class GetEntitiesFromDrive {
+        public static final String PATH = "path";
+        public static final String ENTITIES_TYPE = "entitiesType";
+    }
+
+    public static class UploadFile {
+        public static final String SITE_ID = "siteId";
+        public static final String DRIVE_ID = "driveId";
+        public static final String FOLDER_ID = "folderId";
+        public static final String FILE_PATH = "filePath";
+    }
+
+    public static class CreateFolder {
+        public static final String FOLDER_NAME = "folderName";
+        public static final String JSON_BODY = "jsonBody";
+        public static final String FOLDER_ID = "folderId";
+    }
+    public static class DeleteFolder {
+        public static final String FOLDER_ID = "folderId";
+    }
+
+    public static class GetEntityShareLink {
+        public static final String TYPE = "type";
+        public static final String PASSWORD = "password";
+        public static final String EXPIRATION_DATE_TIME = "expirationDateTime";
+        public static final String RETAIN_INHERITED_PERMISSIONS = "retainInheritedPermissions";
+        public static final String SCOPE = "scope";
+    }
+
+    public static class DownloadFile {
+        public static final String PATH = "path";
+        public static final String OVERWRITE = "overwrite";
+    }
+
+    public static class GetEntityIdByName {
+        public static final String ENTITY_NAME = "entityName";
+        public static final String PARENT_FOLDER = "parentFolder";
+        public static final String ENTITY_PATH = "entityPath";
+    }
+    public static class SearchForEntities {
+        public static final String SEARCH_TEXT = "searchText";
+        public static final String OPTIONAL_PARAMETERS = "optionalParameters";
     }
 }

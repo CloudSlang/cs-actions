@@ -14,8 +14,10 @@
  */
 package io.cloudslang.content.sharepoint.utils;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -30,5 +32,23 @@ public class Utils {
                 result += key + "=" + queryParams.get(key) + "&";
 
         return StringUtils.isEmpty(result) ? result : (result.substring(0, result.length() - 1));
+    }
+
+    public static String getFirstAvailableFileName(String path) {
+
+        String newPath = path;
+        int number = 2;
+
+        while (new File(newPath).exists()) {
+            newPath = FilenameUtils.getFullPath(path) + FilenameUtils.getBaseName(path) + " (" + number + ")." + FilenameUtils.getExtension(path);
+            number++;
+        }
+
+        return newPath;
+    }
+    public static class HostException extends Exception{
+        public HostException(String errorMessage) {
+            super(errorMessage);
+        }
     }
 }

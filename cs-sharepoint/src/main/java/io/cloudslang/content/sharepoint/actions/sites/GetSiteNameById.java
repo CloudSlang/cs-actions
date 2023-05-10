@@ -39,6 +39,8 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpGetSiteNameById;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.AUTH_TOKEN_DESC;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.STATUS_CODE_DESC;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.GetSiteNameById.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
@@ -78,10 +80,7 @@ public class GetSiteNameById {
                                        @Param(value = TLS_VERSION, description = TLS_VERSION_DESCRIPTION) String tlsVersion,
                                        @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESCRIPTION) String allowedCiphers,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
-                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
-                                       @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC)
-                                       GlobalSessionObject sessionConnectionPool) {
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         {
 
             proxyHost = defaultIfEmpty(proxyHost, EMPTY);
@@ -131,8 +130,8 @@ public class GetSiteNameById {
                         connectTimeout,
                         EMPTY,
                         executionTimeout,
-                        sessionCookies,
-                        sessionConnectionPool
+                        null,
+                        null
                 );
 
                 if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {

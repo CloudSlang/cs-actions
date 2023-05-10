@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * (c) Copyright 2023 EntIT Software LLC, a Micro Focus company, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -15,6 +15,7 @@
 
 
 
+
 package io.cloudslang.content.google.services.compute.compute_engine.instances
 
 import java.nio.charset.StandardCharsets.UTF_8
@@ -24,11 +25,10 @@ import java.text.SimpleDateFormat
 import java.util.{Date, TimeZone}
 import javax.crypto.Cipher
 import javax.crypto.Cipher.DECRYPT_MODE
-
 import com.google.api.client.auth.oauth2.Credential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64.decodeBase64
+import com.google.api.client.util.Base64.decodeBase64
 import com.google.api.services.compute.model.Metadata
 import com.google.common.io.BaseEncoding.base64
 import io.cloudslang.content.google.utils.Constants._
