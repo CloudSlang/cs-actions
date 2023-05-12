@@ -56,7 +56,7 @@ public class HttpClientAction {
 
 
     /**
-     * This operation does an http request and a parsing of the response.
+     * This operation does a http request and a parsing of the response.
      * It provides features like: http authentication, http secure, connection pool, cookies, proxy.
      * To accomplish this it uses the third parties from Apache: HttpClient 4.3, HttpCore 4.3.
      * It also uses the JCIFS library from the Samba for the 'NTLM' authentication.
