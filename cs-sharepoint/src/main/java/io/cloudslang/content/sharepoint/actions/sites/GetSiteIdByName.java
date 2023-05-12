@@ -82,10 +82,7 @@ public class GetSiteIdByName {
                                        @Param(value = TLS_VERSION, description = TLS_VERSION_DESCRIPTION) String tlsVersion,
                                        @Param(value = ALLOWED_CIPHERS, description = ALLOWED_CIPHERS_DESCRIPTION) String allowedCiphers,
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
-                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
-                                       @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
-                                       @Param(value = SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC)
-                                       GlobalSessionObject sessionConnectionPool) {
+                                       @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout) {
         {
 
             Map<String, String> queryParams = new HashMap<>();
@@ -137,8 +134,8 @@ public class GetSiteIdByName {
                         connectTimeout,
                         EMPTY,
                         executionTimeout,
-                        sessionCookies,
-                        sessionConnectionPool
+                        null,
+                        null
                 );
 
                 if (Integer.parseInt(result.get(RETURN_CODE)) != -1) {
