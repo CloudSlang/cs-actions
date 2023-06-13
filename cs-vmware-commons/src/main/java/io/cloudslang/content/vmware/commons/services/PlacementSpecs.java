@@ -21,7 +21,6 @@ import com.vmware.vcenter.vm_template.LibraryItemsTypes;
 import io.cloudslang.content.vmware.commons.entities.DeployTemplateFromLibraryInputs;
 import org.apache.commons.lang3.StringUtils;
 
-import static javafx.scene.input.KeyCode.T;
 
 public class PlacementSpecs {
     public static LibraryItemsTypes.DeploySpec getDeploySpec(DeployTemplateFromLibraryInputs deployInputs,
