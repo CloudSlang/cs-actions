@@ -1,36 +1,48 @@
+/*
+ * (c) Copyright 2023 Open Text
+ * This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.vmware.commons.entities;
 
 public class DeployTemplateFromLibraryInputs {
     private final String host;
     private final String username;
     private final String password;
-    private final String closeSession;
-    private final String vmSource;
-    private final String vmFolder;
+    private String vmSource;
+    private String vmFolder;
     private final String vmName;
-    private final String datastore;
-    private final String cluster;
-    private final String vmResourcePool;
-    private final String vmDatacenter;
+    private String datastore;
+    private String cluster;
+    private String vmResourcePool;
     private final String description;
     private final String vmIdentifierType;
+    private String hostSystem;
 
-    public DeployTemplateFromLibraryInputs(String host, String username, String password, String closeSession, String vmSource, String vmFolder,
-                                           String vmName, String datastore, String cluster, String vmResourcePool, String vmDatacenter,
-                                           String description, String vmIdentifierType) {
+    public DeployTemplateFromLibraryInputs(String host, String username, String password, String vmSource, String vmFolder,
+                                           String vmName, String datastore, String cluster, String vmResourcePool,
+                                           String description, String vmIdentifierType, String hostSystem) {
         this.host = host;
         this.username = username;
         this.password = password;
-        this.closeSession = closeSession;
         this.vmSource = vmSource;
         this.vmFolder = vmFolder;
         this.vmName = vmName;
         this.datastore = datastore;
         this.cluster = cluster;
         this.vmResourcePool = vmResourcePool;
-        this.vmDatacenter = vmDatacenter;
         this.description = description;
         this.vmIdentifierType = vmIdentifierType;
+        this.hostSystem = hostSystem;
     }
 
     public String getHost() {
@@ -43,10 +55,6 @@ public class DeployTemplateFromLibraryInputs {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getCloseSession() {
-        return closeSession;
     }
 
     public String getVmSource() {
@@ -73,32 +81,33 @@ public class DeployTemplateFromLibraryInputs {
         return vmResourcePool;
     }
 
-    public String getVmDatacenter() {
-        return vmDatacenter;
-    }
-
     public String getDescription() {
         return description;
     }
-
+    public String getHostSystem(){return hostSystem;}
     public String getVmIdentifierType() {
         return vmIdentifierType;
     }
+    public void setVmSource(String vmSource){this.vmSource = vmSource;}
+    public void setVmFolder(String vmFolder){this.vmFolder = vmFolder;}
+    public void setDatastore(String datastore){this.datastore = datastore;}
+    public void setVmResourcePool(String vmResourcePool){this.vmResourcePool = vmResourcePool;}
+    public void setCluster(String cluster){this.cluster = cluster;}
+    public void setHostSystem(String hostSystem){this.hostSystem = hostSystem;}
 
     public static class CloneVmInputsBuilder {
         private String host;
         private String username;
         private String password;
-        private String closeSession;
         private String vmSource;
         private String vmFolder;
         private String vmName;
         private String datastore;
         private String cluster;
         private String vmResourcePool;
-        private String vmDatacenter;
         private String description;
         private String vmIdentifierType;
+        private String hostSystem;
 
         public CloneVmInputsBuilder host(String host) {
             this.host = host;
@@ -112,11 +121,6 @@ public class DeployTemplateFromLibraryInputs {
 
         public CloneVmInputsBuilder password(String password) {
             this.password = password;
-            return this;
-        }
-
-        public CloneVmInputsBuilder closeSession(String closeSession) {
-            this.closeSession = closeSession;
             return this;
         }
 
@@ -150,11 +154,6 @@ public class DeployTemplateFromLibraryInputs {
             return this;
         }
 
-        public CloneVmInputsBuilder vmDatacenter(String vmDatacenter) {
-            this.vmDatacenter = vmDatacenter;
-            return this;
-        }
-
         public CloneVmInputsBuilder description(String description) {
             this.description = description;
             return this;
@@ -165,8 +164,13 @@ public class DeployTemplateFromLibraryInputs {
             return this;
         }
 
+        public CloneVmInputsBuilder hostSystem(String hostSystem) {
+            this.hostSystem = hostSystem;
+            return this;
+        }
+
         public DeployTemplateFromLibraryInputs build() {
-            return new DeployTemplateFromLibraryInputs(host, username, password, closeSession, vmSource, vmFolder, vmName, datastore, cluster, vmResourcePool, vmDatacenter, description, vmIdentifierType);
+            return new DeployTemplateFromLibraryInputs(host, username, password, vmSource, vmFolder, vmName, datastore, cluster, vmResourcePool, description, vmIdentifierType, hostSystem);
         }
     }
 }
