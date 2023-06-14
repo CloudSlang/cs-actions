@@ -40,6 +40,20 @@
         <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>cs-vmware-commons-0.0.1</tag>
     </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Maven Central staging repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Maven Central snapshots repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <!--Maven versions-->
         <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
