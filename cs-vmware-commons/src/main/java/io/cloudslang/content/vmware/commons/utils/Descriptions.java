@@ -31,4 +31,6 @@ public class Descriptions {
     public static final String VM_IDENTIFIER_TYPE_DESC ="Identifier type used for vmSource, vmFolder, vmResourcePool, datastore and cluster. Valid values: 'name', 'vmid'. Default value: 'name'";
     public static final String DESCRIPTION_DESC ="Description / annotation. To be able to clone the machine, even when no description input is given, the user needs to have the following permission to the virtual machine: Virtual machine -> Configuration -> Set annotation.";
     public static final String HOST_SYSTEM_DESC = "Name or ID of destination host system (ESXi) for new virtual machine as seen in the vCenter UI.  Only supported when host is a vCenter.  If not specified the same host system of the source virtual machine will be used. One of host system, cluster, or resource pool must be specified.";
+    public static final String TIMEOUT_DESC = "The amount of time (in seconds) to wait to complete the execution. A value of '0' disables this feature. \n" +
+            "Default: 60  \n";
 }

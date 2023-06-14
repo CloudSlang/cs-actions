@@ -36,4 +36,5 @@ public class Inputs {
     public static final String DESCRIPTION = "description";
     public static final String VM_IDENTIFIER_TYPE = "vmIdentifierType";
     public static final String MARK_AS_TEMPLATE = "markAsTemplate";
+    public static final String TIMEOUT = "timeout";
 }

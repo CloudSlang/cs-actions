@@ -39,6 +39,7 @@ import static io.cloudslang.content.vmware.commons.utils.Constants.DEFAULT_VM_ID
 import static io.cloudslang.content.vmware.commons.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.vmware.commons.utils.Descriptions.*;
 import static io.cloudslang.content.vmware.commons.utils.InputsValidation.addVerifyVmIdentifierType;
+import static io.cloudslang.content.vmware.commons.utils.InputsValidation.verifyDeployTemplateFromLibraryInputs;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class DeployTemplateFromLibrary {
@@ -63,12 +64,13 @@ public class DeployTemplateFromLibrary {
                                        @Param(value = VM_RESOURCE_POOL, description = VM_RESOURCE_POOL_DESC) String vmResourcePool,
                                        @Param(value = CLUSTER, description = CLUSTER_DESC) String cluster,
                                        @Param(value = HOST_SYSTEM, description = CLUSTER_DESC) String hostSystem,
-                                       @Param(value = DESCRIPTION, description = DESCRIPTION_DESC) String description) {
+                                       @Param(value = DESCRIPTION, description = DESCRIPTION_DESC) String description,
+                                       @Param(value = TIMEOUT, description = TIMEOUT_DESC) String timeout) {
 
         vmIdentifierType = defaultIfEmpty(vmIdentifierType, DEFAULT_VM_IDENTIFIER_TYPE);
+        timeout = defaultIfEmpty(timeout,DEFAULT_VM_IDENTIFIER_TYPE);
 
-        final List<String> exceptionMessages = new ArrayList<>();
-        addVerifyVmIdentifierType(exceptionMessages, vmIdentifierType, VM_IDENTIFIER_TYPE);
+        final List<String> exceptionMessages =verifyDeployTemplateFromLibraryInputs(timeout,vmIdentifierType);
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
@@ -86,6 +88,7 @@ public class DeployTemplateFromLibrary {
                 .description(description)
                 .cluster(cluster)
                 .hostSystem(hostSystem)
+                .timeout(timeout)
                 .build();
         try {
             return DeployTemplateFromLibraryService.execute(deployTemplateFromLibraryInputs);

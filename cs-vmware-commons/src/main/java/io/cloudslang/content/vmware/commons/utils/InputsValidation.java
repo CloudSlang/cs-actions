@@ -14,14 +14,28 @@
  */
 package io.cloudslang.content.vmware.commons.utils;
 
+import io.cloudslang.content.utils.NumberUtilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.cloudslang.content.vmware.commons.constants.Inputs.TIMEOUT;
+import static io.cloudslang.content.vmware.commons.constants.Inputs.VM_IDENTIFIER_TYPE;
 import static io.cloudslang.content.vmware.commons.utils.Constants.*;
 
 public class InputsValidation {
+    @NotNull
+    public static List<String> verifyDeployTemplateFromLibraryInputs(@NotNull final String timeout,
+                                                                     @NotNull final String vmIdentifierType) {
+
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyVmIdentifierType(exceptionMessages, vmIdentifierType, VM_IDENTIFIER_TYPE);
+        addVerifyPositiveNumber(exceptionMessages, timeout, TIMEOUT);
+        return exceptionMessages;
+    }
+
+
     @NotNull
     public static List<String> addVerifyVmIdentifierType(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         List<String> identifierTypes = new ArrayList<>();
@@ -29,6 +43,16 @@ public class InputsValidation {
         identifierTypes.add(VMID);
         if (!identifierTypes.contains(input.toLowerCase()))
             exceptions.add(String.format(EXCEPTION_INVALID_VM_IDENTIFIER_TYPE, input, inputName));
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifyPositiveNumber(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        if (!NumberUtilities.isValidInt(input)) {
+            exceptions.add(String.format(EXCEPTION_INVALID_NUMBER, input, inputName));
+        } else if (Integer.parseInt(input) < 0) {
+            exceptions.add(String.format(EXCEPTION_NEGATIVE_INDEX, input, inputName));
+        }
         return exceptions;
     }
 }

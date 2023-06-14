@@ -27,10 +27,11 @@ public class DeployTemplateFromLibraryInputs {
     private final String description;
     private final String vmIdentifierType;
     private String hostSystem;
+    private final String timeout;
 
     public DeployTemplateFromLibraryInputs(String host, String username, String password, String vmSource, String vmFolder,
                                            String vmName, String datastore, String cluster, String vmResourcePool,
-                                           String description, String vmIdentifierType, String hostSystem) {
+                                           String description, String vmIdentifierType, String hostSystem, String timeout) {
         this.host = host;
         this.username = username;
         this.password = password;
@@ -43,6 +44,7 @@ public class DeployTemplateFromLibraryInputs {
         this.description = description;
         this.vmIdentifierType = vmIdentifierType;
         this.hostSystem = hostSystem;
+        this.timeout = timeout;
     }
 
     public String getHost() {
@@ -81,19 +83,45 @@ public class DeployTemplateFromLibraryInputs {
         return vmResourcePool;
     }
 
+    public String getTimeout() {
+        return timeout;
+    }
+
     public String getDescription() {
         return description;
     }
-    public String getHostSystem(){return hostSystem;}
+
+    public String getHostSystem() {
+        return hostSystem;
+    }
+
     public String getVmIdentifierType() {
         return vmIdentifierType;
     }
-    public void setVmSource(String vmSource){this.vmSource = vmSource;}
-    public void setVmFolder(String vmFolder){this.vmFolder = vmFolder;}
-    public void setDatastore(String datastore){this.datastore = datastore;}
-    public void setVmResourcePool(String vmResourcePool){this.vmResourcePool = vmResourcePool;}
-    public void setCluster(String cluster){this.cluster = cluster;}
-    public void setHostSystem(String hostSystem){this.hostSystem = hostSystem;}
+
+    public void setVmSource(String vmSource) {
+        this.vmSource = vmSource;
+    }
+
+    public void setVmFolder(String vmFolder) {
+        this.vmFolder = vmFolder;
+    }
+
+    public void setDatastore(String datastore) {
+        this.datastore = datastore;
+    }
+
+    public void setVmResourcePool(String vmResourcePool) {
+        this.vmResourcePool = vmResourcePool;
+    }
+
+    public void setCluster(String cluster) {
+        this.cluster = cluster;
+    }
+
+    public void setHostSystem(String hostSystem) {
+        this.hostSystem = hostSystem;
+    }
 
     public static class CloneVmInputsBuilder {
         private String host;
@@ -108,6 +136,7 @@ public class DeployTemplateFromLibraryInputs {
         private String description;
         private String vmIdentifierType;
         private String hostSystem;
+        private String timeout;
 
         public CloneVmInputsBuilder host(String host) {
             this.host = host;
@@ -169,8 +198,14 @@ public class DeployTemplateFromLibraryInputs {
             return this;
         }
 
+        public CloneVmInputsBuilder timeout(String timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
         public DeployTemplateFromLibraryInputs build() {
-            return new DeployTemplateFromLibraryInputs(host, username, password, vmSource, vmFolder, vmName, datastore, cluster, vmResourcePool, description, vmIdentifierType, hostSystem);
+            return new DeployTemplateFromLibraryInputs(host, username, password, vmSource, vmFolder, vmName, datastore,
+                    cluster, vmResourcePool, description, vmIdentifierType, hostSystem, timeout);
         }
     }
 }

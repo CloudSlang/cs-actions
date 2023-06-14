@@ -21,6 +21,8 @@ public class Constants {
     public static final String NAME = "name";
     public static final String VMID = "vmid";
     public static final String UUID = "uuid";
+    public static final String DEFAULT_TIMEOUT = "90";
+    public static final String ZERO = "0";
 
     //exceptions
     public static final String EXCEPTION_RESOURCE_POOL_NOT_FOUND = "Resource pool not found: ";
@@ -31,5 +33,9 @@ public class Constants {
     public static final String EXCEPTION_VM_NOT_FOUND = "Virtual machine or template not found: ";
     public static final String EXCEPTION_LIBRARY_NOT_FOUND = "Library not found: ";
     public static final String EXCEPTION_HOST_NOT_FOUND = "Host not found: ";
+    public static final String EXCEPTION_TIMED_OUT= "The execution timed out after ";
+    public static final String EXCEPTION_INVALID_NUMBER = "The %s for %s input is not a valid number value.";
+    static final String EXCEPTION_NEGATIVE_INDEX = "The value '%s' for %s input cannot be a negative number.";
+
 
 }
