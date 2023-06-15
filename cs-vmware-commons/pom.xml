@@ -19,8 +19,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>io.cloudslang.content</artifactId>
-    <groupId>cs-vmware-commons</groupId>
+    <groupId>io.cloudslang.content</groupId>
+    <artifactId>cs-vmware-commons</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>

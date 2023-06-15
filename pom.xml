@@ -355,13 +355,13 @@
         <module>cs-ssh</module>
         <module>cs-tesseract</module>
         <module>cs-utilities</module>
+        <module>cs-vmware-commons</module>
         <module>cs-vmware</module>
         <module>cs-winrm</module>
         <module>cs-xml</module>
         <module>cs-cyberark</module>
         <module>cs-openshift</module>
         <module>cs-sharepoint</module>
-        <module>cs-vmware-new</module>
     </modules>
 
 </project>
