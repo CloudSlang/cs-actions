@@ -23,6 +23,7 @@ public class Descriptions {
     public static final String HOST_DESC="VMware vCenter, ESX or ESXi host hostname or IP.";
     public static final String USERNAME_DESC ="VMware username.";
     public static final String PASSWORD_DESC ="VMware user's password.";
+    public static final String VM_NAME_DESC = "Name of new virtual machine being created.";
     public static final String VM_FOLDER_DESC ="The ID or name of the VIRTUAL_MACHINE folder to which you want to add your virtual machine. Example of folder id: group-v336";
     public static final String VM_SOURCE_DESC ="Primary Virtual Machine identifier of the virtual machine/template to clone from. UUID, name or vmid (vm-127) can be used.";
     public static final String VM_RESOURCE_POOL_DESC ="The ID or name of the resource pool to which you want to add your virtual machine. One of host system, cluster, or resource pool must be specified. Example of resource pool id: resgroup-452 ";

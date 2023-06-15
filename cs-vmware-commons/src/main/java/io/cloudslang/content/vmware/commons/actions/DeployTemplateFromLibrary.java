@@ -38,7 +38,6 @@ import static io.cloudslang.content.vmware.commons.constants.Inputs.*;
 import static io.cloudslang.content.vmware.commons.utils.Constants.DEFAULT_VM_IDENTIFIER_TYPE;
 import static io.cloudslang.content.vmware.commons.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.vmware.commons.utils.Descriptions.*;
-import static io.cloudslang.content.vmware.commons.utils.InputsValidation.addVerifyVmIdentifierType;
 import static io.cloudslang.content.vmware.commons.utils.InputsValidation.verifyDeployTemplateFromLibraryInputs;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -57,13 +56,13 @@ public class DeployTemplateFromLibrary {
                                        @Param(value = USERNAME, description = USERNAME_DESC, required = true) String username,
                                        @Param(value = PASSWORD, description = PASSWORD_DESC, encrypted = true) String password,
                                        @Param(value = VM_IDENTIFIER_TYPE, description = VM_IDENTIFIER_TYPE_DESC) String vmIdentifierType,
-                                       @Param(value = VM_NAME, required = true) String vmName,
+                                       @Param(value = VM_NAME, description = VM_NAME_DESC, required = true) String vmName,
                                        @Param(value = VM_SOURCE, description = VM_SOURCE_DESC, required = true) String vmSource,
                                        @Param(value = VM_FOLDER, description = VM_FOLDER_DESC, required = true) String vmFolder,
                                        @Param(value = DATASTORE, description = DATASTORE_DESC, required = true) String datastore,
                                        @Param(value = VM_RESOURCE_POOL, description = VM_RESOURCE_POOL_DESC) String vmResourcePool,
                                        @Param(value = CLUSTER, description = CLUSTER_DESC) String cluster,
-                                       @Param(value = HOST_SYSTEM, description = CLUSTER_DESC) String hostSystem,
+                                       @Param(value = HOST_SYSTEM, description = HOST_SYSTEM_DESC) String hostSystem,
                                        @Param(value = DESCRIPTION, description = DESCRIPTION_DESC) String description,
                                        @Param(value = TIMEOUT, description = TIMEOUT_DESC) String timeout) {
 
