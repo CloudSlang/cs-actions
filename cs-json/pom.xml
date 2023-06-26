@@ -150,7 +150,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20200518</version>
+            <version>20230618</version>
         </dependency>
 
     </dependencies>
