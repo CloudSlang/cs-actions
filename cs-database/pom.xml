@@ -138,16 +138,36 @@
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>6.2.2.jre7</version>
+            <version>12.2.0.jre8</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
                     <groupId>com.microsoft.azure</groupId>
-                    <artifactId>adal4j</artifactId>
+                    <artifactId>msal4j</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.microsoft.azure</groupId>
-                    <artifactId>azure-keyvault</artifactId>
+                    <groupId>com.azure</groupId>
+                    <artifactId>azure-security-keyvault-keys</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.azure</groupId>
+                    <artifactId>azure-identity</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcpkix-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-runtime</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
