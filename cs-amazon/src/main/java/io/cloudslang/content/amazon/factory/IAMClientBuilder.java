@@ -31,14 +31,17 @@ package io.cloudslang.content.amazon.factory;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.rds.AmazonRDS;
-import com.amazonaws.services.rds.AmazonRDSAsyncClientBuilder;
-import com.amazonaws.services.rds.AmazonRDSClientBuilder;
+import com.amazonaws.services.eks.AmazonEKS;
+import com.amazonaws.services.eks.AmazonEKSAsyncClientBuilder;
+import com.amazonaws.services.eks.AmazonEKSClientBuilder;
+import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
+import com.amazonaws.services.identitymanagement.AmazonIdentityManagementAsyncClientBuilder;
+import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
 import org.apache.commons.lang3.StringUtils;
 
-public class RDSClientBuilder {
+public class IAMClientBuilder {
 
-    public static AmazonRDS getRDSClientBuilder(
+    public static AmazonIdentityManagement getIAMClientBuilder(
             String accessKeyId,
             String secretAccessKey,
             String proxyHost,
@@ -63,12 +66,12 @@ public class RDSClientBuilder {
             }
         }
         if (!async) {
-            return AmazonRDSClientBuilder.standard().withRegion(region)
+            return AmazonIdentityManagementClientBuilder.standard().withRegion(region)
                     .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))
                     .withClientConfiguration(clientConfiguration)
                     .build();
         }
-        return AmazonRDSAsyncClientBuilder.standard().withRegion(region)
+        return AmazonIdentityManagementAsyncClientBuilder.standard().withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))
                 .withClientConfiguration(clientConfiguration)
                 .build();

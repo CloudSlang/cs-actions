@@ -225,4 +225,19 @@ public class Descriptions {
         public static final String EPOCH_TIME_DESC = "Epoch time.";
         public static final String DATE_FORMAT_DESC = "Date format.";
     }
+
+    public static class EKSClusterCommon {
+        public static final String EKS_CLUSTER_NAME_DESC = "Name of the EKS cluster.";
+        public static final String ACCESS_KEY_ID_DESC  = "ID of the secret access key associated with your Amazon AWS or IAM account." +
+                "Example: 'AKIAIOSFODNN7EXAMPLE'";
+        public static final String ACCESS_KEY_DESC = "Secret access key associated with your Amazon AWS or IAM account." +
+                "Example: 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'";
+    }
+    public static class DescribeEKSClusterAction {
+
+        public static final String DESCRIBE_EKS_CLUSTER_DESC = "Returns information about provisioned EKS Cluster.";
+        public static final String DB_INSTANCE_STATUS_DESC = "Specifies the current state of this database.";
+        public static final String ENDPOINT_ADDRESS_DESC = "Specifies the DNS address of the DB instance.";
+        public static final String DB_INSTANCE_ARN_DESC = "The Amazon Resource Name (ARN) for the DB instance.";
+    }
 }

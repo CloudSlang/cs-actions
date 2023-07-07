@@ -1,4 +1,18 @@
 /*
+ * (c) Copyright 2019 EntIT Software LLC, a Micro Focus company, L.P.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * (c) Copyright 2022 Micro Focus, L.P.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -351,5 +365,31 @@ public class Inputs {
         public static final String DB_USERNAME = "dbUsername";
         public static final String DB_PASSWORD = "dbPassword";
         public static final String LICENSE_MODEL = "licenseModel";
+    }
+
+    public static class EKSCommonInputs {
+        public static final String EKS_CLUSTER_NAME = "eksClusterName";
+        public static final String ACCESS_KEY_ID = "accessKeyID";
+        public static final String ACCESS_KEY = "accessKey";
+    }
+
+    public static class DescribeEKSClusterInputs {
+        public static final String DESCRIBE_EKS_CLUSTER = "Describe EKS Cluster";
+    }
+
+    public static class CreateEKSClusterInputs {
+        public static final String ACCESS_KEY_ID = "accessKeyID";
+        public static final String ACCESS_KEY = "accessKey";
+        public static final String CREATE_EKS_CLUSTER = "Create EKS Cluster";
+        public static final String ROLE_ARN = "roleArn";
+        public static final String SUBNET_IDS = "subnetIds";
+        public static final String SECURITY_GROUP_IDS = "securityGroupIds";
+        public static final String ENDPOINT_PUBLIC_ACCESS = "endpointPublicAccess";
+        public static final String ENDPOINT_PRIVATE_ACCESS = "endpointPrivateAccess";
+        public static final String VERSION = "version";
+        public static final String SERVICE_IPV4_CIDR = "serviceIpv4Cidr";
+        public static final String TAG_KEY = "tag_keys";
+        public static final String TAG_VALUES = "tag_values";
+
     }
 }
