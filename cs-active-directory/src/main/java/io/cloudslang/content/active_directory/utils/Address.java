@@ -1,6 +1,6 @@
 /*
- * (c) Copyright 2021 Micro Focus
- * All rights reserved. This program and the accompanying materials
+ * Copyright 2021-2023 Open Text
+ * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
  * The Apache License is available at
@@ -11,7 +11,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+*/
+
 
 
 package io.cloudslang.content.active_directory.utils;
