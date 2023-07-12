@@ -45,8 +45,9 @@ public class AuthenticationTokenUsingWebAPIImpl {
 
     @NotNull
     private static String getAuthTokenUrl(String tenantId) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(getAuthTokenPath(tenantId));
+        final URIBuilder uriBuilder = new URIBuilder(getAuthTokenPath(tenantId));
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+        //uriBuilder.setPath(getAuthTokenPath(tenantId));
         return uriBuilder.build().toURL().toString();
     }
 

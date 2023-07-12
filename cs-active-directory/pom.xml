@@ -80,7 +80,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
-        <cs-commons.version>0.0.5</cs-commons.version>
+        <cs-commons.version>0.0.7</cs-commons.version>
         <cs-ssh.version>0.0.44</cs-ssh.version>
         <junit.version>4.13.1</junit.version>
         <pdfbox.version>2.0.19</pdfbox.version>
@@ -139,6 +139,17 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
         </dependency>
     </dependencies>
 

@@ -61,8 +61,9 @@ public class TransformationImpl {
 
     @NotNull
     private static String getCreateTransformationUrl(String subscriptionId, String resourceGroupName, String jobName, String transformationName) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(getTransformationURLPath(subscriptionId, resourceGroupName, jobName, transformationName).toString());
+        final URIBuilder uriBuilder = new URIBuilder(getTransformationURLPath(subscriptionId, resourceGroupName, jobName, transformationName).toString());
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+        //uriBuilder.setPath(getTransformationURLPath(subscriptionId, resourceGroupName, jobName, transformationName).toString());
         return uriBuilder.build().toURL().toString();
     }
 
