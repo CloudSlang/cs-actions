@@ -71,8 +71,9 @@ public class StreamingInputJobImpl {
 
     @NotNull
     private static String getCreateInputStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName, String inputName, String apiVersion) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(createStreamingInputJobPath(subscriptionId, resourceGroupName, jobName, inputName, apiVersion));
+        final URIBuilder uriBuilder = new URIBuilder(createStreamingInputJobPath(subscriptionId, resourceGroupName, jobName, inputName, apiVersion));
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+        //uriBuilder.setPath(createStreamingInputJobPath(subscriptionId, resourceGroupName, jobName, inputName, apiVersion));
         return uriBuilder.build().toURL().toString();
     }
 

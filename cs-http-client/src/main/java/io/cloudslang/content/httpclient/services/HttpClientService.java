@@ -62,6 +62,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static io.cloudslang.content.httpclient.entities.Constants.ZERO;
+
 /**
  * Created with IntelliJ IDEA.
  * User: davidmih
@@ -101,7 +103,9 @@ public class HttpClientService {
         initSessionsObjects(httpClientInputs);
         HttpComponents httpComponents = buildHttpComponents(httpClientInputs);
         final Map<String, String>[] result = new Map[]{new HashMap<>()};
-
+        if(StringUtils.isEmpty(httpClientInputs.getExecutionTimeout())){
+            httpClientInputs.setExecutionTimeout(ZERO);
+        }
         if (httpClientInputs.getExecutionTimeout().equals("0")) {
                     CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
                             httpComponents.getHttpRequestBase(),

@@ -76,7 +76,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.9</score-content-sdk.version>
-        <cs-commons.version>0.0.5</cs-commons.version>
+        <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.13.1</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.4.1</version>
+            <version>2.15.2</version>
        </dependency>
         <!-- The gson dependency is required for the json-path dependency-->
         <dependency>

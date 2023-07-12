@@ -68,7 +68,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
-        <cs-commons.version>0.0.5</cs-commons.version>
+        <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.13.1</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -122,7 +122,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>2.7</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
