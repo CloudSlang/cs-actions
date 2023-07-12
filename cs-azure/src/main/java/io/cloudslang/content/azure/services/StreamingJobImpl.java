@@ -128,23 +128,26 @@ public class StreamingJobImpl {
 
     @NotNull
     private static String getCreateStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(getStreamURLPath(subscriptionId, resourceGroupName, jobName).toString());
+        final URIBuilder uriBuilder = new URIBuilder(getStreamURLPath(subscriptionId, resourceGroupName, jobName).toString());
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+       // uriBuilder.setPath(getStreamURLPath(subscriptionId, resourceGroupName, jobName).toString());
         return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
     private static String getStartStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(startStreamingJobPath(subscriptionId, resourceGroupName, jobName));
+        final URIBuilder uriBuilder = new URIBuilder(startStreamingJobPath(subscriptionId, resourceGroupName, jobName));
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+       // uriBuilder.setPath(startStreamingJobPath(subscriptionId, resourceGroupName, jobName));
         return uriBuilder.build().toURL().toString();
     }
 
 
     @NotNull
     private static String getStopStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(stopStreamingJobPath(subscriptionId, resourceGroupName, jobName));
+        final URIBuilder uriBuilder = new URIBuilder(stopStreamingJobPath(subscriptionId, resourceGroupName, jobName));
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+       // uriBuilder.setPath(stopStreamingJobPath(subscriptionId, resourceGroupName, jobName));
         return uriBuilder.build().toURL().toString();
     }
 

@@ -107,15 +107,17 @@ public class AzureComputeImpl {
 
     @NotNull
     private static String getCreateVMUrl(AzureCreateVMInputs azureCreateVMInputs) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(createVMPath(azureCreateVMInputs));
+        final URIBuilder uriBuilder = new URIBuilder(createVMPath(azureCreateVMInputs));
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+        //uriBuilder.setPath(createVMPath(azureCreateVMInputs));
         return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
     private static String getDeleteVMUrl(AzureComputeCommonInputs azureComputeCommonInputs) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(deleteVMPath(azureComputeCommonInputs));
+        final URIBuilder uriBuilder = new URIBuilder(deleteVMPath(azureComputeCommonInputs));
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+       // uriBuilder.setPath(deleteVMPath(azureComputeCommonInputs));
         return uriBuilder.build().toURL().toString();
     }
 
@@ -154,8 +156,9 @@ public class AzureComputeImpl {
 
     @NotNull
     private static String getAvailabilityInfoUrl(AzureCreateVMInputs azureCreateVMInputs) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(getAvailabilityInfoURLPath(azureCreateVMInputs));
+        final URIBuilder uriBuilder = new URIBuilder(getAvailabilityInfoURLPath(azureCreateVMInputs));
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+        //uriBuilder.setPath(getAvailabilityInfoURLPath(azureCreateVMInputs));
         return uriBuilder.build().toURL().toString();
     }
 
@@ -229,8 +232,9 @@ public class AzureComputeImpl {
 
     @NotNull
     private static String getSSHPublicKeysINSubscriptionInfoURL(AzureCreateVMInputs azureCreateVMInputs) throws Exception {
-        final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(getSSHPublicKeysINSubscriptionInfoURLPath(azureCreateVMInputs));
+        final URIBuilder uriBuilder = new URIBuilder(getSSHPublicKeysINSubscriptionInfoURLPath(azureCreateVMInputs));
+        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
+        //uriBuilder.setPath(getSSHPublicKeysINSubscriptionInfoURLPath(azureCreateVMInputs));
         return uriBuilder.build().toURL().toString();
     }
 
