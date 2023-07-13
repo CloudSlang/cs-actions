@@ -254,7 +254,7 @@ public class InstanceImpl {
     }
 
     @NotNull
-    private static Map<String, String> getStringStringMap(@NotNull OCICommonInputs ociCommonInputs, HttpClientInputs httpClientInputs) {
+    private static Map<String, String> getStringStringMap(@NotNull OCICommonInputs ociCommonInputs, HttpClientInputs httpClientInputs) throws Exception {
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
         URI uri = URI.create(httpClientInputs.getUrl());

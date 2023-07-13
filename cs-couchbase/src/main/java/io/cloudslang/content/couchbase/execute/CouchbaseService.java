@@ -38,7 +38,7 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.buildUrl;
 public class CouchbaseService {
     @SafeVarargs
     public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders)
-            throws MalformedURLException {
+            throws Exception {
         InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
 
         httpClientInputs.setUrl(buildUrl(wrapper));

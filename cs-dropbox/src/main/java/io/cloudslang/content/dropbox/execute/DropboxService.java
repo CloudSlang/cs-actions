@@ -37,7 +37,7 @@ import static io.cloudslang.content.dropbox.utils.InputsUtil.buildUrl;
  */
 public class DropboxService {
     @SafeVarargs
-    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) throws MalformedURLException {
+    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) throws Exception {
         InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
 
         httpClientInputs.setUrl(buildUrl(wrapper));
