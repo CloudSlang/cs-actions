@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import static io.cloudslang.content.abbyy.constants.DefaultInputValues.ZERO;
+
 class HttpClient {
     public static HttpClientResponse execute(@NotNull HttpRequest request) throws IOException, HttpClientException, URISyntaxException {
         Map<String, String> rawResponse = new HttpClientAction().execute(
@@ -55,6 +57,7 @@ class HttpClient {
                 request.getKeystorePassword(),
                 String.valueOf(request.getConnectTimeout()),
                 String.valueOf(request.getSocketTimeout()),
+                ZERO,
                 String.valueOf(request.isUseCookies()),
                 String.valueOf(request.isKeepAlive()),
                 String.valueOf(request.getConnectionsMaxPerRoute()),

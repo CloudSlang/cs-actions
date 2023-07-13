@@ -63,8 +63,7 @@ public class PowerShellOsDetectorServiceTest {
     }
 
     @Test
-    public void testPowerShellDetection() throws SAXException, InterruptedException, TransformerException, IOException,
-            XPathExpressionException, TimeoutException, URISyntaxException, ParserConfigurationException {
+    public void testPowerShellDetection() throws Exception {
         doReturn(new HashMap<String, String>()).when(wsManRemoteShellService).runCommand(any(WSManRequestInputs.class));
         OperatingSystemDetails toBeReturnedOsDetails = new OperatingSystemDetails();
         toBeReturnedOsDetails.setArchitecture("xYZ");

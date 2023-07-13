@@ -22,6 +22,7 @@ import io.cloudslang.content.abbyy.entities.others.MarkingType;
 import io.cloudslang.content.abbyy.entities.others.TextType;
 
 public final class DefaultInputValues {
+    public static final String ZERO = "0";
     public static final String LANGUAGE = "English";
     public static final String IMAGE_SOURCE = ImageSource.AUTO.toString();
     public static final String CORRECT_ORIENTATION = String.valueOf(true);

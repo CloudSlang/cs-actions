@@ -38,7 +38,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 public class GetSubscriptionParamsServices {
 
-    public static Map<String, String> createInstance(HttpClientInputs httpClientInputs) {
+    public static Map<String, String> createInstance(HttpClientInputs httpClientInputs) throws Exception {
         final Map<String, String> httpResponse = new HttpClientService().execute(httpClientInputs);
 
         if (parseInt(httpResponse.get(STATUS_CODE)) == HTTP_OK) {

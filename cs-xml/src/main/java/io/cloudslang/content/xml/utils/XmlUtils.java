@@ -322,7 +322,7 @@ public class XmlUtils {
         return context;
     }
 
-    public static String createXmlDocumentFromUrl(CommonInputs commonInputs) throws ParserConfigurationException, SAXException, IOException {
+    public static String createXmlDocumentFromUrl(CommonInputs commonInputs) throws Exception {
         HttpClientService scoreHttpClient = new HttpClientService();
         HttpClientInputs httpClientInputs = new HttpClientInputs();
         httpClientInputs.setMethod(HttpGet.METHOD_NAME);

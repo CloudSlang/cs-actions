@@ -60,7 +60,7 @@ public class UserServiceImpl {
     }
 
     @NotNull
-    public static Map<String, String> listUsers(@NotNull final CreateUserInputs createUserInputs) {
+    public static Map<String, String> listUsers(@NotNull final CreateUserInputs createUserInputs) throws Exception {
         final HttpClientInputs httpClientInputs = new HttpClientInputs();
         final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
         httpClientInputs.setUrl(MANAGE_USER_REQUEST_URL);
