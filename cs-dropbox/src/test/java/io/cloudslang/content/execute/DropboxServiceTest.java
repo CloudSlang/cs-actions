@@ -64,7 +64,7 @@ public class DropboxServiceTest {
     }
 
     @Test
-    public void testCreateFolder() throws MalformedURLException {
+    public void testCreateFolder() throws Exception {
         HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
@@ -93,7 +93,7 @@ public class DropboxServiceTest {
     }
 
     @Test
-    public void testCreateFolderDeprecatedApi() throws MalformedURLException {
+    public void testCreateFolderDeprecatedApi() throws Exception {
         HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
@@ -122,7 +122,7 @@ public class DropboxServiceTest {
     }
 
     @Test
-    public void testCreateFolderNoApiSpecified() throws MalformedURLException {
+    public void testCreateFolderNoApiSpecified() throws Exception {
         HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
@@ -151,7 +151,7 @@ public class DropboxServiceTest {
     }
 
     @Test
-    public void testDeleteFileOrFolder() throws MalformedURLException {
+    public void testDeleteFileOrFolder() throws Exception {
         HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
@@ -178,7 +178,7 @@ public class DropboxServiceTest {
     }
 
     @Test
-    public void testDeleteFileOrFolderDeprecatedApi() throws MalformedURLException {
+    public void testDeleteFileOrFolderDeprecatedApi() throws Exception {
         HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
@@ -206,7 +206,7 @@ public class DropboxServiceTest {
     }
 
     @Test
-    public void testDeleteFileOrFolderNoApiSpecified() throws MalformedURLException {
+    public void testDeleteFileOrFolderNoApiSpecified() throws Exception {
         HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()

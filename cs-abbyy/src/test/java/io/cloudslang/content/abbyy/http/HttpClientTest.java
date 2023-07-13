@@ -70,6 +70,7 @@ public class HttpClientTest {
     private static final String keystore = "keystore";
     private static final String keystorePassword = "keystorePassword";
     private static final Integer connectTimeout = 1;
+    private static final Integer executionTimeout = 0;
     private static final Integer socketTimeout = 1;
     private static final Boolean useCookies = true;
     private static final Boolean keepAlive = false;
@@ -134,7 +135,7 @@ public class HttpClientTest {
                 anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
+                anyString(),any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
 
         HttpClientResponse.Builder httpClientResponseBuilderSpy = new HttpClientResponse.Builder();
         httpClientResponseBuilderSpy = PowerMockito.spy(httpClientResponseBuilderSpy);
@@ -148,7 +149,7 @@ public class HttpClientTest {
         verify(httpClientActionMock).execute(eq(url), eq(tlsVersion), eq(allowedCyphers), eq(authType), eq(preemptiveAuth.toString()),
                 eq(username), eq(password), eq(kerberosConfigFile), eq(kerberosLoginConfFile), eq(kerberosSkipPortForLookup),
                 eq(proxyHost), eq(proxyPort.toString()), eq(proxyUsername), eq(proxyPassword), eq(trustAllRoots.toString()), eq(x509HostnameVerifier),
-                eq(trustKeystore), eq(trustPassword), eq(keystore), eq(keystorePassword), eq(connectTimeout.toString()), eq(socketTimeout.toString()),
+                eq(trustKeystore), eq(trustPassword), eq(keystore), eq(keystorePassword), eq(connectTimeout.toString()), eq(socketTimeout.toString()), eq(executionTimeout.toString()),
                 eq(useCookies.toString()), eq(keepAlive.toString()), eq(connectionsMaxPerRoute.toString()), eq(connectionsMaxTotal.toString()), eq(headers),
                 eq(responseCharacterSet), eq(destinationFile.toAbsolutePath().toString()), eq(followedRedirects.toString()), eq(queryParams),
                 eq(queryParamsAreURLEncoded.toString()), eq(queryParamsAreFormEncoded.toString()), eq(formParams), eq(formParamsAreURLEncoded.toString()),
@@ -189,7 +190,7 @@ public class HttpClientTest {
                 anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
+                anyString(),any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
 
         HttpClientResponse.Builder httpClientResponseBuilderSpy = new HttpClientResponse.Builder();
         httpClientResponseBuilderSpy = PowerMockito.spy(httpClientResponseBuilderSpy);
