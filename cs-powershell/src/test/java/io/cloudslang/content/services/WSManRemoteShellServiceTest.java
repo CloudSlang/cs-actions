@@ -540,7 +540,7 @@ public class WSManRemoteShellServiceTest {
         XMLUtils.parseXml(anyString(), anyString());
     }
 
-    private void mockExecuteRequest() {
+    private void mockExecuteRequest() throws Exception {
         Map<String, String> result = new HashMap<>();
         result.put(RETURN_RESULT, RESPONSE_BODY);
         result.put(STATUS_CODE, OK_STATUS_CODE);
