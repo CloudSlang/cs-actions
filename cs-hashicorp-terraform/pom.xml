@@ -91,7 +91,7 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <junit.version>4.13.1</junit.version>
         <common-codec.version>1.15</common-codec.version>
-        <cs-http-client.version>0.1.83</cs-http-client.version>
+        <cs-http-client.version>0.1.88</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

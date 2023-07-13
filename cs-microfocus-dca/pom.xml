@@ -78,8 +78,8 @@
         <score-content-sdk.version>1.10.7</score-content-sdk.version>
         <commons-collection.version>4.1</commons-collection.version>
         <cs-commons.version>0.0.7</cs-commons.version>
-        <cs-xml.version>0.0.13</cs-xml.version>
-        <cs-http-client.version>0.1.74</cs-http-client.version>
+        <cs-xml.version>0.0.21</cs-xml.version>
+        <cs-http-client.version>0.1.88</cs-http-client.version>
         <jackson.version>2.15.2</jackson.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
