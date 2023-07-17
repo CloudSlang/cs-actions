@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-tesseract</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>OCR Tesseract integration in CloudSlang</description>

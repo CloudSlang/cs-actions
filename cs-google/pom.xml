@@ -23,7 +23,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-google</artifactId>
-    <version>0.4.9-SNAPSHOT</version>
+    <version>0.4.10-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
