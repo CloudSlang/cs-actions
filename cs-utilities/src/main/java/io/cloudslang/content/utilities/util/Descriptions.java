@@ -110,6 +110,8 @@ public class Descriptions {
         public static final String CONVERT_EPOCH_TIME_OPERATION_DESC = "This operation converts the unix time into given format.";
         public static final String EPOCH_TIME_DESC = "Epoch time.";
         public static final String DATE_FORMAT_DESC = "Date format.";
+
+        public static final String EPOCH_TIME_DIFFERENCE_OPERATION_DESC = "This operation converts the unix time into given format and gives the time difference.";
     }
 
 }
