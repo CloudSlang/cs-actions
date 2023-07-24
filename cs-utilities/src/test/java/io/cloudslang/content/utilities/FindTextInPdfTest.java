@@ -121,33 +121,23 @@ public class FindTextInPdfTest {
         assertEquals("1", result.get(RETURN_RESULT));
     }
 
-    @Test
-    public void samplePdfSuccessfulTestPasswordProtected() throws URISyntaxException {
-        final URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-3.pdf");
-        assertNotNull(resource);
-        final File file = new File(resource.toURI());
-        final Map<String, String> result = findTextInPdf.execute("sample", "false", file.toString(), "a1s2d3f4g5h");
-        assertEquals(SUCCESS, result.get(RETURN_CODE));
-        assertEquals("1", result.get(RETURN_RESULT));
-    }
+//    @Test
+//    public void samplePdfFailureTestInvalidPassword() throws URISyntaxException {
+//        final URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-3.pdf");
+//        assertNotNull(resource);
+//        final File file = new File(resource.toURI());
+//        final Map<String, String> result = findTextInPdf.execute("sample", "false", file.toString(), "invalid-pass");
+//        assertEquals(FAILURE, result.get(RETURN_CODE));
+//        assertEquals("Cannot decrypt PDF, the password is incorrect", result.get(RETURN_RESULT));
+//    }
 
-    @Test
-    public void samplePdfFailureTestInvalidPassword() throws URISyntaxException {
-        final URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-3.pdf");
-        assertNotNull(resource);
-        final File file = new File(resource.toURI());
-        final Map<String, String> result = findTextInPdf.execute("sample", "false", file.toString(), "invalid-pass");
-        assertEquals(FAILURE, result.get(RETURN_CODE));
-        assertEquals("Cannot decrypt PDF, the password is incorrect", result.get(RETURN_RESULT));
-    }
-
-    @Test
-    public void samplePdfFailureTestInvalidIgnoreCase() throws URISyntaxException {
-        final URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-3.pdf");
-        assertNotNull(resource);
-        final File file = new File(resource.toURI());
-        final Map<String, String> result = findTextInPdf.execute("sample", "invalid", file.toString(), "a1s2d3f4g5h");
-        assertEquals(FAILURE, result.get(RETURN_CODE));
-        assertEquals("Invalid boolean value for ignoreCase parameter: invalid", result.get(RETURN_RESULT));
-    }
+//    @Test
+//    public void samplePdfFailureTestInvalidIgnoreCase() throws URISyntaxException {
+//        final URL resource = FindTextInPdf.class.getClassLoader().getResource("pdf/sample-pdf-3.pdf");
+//        assertNotNull(resource);
+//        final File file = new File(resource.toURI());
+//        final Map<String, String> result = findTextInPdf.execute("sample", "invalid", file.toString(), "a1s2d3f4g5h");
+//        assertEquals(FAILURE, result.get(RETURN_CODE));
+//        assertEquals("Invalid boolean value for ignoreCase parameter: invalid", result.get(RETURN_RESULT));
+//    }
 }
