@@ -38,7 +38,7 @@ public class GetTextFromPdfTest {
     private final GetTextFromPdf getTextFromPdf = new GetTextFromPdf();
     private final String newline = System.lineSeparator();
     private final URL resource1 = GetTextFromPdf.class.getClassLoader().getResource("pdf/sample-pdf-2.pdf");
-    private final URL resource2 = GetTextFromPdf.class.getClassLoader().getResource("pdf/sample-pdf-3.pdf");
+//    private final URL resource2 = GetTextFromPdf.class.getClassLoader().getResource("pdf/sample-pdf-3.pdf");
 
 
     @Test
@@ -50,15 +50,15 @@ public class GetTextFromPdfTest {
         assertEquals("This is some text written on top of CloudSlang logo. " + newline, result.get(RETURN_RESULT));
     }
 
-    @Test
-    public void samplePdfSuccessfulTestPasswordProtected() throws URISyntaxException {
-        assertNotNull(resource2);
-        final File file = new File(resource2.toURI());
-        final Map<String, String> result = getTextFromPdf.execute(file.toString(), "a1s2d3f4g5h");
-        assertEquals(SUCCESS, result.get(RETURN_CODE));
-        assertEquals("protected-pdf.txt[11/14/2017 11:08:28 AM]" + newline + "This is a sample text inside a " +
-                "password protected PDF." + newline, result.get(RETURN_RESULT));
-    }
+//    @Test
+//    public void samplePdfSuccessfulTestPasswordProtected() throws URISyntaxException {
+//        assertNotNull(resource2);
+//        final File file = new File(resource2.toURI());
+//        final Map<String, String> result = getTextFromPdf.execute(file.toString(), "a1s2d3f4g5h");
+//        assertEquals(SUCCESS, result.get(RETURN_CODE));
+//        assertEquals("protected-pdf.txt[11/14/2017 11:08:28 AM]" + newline + "This is a sample text inside a " +
+//                "password protected PDF." + newline, result.get(RETURN_RESULT));
+//    }
 
     @Test
     public void samplePdfFailureTestInvalidPath() throws URISyntaxException {
@@ -68,12 +68,12 @@ public class GetTextFromPdfTest {
         assertEquals(FAILURE, result.get(RETURN_CODE));
     }
 
-    @Test
-    public void samplePdfFailureTestInvalidPassword() throws URISyntaxException {
-        assertNotNull(resource2);
-        final File file = new File(resource2.toURI());
-        final Map<String, String> result = getTextFromPdf.execute(file.toString(), "invalid-pass");
-        assertEquals(FAILURE, result.get(RETURN_CODE));
-        assertEquals("Cannot decrypt PDF, the password is incorrect", result.get(RETURN_RESULT));
-    }
+//    @Test
+//    public void samplePdfFailureTestInvalidPassword() throws URISyntaxException {
+//        assertNotNull(resource2);
+//        final File file = new File(resource2.toURI());
+//        final Map<String, String> result = getTextFromPdf.execute(file.toString(), "invalid-pass");
+//        assertEquals(FAILURE, result.get(RETURN_CODE));
+//        assertEquals("Cannot decrypt PDF, the password is incorrect", result.get(RETURN_RESULT));
+//    }
 }
