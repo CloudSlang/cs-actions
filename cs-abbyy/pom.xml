@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-abbyy</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -111,7 +111,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-http-client</artifactId>
-            <version>0.1.84</version>
+            <version>0.1.88</version>
         </dependency>
         <!-- Testing -->
         <dependency>
