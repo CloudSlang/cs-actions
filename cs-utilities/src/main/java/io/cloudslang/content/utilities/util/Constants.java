@@ -66,6 +66,14 @@ public final class Constants {
         public static final String EPOCH_TIME = "epochTime";
         public static final String DATE_FORMAT = "dateFormat";
         public static final String EXCEPTION_EPOCH_TIME = "The %s is not a valid.";
+
+        public static final String EPOCH_TIME_DIFFERENCE_OPERATION_NAME = "Epoch Time Difference";
+
+        public static final String UTC_ZONE_OFFSET = "utcZoneOffset";
+
+        public static final String TIME_DIFFERENCE = "timeDifference";
+
+        public static final String TIME_ZONE = "timeZone";
     }
 
     public static class SchedulerTimeConstants {

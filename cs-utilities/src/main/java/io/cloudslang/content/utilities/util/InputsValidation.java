@@ -148,6 +148,14 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifyEpochTimeInputs(@NotNull final String epochTime, @NotNull final String timeZone) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifyEpochTime(exceptionMessages, epochTime);
+        addVerifyEpochTimezone(exceptionMessages, timeZone);
+        return exceptionMessages;
+    }
+
+    @NotNull
     private static List<String> addVerifyEpochTime(@NotNull List<String> exceptions, @NotNull final String input) {
 
         if (!isValidLong(input)) {
@@ -192,6 +200,28 @@ public final class InputsValidation {
 
             String offset = zoneOffset.getId().replaceAll("Z", "+00:00");
             if (input.equalsIgnoreCase(String.format("(UTC%s) %s", offset, id))) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag)
+            exceptions.add(String.format(EXCEPTION_SCHEDULER_TIMEZONE, Constants.SchedulerTimeConstants.TIME_ZONE));
+        return exceptions;
+
+    }
+
+    @NotNull
+    private static List<String> addVerifyEpochTimezone(@NotNull List<String> exceptions, @NotNull final String input) {
+        boolean flag = false;
+        LocalDateTime localDateTime = LocalDateTime.now();
+        for (String zoneId : ZoneId.getAvailableZoneIds()) {
+
+            ZoneId id = ZoneId.of(zoneId);
+            ZonedDateTime zonedDateTime = localDateTime.atZone(id);
+            ZoneOffset zoneOffset = zonedDateTime.getOffset();
+
+            String offset = zoneOffset.getId().replaceAll("Z", "+00:00");
+            if (input.equalsIgnoreCase(id.toString())) {
                 flag = true;
                 break;
             }

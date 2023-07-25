@@ -14,7 +14,6 @@
  */
 
 
-
 package io.cloudslang.content.utilities.services;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,8 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.DATE_FORMAT;
+import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.*;
+import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.UTC_ZONE_OFFSET;
 
 public class ConvertEpochTimeImpl {
     @NotNull
@@ -34,6 +34,36 @@ public class ConvertEpochTimeImpl {
         map.put("returnCode", "0");
         map.put(DATE_FORMAT, LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(epochTime)),
                 ZoneId.of(timeZone.split("\\) ")[1])) + ":00");
+        return map;
+
+    }
+
+    @NotNull
+    public static Map<String, String> getTimeDifference(String epochTime, String zoneId) {
+        Map<String, String> map = new HashMap<>();
+        ZoneId z = ZoneId.of(zoneId);
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(epochTime)), z);
+        map.put(DATE_FORMAT, localDateTime.toString());
+        map.put(TIME_ZONE, z.toString());
+        LocalDateTime localDateTime1 = LocalDateTime.now();
+        StringBuffer timestamp = new StringBuffer();
+        int hours = localDateTime.getHour() - localDateTime1.getHour();
+        int minutes = localDateTime.getMinute() - localDateTime1.getMinute();
+        timestamp.append(localDateTime.compareTo(localDateTime1));
+        if (("" + hours).contains("-"))
+            timestamp.append(":00:");
+        else
+            timestamp.append(":").append(hours).append(":");
+
+        if (("" + minutes).contains("-"))
+            timestamp.append("00");
+        else
+            timestamp.append(minutes);
+
+        timestamp.append(":00");
+        map.put(TIME_DIFFERENCE, timestamp.toString());
+        map.put(UTC_ZONE_OFFSET, localDateTime.atZone(z).getOffset().getId().replaceAll("Z", "+00:00"));
+        map.put("returnCode", "0");
         return map;
 
     }
