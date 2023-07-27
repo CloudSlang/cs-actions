@@ -45,7 +45,7 @@ public class ConvertEpochTimeImpl {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(epochTime)), z);
         map.put(DATE_FORMAT, localDateTime.toString());
         map.put(TIME_ZONE, z.toString());
-        LocalDateTime localDateTime1 = LocalDateTime.now();
+        LocalDateTime localDateTime1 = LocalDateTime.now(z);
         StringBuffer timestamp = new StringBuffer();
         int hours = localDateTime.getHour() - localDateTime1.getHour();
         int minutes = localDateTime.getMinute() - localDateTime1.getMinute();
