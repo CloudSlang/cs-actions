@@ -98,10 +98,6 @@ public class UploadBigFileImpl {
 
     private static String uploadFileChunk(@NotNull final AddAttachmentInputs addAttachmentInputs, UploadSession uploadSession) throws Exception {
 
-        TokenCredential tokenCredential = new AuthTokenCredential(addAttachmentInputs.getCommonInputs().getAuthToken());
-        final TokenCredentialAuthProvider tokenCredAuthProvider = new TokenCredentialAuthProvider(Arrays.asList(DEFAULT_SCOPE), tokenCredential);
-        final OkHttpClient.Builder httpClientBuilder = HttpClients.createDefault(tokenCredAuthProvider).newBuilder();
-
         final TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
                     @Override
@@ -132,20 +128,23 @@ public class UploadBigFileImpl {
                 }
             };
         }
+
+        // Install the all-trusting trust manager
+        final SSLContext sslContext = SSLContext.getInstance(TLS);
+        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+        // Create a ssl socket factory with our all-trusting manager
+        final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
+                .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
+                .hostnameVerifier(new NoopHostnameVerifier());
+
         if (!addAttachmentInputs.getCommonInputs().getProxyHost().isEmpty())
             httpClientBuilder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(addAttachmentInputs.getCommonInputs().getProxyHost(), Integer.parseInt(addAttachmentInputs.getCommonInputs().getProxyPort()))));
 
         if (proxyAuthenticator != null)
             httpClientBuilder.proxyAuthenticator(proxyAuthenticator);
 
-        // Install the all-trusting trust manager
-        final SSLContext sslContext = SSLContext.getInstance(TLS);
-        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-        // Create a ssl socket factory with our all-trusting manager
-        final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-        httpClientBuilder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-        httpClientBuilder.hostnameVerifier(new NoopHostnameVerifier());
+        TokenCredential tokenCredential = new AuthTokenCredential(addAttachmentInputs.getCommonInputs().getAuthToken());
+        final TokenCredentialAuthProvider tokenCredAuthProvider = new TokenCredentialAuthProvider(Arrays.asList(DEFAULT_SCOPE), tokenCredential);
 
         final GraphServiceClient<Request> graphClient = GraphServiceClient
                 .builder()
