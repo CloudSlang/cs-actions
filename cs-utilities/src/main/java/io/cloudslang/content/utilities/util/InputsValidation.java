@@ -34,6 +34,7 @@ import java.util.List;
 
 import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.EXCEPTION_EPOCH_TIME;
 import static io.cloudslang.content.utilities.util.Constants.SchedulerTimeConstants.*;
+import static io.cloudslang.content.utils.NumberUtilities.isValidInt;
 import static io.cloudslang.content.utils.NumberUtilities.isValidLong;
 
 
@@ -156,10 +157,27 @@ public final class InputsValidation {
     }
 
     @NotNull
+    public static List<String> verifySchedulerTimeByHoursInputs(@NotNull final String hours, @NotNull final String timeZone) {
+        final List<String> exceptionMessages = new ArrayList<>();
+        addVerifySchedulerNumberOfHours(exceptionMessages,hours);
+        addVerifyEpochTimezone(exceptionMessages, timeZone);
+        return exceptionMessages;
+    }
+
+    @NotNull
     private static List<String> addVerifyEpochTime(@NotNull List<String> exceptions, @NotNull final String input) {
 
         if (!isValidLong(input)) {
             exceptions.add(String.format(EXCEPTION_EPOCH_TIME, Constants.EpochTimeFormatConstants.EPOCH_TIME));
+        }
+        return exceptions;
+    }
+
+    @NotNull
+    private static List<String> addVerifySchedulerNumberOfHours(@NotNull List<String> exceptions, @NotNull final String input) {
+
+        if (!isValidInt(input)) {
+            exceptions.add(String.format(EXCEPTION_EPOCH_TIME, Constants.SchedulerTimeConstants.NUMBER_OF_HOURS));
         }
         return exceptions;
     }
