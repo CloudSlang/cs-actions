@@ -103,6 +103,7 @@ public class Descriptions {
         public static final String TIME_ZONE_DESC = "Scheduler timeZone.";
         public static final String TRIGGER_EXPRESSION_DESC = "Scheduler trigger expression.";
         public static final String SCHEDULER_TIME_DESC = "Scheduler time in HH:MM:SS format";
+        public static final String NUMBER_OF_HOURS_DESC = "Specify the number of hours scheduler should start.";
         public static final String EXCEPTION_DESC = "Exception if there was an error when executing, empty otherwise.";
     }
 

@@ -82,6 +82,10 @@ public final class Constants {
         public static final String TIME_ZONE = "timeZone";
         public static final String TRIGGER_EXPRESSION = "triggerExpression";
         public static final String SCHEDULER_TIME = "schedulerTime";
+
+        public static final String NUMBER_OF_HOURS = "numberOfHours";
+
+        public static final String TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
         public static final String COLON = ":";
         public static final String NEW_LINE = "\n";
         public static final String FAILURE = "failure";

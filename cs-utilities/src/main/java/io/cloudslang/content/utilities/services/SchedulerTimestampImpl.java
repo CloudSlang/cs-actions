@@ -47,9 +47,29 @@ public class SchedulerTimestampImpl {
         if (localDateAndTimeWithTimeZone.compareTo(localDateTime) >= 1) {
             localDateTime = localDateTime.plusDays(1);
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_PATTERN);
 
         map.put(SCHEDULER_START_TIME, localDateTime.withSecond(seconds).withNano(66).format(formatter) + utcTime);
+        map.put(TIME_ZONE, timeZone);
+        map.put("returnCode", "0");
+        return map;
+    }
+
+    @NotNull
+    public  static Map<String, String> getSchedulerTimeByHours(String hours, String timeZone) {
+
+
+        int hour = Integer.parseInt(hours);
+        ZoneId z = ZoneId.of(timeZone);
+
+        LocalDateTime localDateTime = LocalDateTime.now(z);
+        int value = hour*60*60;
+        String expression =   "*/"+value+"000";
+        Map<String, String> map = new HashMap<>();
+        map.put(TRIGGER_EXPRESSION, expression);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_PATTERN);
+
+        map.put(SCHEDULER_START_TIME, localDateTime.plusMinutes(10).withSecond(0).withNano(66).format(formatter) + localDateTime.atZone(z).getOffset().getId().replaceAll("Z", "+00:00"));
         map.put(TIME_ZONE, timeZone);
         map.put("returnCode", "0");
         return map;
