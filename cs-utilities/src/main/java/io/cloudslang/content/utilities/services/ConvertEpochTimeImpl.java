@@ -26,6 +26,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.*;
 import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.UTC_ZONE_OFFSET;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ConvertEpochTimeImpl {
     @NotNull
@@ -49,7 +50,7 @@ public class ConvertEpochTimeImpl {
         StringBuffer timestamp = new StringBuffer();
         int hours = localDateTime.getHour() - localDateTime1.getHour();
         int minutes = localDateTime.getMinute() - localDateTime1.getMinute();
-        timestamp.append(localDateTime.compareTo(localDateTime1));
+        timestamp.append(DAYS.between(localDateTime,localDateTime1));
         if (("" + hours).contains("-"))
             timestamp.append(":00:");
         else
