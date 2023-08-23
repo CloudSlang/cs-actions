@@ -14,8 +14,6 @@
  */
 
 
-
-
 package io.cloudslang.content.utilities.util;
 
 public final class Constants {
@@ -43,12 +41,12 @@ public final class Constants {
 
     public static final String DEFAULT_IGNORE_CASE = "false";
 
-    public static class CounterConstants{
-        public static final String RESULT_STRING="resultString";
-        public static final String INCREMENT_BY_DEFAULT_VALUE="1";
-        public static final String RESULT="result";
-        public static final String HASMORE="has more";
-        public static final String NOMORE="no more";
+    public static class CounterConstants {
+        public static final String RESULT_STRING = "resultString";
+        public static final String INCREMENT_BY_DEFAULT_VALUE = "1";
+        public static final String RESULT = "result";
+        public static final String HASMORE = "has more";
+        public static final String NOMORE = "no more";
         public static final String FAILURE = "failure";
         public static final String EXCEPTION = "exception";
         public static final String COUNTER_OPERATION_NAME = "Counter";
@@ -96,6 +94,16 @@ public final class Constants {
         public static final String EXCEPTION_SCHEDULER_HOUR_TIME = "The %s format should be in between 0 to 23.";
         public static final String EXCEPTION_SCHEDULER_MINUTES_TIME = "The %s format should be in between 0 to 59.";
         public static final String EXCEPTION_SCHEDULER_TIMEZONE = "The %s is not a valid.";
+
+        public static final String DEFAULT_TIME_VALUE = "00";
+        public static final String DEFAULT_ZONE_REPLACEMENT_VALUE = "+00:00";
+        public static final String DEFAULT_ZONE_CONST = "Z";
+
+        public static final String HYPHEN = "-";
+
+        public static final String EMPTY_STRING = "";
+        public static final String RETURN_CODE = "returnCode";
+        public static final String DEFAULT_RETURN_CODE = "0";
 
 
     }
