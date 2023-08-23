@@ -21,12 +21,16 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.*;
+import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.TIME_ZONE;
 import static io.cloudslang.content.utilities.util.Constants.EpochTimeFormatConstants.UTC_ZONE_OFFSET;
-import static java.time.temporal.ChronoUnit.DAYS;
+import static io.cloudslang.content.utilities.util.Constants.SchedulerTimeConstants.*;
+import static java.time.temporal.ChronoUnit.*;
+
 
 public class ConvertEpochTimeImpl {
     @NotNull
@@ -46,25 +50,35 @@ public class ConvertEpochTimeImpl {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(epochTime)), z);
         map.put(DATE_FORMAT, localDateTime.toString());
         map.put(TIME_ZONE, z.toString());
-        LocalDateTime localDateTime1 = LocalDateTime.now(z);
+        LocalDateTime currentLocalDateTime = LocalDateTime.now(z);
         StringBuffer timestamp = new StringBuffer();
-        int hours = localDateTime.getHour() - localDateTime1.getHour();
-        int minutes = localDateTime.getMinute() - localDateTime1.getMinute();
-        timestamp.append(DAYS.between(localDateTime,localDateTime1));
-        if (("" + hours).contains("-"))
-            timestamp.append(":00:");
-        else
-            timestamp.append(":").append(hours).append(":");
+        long hours, minutes;
+        long days = currentLocalDateTime.until(localDateTime, ChronoUnit.DAYS);
+        if (days > 0) {
+            currentLocalDateTime = currentLocalDateTime.plusDays(days);
 
-        if (("" + minutes).contains("-"))
-            timestamp.append("00");
+        }
+        hours = currentLocalDateTime.until(localDateTime, ChronoUnit.HOURS);
+        if (hours > 0) {
+            currentLocalDateTime = currentLocalDateTime.plusHours(hours);
+        }
+
+        minutes = currentLocalDateTime.until(localDateTime, MINUTES);
+        timestamp.append(days);
+        if ((EMPTY_STRING + hours).contains(HYPHEN))
+            timestamp.append(COLON + DEFAULT_TIME_VALUE + COLON);
+        else
+            timestamp.append(COLON).append(hours).append(COLON);
+
+        if ((EMPTY_STRING + minutes).contains(HYPHEN))
+            timestamp.append(DEFAULT_TIME_VALUE);
         else
             timestamp.append(minutes);
 
-        timestamp.append(":00");
+        timestamp.append(COLON + DEFAULT_TIME_VALUE);
         map.put(TIME_DIFFERENCE, timestamp.toString());
-        map.put(UTC_ZONE_OFFSET, localDateTime.atZone(z).getOffset().getId().replaceAll("Z", "+00:00"));
-        map.put("returnCode", "0");
+        map.put(UTC_ZONE_OFFSET, localDateTime.atZone(z).getOffset().getId().replaceAll(DEFAULT_ZONE_CONST, DEFAULT_ZONE_REPLACEMENT_VALUE));
+        map.put(RETURN_CODE, DEFAULT_RETURN_CODE);
         return map;
 
     }
