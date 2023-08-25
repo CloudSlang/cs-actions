@@ -86,7 +86,7 @@ public class SSLConnectionSocketFactoryBuilder {
         return Arrays.asList(largeArray).containsAll(Arrays.asList(subArray));
     }
 
-    public static boolean checkIfTLS2(String[] arr, String targetValue) {
+    public static boolean checkIfTLS2orTLS3(String[] arr, String targetValue) {
         return Arrays.asList(arr).contains(targetValue);
     }
 
@@ -191,7 +191,7 @@ public class SSLConnectionSocketFactoryBuilder {
                     throw new IllegalArgumentException("Protocol not supported");
                 }
 
-                if (checkIfTLS2(protocolArray, TLSv12))
+                if (checkIfTLS2orTLS3(protocolArray, TLSv12) || checkIfTLS2orTLS3(protocolArray, TLSv13))
                     flag = true;
 
                 if (!StringUtils.isEmpty(inputCyphers))
