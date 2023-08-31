@@ -385,11 +385,45 @@ public class HttpClientAction {
         }
 
         if (!isEmpty(tlsVersion)) {
-            if (tlsVersion.toUpperCase().contains(TLSv12.toUpperCase()) && tlsVersion.split(",").length > 1) {
+            if (tlsVersion.toUpperCase().contains(TLSv13.toUpperCase()) && tlsVersion.split(",").length > 1) {
+                try {
+                    httpClientInputs.setTlsVersion(TLSv13);
+                    return new HttpClientService().execute(httpClientInputs);
+                } catch (Exception e) {
+                    if (tlsVersion.toUpperCase().contains(TLSv12.toUpperCase()) && tlsVersion.split(",").length > 1) {
+                        try {
+                            httpClientInputs.setTlsVersion(TLSv12);
+                            httpClientInputs.setCookieStoreSessionObject(new SerializableSessionObject());
+                            httpClientInputs.setConnectionPoolSessionObject(new GlobalSessionObject());
+                            return new HttpClientService().execute(httpClientInputs);
+                        } catch (Exception ex) {
+                            Set<String> otherTls = new HashSet<>(Arrays.asList(tlsVersion.split(",")));
+                            String tls12 = "";
+                            String tls13 = "";
+                            for (String protocol : otherTls) {
+                                if (protocol.toUpperCase().equals(TLSv12.toUpperCase()))
+                                    tls12 = protocol;
+                                if (protocol.toUpperCase().equals(TLSv13.toUpperCase()))
+                                    tls13 = protocol;
+                            }
+                            otherTls.remove(tls12);
+                            otherTls.remove(tls13);
+                            httpClientInputs.setTlsVersion(otherTls.toString().replace("[", "").replace("]", ""));
+                            httpClientInputs.setCookieStoreSessionObject(new SerializableSessionObject());
+                            httpClientInputs.setConnectionPoolSessionObject(new GlobalSessionObject());
+                            try {
+                                return new HttpClientService().execute(httpClientInputs);
+                            } catch (Exception exe) {
+                                return exceptionResult(ex.getMessage(), exe);
+                            }
+                        }
+                    }
+                }
+            } else if (tlsVersion.toUpperCase().contains(TLSv12.toUpperCase()) && tlsVersion.split(",").length > 1) {
                 try {
                     httpClientInputs.setTlsVersion(TLSv12);
                     return new HttpClientService().execute(httpClientInputs);
-                } catch (Exception e) {
+                } catch (Exception ex) {
                     Set<String> otherTls = new HashSet<>(Arrays.asList(tlsVersion.split(",")));
                     String tls12 = "";
                     for (String protocol : otherTls) {
@@ -402,7 +436,7 @@ public class HttpClientAction {
                     httpClientInputs.setConnectionPoolSessionObject(new GlobalSessionObject());
                     try {
                         return new HttpClientService().execute(httpClientInputs);
-                    } catch (Exception ex) {
+                    } catch (Exception exe) {
                         return exceptionResult(ex.getMessage(), ex);
                     }
                 }
@@ -419,6 +453,12 @@ public class HttpClientAction {
             } catch (Exception e) {
                 return exceptionResult(e.getMessage(), e);
             }
+        }
+
+        try {
+            return new HttpClientService().execute(httpClientInputs);
+        } catch (Exception e) {
+            return exceptionResult(e.getMessage(), e);
         }
     }
 
