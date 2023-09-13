@@ -95,7 +95,7 @@
         <cs-http-client.version>0.1.88</cs-http-client.version>
         <cs-commons.version>0.0.9</cs-commons.version>
         <junit.version>4.13.2</junit.version>
-        <aws-sdk.version>1.11.1000</aws-sdk.version>
+        <aws-sdk.version>1.12.548</aws-sdk.version>
         <httpcomponents.httpclient.version>4.5.13</httpcomponents.httpclient.version>
         <httpcomponents.httpcore.version>4.4.14</httpcomponents.httpcore.version>
         <!--Misc properties-->
@@ -134,8 +134,8 @@
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.68</version>
+            <artifactId>bcpkix-jdk18on</artifactId>
+            <version>1.76</version>
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>
