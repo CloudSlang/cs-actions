@@ -40,4 +40,6 @@ public class DefaultValues extends io.cloudslang.content.constants.DefaultValues
     public static final String ACCEPTED_LANGUAGE = "en";
     public static final String IGNORE_ERRORS = "false";
 
+    public static final String DEFAULT_SERVICE_NAME_FOR_RIGHT_SIZE_RECOMMENDATIONS = "AmazonEC2";
+
 }

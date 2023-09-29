@@ -353,4 +353,11 @@ public class Inputs {
         public static final String DB_PASSWORD = "dbPassword";
         public static final String LICENSE_MODEL = "licenseModel";
     }
+
+    public static class CostOptimizationRecommendationsInputs {
+        public static final String COST_OPTIMIZATION_RECOMMENDATIONS = "Cost Optimization Recommendations";
+        public static final String GET_RIGHT_SIZING_RECOMMENDATIONS = "Get Right Sizing Recommendations";
+        public static final String CHECK_ID = "checkID";
+        public static final String SERVICE_NAME = "serviceName";
+    }
 }

@@ -33,11 +33,13 @@ package io.cloudslang.content.amazon.utils;
 
 import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.Stack;
+import com.amazonaws.services.costexplorer.model.GetRightsizingRecommendationResult;
 import com.amazonaws.services.rds.model.DBInstance;
 import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
 import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
 import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
 import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
+import com.amazonaws.services.support.model.DescribeTrustedAdvisorCheckResultResult;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
@@ -229,5 +231,19 @@ public class OutputsUtil {
     public static Map<String, String> getSuccessResultMapDBInstance(DBInstance result) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         return getSuccessResultsMap(objectMapper.writeValueAsString(result));
+    }
+
+    public static Map<String, String> getSuccessResultMapDescribedRecommendations(DescribeTrustedAdvisorCheckResultResult result) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> results = getSuccessResultsMap(objectMapper.writeValueAsString(result));
+
+        return results;
+    }
+
+    public static Map<String, String> getSuccessResultMapDescribedRecommendations(GetRightsizingRecommendationResult result) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> results = getSuccessResultsMap(objectMapper.writeValueAsString(result));
+
+        return results;
     }
 }

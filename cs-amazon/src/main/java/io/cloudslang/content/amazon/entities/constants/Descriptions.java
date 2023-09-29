@@ -240,4 +240,19 @@ public class Descriptions {
         public static final String EPOCH_TIME_DESC = "Epoch time.";
         public static final String DATE_FORMAT_DESC = "Date format.";
     }
+
+    public static class CostOptimizationRecommendationsAction {
+
+        public static final String COST_OPTIMIZATION_RECOMMENDATIONS_DESC = "Get cost optimization recommendations based on checkid.";
+        public static final String CHECK_ID_DESC = "Check ID";
+
+    }
+
+    public static class GetRightsizingRecommendationsAction {
+
+        public static final String GET_RIGHT_SIZING_RECOMMENDATIONS_DESC = "Get Right sizing Recommendations.";
+
+        public static final String SERVICE_NAME_DESC = "AWS service name for which right size recommendations has to fetch.";
+
+    }
 }
