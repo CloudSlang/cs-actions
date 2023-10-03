@@ -248,9 +248,9 @@ public class Descriptions {
 
     }
 
-    public static class GetRightsizingRecommendationsAction {
+    public static class CostExplorerRecommendationsAction {
 
-        public static final String GET_RIGHT_SIZING_RECOMMENDATIONS_DESC = "Get Right sizing Recommendations.";
+        public static final String COST_EXPLORER_RECOMMENDATIONS_DESC = "Cost Explorer Recommendations.";
 
         public static final String SERVICE_NAME_DESC = "AWS service name for which right size recommendations has to fetch.";
 

@@ -34,12 +34,12 @@ import static io.cloudslang.content.amazon.entities.constants.Descriptions.Commo
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.ASYNC_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.DBInstanceCommon.ACCESS_KEY_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.DBInstanceCommon.ACCESS_KEY_ID_DESC;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.GetRightsizingRecommendationsAction.GET_RIGHT_SIZING_RECOMMENDATIONS_DESC;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.GetRightsizingRecommendationsAction.SERVICE_NAME_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.CostExplorerRecommendationsAction.COST_EXPLORER_RECOMMENDATIONS_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.CostExplorerRecommendationsAction.SERVICE_NAME_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.ASYNC;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CostOptimizationRecommendationsInputs.GET_RIGHT_SIZING_RECOMMENDATIONS;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CostOptimizationRecommendationsInputs.COST_EXPLORER_RECOMMENDATIONS;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CostOptimizationRecommendationsInputs.SERVICE_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.DBInstanceCommonInputs.ACCESS_KEY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.DBInstanceCommonInputs.ACCESS_KEY_ID;
@@ -47,9 +47,9 @@ import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMap
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class GetRightsizingRecommendations {
+public class CostExplorerRecommendations {
 
-    @Action(name = GET_RIGHT_SIZING_RECOMMENDATIONS, description = GET_RIGHT_SIZING_RECOMMENDATIONS_DESC,
+    @Action(name = COST_EXPLORER_RECOMMENDATIONS, description = COST_EXPLORER_RECOMMENDATIONS_DESC,
             outputs = {
                     @Output(value = Outputs.RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.RETURN_RESULT, description = RETURN_RESULT_DESC),

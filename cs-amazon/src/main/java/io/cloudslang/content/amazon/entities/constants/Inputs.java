@@ -356,7 +356,7 @@ public class Inputs {
 
     public static class CostOptimizationRecommendationsInputs {
         public static final String COST_OPTIMIZATION_RECOMMENDATIONS = "Cost Optimization Recommendations";
-        public static final String GET_RIGHT_SIZING_RECOMMENDATIONS = "Get Right Sizing Recommendations";
+        public static final String COST_EXPLORER_RECOMMENDATIONS = "Cost Explorer Recommendations";
         public static final String CHECK_ID = "checkID";
         public static final String SERVICE_NAME = "serviceName";
     }
