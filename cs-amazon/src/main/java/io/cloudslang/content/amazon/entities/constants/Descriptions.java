@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 /*
- * Copyright 2019-2023 Open Text
+ * Copyright 2019-2024 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -209,6 +209,13 @@ public class Descriptions {
                 "created when the SkipFinalSnapshot parameter is disabled.";
         public static final String DELETE_AUTOMATED_BACKUPS_DESC = "A value that indicates whether to remove automated " +
                 "backups immediately after the DB instance is deleted.";
+    }
+
+    public static class StopDBInstanceAction {
+        public static final String STOP_DB_INSTANCE_DESC = "Stop a DB instance.";
+        public static final String DB_SNAPSHOT_IDENTIFIER_DESC = "The instance identifier of the DB Snapshot created " +
+                "immediately before the DB instance is stopped.";
+
     }
 
     public static class CreateDBInstanceAction {

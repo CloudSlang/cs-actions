@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 Open Text
+ * Copyright 2019-2024 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -342,6 +342,13 @@ public class Inputs {
         public static final String DELETE_AUTOMATED_BACKUPS = "deleteAutomatedBackups";
     }
 
+    public static class StopDBInstanceInputs {
+
+        public static final String STOP_DB_INSTANCE = "Stop DB Instance";
+
+        public static final String DB_SNAPSHOT_IDENTIFIER = "DBSnapshotIdentifier";
+
+    }
 
     public static class CreateDBInstanceInputs {
         public static final String CREATE_DB_INSTANCE = "Create DB Instance";

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 Open Text
+ * Copyright 2019-2024 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -67,5 +67,18 @@ public class AmazonRDSService {
             deleteDBInstanceRequest.setDeleteAutomatedBackups(deleteAutomatedBackups);
 
         return amazonRDSClient.deleteDBInstance(deleteDBInstanceRequest);
+    }
+
+
+    public static DBInstance stopRDSInstance(final String dbInstanceIdentifier,
+                                                final String finalDBSnapshotIdentifier, final AmazonRDS amazonRDSClient) {
+
+        StopDBInstanceRequest stopDBInstanceRequest = new StopDBInstanceRequest();
+        stopDBInstanceRequest.setDBInstanceIdentifier(dbInstanceIdentifier);
+
+        if (!isEmpty(finalDBSnapshotIdentifier))
+            stopDBInstanceRequest.setDBSnapshotIdentifier(finalDBSnapshotIdentifier);
+
+        return amazonRDSClient.stopDBInstance(stopDBInstanceRequest);
     }
 }
