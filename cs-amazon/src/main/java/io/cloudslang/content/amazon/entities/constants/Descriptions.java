@@ -212,7 +212,7 @@ public class Descriptions {
     }
 
     public static class StopDBInstanceAction {
-        public static final String STOP_DB_INSTANCE_DESC = "Stop a DB instance.";
+        public static final String STOP_DB_INSTANCE_DESC = "Stops a DB instance.";
         public static final String DB_SNAPSHOT_IDENTIFIER_DESC = "The instance identifier of the DB Snapshot created " +
                 "immediately before the DB instance is stopped.";
 
