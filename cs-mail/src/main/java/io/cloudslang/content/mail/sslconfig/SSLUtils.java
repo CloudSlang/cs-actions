@@ -233,7 +233,9 @@ public class SSLUtils {
     public static Store configureStoreWithTLS(Properties props, Authenticator auth, MailInput input) throws NoSuchProviderException {
         configureWithTLS(props, input);
         Session session = Session.getInstance(props, auth);
-        return session.getStore(input.getProtocol());
+        URLName urlName = new URLName(input.getProtocol(), input.getHostname(),
+                input.getPort(), (String)null, (String)null, (String)null );
+        return session.getStore(urlName);
     }
 
 
