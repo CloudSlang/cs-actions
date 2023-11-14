@@ -233,9 +233,7 @@ public class SSLUtils {
     public static Store configureStoreWithTLS(Properties props, Authenticator auth, MailInput input) throws NoSuchProviderException {
         configureWithTLS(props, input);
         Session session = Session.getInstance(props, auth);
-        URLName urlName = new URLName(input.getProtocol(), input.getHostname(),
-                input.getPort(), (String)null, (String)null, (String)null );
-        return session.getStore(urlName);
+        return session.getStore(input.getProtocol());
     }
 
 
@@ -276,6 +274,8 @@ public class SSLUtils {
         props.put(String.format(PropNames.MAIL_HOST, input.getProtocol()), input.getHostname());
         props.put(String.format(PropNames.MAIL_PORT, input.getProtocol()), input.getPort());
         Session session = Session.getInstance(props, auth);
-        return session.getStore();
+        URLName urlName = new URLName(input.getProtocol(), input.getHostname(),
+                input.getPort(), (String)null, (String)null, (String)null );
+        return session.getStore(urlName);
     }
 }
