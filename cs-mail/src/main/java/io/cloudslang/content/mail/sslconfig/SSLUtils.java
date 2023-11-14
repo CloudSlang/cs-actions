@@ -274,6 +274,8 @@ public class SSLUtils {
         props.put(String.format(PropNames.MAIL_HOST, input.getProtocol()), input.getHostname());
         props.put(String.format(PropNames.MAIL_PORT, input.getProtocol()), input.getPort());
         Session session = Session.getInstance(props, auth);
-        return session.getStore(input.getProtocol());
+        URLName urlName = new URLName(input.getProtocol(), input.getHostname(),
+                input.getPort(), (String)null, (String)null, (String)null );
+        return session.getStore(urlName);
     }
 }
