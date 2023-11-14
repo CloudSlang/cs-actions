@@ -18,6 +18,7 @@
 package io.cloudslang.content.services;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.exceptions.IteratorProcessorException;
 import io.cloudslang.content.utils.IteratorProcessor;
 
@@ -27,24 +28,24 @@ import java.util.Map;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 
 public class ListService {
-    public static Map<String, String> iterate(String list, String separator, GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+    public static Map<String, String> iterate(String list, String separator, StepSerializableSessionObject session) {
 
         IteratorProcessor iterator = new IteratorProcessor();
         Map<String, String> returnResult = new HashMap<String, String>();
         returnResult.put("result", "failed");
 
         try {
-            iterator.init(list, separator, globalSessionObject);
+            iterator.init(list, separator, session);
             if (iterator.hasNext()) {
                 returnResult.put("index", Integer.toString(iterator.getIndex()));
-                returnResult.put("resultString", iterator.getNext(globalSessionObject));
+                returnResult.put("resultString", iterator.getNext(session));
                 if (iterator.hasNext()) {
                     returnResult.put("result", "has more");
                     returnResult.put("returnCode", "0");
                 } else {
                     returnResult.put("resultString", "");
                     returnResult.put("returnCode", "1");
-                    iterator.setStepSessionEnd(globalSessionObject);
+                    iterator.setStepSessionEnd(session);
                     returnResult.put("result", "no more");
                 }
             }

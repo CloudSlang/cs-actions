@@ -18,6 +18,7 @@
 package io.cloudslang.content.actions;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import org.junit.Test;
 
 import java.util.Map;
@@ -36,7 +37,7 @@ public class ListIteratorActionTest {
 
     @Test
     public void testListIteratorSuccess() {
-        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();;
         Map<String, String> result = new ListIteratorAction().execute(LIST_STRING, ",", globalSessionObject);
         assertEquals(HAS_MORE, result.get(RESULT_TEXT));
         assertEquals("Maria", result.get(RESULT_STRING));
@@ -45,7 +46,7 @@ public class ListIteratorActionTest {
 
     @Test
     public void testListIteratorSuccessFullList() {
-        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();;
         Map<String, String> result = new ListIteratorAction().execute(LIST_STRING, "ceva", globalSessionObject);
         assertEquals(HAS_MORE, result.get(RESULT_TEXT));
         assertEquals(LIST_STRING, result.get(RESULT_STRING));
@@ -54,7 +55,7 @@ public class ListIteratorActionTest {
 
     @Test
     public void testListIteratorFails() {
-        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();
         Map<String, String> result = new ListIteratorAction().execute(LIST_STRING, "", globalSessionObject);
         assertEquals(HAS_MORE, result.get(RESULT_TEXT));
         assertEquals("Maria", result.get(RESULT_STRING));
@@ -62,7 +63,7 @@ public class ListIteratorActionTest {
 
     @Test
     public void testListIteratorEmptyList() {
-        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();
         Map<String, String> result = new ListIteratorAction().execute("", ";", globalSessionObject);
         assertEquals("failed", result.get(RESULT_TEXT));
         assertEquals("list has null or 0 length", result.get(RESULT_STRING));
@@ -70,7 +71,7 @@ public class ListIteratorActionTest {
 
     @Test
     public void testListIteratorEmptyListAndDefaultSeparator() {
-        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();
         Map<String, String> result = new ListIteratorAction().execute("", "", globalSessionObject);
         assertEquals("failed", result.get(RESULT_TEXT));
         assertEquals("list has null or 0 length", result.get(RESULT_STRING));
@@ -78,14 +79,14 @@ public class ListIteratorActionTest {
 
     @Test
     public void testListIteratorEmptyListAndSeparator() {
-        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();
         Map<String, String> result = new ListIteratorAction().execute(EMPTY_LIST, ",", globalSessionObject);
         assertEquals(NO_MORE, result.get(RESULT_TEXT));
     }
 
     @Test
     public void testListIteratorEmptyListWithDifferentSeparator() {
-        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();
         Map<String, String> result = new ListIteratorAction().execute("", ";", globalSessionObject);
         assertEquals("failed", result.get(RESULT_TEXT));
         assertEquals("list has null or 0 length", result.get(RESULT_STRING));
@@ -93,7 +94,7 @@ public class ListIteratorActionTest {
 
     @Test
     public void testListIteratorIntegerListAndStringSeparator() {
-        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();
         Map<String, String> result = new ListIteratorAction().execute(LIST_INTEGER, "alabala", globalSessionObject);
         assertEquals(HAS_MORE, result.get(RESULT_TEXT));
         assertEquals(LIST_INTEGER, result.get(RESULT_STRING));
@@ -101,7 +102,7 @@ public class ListIteratorActionTest {
 
     @Test
     public void testListIteratorRandomListWordAndSeparator() {
-        final GlobalSessionObject<Map<String, Object>> globalSessionObject = new GlobalSessionObject<>();
+        final StepSerializableSessionObject globalSessionObject = new StepSerializableSessionObject();
         Map<String, String> result = new ListIteratorAction().execute("ThisIsOnlyAWord, , , , ,,,", ",", globalSessionObject);
         assertEquals(HAS_MORE, result.get(RESULT_TEXT));
         assertEquals("ThisIsOnlyAWord", result.get(RESULT_STRING));

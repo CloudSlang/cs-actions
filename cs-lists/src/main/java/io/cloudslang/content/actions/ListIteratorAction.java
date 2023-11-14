@@ -24,6 +24,7 @@ import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.services.ListService;
 import io.cloudslang.content.utils.Constants;
 
@@ -47,11 +48,11 @@ public class ListIteratorAction {
                     @Response(text = FAILURE, field = RESULT_TEXT, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true, description = FAILURE_DESC)})
     public Map<String, String> execute(@Param(value = LIST, required = true, description = LIST_DESC) String list,
                                        @Param(value = SEPARATOR, required = true, description = Constants.Descriptions.SEPARATOR_DESC) String separator,
-                                       @Param("globalSessionObject") GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+                                       @Param("sessionIterator")StepSerializableSessionObject sessionIterator) {
 
         //Get default values
         final String separatorImp = defaultIfEmpty(separator, ",");
 
-        return ListService.iterate(list, separatorImp, globalSessionObject);
+        return ListService.iterate(list, separatorImp, sessionIterator);
     }
 }

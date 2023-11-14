@@ -43,8 +43,8 @@ public class ArrayIteratorAction {
                     @Response(text = FAILURE, field = RETURN_RESULT, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true, description = FAILURE_DESC)})
 
     public Map<String, String> execute(@Param(value = Constants.InputNames.ARRAY, required = true) String array,
-                                       @Param(value = GLOBAL_SESSION_OBJECT) GlobalSessionObject<Map<String, Object>> globalSessionObject) {
+                                       @Param(value = "sessionIterator") SerializableSessionObject sessionIterator) {
 
-        return ArrayListService.iterate(array, globalSessionObject);
+        return ArrayListService.iterate(array, sessionIterator);
     }
 }
