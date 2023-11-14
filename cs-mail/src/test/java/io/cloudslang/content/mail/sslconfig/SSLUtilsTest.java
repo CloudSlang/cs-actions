@@ -249,7 +249,7 @@ public class SSLUtilsTest {
         PowerMockito.mockStatic(Session.class);
         PowerMockito.doReturn(sessionMock)
                 .when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        doReturn(storeMock).when(sessionMock).getStore(Constants.POP3);
+        doReturn(storeMock).when(sessionMock).getStore(any(URLName.class));
         PowerMockito.mockStatic(SSLUtils.class);
         when(SSLUtils.configureStoreWithoutSSL(propertiesMock, authenticatorMock, input)).thenCallRealMethod();
 
@@ -260,7 +260,7 @@ public class SSLUtilsTest {
         verify(propertiesMock).put(String.format(PropNames.MAIL_PORT, Constants.POP3), Short.parseShort(Constants.POP3_PORT));
         PowerMockito.verifyStatic();
         Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(Constants.POP3);
+        verify(sessionMock).getStore(any(URLName.class));
     }
 
     /**
