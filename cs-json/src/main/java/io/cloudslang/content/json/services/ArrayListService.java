@@ -26,16 +26,16 @@ import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.RET
 import static io.cloudslang.content.json.utils.Constants.InputNames.*;
 
 public class ArrayListService {
-    public static Map<String, String> iterate(String array, GlobalSessionObject<Map<String, Object>> globalSessionObject){
+    public static Map<String, String> iterate(String array, SerializableSessionObject sessionObject){
         IteratorProcessor iterate = new IteratorProcessor();
         Map<String, String> returnResult = new HashMap<>();
         returnResult.put(RETURN_RESULT, FAILED);
 
         try {
-            iterate.init(array,  globalSessionObject);
+            iterate.init(array,  sessionObject);
             if (iterate.getIndex() == 0 && iterate.getLength() == 1 || iterate.getIndex() == iterate.getLength()-1) {
                 returnResult.put(RETURN_RESULT, HAS_MORE);
-                returnResult.put(RESULT_STRING, iterate.getNext(globalSessionObject));
+                returnResult.put(RESULT_STRING, iterate.getNext(sessionObject));
                 returnResult.put(RETURN_CODE, ZERO);
             } else if (iterate.getIndex() == 1 && iterate.getLength() == 1 || iterate.getIndex() == iterate.getLength()) {
                 returnResult.put(RETURN_RESULT, NO_MORE);
@@ -44,14 +44,14 @@ public class ArrayListService {
             }
             else if (iterate.hasNext()) {
                 returnResult.put(INDEX, Integer.toString(iterate.getIndex()));
-                returnResult.put(RESULT_STRING, iterate.getNext(globalSessionObject));
+                returnResult.put(RESULT_STRING, iterate.getNext(sessionObject));
                 if (iterate.hasNext()) {
                     returnResult.put(RETURN_RESULT, HAS_MORE);
                     returnResult.put(RETURN_CODE, ZERO);
                 } else {
                         returnResult.put(RESULT_STRING, EMPTY_STRING);
                         returnResult.put(RETURN_CODE, ONE);
-                        iterate.setStepSessionEnd(globalSessionObject);
+                        iterate.setStepSessionEnd(sessionObject);
                         returnResult.put(RETURN_RESULT, NO_MORE);
                     }
                 }

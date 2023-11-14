@@ -19,6 +19,7 @@ package io.cloudslang.content.utils;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.IteratorSessionResource;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.exceptions.IteratorProcessorException;
 
 import java.util.HashMap;
@@ -35,18 +36,18 @@ public class IteratorProcessor {
     public IteratorProcessor() {
     }
 
-    private boolean initialized(GlobalSessionObject<Map<String, Object>> session) {
-        return (session.get().get(TEXT_ARRAYLIST) != null &&
-                session.get().get(TEXT_INDEX) != null);
+    private boolean initialized(StepSerializableSessionObject session) {
+        return ((HashMap<String, Object>) session.getValue()).get(TEXT_ARRAYLIST) != null &&
+                ((HashMap<String, Object>) session.getValue()).get(TEXT_INDEX) != null;
     }
 
-    public void init(String list, String delim, GlobalSessionObject<Map<String, Object>> session) throws IteratorProcessorException {
+    public void init(String list, String delim, StepSerializableSessionObject session) throws IteratorProcessorException {
 
-        if (session.get() == null) {
-            session.setResource(new IteratorSessionResource(new HashMap<String, Object>()));
+        if (session.getValue() == null) {
+            session.setValue(new HashMap<String, Object>());
         }
 
-        Map<String, Object> sessionMap = session.get();
+        Map<String, Object> sessionMap = (HashMap<String, Object>) session.getValue();
         if (list != null && delim != null) {
             if (delim.length() == 0) {
                 throw new IteratorProcessorException("delimiter has null or 0 length");
@@ -133,16 +134,16 @@ public class IteratorProcessor {
         return temp;
     }
 
-    public String getNext(GlobalSessionObject<Map<String, Object>> session) {
+    public String getNext(StepSerializableSessionObject session) {
         if (index < splitList.length) {
             String ret = splitList[index];
             index += 1;
-            session.get().put(TEXT_INDEX, index);
+            ((HashMap<String, Object>) session.getValue()).put(TEXT_INDEX, index);
 
             return ret;
         } else {
             this.index += 1;
-            session.get().put(TEXT_INDEX, index);
+            ((HashMap<String, Object>) session.getValue()).put(TEXT_INDEX, index);
 
             return null;
         }
@@ -152,8 +153,8 @@ public class IteratorProcessor {
         return index <= splitList.length;
     }
 
-    public void setStepSessionEnd(GlobalSessionObject<Map<String, Object>> session) {
-        session.get().put(TEXT_INDEX, Integer.toString(0));
+    public void setStepSessionEnd(StepSerializableSessionObject session) {
+        ((HashMap<String, Object>) session.getValue()).put(TEXT_INDEX, Integer.toString(0));
     }
 
     public int getIndex() {

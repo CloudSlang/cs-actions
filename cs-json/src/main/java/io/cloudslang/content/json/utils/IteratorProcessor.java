@@ -19,6 +19,7 @@ import com.google.gson.*;
 import com.hp.oo.sdk.content.plugin.*;
 import io.cloudslang.content.utils.*;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.*;
@@ -30,16 +31,16 @@ public class IteratorProcessor {
     private int index;
     private JsonArray jsonElements;
 
-    public void init(String array, GlobalSessionObject<Map<String, Object>> session) throws Exception {
+    public void init(String array, SerializableSessionObject session) throws Exception {
 
-        if (session.get() == null) {
+        if (session.getValue() == null) {
             Map<String, Object> initialData = new HashMap<String, Object>();
             initialData.put(INDEX, 0);
             initialData.put(LENGTH, array.length());
-            session.setResource(new IteratorSessionResource(initialData));
+            session.setValue((Serializable) new IteratorSessionResource(initialData));
         }
 
-        Map<String, Object> sessionMap = session.get();
+        Map<String, Object> sessionMap = ((HashMap<String, Object>) session.getValue());
 
         if ((Integer) sessionMap.get(LENGTH) != array.length())
             throw new Exception(DIFFERENT_ARRAY);
@@ -72,23 +73,23 @@ public class IteratorProcessor {
         return index;
     }
 
-    public String getNext(GlobalSessionObject<Map<String, Object>> session) {
+    public String getNext(SerializableSessionObject session) {
         if (index < jsonElements.size()) {
             String ret = String.valueOf(jsonElements.get(index));
             index += 1;
-            session.get().put(INDEX, index);
+            ((HashMap<String, Object>) session.getValue()).put(INDEX, index);
 
             return ret;
         } else {
             this.index += 1;
-            session.get().put(INDEX, index);
+            ((HashMap<String, Object>) session.getValue()).put(INDEX, index);
 
             return null;
         }
     }
 
-    public void setStepSessionEnd(GlobalSessionObject<Map<String, Object>> session) {
-        session.get().put(INDEX, Integer.toString(0));
+    public void setStepSessionEnd(SerializableSessionObject session) {
+        ((HashMap<String, Object>) session.getValue()).put(INDEX, Integer.toString(0));
     }
 
 }
