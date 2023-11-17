@@ -99,6 +99,12 @@
             <version>${winrm4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-bom</artifactId>
+            <version>3.4.10</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
             <version>${cs-commons.version}</version>
