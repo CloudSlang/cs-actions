@@ -27,6 +27,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.database.services.SQLCommandService;
 import io.cloudslang.content.database.utils.SQLInputs;
+import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,8 +38,7 @@ import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
-import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
+import static io.cloudslang.content.database.constants.DBDefaultValues.*;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBOutputNames.OUTPUT_TEXT;
@@ -48,6 +48,7 @@ import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSq
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.BooleanUtils.toBoolean;
+import static org.apache.commons.lang3.BooleanUtils.toInteger;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
@@ -121,6 +122,7 @@ public class SQLCommand {
                                        @Param(value = DB_CLASS) String dbClass,
                                        @Param(value = DB_URL) String dbURL,
                                        @Param(value = COMMAND, required = true) String command,
+                                       @Param(value = TIMEOUT) String timeout,
                                        @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
                                        @Param(value = TRUST_STORE) String trustStore,
                                        @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
@@ -132,6 +134,7 @@ public class SQLCommand {
         dbType = defaultIfEmpty(dbType, ORACLE_DB_TYPE);
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
+        timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
         trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
         resultSetType = defaultIfEmpty(resultSetType, TYPE_FORWARD_ONLY);
@@ -171,6 +174,7 @@ public class SQLCommand {
                     .resultSetType(getResultSetType(resultSetType))
                     .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
                     .isNetcool(checkIsNetcool(dbType))
+                    .timeout(NumberUtilities.toInteger(timeout))
                     .build();
 
             String res = SQLCommandService.executeSqlCommand(sqlInputs);

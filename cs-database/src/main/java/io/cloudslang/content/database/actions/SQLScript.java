@@ -38,8 +38,7 @@ import static io.cloudslang.content.constants.BooleanValues.FALSE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
-import static io.cloudslang.content.database.constants.DBDefaultValues.NEW_LINE;
+import static io.cloudslang.content.database.constants.DBDefaultValues.*;
 import static io.cloudslang.content.database.constants.DBExceptionValues.NO_SQL_COMMAND;
 import static io.cloudslang.content.database.constants.DBInputNames.*;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
@@ -47,6 +46,7 @@ import static io.cloudslang.content.database.constants.DBOutputNames.UPDATE_COUN
 import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.validateSqlScriptInputs;
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
+import static io.cloudslang.content.utils.NumberUtilities.toInteger;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -127,6 +127,7 @@ public class SQLScript {
                                        @Param(value = DELIMITER) String delimiter,
                                        @Param(value = SQL_COMMANDS) String sqlCommands,
                                        @Param(value = SCRIPT_FILE_NAME) String scriptFileName,
+                                       @Param(value = TIMEOUT) String timeout,
                                        @Param(value = TRUST_ALL_ROOTS) String trustAllRoots,
                                        @Param(value = TRUST_STORE) String trustStore,
                                        @Param(value = TRUST_STORE_PASSWORD) String trustStorePassword,
@@ -139,6 +140,7 @@ public class SQLScript {
         username = defaultIfEmpty(username, EMPTY);
         password = defaultIfEmpty(password, EMPTY);
         instance = defaultIfEmpty(instance, EMPTY);
+        timeout = defaultIfEmpty(timeout, DEFAULT_TIMEOUT);
         authenticationType = defaultIfEmpty(authenticationType, AUTH_SQL);
         trustAllRoots = defaultIfEmpty(trustAllRoots, FALSE);
         trustStore = defaultIfEmpty(trustStore, EMPTY);
@@ -177,6 +179,7 @@ public class SQLScript {
                 .resultSetType(getResultSetType(resultSetType))
                 .resultSetConcurrency(getResultSetConcurrency(resultSetConcurrency))
                 .isNetcool(checkIsNetcool(dbType))
+                .timeout(toInteger(timeout))
                 .build();
 
         try {
