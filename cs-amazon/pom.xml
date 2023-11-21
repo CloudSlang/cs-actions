@@ -140,7 +140,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-xml</artifactId>
-            <version>0.0.21</version>
+            <version>0.0.22</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
