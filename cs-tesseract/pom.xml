@@ -73,7 +73,7 @@
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <score-content-sdk.version>1.10.7</score-content-sdk.version>
+        <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <cs-commons.version>0.0.6</cs-commons.version>
         <commons-io.version>2.7</commons-io.version>
         <pdfbox.version>2.0.13</pdfbox.version>
