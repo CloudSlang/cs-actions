@@ -92,7 +92,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
-        <cs-http-client.version>0.1.88</cs-http-client.version>
+        <cs-http-client.version>0.1.93</cs-http-client.version>
         <cs-commons.version>0.0.9</cs-commons.version>
         <junit.version>4.13.2</junit.version>
         <aws-sdk.version>1.12.548</aws-sdk.version>
