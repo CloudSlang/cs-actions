@@ -76,7 +76,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <aliyun-java-sdk-core.version>4.0.3</aliyun-java-sdk-core.version>
-        <score-content-sdk.version>1.10.7</score-content-sdk.version>
+        <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <cs-commons.version>0.0.7</cs-commons.version>
         <commons-io.version>2.7</commons-io.version>
         <!--Misc properties-->
