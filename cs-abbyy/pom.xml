@@ -111,7 +111,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-http-client</artifactId>
-            <version>0.1.88</version>
+            <version>0.1.93</version>
         </dependency>
         <!-- Testing -->
         <dependency>
