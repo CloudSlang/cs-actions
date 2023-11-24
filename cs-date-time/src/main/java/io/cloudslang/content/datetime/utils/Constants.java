@@ -65,6 +65,8 @@ public class Constants {
         public static final String EXCEPTION = "exception";
         public static final String SCHEDULER_TIME_OPERATION_NAME = "Scheduler Time";
 
+        public static final String SCHEDULER_TIME_BY_HOURS_OPERATION_NAME = "Scheduler Time By Hours";
+
         public static final String EXCEPTION_SCHEDULER_TIME = "The %s format should be in HH:MM:SS format.";
         public static final String EXCEPTION_SCHEDULER_HOUR_TIME = "The %s format should be in between 0 to 23.";
         public static final String EXCEPTION_SCHEDULER_MINUTES_TIME = "The %s format should be in between 0 to 59.";

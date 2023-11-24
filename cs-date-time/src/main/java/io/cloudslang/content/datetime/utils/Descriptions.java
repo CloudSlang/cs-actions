@@ -18,6 +18,8 @@ public class Descriptions {
 
     public static class SchedulerTime {
         public static final String SCHEDULER_TIME_OPERATION_DESC = "Converts time with specified timezone and return the scheduler time.";
+
+        public static final String SCHEDULER_TIME_BY_HOURS_OPERATION_DESC = "Converts time with specified timezone and return the scheduler time.";
         public static final String SCHEDULER_START_TIME_DESC = "Scheduler start time.";
         public static final String TIME_ZONE_DESC = "Scheduler timeZone.";
         public static final String TRIGGER_EXPRESSION_DESC = "Scheduler trigger expression.";

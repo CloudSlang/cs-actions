@@ -43,7 +43,7 @@ import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 public class SchedulerTimeByHours {
 
 
-    @Action(name = SCHEDULER_TIME_OPERATION_NAME, description = SCHEDULER_TIME_OPERATION_DESC,
+    @Action(name = SCHEDULER_TIME_BY_HOURS_OPERATION_NAME, description = SCHEDULER_TIME_BY_HOURS_OPERATION_DESC,
             outputs = {
                     @Output(value = SCHEDULER_START_TIME, description = SCHEDULER_START_TIME_DESC),
                     @Output(value = TRIGGER_EXPRESSION, description = TRIGGER_EXPRESSION_DESC),
