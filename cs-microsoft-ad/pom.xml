@@ -71,7 +71,7 @@
         <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.13.1</junit.version>
         <common-codec.version>1.15</common-codec.version>
-        <cs-http-client.version>0.1.93</cs-http-client.version>
+        <cs-http-client.version>0.1.94</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

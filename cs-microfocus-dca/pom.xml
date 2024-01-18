@@ -79,7 +79,7 @@
         <commons-collection.version>4.1</commons-collection.version>
         <cs-commons.version>0.0.7</cs-commons.version>
         <cs-xml.version>0.0.22</cs-xml.version>
-        <cs-http-client.version>0.1.93</cs-http-client.version>
+        <cs-http-client.version>0.1.94</cs-http-client.version>
         <jackson.version>2.14.3</jackson.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
