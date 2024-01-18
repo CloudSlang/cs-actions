@@ -78,7 +78,7 @@
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <commons-collection.version>4.1</commons-collection.version>
         <cs-commons.version>0.0.7</cs-commons.version>
-        <cs-xml.version>0.0.22</cs-xml.version>
+        <cs-xml.version>0.0.23</cs-xml.version>
         <cs-http-client.version>0.1.94</cs-http-client.version>
         <jackson.version>2.14.3</jackson.version>
         <!--Misc properties-->
