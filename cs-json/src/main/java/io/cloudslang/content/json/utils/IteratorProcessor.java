@@ -31,13 +31,13 @@ public class IteratorProcessor {
     private int index;
     private JsonArray jsonElements;
 
-    public void init(String array, SerializableSessionObject session) throws Exception {
+    public void init(String array, StepSerializableSessionObject session) throws Exception {
 
         if (session.getValue() == null) {
             Map<String, Object> initialData = new HashMap<String, Object>();
             initialData.put(INDEX, 0);
             initialData.put(LENGTH, array.length());
-            session.setValue((Serializable) new IteratorSessionResource(initialData));
+            session.setValue((Serializable) initialData);
         }
 
         Map<String, Object> sessionMap = ((HashMap<String, Object>) session.getValue());
@@ -73,7 +73,7 @@ public class IteratorProcessor {
         return index;
     }
 
-    public String getNext(SerializableSessionObject session) {
+    public String getNext(StepSerializableSessionObject session) {
         if (index < jsonElements.size()) {
             String ret = String.valueOf(jsonElements.get(index));
             index += 1;
@@ -88,7 +88,7 @@ public class IteratorProcessor {
         }
     }
 
-    public void setStepSessionEnd(SerializableSessionObject session) {
+    public void setStepSessionEnd(StepSerializableSessionObject session) {
         ((HashMap<String, Object>) session.getValue()).put(INDEX, Integer.toString(0));
     }
 
