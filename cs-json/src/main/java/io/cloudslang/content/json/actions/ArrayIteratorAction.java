@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Open Text
+ * Copyright 2021-2024 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -28,6 +28,7 @@ import java.util.*;
 import static io.cloudslang.content.constants.ResponseNames.*;
 import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.*;
 import static io.cloudslang.content.json.utils.Descriptions.ArrayIteratorDescription.*;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 
 public class ArrayIteratorAction {
 
@@ -43,7 +44,7 @@ public class ArrayIteratorAction {
                     @Response(text = FAILURE, field = RETURN_RESULT, value = FAILURE, matchType = MatchType.COMPARE_EQUAL, isDefault = true, isOnFail = true, description = FAILURE_DESC)})
 
     public Map<String, String> execute(@Param(value = Constants.InputNames.ARRAY, required = true) String array,
-                                       @Param(value = "sessionIterator") SerializableSessionObject sessionIterator) {
+                                       @Param(value = "sessionIterator") StepSerializableSessionObject sessionIterator) {
 
         return ArrayListService.iterate(array, sessionIterator);
     }
