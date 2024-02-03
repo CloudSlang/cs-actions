@@ -1,19 +1,5 @@
 /*
- * Copyright 2019-2023 Open Text
- * This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/*
- * Copyright 2019-2023 Open Text
+ * Copyright 2019-2024 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -52,6 +38,7 @@ import io.cloudslang.content.constants.ReturnCodes;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.DEFAULT_INSTANCE_TYPE;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.*;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInput;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.putResponseIn;
 
@@ -110,13 +97,6 @@ import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInp
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.PLACEMENT_GROUP_NAME;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.TENANCY;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.LOWER_CASE_USER_DATA;
-
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ASSOCIATE_PUBLIC_IP_ADDRESS;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DELETE_ON_TERMINATION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DESCRIPTION;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_DEVICE_INDEX;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.NETWORK_INTERFACE_ID;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.NetworkInputs.SECONDARY_PRIVATE_IP_ADDRESS_COUNT;
 
 import static io.cloudslang.content.amazon.entities.constants.Outputs.INSTANCE_ID_RESULT;
 
@@ -504,7 +484,9 @@ public class RunInstancesAction {
                                        @Param(value = NETWORK_INTERFACE_DESCRIPTION) String networkInterfaceDescription,
                                        @Param(value = NETWORK_INTERFACE_DEVICE_INDEX) String networkInterfaceDeviceIndex,
                                        @Param(value = NETWORK_INTERFACE_ID) String networkInterfaceId,
-                                       @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount) {
+                                       @Param(value = SECONDARY_PRIVATE_IP_ADDRESS_COUNT) String secondaryPrivateIpAddressCount,
+                                       @Param(value = TAG_KEY_LIST) String tagKeyList,
+                                       @Param(value = TAG_VALUE_LIST) String tagValueList) {
         try {
             version = getDefaultStringInput(version, INSTANCES_DEFAULT_API_VERSION);
             instanceType = getDefaultStringInput(instanceType, DEFAULT_INSTANCE_TYPE);
@@ -574,6 +556,8 @@ public class RunInstancesAction {
                     .withPlacementGroupName(placementGroupName)
                     .withTenancy(tenancy)
                     .withUserData(userData)
+                    .withTagKeyList(tagKeyList)
+                    .withTagValueList(tagValueList)
                     .build();
 
             final NetworkInputs networkInputs = new NetworkInputs.Builder()
