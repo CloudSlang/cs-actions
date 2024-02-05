@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.AWSRDSActions.TAG_KEY_AND_VALUE_CONST;
 import static io.cloudslang.content.amazon.entities.constants.Constants.GetTimeFormatConstants.EXCEPTION_EPOCH_TIME;
 import static io.cloudslang.content.amazon.entities.constants.Constants.SchedulerTimeConstants.*;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
@@ -167,5 +168,16 @@ public class Validator {
             exceptions.add(String.format(EXCEPTION_SCHEDULER_TIMEZONE, Constants.SchedulerTimeConstants.TIME_ZONE));
         return exceptions;
 
+    }
+
+    @NotNull
+    public static List<String> verifyTagInputs(@NotNull final String tagKeyList, @NotNull final String tagValueList){
+        final List<String> exceptionMessages = new ArrayList<>();
+        String[] keyList = tagKeyList.split(",");
+        String[] valueList = tagValueList.split(",");
+        if(!(keyList.length == valueList.length)){
+            exceptionMessages.add(String.format(TAG_KEY_AND_VALUE_CONST));
+        }
+        return exceptionMessages;
     }
 }

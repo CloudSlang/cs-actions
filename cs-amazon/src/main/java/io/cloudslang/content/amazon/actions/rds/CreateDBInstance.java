@@ -28,17 +28,25 @@ import io.cloudslang.content.amazon.entities.validators.Validator;
 import io.cloudslang.content.amazon.factory.RDSClientBuilder;
 import io.cloudslang.content.amazon.services.AmazonRDSService;
 import io.cloudslang.content.constants.DefaultValues;
+import io.cloudslang.content.utils.StringUtilities;
 
+import java.util.List;
 import java.util.Map;
 
+import static io.cloudslang.content.amazon.entities.constants.Constants.SchedulerTimeConstants.NEW_LINE;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.AddTagsToDBInstanceAction.TAG_KEY_LIST_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.AddTagsToDBInstanceAction.TAG_VALUE_LIST_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.CreateDBInstanceAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.DBInstanceCommon.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.AddTagsToDBInstanceInputs.TAG_KEY_LIST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.AddTagsToDBInstanceInputs.TAG_VALUE_LIST;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CreateDBInstanceInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.DBInstanceCommonInputs.*;
+import static io.cloudslang.content.amazon.entities.validators.Validator.verifyTagInputs;
 import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapDBInstance;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -71,6 +79,8 @@ public class CreateDBInstance {
                                        @Param(value = DB_STORAGE_SIZE, required = true, encrypted = true, description = DB_STORAGE_SIZE_DESC) final String dbStorageSize,
                                        @Param(value = LICENSE_MODEL, description = LICENSE_MODEL_DESC) final String licenseModel,
                                        @Param(value = AVAILABILITY_ZONE, description = AVAILABILITY_ZONE_DESC) final String availabilityZone,
+                                       @Param(value = TAG_KEY_LIST, description = TAG_KEY_LIST_DESC) final String tagKeyList,
+                                       @Param(value = TAG_VALUE_LIST, description = TAG_VALUE_LIST_DESC) final String tagValueList,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) final String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) final String proxyUsername,
@@ -105,12 +115,16 @@ public class CreateDBInstance {
         final int dbStorageSizeImp = Integer.parseInt(dbStorageSize);
 
         try {
+            List<String> exceptionMessage = verifyTagInputs(tagKeyList, tagValueList);
+            if (!exceptionMessage.isEmpty()) {
+                return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+            }
 
             final AmazonRDS amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
 
             final DBInstance result = AmazonRDSService.createRDSInstance(dbEngineName, dbEngineVersion, dbUsername, dbPassword,
-                    dbInstanceIdentifier, dbInstanceSize, dbStorageSizeImp, licenseModel, availabilityZone, amazonRDS);
+                    dbInstanceIdentifier, dbInstanceSize, dbStorageSizeImp, licenseModel, availabilityZone, tagKeyList, tagValueList, amazonRDS);
 
             return getSuccessResultMapDBInstance(result);
 

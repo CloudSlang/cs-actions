@@ -361,6 +361,13 @@ public class Inputs {
         public static final String LICENSE_MODEL = "licenseModel";
     }
 
+    public static class AddTagsToDBInstanceInputs {
+        public static final String ADD_TAGS_TO_DB_INSTANCE = "Add tags to DB Instance";
+        public static final String TAG_KEY_LIST = "tagKeyList";
+        public static final String TAG_VALUE_LIST = "tagValueList";
+
+    }
+
     public static class CostOptimizationRecommendationsInputs {
         public static final String COST_OPTIMIZATION_RECOMMENDATIONS = "Cost Optimization Recommendations";
         public static final String COST_EXPLORER_RECOMMENDATIONS = "Cost Explorer Recommendations";

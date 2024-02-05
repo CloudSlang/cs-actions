@@ -214,6 +214,7 @@ public class Constants {
     public static class AWSRDSActions {
         public static final String SKIP_FINAL_SNAPSHOT_CONST = "false";
         public static final String DELETE_AUTOMATED_BACKUPS_CONST = "false";
+        public static final String TAG_KEY_AND_VALUE_CONST = "Number of tag keys must be equals to number of tag values.";
     }
 
     public static class SchedulerTimeConstants {
