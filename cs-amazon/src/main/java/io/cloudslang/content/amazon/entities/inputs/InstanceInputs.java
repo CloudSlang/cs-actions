@@ -11,22 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-/*
- * Copyright 2019-2024 Open Text
- * This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
 */
- 
 
 
 
@@ -75,6 +60,9 @@ public class InstanceInputs {
     private final boolean forceStop;
     private final boolean monitoring;
 
+    private final String tagKeyList;
+    private final String tagValueList;
+
     private InstanceInputs(Builder builder) {
         this.affinity = builder.affinity;
         this.attribute = builder.attribute;
@@ -104,10 +92,19 @@ public class InstanceInputs {
         this.enaSupport = builder.enaSupport;
         this.monitoring = builder.monitoring;
         this.forceStop = builder.forceStop;
+        this.tagKeyList = builder.tagKeyList;
+        this.tagValueList = builder.tagValueList;
     }
 
     public String getAffinity() {
         return affinity;
+    }
+
+    public String getTagKeyList() {
+        return tagKeyList;
+    }
+    public String getTagValueList() {
+        return tagValueList;
     }
 
     public String getAttribute() {
@@ -240,8 +237,21 @@ public class InstanceInputs {
         private boolean monitoring;
         private boolean forceStop;
 
+        private String tagKeyList;
+        private String tagValueList;
+
         public InstanceInputs build() {
             return new InstanceInputs(this);
+        }
+
+        public Builder withTagKeyList(String inputValue) {
+            tagKeyList = inputValue;
+            return this;
+        }
+
+        public Builder withTagValueList(String inputValue) {
+            tagValueList = inputValue;
+            return this;
         }
 
         public Builder withAffinity(String inputValue) {

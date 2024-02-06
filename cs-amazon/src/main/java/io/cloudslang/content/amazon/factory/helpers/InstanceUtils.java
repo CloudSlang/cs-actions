@@ -11,20 +11,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-/*
- * Copyright 2019-2024 Open Text
- * This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
 */
 
 
@@ -34,6 +20,7 @@ package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.aws.*;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -41,6 +28,8 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.AwsParam
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.*;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.ONE;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.KEY_TAGS_STRING;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.VALUE_TAGS_STRING;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.EbsInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.InstanceInputs.*;
 import static io.cloudslang.content.amazon.utils.InputsUtil.*;
@@ -222,6 +211,22 @@ public class InstanceUtils {
             setOptionalMapEntry(queryParamsMap, SUBNET_ID, wrapper.getCustomInputs().getSubnetId(),
                     isNotBlank(wrapper.getCustomInputs().getSubnetId()));
             setSecurityGroupQueryParams(queryParamsMap, wrapper);
+        }
+
+
+        String tagKeyList =  wrapper.getInstanceInputs().getTagKeyList();
+        if(!StringUtils.isEmpty(tagKeyList)){
+            String[] tagKeyListArray = tagKeyList.split(",");
+            String[] tagValueListArray = wrapper.getInstanceInputs().getTagValueList().split(",");
+            queryParamsMap.put("TagSpecification.1.ResourceType", "instance");
+            queryParamsMap.put("TagSpecification.2.ResourceType", "volume");
+            for(int index=0;index<tagKeyListArray.length;index++) {
+
+                queryParamsMap.put("TagSpecification.1.Tag."+(index+1)+".Key", tagKeyListArray[index]);
+                queryParamsMap.put("TagSpecification.1.Tag."+(index+1)+".Value", tagValueListArray[index]);
+                queryParamsMap.put("TagSpecification.2.Tag."+(index+1)+".Key", tagKeyListArray[index]);
+                queryParamsMap.put("TagSpecification.2.Tag."+(index+1)+".Value", tagValueListArray[index]);
+            }
         }
 
         return queryParamsMap;

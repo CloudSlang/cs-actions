@@ -246,6 +246,8 @@ public class Inputs {
         public static final String FILTER_TAG_KEY = "filterTagKey";
         public static final String FILTER_TAG_VALUE = "filterTagValue";
         public static final String FILTER_VPC_ID = "filterVpcId";
+        public static final String TAG_KEY_LIST= "tagKeyList";
+        public static final String TAG_VALUE_LIST= "tagValueList";
     }
 
     public static class StorageInputs {
