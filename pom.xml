@@ -71,7 +71,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
-        <cs-http-client.version>0.1.93</cs-http-client.version>
+        <cs-http-client.version>0.1.94</cs-http-client.version>
         <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.13.1</junit.version>
         <apache-poi.version>3.14</apache-poi.version>

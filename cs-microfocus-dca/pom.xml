@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    * Copyright 2019-2023 Open Text
+    * Copyright 2019-2024 Open Text
     * This program and the accompanying materials
     * are made available under the terms of the Apache License v2.0 which accompany this distribution.
     *
@@ -22,7 +22,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-microfocus-dca</artifactId>
-    <version>1.1.11-SNAPSHOT</version>
+    <version>1.1.13-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
@@ -78,9 +78,9 @@
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <commons-collection.version>4.1</commons-collection.version>
         <cs-commons.version>0.0.7</cs-commons.version>
-        <cs-xml.version>0.0.22</cs-xml.version>
-        <cs-http-client.version>0.1.93</cs-http-client.version>
-        <jackson.version>2.14.3</jackson.version>
+        <cs-xml.version>0.0.23</cs-xml.version>
+        <cs-http-client.version>0.1.94</cs-http-client.version>
+        <jackson.version>2.15.2</jackson.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -206,7 +206,7 @@
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
-                        <copyright.year>2019-2023</copyright.year>
+                        <copyright.year>2019-2024</copyright.year>
                     </properties>
                     <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>

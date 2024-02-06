@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Open Text
+ * Copyright 2021-2024 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -14,8 +14,7 @@
  */
 
 package io.cloudslang.content.json.services;
-
-import com.hp.oo.sdk.content.plugin.*;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.json.utils.*;
 
 import java.util.*;
@@ -26,7 +25,7 @@ import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.RET
 import static io.cloudslang.content.json.utils.Constants.InputNames.*;
 
 public class ArrayListService {
-    public static Map<String, String> iterate(String array, SerializableSessionObject sessionObject){
+    public static Map<String, String> iterate(String array, StepSerializableSessionObject sessionObject){
         IteratorProcessor iterate = new IteratorProcessor();
         Map<String, String> returnResult = new HashMap<>();
         returnResult.put(RETURN_RESULT, FAILED);
