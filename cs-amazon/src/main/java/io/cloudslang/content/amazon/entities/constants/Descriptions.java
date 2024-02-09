@@ -232,6 +232,22 @@ public class Descriptions {
 
     }
 
+    public static class AddTagsToDBInstanceAction {
+        public static final String ADD_TAGS_TO_DB_INSTANCE_DESC = "Adds metadata tags to an Amazon RDS resource";
+        public static final String TAG_KEY_LIST_DESC = "String that contains one or more key tags separated by delimiter." +
+                "Constraints: Tag keys are case-sensitive and accept a maximum of 127 Unicode characters." +
+                "May not begin with \"aws:\";  Each resource can have a maximum of 50 tags." +
+                "Example: Name,webserver,stack,scope" +
+                "Default: \"\"";
+        public static final String TAG_VALUE_LIST_DESC = "String that contains one or more tag values separated by delimiter. " +
+                "Number of values should be same as keys else operation will fail with exception." +
+                "Constraints: Tag values are case-sensitive and accept a maximum of 255 Unicode characters;" +
+                "Each resource can have a maximum of 50 tags" +
+                "Example of values string for tagging resources with values corresponding to the keys from" +
+                "above example: Tagged from API call,Not relevant,Testing,For testing purposes" +
+                "Default: \"\"";
+    }
+
     public static class SchedulerTime {
 
         public static final String SCHEDULER_TIME_OPERATION_DESC = "Converts time with specified timezone and return the scheduler time.";

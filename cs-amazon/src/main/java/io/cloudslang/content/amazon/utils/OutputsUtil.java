@@ -34,6 +34,7 @@ package io.cloudslang.content.amazon.utils;
 import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.costexplorer.model.GetRightsizingRecommendationResult;
+import com.amazonaws.services.rds.model.AddTagsToResourceResult;
 import com.amazonaws.services.rds.model.DBInstance;
 import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
 import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
@@ -229,6 +230,11 @@ public class OutputsUtil {
     }
 
     public static Map<String, String> getSuccessResultMapDBInstance(DBInstance result) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return getSuccessResultsMap(objectMapper.writeValueAsString(result));
+    }
+
+    public static Map<String, String> getSuccessResultMapDBInstanceTags(AddTagsToResourceResult result) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         return getSuccessResultsMap(objectMapper.writeValueAsString(result));
     }

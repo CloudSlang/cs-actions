@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2024 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,10 +13,11 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.amazon.actions.rds;
+package io.cloudslang.content.amazon.actions.rds.tags;
 
 import com.amazonaws.services.rds.AmazonRDS;
-import com.amazonaws.services.rds.model.DBInstance;
+import com.amazonaws.services.rds.model.AddTagsToResourceResult;
+import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -34,30 +35,24 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.SchedulerTimeConstants.NEW_LINE;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.AddTagsToDBInstanceAction.TAG_KEY_LIST_DESC;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.AddTagsToDBInstanceAction.TAG_VALUE_LIST_DESC;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.AddTagsToDBInstanceAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
-import static io.cloudslang.content.amazon.entities.constants.Descriptions.CreateDBInstanceAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.DBInstanceCommon.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.AddTagsToDBInstanceInputs.TAG_KEY_LIST;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.AddTagsToDBInstanceInputs.TAG_VALUE_LIST;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.AddTagsToDBInstanceInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CreateDBInstanceInputs.*;
-import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.DBInstanceCommonInputs.*;
 import static io.cloudslang.content.amazon.entities.validators.Validator.verifyTagInputs;
-import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapDBInstance;
+import static io.cloudslang.content.amazon.utils.OutputsUtil.getSuccessResultMapDBInstanceTags;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class CreateDBInstance {
-    @Action(name = CREATE_DB_INSTANCE, description = CREATE_DB_INSTANCE_DESC,
+public class AddTagsToDBInstance {
+    @Action(name = ADD_TAGS_TO_DB_INSTANCE, description = ADD_TAGS_TO_DB_INSTANCE_DESC,
             outputs = {
                     @Output(value = Outputs.RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = Outputs.RETURN_RESULT, description = RETURN_RESULT_DESC),
                     @Output(value = Outputs.EXCEPTION, description = EXCEPTION_DESC)
-
 
             },
             responses = {
@@ -71,14 +66,6 @@ public class CreateDBInstance {
                                        @Param(value = ACCESS_KEY, required = true, encrypted = true, description = ACCESS_KEY_DESC) final String accessKey,
                                        @Param(value = REGION, required = true, description = REGION_DESC) String region,
                                        @Param(value = DB_INSTANCE_IDENTIFIER, required = true, description = DB_INSTANCE_IDENTIFIER_DESC) String dbInstanceIdentifier,
-                                       @Param(value = DB_ENGINE_NAME, required = true, description = DB_ENGINE_NAME_DESC) final String dbEngineName,
-                                       @Param(value = DB_ENGINE_VERSION, required = true, description = DB_ENGINE_VERSION_DESC) final String dbEngineVersion,
-                                       @Param(value = DB_INSTANCE_SIZE, required = true, description = DB_INSTANCE_SIZE_DESC) String dbInstanceSize,
-                                       @Param(value = DB_USERNAME, required = true, description = DB_USERNAME_DESC) String dbUsername,
-                                       @Param(value = DB_PASSWORD, required = true, encrypted = true, description = DB_PASSWORD_DESC) final String dbPassword,
-                                       @Param(value = DB_STORAGE_SIZE, required = true, encrypted = true, description = DB_STORAGE_SIZE_DESC) final String dbStorageSize,
-                                       @Param(value = LICENSE_MODEL, description = LICENSE_MODEL_DESC) final String licenseModel,
-                                       @Param(value = AVAILABILITY_ZONE, description = AVAILABILITY_ZONE_DESC) final String availabilityZone,
                                        @Param(value = TAG_KEY_LIST, description = TAG_KEY_LIST_DESC) final String tagKeyList,
                                        @Param(value = TAG_VALUE_LIST, description = TAG_VALUE_LIST_DESC) final String tagValueList,
                                        @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) final String proxyHost,
@@ -101,7 +88,6 @@ public class CreateDBInstance {
                 .validatePort(proxyPortVal, PROXY_PORT)
                 .validateInt(connectTimeoutVal, CONNECT_TIMEOUT)
                 .validateInt(execTimeoutVal, EXECUTION_TIMEOUT)
-                .validateInt(dbStorageSize, dbStorageSize)
                 .validateBoolean(asyncVal, ASYNC);
 
         if (validator.hasErrors()) {
@@ -112,7 +98,6 @@ public class CreateDBInstance {
         final Integer connectTimeoutImp = Integer.valueOf(connectTimeoutVal);
         final Integer execTimeoutImp = Integer.valueOf(execTimeoutVal);
         final boolean asyncImp = Boolean.parseBoolean(asyncVal);
-        final int dbStorageSizeImp = Integer.parseInt(dbStorageSize);
 
         try {
             List<String> exceptionMessage = verifyTagInputs(tagKeyList, tagValueList);
@@ -123,11 +108,11 @@ public class CreateDBInstance {
             final AmazonRDS amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
 
-            final DBInstance result = AmazonRDSService.createRDSInstance(dbEngineName, dbEngineVersion, dbUsername, dbPassword,
-                    dbInstanceIdentifier, dbInstanceSize, dbStorageSizeImp, licenseModel, availabilityZone, tagKeyList, tagValueList, amazonRDS);
+            final DescribeDBInstancesResult dbInstanceDetails = AmazonRDSService.getDBDetails(dbInstanceIdentifier, amazonRDS);
 
-            return getSuccessResultMapDBInstance(result);
+            AddTagsToResourceResult result = AmazonRDSService.addTagsToDBInstance(dbInstanceDetails.getDBInstances().get(0).getDBInstanceArn(), tagKeyList, tagValueList, amazonRDS);
 
+            return getSuccessResultMapDBInstanceTags(result);
 
         } catch (Exception e) {
             return getFailureResultsMap(e);

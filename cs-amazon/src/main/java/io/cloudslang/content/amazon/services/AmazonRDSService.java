@@ -17,6 +17,10 @@ package io.cloudslang.content.amazon.services;
 
 import com.amazonaws.services.rds.AmazonRDS;
 import com.amazonaws.services.rds.model.*;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -33,8 +37,8 @@ public class AmazonRDSService {
     public static DBInstance createRDSInstance(
             final String dbEngineName, final String dbEngineVersion, final String dbUsername,
             final String dbPassword, final String dbInstanceIdentifier, final String dbInstanceSize, final int dbStorageSize,
-            final String licenseModel, final String availabilityZone, final AmazonRDS amazonRDSClient) {
-
+            final String licenseModel, final String availabilityZone, final String tagKeyList, final String tagValueList,
+            final AmazonRDS amazonRDSClient) {
 
         CreateDBInstanceRequest createDBInstanceRequest = new CreateDBInstanceRequest();
         createDBInstanceRequest.setDBInstanceIdentifier(dbInstanceIdentifier);
@@ -49,7 +53,18 @@ public class AmazonRDSService {
         if (!isEmpty(availabilityZone))
             createDBInstanceRequest.setAvailabilityZone(availabilityZone);
 
-
+        String[] keyList = tagKeyList.split(",");
+        String[] valueList = tagValueList.split(",");
+        if (!StringUtils.isEmpty(tagKeyList) && (keyList.length == valueList.length)) {
+            Collection<Tag> tagCollection = new ArrayList<>();
+            for (int i = 0; i < keyList.length; i++) {
+                Tag tag = new Tag();
+                tag.setKey(keyList[i]);
+                tag.setValue(valueList[i]);
+                tagCollection.add(tag);
+            }
+            createDBInstanceRequest.setTags(tagCollection);
+        }
         return amazonRDSClient.createDBInstance(createDBInstanceRequest);
     }
 
@@ -71,7 +86,7 @@ public class AmazonRDSService {
 
 
     public static DBInstance stopRDSInstance(final String dbInstanceIdentifier,
-                                                final String finalDBSnapshotIdentifier, final AmazonRDS amazonRDSClient) {
+                                             final String finalDBSnapshotIdentifier, final AmazonRDS amazonRDSClient) {
 
         StopDBInstanceRequest stopDBInstanceRequest = new StopDBInstanceRequest();
         stopDBInstanceRequest.setDBInstanceIdentifier(dbInstanceIdentifier);
@@ -80,5 +95,25 @@ public class AmazonRDSService {
             stopDBInstanceRequest.setDBSnapshotIdentifier(finalDBSnapshotIdentifier);
 
         return amazonRDSClient.stopDBInstance(stopDBInstanceRequest);
+    }
+
+    public static AddTagsToResourceResult addTagsToDBInstance(final String RDSResourceName,
+                                                               final String tagKeyList, final String tagValueList, final AmazonRDS amazonRDSClient) {
+
+        AddTagsToResourceRequest addTagsToResourceRequest = new AddTagsToResourceRequest();
+        addTagsToResourceRequest.setResourceName(RDSResourceName);
+        String[] keyList = tagKeyList.split(",");
+        String[] valueList = tagValueList.split(",");
+        if (!StringUtils.isEmpty(tagKeyList) && (keyList.length == valueList.length)) {
+            Collection<Tag> tagCollection = new ArrayList<>();
+            for (int i = 0; i < keyList.length; i++) {
+                Tag tag = new Tag();
+                tag.setKey(keyList[i]);
+                tag.setValue(valueList[i]);
+                tagCollection.add(tag);
+            }
+            addTagsToResourceRequest.setTags(tagCollection);
+        }
+        return amazonRDSClient.addTagsToResource(addTagsToResourceRequest);
     }
 }
