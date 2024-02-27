@@ -68,6 +68,7 @@ public class Inputs {
     }
 
     public static class UploadFile {
+        public static final String FILE_ID = "fileId";
         public static final String SITE_ID = "siteId";
         public static final String DRIVE_ID = "driveId";
         public static final String FOLDER_ID = "folderId";
@@ -92,6 +93,7 @@ public class Inputs {
     }
 
     public static class DownloadFile {
+        public static final String FILE_ID = "fileId";
         public static final String PATH = "path";
         public static final String OVERWRITE = "overwrite";
     }
@@ -104,5 +106,10 @@ public class Inputs {
     public static class SearchForEntities {
         public static final String SEARCH_TEXT = "searchText";
         public static final String OPTIONAL_PARAMETERS = "optionalParameters";
+    }
+    public static class ListPermissions{
+        public static final String SITE_ID = "siteId";
+        public static final String DRIVE_ID = "driveId";
+        public static final String ITEM_ID = "itemId";
     }
 }

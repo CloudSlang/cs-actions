@@ -63,6 +63,8 @@ public class Constants {
 
     public static final String GRAPH_API_ENDPOINT = "https://graph.microsoft.com/v1.0";
     public static final String SITES_ENDPOINT = "/sites/";
+    public static final String  CURRENT_USER_ENDPOINT =  "/me/drive/items/";
+    public static final String PERMISSIONS_ENDPOINT = "/permissions";
     public static final String PATH_ENDPOINT =":/";
     public static final String CONTENT_ENDPOINT= ":/content";
     public static final String ROOT_DRIVE_ENDPOINT = "/drive/root";

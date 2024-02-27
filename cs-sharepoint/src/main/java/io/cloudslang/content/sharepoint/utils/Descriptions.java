@@ -432,4 +432,15 @@ public class Descriptions {
         public static final String NEXT_LINK_DESC = "The link to the next page of results in case there are too many matches.";
 
     }
+
+    public static class ListPermissionsDesc{
+        public static final String RETURN_RESULT_DESC = "The collection of permissions of the provided file.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to get the permissions.";
+        public static final String SITE_ID_DESC ="The id of the site related to the fileId from which to get the permissions.";
+        public static final String SUCCESS_DESC="List of permissions was returned successfully.";
+        public static final String FAILURE_DESC ="There was an error while trying to get permissions.";
+        public static final String DRIVE_ID_DESC= "The id of the driver related to the fileId from which to get the permissions";
+        public static final String ITEM_ID_DESC= "The id of the item from which to get the permissions";
+        public static final String NAME= "List Permissions";
+    }
 }

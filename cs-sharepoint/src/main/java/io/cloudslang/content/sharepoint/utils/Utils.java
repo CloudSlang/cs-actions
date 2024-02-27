@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.Map;
 
+import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class Utils {
@@ -47,7 +48,29 @@ public class Utils {
 
         return newPath;
     }
-    public static class HostException extends Exception{
+
+
+    public static String buildListPermissionsURL(String siteId, String driveId, String itemId) {
+        //GET /drive/items/{item-id}/permissions
+        //GET /drives/{drive-id}/items/{item-id}/permissions
+        //GET /sites/{siteId}/drive/items/{itemId}/permissions
+        //GET /sites/{siteId}/drives/{driveId}/items/{itemId}/permissions
+        //GET /me/drive/items/{item-id}/permissions
+        StringBuilder urlBuilder = new StringBuilder(GRAPH_API_ENDPOINT);
+        if (StringUtils.isEmpty(siteId) && StringUtils.isEmpty(driveId)) {
+            urlBuilder.append(CURRENT_USER_ENDPOINT);
+        } else {
+            if (!StringUtils.isEmpty(siteId))
+                urlBuilder.append(SITES_ENDPOINT).append(siteId);
+
+            if (StringUtils.isEmpty(driveId))
+                urlBuilder.append(DRIVE_ENDPOINT);
+            else
+                urlBuilder.append(DRIVES_ENDPOINT).append(driveId);
+        }
+        return urlBuilder.append(ITEMS_ENDPOINT).append(itemId).append(PERMISSIONS_ENDPOINT).toString();
+    }
+    public static class HostException extends Exception {
         public HostException(String errorMessage) {
             super(errorMessage);
         }
