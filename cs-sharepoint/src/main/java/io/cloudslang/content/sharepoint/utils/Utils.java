@@ -49,13 +49,8 @@ public class Utils {
         return newPath;
     }
 
+    public static StringBuilder buildPermissionsURL(String siteId, String driveId, String itemId) {
 
-    public static String buildListPermissionsURL(String siteId, String driveId, String itemId) {
-        //GET /drive/items/{item-id}/permissions
-        //GET /drives/{drive-id}/items/{item-id}/permissions
-        //GET /sites/{siteId}/drive/items/{itemId}/permissions
-        //GET /sites/{siteId}/drives/{driveId}/items/{itemId}/permissions
-        //GET /me/drive/items/{item-id}/permissions
         StringBuilder urlBuilder = new StringBuilder(GRAPH_API_ENDPOINT);
         if (StringUtils.isEmpty(siteId) && StringUtils.isEmpty(driveId)) {
             urlBuilder.append(CURRENT_USER_ENDPOINT);
@@ -68,8 +63,27 @@ public class Utils {
             else
                 urlBuilder.append(DRIVES_ENDPOINT).append(driveId);
         }
-        return urlBuilder.append(ITEMS_ENDPOINT).append(itemId).append(PERMISSIONS_ENDPOINT).toString();
+        return urlBuilder.append(ITEMS_ENDPOINT).append(itemId);
     }
+
+    //GET /drive/items/{item-id}/permissions
+    //GET /drives/{drive-id}/items/{item-id}/permissions
+    //GET /sites/{siteId}/drive/items/{itemId}/permissions
+    //GET /sites/{siteId}/drives/{driveId}/items/{itemId}/permissions
+    //GET /me/drive/items/{item-id}/permissions
+    public static String buildListPermissionsURL(String siteId, String driveId, String itemId) {
+        return buildPermissionsURL(siteId, driveId, itemId).append(PERMISSIONS_ENDPOINT).toString();
+    }
+
+    public static String buildAddPermissionsURL(String siteId, String driveId, String itemId) {
+        return buildPermissionsURL(siteId, driveId, itemId).append(INVITE_ENDPOINT).toString();
+    }
+
+    public static String buildDeleteUpdatePermissionsURL(String siteId, String driveId, String itemId, String permId) {
+        return buildPermissionsURL(siteId, driveId, itemId).append(PERMISSIONS_ENDPOINT).append(SLASH).append(permId).toString();
+    }
+
+
     public static class HostException extends Exception {
         public HostException(String errorMessage) {
             super(errorMessage);

@@ -635,11 +635,4 @@ public class SharepointService {
         httpResults.put(WEB_URL, json.get(WEB_URL).asText());
         httpResults.put(ENTITY_ID, json.get(ID).asText());
     }
-
-    public static void processHttpListPermissions(Map<String, String> httpResults, String exceptionMessage){
-        processHttpResult(httpResults, exceptionMessage);
-
-        if (!httpResults.get(STATUS_CODE).equals(STATUS_CODE_200))
-            return;
-    }
 }

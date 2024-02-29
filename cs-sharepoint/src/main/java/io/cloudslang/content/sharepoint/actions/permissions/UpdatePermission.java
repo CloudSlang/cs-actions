@@ -19,7 +19,7 @@ import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
+import io.cloudslang.content.httpclient.actions.HttpClientPatchAction;
 import io.cloudslang.content.utils.StringUtilities;
 
 import java.util.List;
@@ -29,6 +29,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUA
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.BooleanValues.FALSE;
+import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
@@ -36,19 +37,18 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpResult;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.ListPermissionsDesc.NAME;
-import static io.cloudslang.content.sharepoint.utils.Descriptions.ListPermissionsDesc.*;
-import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.UpdatePermissionDesc.NAME;
+import static io.cloudslang.content.sharepoint.utils.Descriptions.UpdatePermissionDesc.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
-import static io.cloudslang.content.sharepoint.utils.Inputs.ListPermissions.ITEM_ID;
+import static io.cloudslang.content.sharepoint.utils.Inputs.UpdatePermission.*;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
-import static io.cloudslang.content.sharepoint.utils.Outputs.*;
-import static io.cloudslang.content.sharepoint.utils.Utils.buildListPermissionsURL;
+import static io.cloudslang.content.sharepoint.utils.Outputs.EXCEPTION;
+import static io.cloudslang.content.sharepoint.utils.Outputs.STATUS_CODE;
+import static io.cloudslang.content.sharepoint.utils.Utils.buildDeleteUpdatePermissionsURL;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
-public class ListPermissions {
+public class UpdatePermission {
     @Action(name = NAME,
             outputs = {
                     @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
@@ -65,6 +65,9 @@ public class ListPermissions {
             @Param(value = SITE_ID, description = SITE_ID_DESC) String siteId,
             @Param(value = DRIVE_ID, description = DRIVE_ID_DESC) String driveId,
             @Param(value = ITEM_ID, description = ITEM_ID_DESC, required = true) String itemId,
+            @Param(value = PERMISSION_ID, description = PERMISSION_ID_DESC, required = true) String permId,
+            @Param(value = JSON_BODY, description = JSON_BODY_DESC, required = true) String jsonBody,
+
 
             @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
@@ -95,12 +98,12 @@ public class ListPermissions {
             if (!exceptionMessages.isEmpty())
                 return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
-            Map<String, String> result = new HttpClientGetAction().execute(
-                    buildListPermissionsURL(siteId, driveId, itemId),
+            Map<String, String> result = new HttpClientPatchAction().execute(
+                    buildDeleteUpdatePermissionsURL(siteId, driveId, itemId, permId),
                     ANONYMOUS,
                     EMPTY,
                     EMPTY,
-                    EMPTY,
+                    TRUE,
                     proxyHost,
                     proxyPort,
                     proxyUsername,
@@ -123,6 +126,12 @@ public class ListPermissions {
                     EMPTY,
                     EMPTY,
                     EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    EMPTY,
+                    jsonBody,
+                    APPLICATION_JSON,
                     EMPTY,
                     connectTimeout,
                     EMPTY,

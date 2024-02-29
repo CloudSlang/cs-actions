@@ -112,4 +112,23 @@ public class Inputs {
         public static final String DRIVE_ID = "driveId";
         public static final String ITEM_ID = "itemId";
     }
+    public static class AddPermissions{
+        public static final String SITE_ID = "siteId";
+        public static final String DRIVE_ID = "driveId";
+        public static final String ITEM_ID = "itemId";
+        public static final String JSON_BODY = "jsonBody";
+    }
+    public static class DeletePermission{
+        public static final String SITE_ID = "siteId";
+        public static final String DRIVE_ID = "driveId";
+        public static final String ITEM_ID = "itemId";
+        public static final String PERMISSION_ID = "permissionId";
+    }
+    public static class UpdatePermission{
+        public static final String SITE_ID = "siteId";
+        public static final String DRIVE_ID = "driveId";
+        public static final String ITEM_ID = "itemId";
+        public static final String PERMISSION_ID = "permissionId";
+        public static final String JSON_BODY = "jsonBody";
+    }
 }

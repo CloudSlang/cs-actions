@@ -443,4 +443,38 @@ public class Descriptions {
         public static final String ITEM_ID_DESC= "The id of the item from which to get the permissions";
         public static final String NAME= "List Permissions";
     }
+    public static class AddPermissionsDesc{
+        public static final String RETURN_RESULT_DESC = "If successful returns permission collection object.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to add the permissions.";
+        public static final String SITE_ID_DESC ="The identifier of the site associated with the item where permissions are to be added.";
+        public static final String SUCCESS_DESC="Permissions were added successfully.";
+        public static final String FAILURE_DESC ="There was an error while trying to add the permissions.";
+        public static final String DRIVE_ID_DESC= "The identifier of the drive associated with the item where permissions are to be added.";
+        public static final String ITEM_ID_DESC= "The id of the item where to add the permissions.";
+        public static final String JSON_BODY_DESC = "The body to be sent in the request.";
+        public static final String NAME= "Add Permissions";
+    }
+    public static class DeletePermissionDesc{
+        public static final String RETURN_RESULT_DESC = "The permission was successfully deleted.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to delete the permission.";
+        public static final String SITE_ID_DESC ="The identifier of the site associated with the item where the permission will be deleted.";
+        public static final String SUCCESS_DESC="The permission was successfully deleted.";
+        public static final String FAILURE_DESC ="There was an error while trying to delete the permission.";
+        public static final String DRIVE_ID_DESC= "The identifier of the drive associated with the item where the permission will be deleted.";
+        public static final String ITEM_ID_DESC= "The id of the item where to delete the permission.";
+        public static final String PERMISSION_ID_DESC = "The id of the permission to be deleted.";
+        public static final String NAME= "Delete Permission";
+    }
+    public static class UpdatePermissionDesc{
+        public static final String RETURN_RESULT_DESC = "The permission was successfully updated.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to delete the permission.";
+        public static final String SITE_ID_DESC ="The identifier of the site associated with the item where the permission will be updated.";
+        public static final String SUCCESS_DESC="The permission was successfully deleted.";
+        public static final String FAILURE_DESC ="There was an error while trying to delete the permission.";
+        public static final String DRIVE_ID_DESC= "The identifier of the drive associated with the item where the permission will be updated.";
+        public static final String ITEM_ID_DESC= "The id of the item where to update the permission.";
+        public static final String PERMISSION_ID_DESC = "The id of the permission to be updated.";
+        public static final String JSON_BODY_DESC = "The body to be sent in the request.";
+        public static final String NAME= "Update Permission";
+    }
 }
