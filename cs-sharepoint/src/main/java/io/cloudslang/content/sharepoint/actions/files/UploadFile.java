@@ -48,6 +48,7 @@ import static io.cloudslang.content.sharepoint.utils.Inputs.UploadFile.DRIVE_ID;
 import static io.cloudslang.content.sharepoint.utils.Inputs.UploadFile.SITE_ID;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
+import static io.cloudslang.content.sharepoint.utils.Outputs.FILE_ID;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.io.FilenameUtils.getName;
 import static org.apache.commons.lang3.StringUtils.EMPTY;

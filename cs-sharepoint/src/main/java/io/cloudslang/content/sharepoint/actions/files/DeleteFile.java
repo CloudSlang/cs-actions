@@ -46,6 +46,7 @@ import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.DeleteFile.*;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.AUTH_TOKEN;
 import static io.cloudslang.content.sharepoint.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.sharepoint.utils.Inputs.DownloadFile.FILE_ID;
 import static io.cloudslang.content.sharepoint.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.sharepoint.utils.Outputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;

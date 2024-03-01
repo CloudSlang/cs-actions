@@ -21,6 +21,7 @@ public class Outputs {
     public static final String AUTH_TOKEN = "authToken";
     public static final String SITE_ID = "siteId";
     public static final String SITE_IDS = "siteIds";
+    public static final String FILE_ID = "fileId";
     public static final String SITE_URLS = "siteUrls";
     public static final String WEB_URL = "webUrl";
     public static final String DRIVE_NAME = "driveName";
@@ -37,7 +38,6 @@ public class Outputs {
     public static final String ENTITY_URLS = "entityUrls";
     public static final String ENTITY_TYPES = "entityTypes";
     public static final String ENTITY_PATHS = "entityPaths";
-    public static final String FILE_ID = "fileId";
     public static final String SHARE_LINK = "shareLink";
     public static final String NEXT_LINK = "nextLink";
     public static final String SHARE_ID = "shareId";
