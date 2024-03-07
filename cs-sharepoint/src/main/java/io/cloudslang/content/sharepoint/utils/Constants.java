@@ -65,6 +65,7 @@ public class Constants {
     public static final String SITES_ENDPOINT = "/sites/";
     public static final String  CURRENT_USER_ENDPOINT =  "/me/drive/items/";
     public static final String PERMISSIONS_ENDPOINT = "/permissions";
+    public static final String COPY_ENDPOINT = "/copy";
     public static final String INVITE_ENDPOINT="/invite";
     public static final String PATH_ENDPOINT =":/";
     public static final String CONTENT_ENDPOINT= ":/content";

@@ -131,4 +131,17 @@ public class Inputs {
         public static final String PERMISSION_ID = "permissionId";
         public static final String JSON_BODY = "jsonBody";
     }
+    public static class MoveItemInputs{
+        public static final String SITE_ID = "siteId";
+        public static final String DRIVE_ID = "driveId";
+        public static final String ITEM_ID = "itemId";
+        public static final String JSON_BODY = "jsonBody";
+    }
+    public static class CopyItemInputs{
+        public static final String SITE_ID = "siteId";
+        public static final String DRIVE_ID = "driveId";
+        public static final String ITEM_ID = "itemId";
+        public static final String JSON_BODY = "jsonBody";
+        public static final String OPTIONAL_PARAMETERS = "optionalParameters";
+    }
 }
