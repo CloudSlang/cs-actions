@@ -82,7 +82,13 @@ public class Utils {
     public static String buildDeleteUpdatePermissionsURL(String siteId, String driveId, String itemId, String permId) {
         return buildPermissionsURL(siteId, driveId, itemId).append(PERMISSIONS_ENDPOINT).append(SLASH).append(permId).toString();
     }
+    public static String buildMoveItemURL(String siteId, String driveId, String itemId) {
+        return buildPermissionsURL(siteId, driveId, itemId).toString();
+    }
 
+    public static String buildCopyItemURL(String siteId, String driveId, String itemId) {
+        return buildPermissionsURL(siteId, driveId, itemId).append(COPY_ENDPOINT).toString();
+    }
 
     public static class HostException extends Exception {
         public HostException(String errorMessage) {

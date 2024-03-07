@@ -477,4 +477,32 @@ public class Descriptions {
         public static final String JSON_BODY_DESC = "The body to be sent in the request.";
         public static final String NAME= "Update Permission";
     }
+    public static class MoveItemDesc{
+        public static final String RETURN_RESULT_DESC = "The item was successfully moved.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to move the item.";
+        public static final String SITE_ID_DESC ="The identifier of the site associated with the item that will be moved.";
+        public static final String SUCCESS_DESC="The item was successfully moved.";
+        public static final String FAILURE_DESC ="There was an error while trying to move the item.";
+        public static final String DRIVE_ID_DESC= "The identifier of the drive associated with the item that will be moved.";
+        public static final String ITEM_ID_DESC= "The id of the item that will be moved.";
+        public static final String JSON_BODY_DESC = "The body to be sent in the request.";
+        public static final String NAME= "Move Item";
+    }
+    public static class CopyItemDesc{
+        public static final String RETURN_RESULT_DESC = "The item was successfully copied.";
+        public static final String EXCEPTION_DESC = "There was an error while trying to copy the item.";
+        public static final String SITE_ID_DESC ="The identifier of the site associated with the item that will be copied.";
+        public static final String OPTIONAL_PARAMETERS_DESC = "The optional query parameters to copy the item. This method supports the @microsoft.graph.conflictBehavior query parameter to customize the behavior when a conflict occurs.\n" +
+                "\n" +
+                "Value\tDescription\n" +
+                "fail\tDefault behavior is to report the failure.\n" +
+                "replace\tOverwrite existing item at the target site.\n" +
+                "rename\tRename the item.";
+        public static final String SUCCESS_DESC="The item was successfully copied.";
+        public static final String FAILURE_DESC ="There was an error while trying to copy the item.";
+        public static final String DRIVE_ID_DESC= "The identifier of the drive associated with the item that will be copied.";
+        public static final String ITEM_ID_DESC= "The id of the item that will be copied.";
+        public static final String JSON_BODY_DESC = "The body to be sent in the request.";
+        public static final String NAME= "Copy Item";
+    }
 }
