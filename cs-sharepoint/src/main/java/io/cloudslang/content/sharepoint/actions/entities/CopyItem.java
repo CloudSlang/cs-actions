@@ -21,6 +21,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpCopyItemResult;
 import static io.cloudslang.content.sharepoint.services.SharepointService.processHttpResult;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;
 import static io.cloudslang.content.sharepoint.utils.Descriptions.Common.*;
@@ -130,7 +131,7 @@ public class CopyItem {
                     null
             );
 
-            processHttpResult(result, EXCEPTION_DESC);
+            processHttpCopyItemResult(result, EXCEPTION_DESC);
             return result;
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
