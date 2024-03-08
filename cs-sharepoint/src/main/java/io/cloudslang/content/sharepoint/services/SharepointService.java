@@ -82,6 +82,11 @@ public class SharepointService {
         }
     }
 
+    public static void processHttpCopyItemResult(Map<String, String> httpResults, String exceptionMessage) {
+        processHttpResult(httpResults,exceptionMessage);
+        httpResults.put(RETURN_RESULT,httpResults.get("finalLocation"));
+    }
+
     public static void processHttpGetSiteIdByName(Map<String, String> httpResults) {
 
         //Process the return result output
