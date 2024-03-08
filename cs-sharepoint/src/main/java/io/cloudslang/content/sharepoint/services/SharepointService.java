@@ -83,19 +83,7 @@ public class SharepointService {
     }
 
     public static void processHttpCopyItemResult(Map<String, String> httpResults, String exceptionMessage) {
-
-        String statusCode = httpResults.get(STATUS_CODE);
-
-        if (StringUtils.isEmpty(statusCode))
-            statusCode = EMPTY;
-
-        if (StringUtils.isEmpty(statusCode) || Integer.parseInt(statusCode) < 200 || Integer.parseInt(statusCode) >= 300) {
-            if (StringUtils.isEmpty(httpResults.get(EXCEPTION))) {
-                httpResults.put(EXCEPTION, httpResults.get(RETURN_RESULT));
-                httpResults.put(RETURN_RESULT, exceptionMessage);
-            }
-            httpResults.put(RETURN_CODE, NEGATIVE_RETURN_CODE);
-        }
+        processHttpResult(httpResults,exceptionMessage);
         httpResults.put(RETURN_RESULT,httpResults.get("finalLocation"));
     }
 
