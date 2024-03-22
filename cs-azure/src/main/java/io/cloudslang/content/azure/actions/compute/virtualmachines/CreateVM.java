@@ -43,6 +43,7 @@ import static io.cloudslang.content.azure.utils.Constants.Common.*;
 import static io.cloudslang.content.azure.utils.Constants.CreateVMConstants.CREATE_VM;
 import static io.cloudslang.content.azure.utils.Descriptions.Common.*;
 import static io.cloudslang.content.azure.utils.Descriptions.ComputeCommonDescriptions.*;
+import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.NIC_RESOURCE_GROUP_NAME_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateStreamingJob.RESOURCE_GROUP_NAME_DESC;
 import static io.cloudslang.content.azure.utils.Descriptions.CreateVMDescriptions.*;
 import static io.cloudslang.content.azure.utils.HttpUtils.getFailureResults;
@@ -80,6 +81,7 @@ public class CreateVM {
                                        @Param(value = API_VERSION, description = COMPUTE_API_VERSION_DESC) String apiVersion,
                                        @Param(value = LOCATION, required = true, description = COMPUTE_LOCATION_DESC) String location,
                                        @Param(value = RESOURCE_GROUP_NAME, required = true, description = RESOURCE_GROUP_NAME_DESC) String resourceGroupName,
+                                       @Param(value = NIC_RESOURCE_GROUP_NAME, description = NIC_RESOURCE_GROUP_NAME_DESC) String nicResourceGroupName,
                                        @Param(value = NIC_NAME, required = true, description = NIC_NAME_DESC) String nicName,
                                        @Param(value = VM_SIZE, required = true, description = VM_SIZE_DESC) String vmSize,
                                        @Param(value = VM_NAME, required = true, description = VM_NAME_DESC) String vmName,
@@ -129,6 +131,11 @@ public class CreateVM {
         dataDiskName = defaultIfEmpty(dataDiskName, vmName);
         osDiskName = defaultIfEmpty(osDiskName, vmName);
 
+        if(nicResourceGroupName.isEmpty())
+        {
+            nicResourceGroupName = resourceGroupName;
+        }
+
         List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots);
         if (!exceptionMessage.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
@@ -177,6 +184,7 @@ public class CreateVM {
                     .privateImageName(privateImageName)
                     .dataDiskName(dataDiskName)
                     .osDiskName(osDiskName)
+                    .nicResourceGroupName(nicResourceGroupName)
                     .build());
 
             final String returnMessage = result.get(RETURN_RESULT);
