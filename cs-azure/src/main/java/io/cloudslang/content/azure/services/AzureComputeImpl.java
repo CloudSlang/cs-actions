@@ -399,7 +399,7 @@ public class AzureComputeImpl {
                 CreateVMRequestBody.Properties.networkProfile.networkInterfaces.properties();
         nicProperties.setPrimary(true);
         networkInterfaces1.setId(SUBSCRIPTION_PATH + inputs.getAzureComputeCommonInputs().getAzureCommonInputs().getSubscriptionId() +
-                RESOURCE_GROUPS_PATH + inputs.getAzureComputeCommonInputs().getAzureCommonInputs().getResourceGroupName() + AZURE_CREATE_VM_NETWORK_INTERFACES_PATH + inputs.getNicName());
+                RESOURCE_GROUPS_PATH + inputs.getNicResourceGroupName() + AZURE_CREATE_VM_NETWORK_INTERFACES_PATH + inputs.getNicName());
         networkInterfaces1.setProperties(nicProperties);
         CreateVMRequestBody.Properties.networkProfile.networkInterfaces[] arry =
                 new CreateVMRequestBody.Properties.networkProfile.networkInterfaces[1];

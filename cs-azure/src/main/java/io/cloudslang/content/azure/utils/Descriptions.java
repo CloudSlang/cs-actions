@@ -169,6 +169,9 @@ public class Descriptions {
         public static final String JOB_NAME_DESC = "The name of the streaming job.";
         public static final String RESOURCE_GROUP_NAME_DESC = "The name of the resource group that contains the resource. " +
                 "You can obtain this value from the Azure Resource Manager API or the portal.";
+
+        public static final String NIC_RESOURCE_GROUP_NAME_DESC = "The name of the resource group that contains the resource. " +
+                "You can obtain this value from the Azure Resource Manager API or the portal for the nic.";
         public static final String SUBSCRIPTION_ID_DESC = "GUID which uniquely identify Microsoft Azure subscription. The subscription ID forms part of the URI for every service call.";
         public static final String API_VERSION_DESC = "Client Api Version." +
                 "Default: 2016-03-01";

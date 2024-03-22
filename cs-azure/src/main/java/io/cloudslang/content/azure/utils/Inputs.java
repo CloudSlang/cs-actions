@@ -28,6 +28,7 @@ public class Inputs extends InputNames {
         public static final String CLIENT_SECRET = "clientSecret";
         public static final String JOB_NAME = "jobName";
         public static final String RESOURCE_GROUP_NAME = "resourceGroupName";
+        public static final String NIC_RESOURCE_GROUP_NAME = "nicResourceGroupName";
         public static final String ACCOUNT_NAME = "accountName";
         public static final String ACCOUNT_KEY = "accountKey";
         public static final String API_VERSION = "apiVersion";
