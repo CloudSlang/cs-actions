@@ -13,6 +13,7 @@
  * limitations under the License.
 */
 
+
 package io.cloudslang.content.active_directory.utils;
 
 import io.cloudslang.content.active_directory.constants.CipherSuites;
@@ -207,6 +208,19 @@ public final class InputBuilderUtils {
         return tlsVersionInput;
     }
 
+    public static boolean isValidAttributesList(String attributesList, String delimiter) {
+        if (attributesList == null || attributesList.isEmpty()) {
+            return false;
+        }
+        String[] attributeValuePairs = attributesList.split(delimiter+"\\s*");
+        for (String attributeValuePair : attributeValuePairs) {
+            String[] parts = attributeValuePair.split("=", 2);
+            if (parts.length != 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public static List<String> buildAllowedCiphers(String allowedCiphersInput) throws Exception {
         if (StringUtils.isEmpty(allowedCiphersInput)) {

@@ -25,6 +25,7 @@ public final class Constants {
     public static final String STRICT = "strict";
     public static final String DEFAULT_PASSWORD_FOR_STORE = "changeit";
     public static final String TIMEOUT_VALUE = "60000";
+    public static final String DEFAULT_DELIMITER=";";
     public static final String HOST = ".host";
     public static final String JAVA_HOME = "java.home";
     public static final String AD_COMMOM_NAME = "cn=";

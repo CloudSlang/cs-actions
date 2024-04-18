@@ -53,4 +53,5 @@ public final class InputNames {
     public static final String PROXY_USERNAME = "proxyUsername";
     public static final String PROXY_PASSWORD = "proxyPassword";
     public static final String X_509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
+    public static final String DELIMITER = "delimiter";
 }
