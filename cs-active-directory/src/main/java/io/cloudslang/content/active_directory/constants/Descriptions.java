@@ -444,5 +444,28 @@ public class Descriptions {
         public static final String SUCCESS_DESC = "The attributes were successfully updated.";
         public static final String FAILURE_DESC = "There was a problem while updating the attribute.";
     }
+    public static class UpdateComputerAccount {
+
+        public static final String UPDATE_COMPUTER_ACCOUNT_DESC = "Updates the computer account within Active Directory.";
+
+        //inputs
+        public static final String DISTINGUISHED_NAME_DESC = "The Organizational Unit DN or Common Name DN to update the " +
+                "computer to. (i.e. OU=OUTest1,DC=battleground,DC=ad)";
+        public static final String COMPUTER_COMMON_NAME_DESC = "The name of the computer (its CN).";
+        public static final String ESCAPE_CHARS_DESC = "Specifies whether to escape the special Active Directory characters:\n" +
+                "'#','=','\"','<','>',',','+',';','\\','\"''.\n" +
+                "Default value: false.\n" +
+                "Valid values: true, false.";
+        public static final String ATTRIBUTES_LIST_DESC= "A list of attributes and their corresponding values, delimited by delimiter input." +
+                " Each attribute-value pair provides information to be updated or modified. Example: description=new description; location=new location.";
+
+        //outputs
+        public static final String RESULT_COMPUTER_DN_DESC = "The distinguished name of the computer account to be updated.";
+
+        //results
+        public static final String SUCCESS_DESC = "The computer account was updated successfully.";
+        public static final String FAILURE_DESC = "Failed to update the computer account in the Active Directory.";
+        public static final String DELIMITER_DESC = "The delimiter to be used for attributes list, default value ;";
+    }
 
 }

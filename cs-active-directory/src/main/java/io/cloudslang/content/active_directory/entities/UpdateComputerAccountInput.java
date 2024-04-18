@@ -1,4 +1,32 @@
 /*
+ * Copyright 2021-2024 Open Text
+ * This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+/*
+ * Copyright 2021-2024 Open Text
+ * This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
  * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -11,7 +39,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 /*
  * Copyright 2021-2024 Open Text
  * This program and the accompanying materials
@@ -56,9 +84,13 @@ public class UpdateComputerAccountInput {
     private String trustPassword;
     private boolean escapeChars;
     private String timeout;
+    private String attributesList;
+    private String delimiter;
 
     private UpdateComputerAccountInput() {
     }
+
+    public String getDelimiter() {return delimiter;}
 
     public String getHost() {
         return host;
@@ -132,6 +164,8 @@ public class UpdateComputerAccountInput {
         return x509HostnameVerifier;
     }
 
+    public String getAttributesList(){return attributesList;}
+
     public static class Builder {
 
         private String host;
@@ -152,6 +186,8 @@ public class UpdateComputerAccountInput {
         private String trustPassword;
         private String escapeChars;
         private String timeout;
+        private String attributesList;
+        private String delimiter;
 
 
         public Builder host(String host) {
@@ -249,6 +285,15 @@ public class UpdateComputerAccountInput {
             return this;
         }
 
+        public Builder attributesList(String attributesList) {
+            this.attributesList = attributesList;
+            return this;
+        }
+        public Builder delimiter(String delimiter) {
+            this.delimiter = delimiter;
+            return this;
+        }
+
         public UpdateComputerAccountInput build() throws Exception {
             UpdateComputerAccountInput input = new UpdateComputerAccountInput();
 
@@ -287,7 +332,8 @@ public class UpdateComputerAccountInput {
             input.allowedCiphers = buildAllowedCiphers(allowedCiphers);
 
             input.proxyPort = Integer.parseInt(addVerifyPort(proxyPort));
-
+            input.attributesList = attributesList;
+            input.delimiter=delimiter;
             return input;
         }
     }

@@ -1,4 +1,18 @@
 /*
+ * Copyright 2021-2024 Open Text
+ * This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+/*
  * (c) Copyright 2021 Micro Focus
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
@@ -46,8 +60,9 @@ import java.util.Map;
 
 import static io.cloudslang.content.active_directory.constants.Constants.*;
 import static io.cloudslang.content.active_directory.constants.Descriptions.Common.*;
-import static io.cloudslang.content.active_directory.constants.Descriptions.CreateComputerAccount.*;
+import static io.cloudslang.content.active_directory.constants.Descriptions.UpdateComputerAccount.*;
 import static io.cloudslang.content.active_directory.constants.TlsVersions.TLSv1_2;
+import static io.cloudslang.content.active_directory.utils.InputBuilderUtils.isValidAttributesList;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class UpdateComputerAccountAction {
@@ -121,10 +136,9 @@ public class UpdateComputerAccountAction {
      * exception - The exception message if the operation fails.
      * computerDN - The distinguished name of the newly created computer account.
      */
-    @Action(name = "Create Computer Account", description = CREATE_COMPUTER_ACCOUNT_DESC,
+    @Action(name = "Create Computer Account", description = UPDATE_COMPUTER_ACCOUNT_DESC,
             outputs = {
                     @Output(value = OutputNames.RETURN_RESULT, description = RETURN_RESULT_DESC),
-                    @Output(value = OutputNames.RESULT_COMPUTER_DN, description = RESULT_COMPUTER_DN_DESC),
                     @Output(value = OutputNames.RETURN_CODE, description = RETURN_CODE_DESC),
                     @Output(value = OutputNames.EXCEPTION, description = EXCEPTION_DESC)
             },
@@ -139,6 +153,8 @@ public class UpdateComputerAccountAction {
             @Param(value = InputNames.PASSWORD, required = true, encrypted = true, description = PASSWORD_DESC) String password,
             @Param(value = InputNames.DISTINGUISHED_NAME, required = true, description = DISTINGUISHED_NAME_DESC) String distinguishedName,
             @Param(value = InputNames.COMPUTER_COMMON_NAME, required = true, description = COMPUTER_COMMON_NAME_DESC) String computerCommonName,
+            @Param(value = InputNames.ATTRIBUTES_LIST, required = true, description = ATTRIBUTES_LIST_DESC) String attributesList,
+            @Param(value = InputNames.DELIMITER, description = DELIMITER_DESC) String delimiter,
             @Param(value = InputNames.PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
             @Param(value = InputNames.PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
             @Param(value = InputNames.PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
@@ -161,7 +177,13 @@ public class UpdateComputerAccountAction {
         trustPassword = defaultIfEmpty(trustPassword, DEFAULT_PASSWORD_FOR_STORE);
         escapeChars = defaultIfEmpty(escapeChars, BOOLEAN_FALSE);
         timeout = defaultIfEmpty(timeout, TIMEOUT_VALUE);
+        delimiter = defaultIfEmpty(delimiter, DEFAULT_DELIMITER);
 
+        try {
+        if (!isValidAttributesList(attributesList, delimiter)) {
+            throw new IllegalArgumentException("Invalid attributes list format. The format should be:" +
+                    " attribute1=value1;attribute2=value2");
+        }
         UpdateComputerAccountInput.Builder inputBuilder = new UpdateComputerAccountInput.Builder()
                 .host(host)
                 .distinguishedName(distinguishedName)
@@ -180,8 +202,10 @@ public class UpdateComputerAccountAction {
                 .trustKeystore(trustKeystore)
                 .trustPassword(trustPassword)
                 .escapeChars(escapeChars)
-                .timeout(timeout);
-        try {
+                .timeout(timeout)
+                .attributesList(attributesList)
+                .delimiter(delimiter);
+
             return new UpdateComputerAccountService().execute(inputBuilder.build());
         } catch (Exception e) {
             return ResultUtils.fromException(e);
