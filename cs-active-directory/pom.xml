@@ -22,7 +22,7 @@
     <artifactId>cs-active-directory</artifactId>
     <version>0.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
-K
+
     <name>${project.groupId}:${project.artifactId}</name>
     <description>LDAP Java Actions</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
