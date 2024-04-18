@@ -20,9 +20,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-active-directory</artifactId>
-    <version>0.0.82-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
-
+K
     <name>${project.groupId}:${project.artifactId}</name>
     <description>LDAP Java Actions</description>
     <url>https://github.com/CloudSlang/cs-actions</url>
