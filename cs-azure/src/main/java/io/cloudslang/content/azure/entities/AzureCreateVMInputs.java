@@ -43,8 +43,10 @@ public class AzureCreateVMInputs {
     private final String tagKeyList;
     private final String tagValueList;
 
-    @java.beans.ConstructorProperties({"azureComputeCommonInputs", "diskType", "nicName", "availabilitySetName", "adminUsername", "adminPassword", "sshPublicKeyName", "vmSize", "imageVersion", "diskSizeInGB", "storageAccount", "storageAccountType", "publisher", "sku", "offer", "plan", "privateImageName", "dataDiskName", "osDiskName", "tagKeyList", "tagValueList"})
-    public AzureCreateVMInputs(AzureComputeCommonInputs azureComputeCommonInputs, String diskType, String nicName, String availabilitySetName, String adminUsername, String adminPassword, String sshPublicKeyName, String vmSize, String imageVersion, String diskSizeInGB, String storageAccount, String storageAccountType, String publisher, String sku, String offer, String plan, String privateImageName, String dataDiskName, String osDiskName, String tagKeyList, String tagValueList) {
+    private final String nicResourceGroupName;
+
+    @java.beans.ConstructorProperties({"azureComputeCommonInputs", "diskType", "nicName", "availabilitySetName", "adminUsername", "adminPassword", "sshPublicKeyName", "vmSize", "imageVersion", "diskSizeInGB", "storageAccount", "storageAccountType", "publisher", "sku", "offer", "plan", "privateImageName", "dataDiskName", "osDiskName", "tagKeyList", "tagValueList", "nicResourceGroupName"})
+    public AzureCreateVMInputs(AzureComputeCommonInputs azureComputeCommonInputs, String diskType, String nicName, String availabilitySetName, String adminUsername, String adminPassword, String sshPublicKeyName, String vmSize, String imageVersion, String diskSizeInGB, String storageAccount, String storageAccountType, String publisher, String sku, String offer, String plan, String privateImageName, String dataDiskName, String osDiskName, String tagKeyList, String tagValueList, String nicResourceGroupName) {
 
         this.azureComputeCommonInputs = azureComputeCommonInputs;
         this.diskType = diskType;
@@ -69,6 +71,7 @@ public class AzureCreateVMInputs {
         this.osDiskName = osDiskName;
         this.tagKeyList = tagKeyList;
         this.tagValueList = tagValueList;
+        this.nicResourceGroupName = nicResourceGroupName;
     }
 
     @NotNull
@@ -162,6 +165,11 @@ public class AzureCreateVMInputs {
         return tagValueList;
     }
 
+    public String getNicResourceGroupName() {
+        return nicResourceGroupName;
+    }
+
+
     public static final class AzureCreateVMInputsBuilder {
 
         private AzureComputeCommonInputs azureComputeCommonInputs;
@@ -185,6 +193,8 @@ public class AzureCreateVMInputs {
         private String osDiskName;
         private String tagKeyList;
         private String tagValueList;
+
+        private String nicResourceGroupName;
 
         private AzureCreateVMInputsBuilder() {
         }
@@ -317,8 +327,13 @@ public class AzureCreateVMInputs {
         }
 
         @NotNull
+        public AzureCreateVMInputs.AzureCreateVMInputsBuilder nicResourceGroupName(String nicResourceGroupName) {
+            this.nicResourceGroupName = nicResourceGroupName;
+            return this;
+        }
+        @NotNull
         public AzureCreateVMInputs build() {
-            return new AzureCreateVMInputs(azureComputeCommonInputs, diskType, nicName, availabilitySetName, adminUsername, adminPassword, sshPublicKeyName, vmSize, imageVersion, diskSizeInGB, storageAccount, storageAccountType, publisher, sku, offer, plan, privateImageName, dataDiskName, osDiskName, tagKeyList, tagValueList);
+            return new AzureCreateVMInputs(azureComputeCommonInputs, diskType, nicName, availabilitySetName, adminUsername, adminPassword, sshPublicKeyName, vmSize, imageVersion, diskSizeInGB, storageAccount, storageAccountType, publisher, sku, offer, plan, privateImageName, dataDiskName, osDiskName, tagKeyList, tagValueList,nicResourceGroupName);
         }
     }
 
