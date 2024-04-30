@@ -204,7 +204,7 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>oauth2-oidc-sdk</artifactId>
-            <version>10.13</version>
+            <version>11.10.1</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
