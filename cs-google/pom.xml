@@ -235,7 +235,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk18on</artifactId>
-            <version>${bouncycastle.version}</version>
+            <version>1.78.1</version>
         </dependency>
         <!-- Testing -->
         <dependency>
