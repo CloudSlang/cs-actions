@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.tesseract.services;
 
-import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.ZipFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
