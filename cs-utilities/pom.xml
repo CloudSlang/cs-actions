@@ -86,7 +86,7 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <cs-commons.version>0.0.7</cs-commons.version>
-        <cs-ssh.version>0.0.51</cs-ssh.version>
+        <cs-ssh.version>0.0.52</cs-ssh.version>
         <junit.version>4.13.1</junit.version>
         <pdfbox.version>2.0.31</pdfbox.version>
         <!--Misc properties-->
