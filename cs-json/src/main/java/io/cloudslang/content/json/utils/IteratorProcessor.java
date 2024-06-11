@@ -31,7 +31,7 @@ public class IteratorProcessor {
     private int index;
     private JsonArray jsonElements;
 
-    public void init(String array, SerializableSessionObject session) throws Exception {
+    public void init(String array, StepSerializableSessionObject session) throws Exception {
 
         if (session.getValue() == null) {
             Map<String, Object> initialData = new HashMap<String, Object>();
