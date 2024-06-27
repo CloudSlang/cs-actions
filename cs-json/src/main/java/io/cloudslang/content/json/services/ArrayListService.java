@@ -40,6 +40,7 @@ public class ArrayListService {
                 returnResult.put(RETURN_RESULT, NO_MORE);
                 returnResult.put(RESULT_STRING, EMPTY_STRING);
                 returnResult.put(RETURN_CODE, ONE);
+                iterate.setStepSessionEnd(sessionObject);
             }
             else if (iterate.hasNext()) {
                 returnResult.put(INDEX, Integer.toString(iterate.getIndex()));
