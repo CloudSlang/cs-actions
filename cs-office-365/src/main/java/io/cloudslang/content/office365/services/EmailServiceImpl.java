@@ -370,6 +370,9 @@ public class EmailServiceImpl {
 
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        if (!isEmpty(getListAttachmentInputs.getSelectQuery()) || !isEmpty(getListAttachmentInputs.getoDataQuery())) {
+            httpClientInputs.setQueryParams(getQueryParams(getListAttachmentInputs.getSelectQuery(), getListAttachmentInputs.getoDataQuery()));
+        }
 
         return new HttpClientService().execute(httpClientInputs);
     }

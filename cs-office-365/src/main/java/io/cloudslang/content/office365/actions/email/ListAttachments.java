@@ -78,6 +78,8 @@ public class ListAttachments {
                                        @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
                                        @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
                                        @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
+                                       @Param(value = SELECT_QUERY, description = SELECT_QUERY_DESC) String selectQuery,
+                                       @Param(value = O_DATA_QUERY, description = O_DATA_QUERY_DESC) String oDataQuery,
 
                                        @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
                                        @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
@@ -108,6 +110,8 @@ public class ListAttachments {
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
         responseCharacterSet = defaultIfEmpty(responseCharacterSet, UTF8);
+        selectQuery = defaultIfEmpty(selectQuery, EMPTY);
+        oDataQuery = defaultIfEmpty(oDataQuery, EMPTY);
 
         final List<String> exceptionMessages = verifyCommonInputs(userPrincipalName, userId, proxyPort, trustAllRoots,
                 connectTimeout, socketTimeout, keepAlive,
@@ -120,6 +124,8 @@ public class ListAttachments {
         try {
             final Map<String, String> result = listAttachment(ListAttachmentsInputs.builder()
                     .messageId(messageId)
+                    .selectQuery(selectQuery)
+                    .oDataQuery(oDataQuery)
                     .commonInputs(Office365CommonInputs.builder()
                             .authToken(authToken)
                             .connectionsMaxPerRoute(connectionsMaxPerRoute)
