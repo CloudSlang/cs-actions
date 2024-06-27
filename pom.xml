@@ -362,6 +362,7 @@
         <module>cs-cyberark</module>
         <module>cs-openshift</module>
         <module>cs-sharepoint</module>
+        <module>cs-ssh-v2</module>
     </modules>
 
 </project>
