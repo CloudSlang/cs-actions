@@ -40,6 +40,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 public enum AmazonApi {
     EC2("ec2"),
+    RDS("rds"),
     ELASTIC_LOAD_BALANCING("elasticloadbalancing"),
     S3("s3");
 
@@ -60,7 +61,7 @@ public enum AmazonApi {
             }
         }
 
-        throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. Valid values: ec2, elasticloadbalancing, s3.");
+        throw new RuntimeException("Invalid Amazon API service value: [" + input + "]. Valid values: ec2, elasticloadbalancing, s3, RDS.");
     }
 
     private String getValue() {
