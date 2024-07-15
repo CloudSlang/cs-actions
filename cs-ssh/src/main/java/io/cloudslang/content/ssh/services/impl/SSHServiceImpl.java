@@ -76,7 +76,8 @@ public class SSHServiceImpl implements SSHService {
         JSch.setConfig("cipher.s2c", finalListOfAllowedCiphers);
         JSch.setConfig("cipher.c2s", finalListOfAllowedCiphers);
         JSch.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");
-
+        JSch.setConfig("server_host_key", JSch.getConfig("server_host_key") + ",ssh-rsa");
+        JSch.setConfig("PubkeyAcceptedAlgorithms", JSch.getConfig("PubkeyAcceptedAlgorithms") + ",ssh-rsa");
         try {
             session = jsch.getSession(details.getUsername(), details.getHost(), details.getPort());
         } catch (JSchException e) {
