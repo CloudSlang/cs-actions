@@ -38,12 +38,14 @@ import static io.cloudslang.content.amazon.entities.constants.Descriptions.AddTa
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.AddTagsToDBInstanceAction.TAG_VALUE_LIST_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.Common.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.CreateDBInstanceAction.*;
+import static io.cloudslang.content.amazon.entities.constants.Descriptions.CreateDBInstanceAction.VPC_SECURITY_GROUP_ID_DESC;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.DBInstanceCommon.*;
 import static io.cloudslang.content.amazon.entities.constants.Descriptions.ProvisionProductAction.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.AddTagsToDBInstanceInputs.TAG_KEY_LIST;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.AddTagsToDBInstanceInputs.TAG_VALUE_LIST;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CommonInputs.*;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CreateDBInstanceInputs.*;
+import static io.cloudslang.content.amazon.entities.constants.Inputs.CreateDBInstanceInputs.VPC_SECURITY_GROUP_ID;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.CustomInputs.AVAILABILITY_ZONE;
 import static io.cloudslang.content.amazon.entities.constants.Inputs.DBInstanceCommonInputs.*;
 import static io.cloudslang.content.amazon.entities.validators.Validator.verifyTagInputs;
@@ -76,6 +78,7 @@ public class CreateDBInstance {
                                        @Param(value = DB_INSTANCE_SIZE, required = true, description = DB_INSTANCE_SIZE_DESC) String dbInstanceSize,
                                        @Param(value = DB_USERNAME, required = true, description = DB_USERNAME_DESC) String dbUsername,
                                        @Param(value = DB_PASSWORD, required = true, encrypted = true, description = DB_PASSWORD_DESC) final String dbPassword,
+                                       @Param(value = VPC_SECURITY_GROUP_ID, description = VPC_SECURITY_GROUP_ID_DESC) String vpcSecurityGroupIds,
                                        @Param(value = DB_STORAGE_SIZE, required = true, encrypted = true, description = DB_STORAGE_SIZE_DESC) final String dbStorageSize,
                                        @Param(value = LICENSE_MODEL, description = LICENSE_MODEL_DESC) final String licenseModel,
                                        @Param(value = AVAILABILITY_ZONE, description = AVAILABILITY_ZONE_DESC) final String availabilityZone,
@@ -123,7 +126,7 @@ public class CreateDBInstance {
             final AmazonRDS amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
 
-            final DBInstance result = AmazonRDSService.createRDSInstance(dbEngineName, dbEngineVersion, dbUsername, dbPassword,
+            final DBInstance result = AmazonRDSService.createRDSInstance(dbEngineName, dbEngineVersion, dbUsername, dbPassword,vpcSecurityGroupIds,
                     dbInstanceIdentifier, dbInstanceSize, dbStorageSizeImp, licenseModel, availabilityZone, tagKeyList, tagValueList, amazonRDS);
 
             return getSuccessResultMapDBInstance(result);
