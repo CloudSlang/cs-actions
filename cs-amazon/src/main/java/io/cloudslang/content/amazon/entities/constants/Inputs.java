@@ -362,6 +362,7 @@ public class Inputs {
         public static final String DB_PASSWORD = "dbPassword";
         public static final String LICENSE_MODEL = "licenseModel";
         public static final String VPC_SECURITY_GROUP_ID = "vpcSecurityGroupIds";
+        public static final String DB_SUBNET_GROUP_NAME = "dbSubnetGroupName";
     }
 
     public static class AddTagsToDBInstanceInputs {

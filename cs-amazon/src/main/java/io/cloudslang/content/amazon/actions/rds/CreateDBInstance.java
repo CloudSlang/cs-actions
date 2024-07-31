@@ -79,6 +79,7 @@ public class CreateDBInstance {
                                        @Param(value = DB_USERNAME, required = true, description = DB_USERNAME_DESC) String dbUsername,
                                        @Param(value = DB_PASSWORD, required = true, encrypted = true, description = DB_PASSWORD_DESC) final String dbPassword,
                                        @Param(value = VPC_SECURITY_GROUP_ID, description = VPC_SECURITY_GROUP_ID_DESC) String vpcSecurityGroupIds,
+                                       @Param(value = DB_SUBNET_GROUP_NAME , description = DB_SUBNET_GROUP_NAME_DESC) String dbSubnetGroupName,
                                        @Param(value = DB_STORAGE_SIZE, required = true, encrypted = true, description = DB_STORAGE_SIZE_DESC) final String dbStorageSize,
                                        @Param(value = LICENSE_MODEL, description = LICENSE_MODEL_DESC) final String licenseModel,
                                        @Param(value = AVAILABILITY_ZONE, description = AVAILABILITY_ZONE_DESC) final String availabilityZone,
@@ -126,7 +127,7 @@ public class CreateDBInstance {
             final AmazonRDS amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
 
-            final DBInstance result = AmazonRDSService.createRDSInstance(dbEngineName, dbEngineVersion, dbUsername, dbPassword,vpcSecurityGroupIds,
+            final DBInstance result = AmazonRDSService.createRDSInstance(dbEngineName, dbEngineVersion, dbUsername, dbPassword,vpcSecurityGroupIds,dbSubnetGroupName,
                     dbInstanceIdentifier, dbInstanceSize, dbStorageSizeImp, licenseModel, availabilityZone, tagKeyList, tagValueList, amazonRDS);
 
             return getSuccessResultMapDBInstance(result);

@@ -230,6 +230,7 @@ public class Descriptions {
         public static final String DB_USERNAME_DESC = "The name for the master user.";
         public static final String DB_PASSWORD_DESC = "The password for the master user.";
         public static final String VPC_SECURITY_GROUP_ID_DESC = "The VPC Security Group ID where DB instance will be created.";
+        public static final String DB_SUBNET_GROUP_NAME_DESC = "The name of the subnet group.";
 
     }
 
