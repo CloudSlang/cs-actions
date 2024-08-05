@@ -36,7 +36,7 @@ public class AmazonRDSService {
 
     public static DBInstance createRDSInstance(
             final String dbEngineName, final String dbEngineVersion, final String dbUsername,
-            final String dbPassword, final String dbInstanceIdentifier, final String dbInstanceSize, final int dbStorageSize,
+            final String dbPassword, final String vpcSecurityGroupIds,final String dbSubnetGroupName, final String dbInstanceIdentifier, final String dbInstanceSize, final int dbStorageSize,
             final String licenseModel, final String availabilityZone, final String tagKeyList, final String tagValueList,
             final AmazonRDS amazonRDSClient) {
 
@@ -52,6 +52,17 @@ public class AmazonRDSService {
             createDBInstanceRequest.setLicenseModel(licenseModel);
         if (!isEmpty(availabilityZone))
             createDBInstanceRequest.setAvailabilityZone(availabilityZone);
+        if (!isEmpty(vpcSecurityGroupIds))
+        {
+            String[] vpcSecurityGroupIdList =  vpcSecurityGroupIds.split(",");
+            Collection<String> vpcSecurityGroupIdCollection = new ArrayList<>();
+            for (int i = 0; i < vpcSecurityGroupIdList.length; i++){
+                vpcSecurityGroupIdCollection.add(vpcSecurityGroupIdList[i]);
+            }
+            createDBInstanceRequest.setVpcSecurityGroupIds(vpcSecurityGroupIdCollection);
+        }
+        if (!isEmpty(dbSubnetGroupName))
+            createDBInstanceRequest.setDBSubnetGroupName(dbSubnetGroupName);
 
         String[] keyList = tagKeyList.split(",");
         String[] valueList = tagValueList.split(",");
