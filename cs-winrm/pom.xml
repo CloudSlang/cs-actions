@@ -16,7 +16,8 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.cloudslang.content</groupId>
@@ -132,6 +133,17 @@
             <groupId>io.cloudsoft.windows</groupId>
             <artifactId>winrm4j-service</artifactId>
             <version>${winrm4j.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.xmlunit</groupId>
+                    <artifactId>xmlunit-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-core</artifactId>
+            <version>2.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -256,12 +268,12 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
-                               <configuration>
-                                        <gpgArguments>
-                                            <arg>--pinentry-mode</arg>
-                                            <arg>loopback</arg>
-                                        </gpgArguments> 
-                                    </configuration>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
