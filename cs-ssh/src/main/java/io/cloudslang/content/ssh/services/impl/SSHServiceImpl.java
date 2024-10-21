@@ -49,6 +49,7 @@ public class SSHServiceImpl implements SSHService {
     private static final String KNOWN_HOSTS_STRICT = "strict";
     private static final String KNOWN_HOSTS_ADD = "add";
     private static final String ALLOWED_CIPHERS = "aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
+    private static final String KEX = ",ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha256,diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1";
     public static final String EXIT_COMMAND = "exit";
     private Session session;
     private Channel execChannel;
@@ -78,6 +79,7 @@ public class SSHServiceImpl implements SSHService {
         JSch.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");
         JSch.setConfig("server_host_key", JSch.getConfig("server_host_key") + ",ssh-rsa");
         JSch.setConfig("PubkeyAcceptedAlgorithms", JSch.getConfig("PubkeyAcceptedAlgorithms") + ",ssh-rsa");
+        JSch.setConfig("kex", JSch.getConfig("kex") + KEX);
         try {
             session = jsch.getSession(details.getUsername(), details.getHost(), details.getPort());
         } catch (JSchException e) {
@@ -153,13 +155,15 @@ public class SSHServiceImpl implements SSHService {
             int connectTimeout,
             int commandTimeout,
             boolean agentForwarding) {
-
+        ChannelShell channelShell = null;
+        OutputStream out = null;
+        OutputStream err = null;
         try {
             if (!isConnected()) {
                 session.connect(connectTimeout);
             }
 
-            final ChannelShell channelShell = (ChannelShell) session.openChannel(SHELL_CHANNEL);
+            channelShell = (ChannelShell) session.openChannel(SHELL_CHANNEL);
             channelShell.setPty(usePseudoTerminal);
             channelShell.setAgentForwarding(agentForwarding);
 
@@ -189,6 +193,20 @@ public class SSHServiceImpl implements SSHService {
             return commandResult;
         } catch (JSchException | IOException e) {
             throw new RuntimeException(e);
+        }finally {
+            if (channelShell != null && channelShell.isConnected()) {
+                channelShell.disconnect();
+            }
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (err != null) {
+                    err.close();
+                }
+            } catch (IOException ioException) {
+                ioException.printStackTrace();  // Handle the stream closing exception
+            }
         }
     }
 
@@ -200,18 +218,21 @@ public class SSHServiceImpl implements SSHService {
             int connectTimeout,
             int commandTimeout,
             boolean agentForwarding) {
+        ChannelExec channel = null;
+        OutputStream out = null;
+        OutputStream err = null;
         try {
             if (!isConnected()) {
                 session.connect(connectTimeout);
             }
             // create exec channel
-            ChannelExec channel = (ChannelExec) session.openChannel(EXEC_CHANNEL);
+            channel = (ChannelExec) session.openChannel(EXEC_CHANNEL);
             channel.setCommand(command.getBytes(characterSet));
             channel.setPty(usePseudoTerminal);
             channel.setAgentForwarding(agentForwarding);
-            OutputStream out = new ByteArrayOutputStream();
+            out = new ByteArrayOutputStream();
             channel.setOutputStream(out);
-            OutputStream err = new ByteArrayOutputStream();
+             err = new ByteArrayOutputStream();
             channel.setErrStream(err);
 
             // connect to the channel and run the command(s)
@@ -249,6 +270,20 @@ public class SSHServiceImpl implements SSHService {
             return result;
         } catch (JSchException | UnsupportedEncodingException | TimeoutException e) {
             throw new RuntimeException(e);
+        }finally {
+            if (channel != null && channel.isConnected()) {
+                channel.disconnect();
+            }
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (err != null) {
+                    err.close();
+                }
+            } catch (IOException ioException) {
+                ioException.printStackTrace();  // Handle the stream closing exception
+            }
         }
     }
 
