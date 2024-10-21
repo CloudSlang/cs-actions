@@ -205,7 +205,7 @@ public class SSHServiceImpl implements SSHService {
                     err.close();
                 }
             } catch (IOException ioException) {
-                ioException.printStackTrace();  // Handle the stream closing exception
+                throw new RuntimeException(ioException);
             }
         }
     }
@@ -282,7 +282,7 @@ public class SSHServiceImpl implements SSHService {
                     err.close();
                 }
             } catch (IOException ioException) {
-                ioException.printStackTrace();  // Handle the stream closing exception
+                throw new RuntimeException(ioException);
             }
         }
     }
