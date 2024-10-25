@@ -77,7 +77,7 @@
         <aliyun-java-sdk-core.version>4.0.3</aliyun-java-sdk-core.version>
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <cs-commons.version>0.0.7</cs-commons.version>
-        <commons-io.version>2.7</commons-io.version>
+        <commons-io.version>2.17.0</commons-io.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -111,7 +111,13 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-http-client</artifactId>
-            <version>0.1.94</version>
+            <version>0.1.96</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit</groupId>
+            <artifactId>junit-bom</artifactId>
+            <version>5.11.0</version>
+            <type>pom</type>
         </dependency>
         <!-- Testing -->
         <dependency>
