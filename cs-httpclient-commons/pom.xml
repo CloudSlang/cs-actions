@@ -100,13 +100,13 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.7</version>
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.junit</groupId>-->
-<!--                    <artifactId>junit-bom</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
+            <version>2.17.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit</groupId>
+            <artifactId>junit-bom</artifactId>
+            <version>5.11.0</version>
+            <type>pom</type>
         </dependency>
         <!--        Testing dependencies-->
         <dependency>
