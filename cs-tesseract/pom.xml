@@ -75,7 +75,7 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <cs-commons.version>0.0.6</cs-commons.version>
-        <commons-io.version>2.7</commons-io.version>
+        <commons-io.version>2.17.0</commons-io.version>
         <pdfbox.version>2.0.25</pdfbox.version>
         <zip4j.version>2.11.5</zip4j.version>
         <tesseract-platform.version>4.0.0-1.4.4</tesseract-platform.version>
@@ -149,6 +149,12 @@
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit-jupiter-api.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit</groupId>
+            <artifactId>junit-bom</artifactId>
+            <version>5.11.0</version>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
