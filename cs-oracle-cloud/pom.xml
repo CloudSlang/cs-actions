@@ -86,7 +86,7 @@
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <junit.version>4.13.1</junit.version>
         <common-codec.version>1.15</common-codec.version>
-        <cs-http-client.version>0.1.94</cs-http-client.version>
+        <cs-http-client.version>0.1.96</cs-http-client.version>
         <httpcomponents.httpclient.version>4.5.13</httpcomponents.httpclient.version>
         <httpcomponents.httpcore.version>4.4.15</httpcomponents.httpcore.version>
         <!--Misc properties-->
@@ -189,7 +189,12 @@
             <version>1.6.5</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.junit</groupId>
+            <artifactId>junit-bom</artifactId>
+            <version>5.11.0</version>
+            <type>pom</type>
+        </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
