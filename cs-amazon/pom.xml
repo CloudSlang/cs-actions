@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-amazon</artifactId>
-    <version>1.0.59-SNAPSHOT</version>
+    <version>1.0.60-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -92,7 +92,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
-        <cs-http-client.version>0.1.94</cs-http-client.version>
+        <cs-http-client.version>0.1.96</cs-http-client.version>
         <cs-commons.version>0.0.9</cs-commons.version>
         <junit.version>4.13.2</junit.version>
         <aws-sdk.version>1.12.548</aws-sdk.version>
@@ -140,7 +140,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-xml</artifactId>
-            <version>0.0.23</version>
+            <version>0.0.24</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
