@@ -78,7 +78,7 @@
         <cs-commons.version>0.0.7</cs-commons.version>
         <jackson-databind.version>2.15.2</jackson-databind.version>
         <commons-compress.version>1.26.1</commons-compress.version>
-        <commons-io.version>2.7</commons-io.version>
+        <commons-io.version>2.17.0</commons-io.version>
         <gson.version>2.9.1</gson.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -133,6 +133,12 @@
             <artifactId>junit</artifactId>
             <version>4.13.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit</groupId>
+            <artifactId>junit-bom</artifactId>
+            <version>5.11.0</version>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
