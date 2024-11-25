@@ -95,7 +95,7 @@
         <cs-http-client.version>0.1.96</cs-http-client.version>
         <cs-commons.version>0.0.9</cs-commons.version>
         <junit.version>4.13.2</junit.version>
-        <aws-sdk.version>1.12.548</aws-sdk.version>
+        <aws-sdk.version>1.12.778</aws-sdk.version>
         <httpcomponents.httpclient.version>4.5.13</httpcomponents.httpclient.version>
         <httpcomponents.httpcore.version>4.4.14</httpcomponents.httpcore.version>
         <!--Misc properties-->
