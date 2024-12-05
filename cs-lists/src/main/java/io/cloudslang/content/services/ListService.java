@@ -17,7 +17,6 @@
 
 package io.cloudslang.content.services;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.exceptions.IteratorProcessorException;
 import io.cloudslang.content.utils.IteratorProcessor;
@@ -25,7 +24,6 @@ import io.cloudslang.content.utils.IteratorProcessor;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 
 public class ListService {
     public static Map<String, String> iterate(String list, String separator, StepSerializableSessionObject session) {
@@ -54,6 +52,17 @@ public class ListService {
             returnResult.put("resultString", e.getMessage());
             returnResult.put("returnCode", "-1");
         }
+        return returnResult;
+    }
+
+    public static Map<String, String> setResultNoMore(){
+
+        Map<String, String> returnResult = new HashMap<String, String>();
+
+        returnResult.put("resultString", "");
+        returnResult.put("returnCode", "1");
+        returnResult.put("result", "no more");
+
         return returnResult;
     }
 }

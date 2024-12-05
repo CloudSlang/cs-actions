@@ -27,9 +27,11 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.services.ListService;
 import io.cloudslang.content.utils.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
+import static io.cloudslang.content.services.ListService.setResultNoMore;
 import static io.cloudslang.content.utils.Constants.Descriptions.*;
 import static io.cloudslang.content.utils.Constants.OutputNames.*;
 import static io.cloudslang.content.utils.Constants.ResponseNames.FAILURE;
@@ -53,6 +55,10 @@ public class ListIteratorAction {
         //Get default values
         final String separatorImp = defaultIfEmpty(separator, ",");
 
-        return ListService.iterate(list, separatorImp, sessionIterator);
+        if (StringUtils.isEmpty(list)){
+            return setResultNoMore();
+        } else {
+            return ListService.iterate(list, separatorImp, sessionIterator);
+        }
     }
 }
