@@ -67,7 +67,7 @@
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <junit.version>4.12</junit.version>
         <cs-commons.version>0.0.7</cs-commons.version>
-        <winrm4j.version>0.13.2-ot</winrm4j.version>
+        <winrm4j.version>0.13.3-ot</winrm4j.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -162,7 +162,7 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-bom</artifactId>
-            <version>3.5.9</version>
+            <version>3.5.10</version>
             <type>pom</type>
         </dependency>
         <dependency>
