@@ -78,12 +78,23 @@ public class SSHServiceImpl implements SSHService {
         JSch.setConfig("cipher.c2s", finalListOfAllowedCiphers);
         JSch.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");
         // Check if the configuration already contains the value before appending
-        if (!JSch.getConfig("server_host_key").contains("ssh-rsa,ssh-dss")) {
-            JSch.setConfig("server_host_key", JSch.getConfig("server_host_key") + ",ssh-rsa,ssh-dss");
+        String currentHostKeyAlgorithms = JSch.getConfig("server_host_key");
+        if (!currentHostKeyAlgorithms.contains("ssh-rsa")) {
+            currentHostKeyAlgorithms += ",ssh-rsa";
         }
-        if (!JSch.getConfig("PubkeyAcceptedAlgorithms").contains("ssh-rsa,ssh-dss")) {
-            JSch.setConfig("PubkeyAcceptedAlgorithms", JSch.getConfig("PubkeyAcceptedAlgorithms") + ",ssh-rsa,ssh-dss");
+        if (!currentHostKeyAlgorithms.contains("ssh-dss")) {
+            currentHostKeyAlgorithms += ",ssh-dss";
         }
+        JSch.setConfig("server_host_key", currentHostKeyAlgorithms);
+
+        String currentPubkeyAlgorithms = JSch.getConfig("PubkeyAcceptedAlgorithms");
+        if (!currentPubkeyAlgorithms.contains("ssh-rsa")) {
+            currentPubkeyAlgorithms += ",ssh-rsa";
+        }
+        if (!currentPubkeyAlgorithms.contains("ssh-dss")) {
+            currentPubkeyAlgorithms += ",ssh-dss";
+        }
+        JSch.setConfig("PubkeyAcceptedAlgorithms", currentPubkeyAlgorithms);
         if (!JSch.getConfig("kex").contains(KEX)) {
             JSch.setConfig("kex", JSch.getConfig("kex") + KEX);
         }
