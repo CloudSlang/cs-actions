@@ -14,8 +14,6 @@
 */
 
 
-
-
 package io.cloudslang.content.amazon.factory.helpers;
 
 import io.cloudslang.content.amazon.entities.aws.*;
