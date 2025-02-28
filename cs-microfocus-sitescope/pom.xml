@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    * Copyright 2020-2024 Open Text
+    * Copyright 2020-2025 Open Text
     * This program and the accompanying materials
     * are made available under the terms of the Apache License v2.0 which accompany this distribution.
     *
@@ -15,7 +15,6 @@
     * limitations under the License.
 
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -126,6 +125,17 @@
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
             <version>2.9.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.minidev</groupId>
+                    <artifactId>json-smart</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>2.5.2</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -233,7 +243,7 @@
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
-                        <copyright.year>2020-2024</copyright.year>
+                        <copyright.year>2020-2025</copyright.year>
                     </properties>
                     <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>
