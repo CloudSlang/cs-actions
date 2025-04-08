@@ -19,12 +19,9 @@
 package io.cloudslang.content.httpclient.build.conn;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.http.conn.ssl.*;
 
+import javax.net.ssl.HostnameVerifier;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +36,8 @@ import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static io.cloudslang.content.httpclient.entities.Constants.ALLOW_ALL;
 
 /**
  * Created with IntelliJ IDEA.
@@ -167,21 +166,21 @@ public class SSLConnectionSocketFactoryBuilder {
         SSLConnectionSocketFactory sslsf = null;
         try {
             String x509HostnameVerifierStr = x509HostnameVerifierInputValue.toLowerCase();
-
-            X509HostnameVerifier x509HostnameVerifier;
-            switch (x509HostnameVerifierStr) {
-                case "strict":
-                    x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
-                    break;
-                case "browser_compatible":
-                    x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
-                    break;
-                case "allow_all":
-                    x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid value '" + x509HostnameVerifierInputValue + "' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
-            }
+            HostnameVerifier x509HostnameVerifier = createHostnameVerifier(x509HostnameVerifierStr);
+//            X509HostnameVerifier x509HostnameVerifier;
+//            switch (x509HostnameVerifierStr) {
+//                case "strict":
+//                    x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+//                    break;
+//                case "browser_compatible":
+//                    x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+//                    break;
+//                case "allow_all":
+//                    x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+//                    break;
+//                default:
+//                    throw new IllegalArgumentException("Invalid value '" + x509HostnameVerifierInputValue + "' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
+//            }
 
             // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
             if (!StringUtils.isEmpty(inputTLS)) {
@@ -250,6 +249,13 @@ public class SSLConnectionSocketFactoryBuilder {
                 throw new IllegalArgumentException(gse.getMessage() + ". " + INVALID_TRUST_KEYSTORE_ERROR, gse);
             }
         }
+    }
+
+    private static HostnameVerifier createHostnameVerifier(String hostnameVerifier) {
+        if (hostnameVerifier.equalsIgnoreCase(ALLOW_ALL))
+            return new NoopHostnameVerifier();
+        else
+            return new DefaultHostnameVerifier();
     }
 
     public SSLConnectionSocketFactoryBuilder setTrustAllRoots(String trustAllRoots) {

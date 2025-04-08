@@ -31,6 +31,7 @@ public class Constants {
     public static final String TLSv12 = "TLSv1.2";
     public static final String TLSv13 = "TLSv1.3";
     public static final String RESPONSE_CHARACTER_SET = "ISO-8859-1";
+    public static final String ALLOW_ALL = "allow_all";
     public static final String NEW_LINE = "\n";
     public static final String EXCEPTION_INVALID_BOOLEAN = "The %s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_VALUE = "%s is not a valid value for executionTimeout. The value must be a positive number.";
