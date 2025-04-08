@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2022-2025 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,7 +13,8 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.httpclient.services;
+
+package io.cloudslang.content.httpclient.entities;
 
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;

@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.InputStream;
@@ -102,8 +103,8 @@ public class SSLConnectionSocketFactoryBuilderTest {
 
     private void prepareSSLConnectionSocketFactory() throws Exception {
         whenNew(SSLConnectionSocketFactory.class)
-                .withParameterTypes(SSLContext.class, String[].class, String[].class, X509HostnameVerifier.class)
-                .withArguments(isA(SSLContext.class), isA(String[].class), isNull(), isA(X509HostnameVerifier.class))
+                .withParameterTypes(SSLContext.class, String[].class, String[].class, HostnameVerifier.class)
+                .withArguments(isA(SSLContext.class), isA(String[].class), isNull(), isA(HostnameVerifier.class))
                 .thenReturn(sslsfMock);
     }
 
@@ -113,6 +114,16 @@ public class SSLConnectionSocketFactoryBuilderTest {
         builder.setTrustAllRoots("true");
         builder.setKeystore(System.getProperty("java.home") + "/lib/security/cacerts");
         builder.setKeystorePassword("changeit");
+
+
+
+
+
+
+
+
+
+
         mockStatic(SSLContexts.class);
 
         when(SSLContexts.custom()).thenReturn(sslContextBuilderMock);

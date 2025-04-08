@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2022-2025 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-package io.cloudslang.content.httpclient.services;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+package io.cloudslang.content.httpclient.entities;
+
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.util.TimeValue;
