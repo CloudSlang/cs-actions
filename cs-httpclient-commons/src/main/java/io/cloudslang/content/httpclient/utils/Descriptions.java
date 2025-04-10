@@ -22,8 +22,8 @@ public class Descriptions {
         public static final String HTTP_CLIENT_GET_ACTION = "HTTP Client Get";
         public static final String HTTP_CLIENT_POST_ACTION = "HTTP Client Post";
         public static final String HTTP_CLIENT_PUT_ACTION = "HTTP Client Put";
-        public static final String HTTP_CLIENT_PATCH_ACTION = "HTTP Client Put";
-        public static final String HTTP_CLIENT_DELETE_ACTION = "HTTP Client Put";
+        public static final String HTTP_CLIENT_PATCH_ACTION = "HTTP Client Patch";
+        public static final String HTTP_CLIENT_DELETE_ACTION = "HTTP Client Delete";
 
         //Inputs
         public static final String HTTP_CLIENT_ACTION_DESC = "This operation does an http request and a parsing of " +
