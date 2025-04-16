@@ -64,7 +64,7 @@ public class HttpClientGetAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
+    public Map<String, String> execute(@Param(value = URL, required = true, description = URL_DESC) String url,
 
                                        @Param(value = AUTH_TYPE, description = AUTH_TYPE_DESC) String authType,
                                        @Param(value = USERNAME, description = PROTOCOL_DESC) String username,
@@ -100,7 +100,7 @@ public class HttpClientGetAction {
                                        @Param(value = QUERY_PARAMS_ARE_FORM_ENCODED, description = QUERY_PARAMS_ARE_FORM_ENCODED_DESC) String queryParamsAreFormEncoded,
 
                                        @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
-                                       @Param(value = RESPONSE_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String responseTimeout,
+                                       @Param(value = RESPONSE_TIMEOUT, description = RESPONSE_TIMEOUT_DESC) String responseTimeout,
                                        @Param(value = EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
 
                                        @Param(value = SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
@@ -126,7 +126,7 @@ public class HttpClientGetAction {
         followRedirects = defaultIfEmpty(followRedirects, BOOLEAN_TRUE);
 
         connectTimeout = defaultIfEmpty(connectTimeout, DEFAULT_CONNECT_TIMEOUT);
-        responseTimeout = defaultIfEmpty(responseTimeout, DEFAULT_CONNECT_TIMEOUT);
+        responseTimeout = defaultIfEmpty(responseTimeout, DEFAULT_RESPONSE_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
         final List<String> exceptionMessages = verifyHttpCommonInputs(authType, preemptiveAuth, proxyPort, tlsVersion,
@@ -136,7 +136,7 @@ public class HttpClientGetAction {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
         HttpClientInputs httpClientInputs = HttpClientInputs.builder()
-                .host(host)
+                .url(url)
                 .method(GET)
 
                 .authType(authType)

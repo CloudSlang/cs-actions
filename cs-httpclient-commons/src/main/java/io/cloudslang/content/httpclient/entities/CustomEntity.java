@@ -49,7 +49,7 @@ public class CustomEntity {
         ContentType parsedContentType = null;
         HttpEntity httpEntity = null;
 
-        if (StringUtils.isEmpty(httpClientInputs.getContentType())) {
+        if (!StringUtils.isEmpty(httpClientInputs.getContentType())) {
             try {
                 parsedContentType = ContentType.parse(httpClientInputs.getContentType());
             } catch (UnsupportedCharsetException e) {

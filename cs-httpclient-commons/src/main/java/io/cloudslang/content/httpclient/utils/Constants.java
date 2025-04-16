@@ -31,14 +31,16 @@ public class Constants {
     public static final String BOOLEAN_FALSE = "false";
     public static final String BOOLEAN_TRUE = "true";
     public static final String DEFAULT_PROXY_PORT = "8080";
-    public static final String DEFAULT_CONNECT_TIMEOUT = "0";
     public static final String TLSv12 = "TLSv1.2";
     public static final String TLSv13 = "TLSv1.3";
     public static final String DEFAULT_CONTENT_TYPE = "application/json";
 
     public static final String DEFAULT_CONNECTIONS_MAX_PER_ROUTE = "2";
     public static final String DEFAULT_CONNECTIONS_MAX_TOTAL = "20";
-    public static final String DEFAULT_EXECUTION_TIMEOUT = "90";
+    public static final String DEFAULT_EXECUTION_TIMEOUT = "300";
+    public static final String DEFAULT_CONNECT_TIMEOUT = "300";
+    public static final String DEFAULT_RESPONSE_TIMEOUT = "300";
+
 
     public static final String HTTP_PORT = "80";
     public static final String HTTPS_PORT = "443";
