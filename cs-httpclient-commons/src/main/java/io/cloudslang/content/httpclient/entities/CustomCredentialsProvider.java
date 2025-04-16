@@ -37,7 +37,7 @@ public class CustomCredentialsProvider {
             Credentials credentials;
             if (httpInputs.getAuthType().equalsIgnoreCase(NTLM)) {
                 String[] domainAndUsername = getDomainUsername(httpInputs.getUsername());
-                credentials = new NTCredentials(domainAndUsername[1], httpInputs.getPassword().toCharArray(), httpInputs.getHost(), domainAndUsername[0]);
+                credentials = new NTCredentials(domainAndUsername[1], httpInputs.getPassword().toCharArray(), httpInputs.getUrl(), domainAndUsername[0]);
             } else {
                 credentials = new UsernamePasswordCredentials(httpInputs.getUsername(), httpInputs.getPassword().toCharArray());
             }

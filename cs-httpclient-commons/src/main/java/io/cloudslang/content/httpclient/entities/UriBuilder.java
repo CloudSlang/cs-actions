@@ -35,7 +35,7 @@ import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.QUERY_PAR
 public class UriBuilder {
 
     public static URI getUri(HttpClientInputs httpClientInputs) throws URISyntaxException, IllegalArgumentException {
-        URIBuilder uriBuilder = new URIBuilder(httpClientInputs.getHost());
+        URIBuilder uriBuilder = new URIBuilder(httpClientInputs.getUrl());
         boolean bEncodeQueryParams = !Boolean.parseBoolean(httpClientInputs.getQueryParamsAreURLEncoded());
         boolean bEncodeQueryParamsAsForm = Boolean.parseBoolean(httpClientInputs.getQueryParamsAreFormEncoded());
 
@@ -57,7 +57,7 @@ public class UriBuilder {
             return uriBuilder.build();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Could not build 'URL' for"
-                    + httpClientInputs.getHost() + " and queries " + httpClientInputs.getQueryParams(), e);
+                    + httpClientInputs.getUrl() + " and queries " + httpClientInputs.getQueryParams(), e);
         }
     }
 
