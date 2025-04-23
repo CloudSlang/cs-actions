@@ -83,7 +83,12 @@ public class HttpClientService {
         RequestConfig requestConfig = CustomRequestConfig.getDefaultRequestConfig(httpClientInputs);
         HttpClientContext context = CustomHttpClientContext.getHttpClientContext(httpClientInputs, credentialsProvider, uri);
         HttpEntity httpEntity = CustomEntity.getHttpEntity(httpClientInputs);
-        httpRequest.setEntity(httpEntity);
+        if (!httpClientInputs.getMethod().equalsIgnoreCase("TRACE") && httpEntity != null) {
+            httpRequest.setEntity(httpEntity);
+        }
+
+
+
 
         if (Boolean.parseBoolean(httpClientInputs.getPreemptiveAuth())) {
             AuthCache authCache = new BasicAuthCache();

@@ -26,6 +26,7 @@ public class Constants {
     public static final String DELETE = "DELETE";
     public static final String PATCH = "PATCH";
 
+    public static final String TRACE = "TRACE";
     //DEFAULT VALUES
     public static final String STRICT = "strict";
     public static final String BOOLEAN_FALSE = "false";
