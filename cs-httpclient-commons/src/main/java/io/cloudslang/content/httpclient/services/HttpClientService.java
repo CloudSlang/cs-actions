@@ -82,9 +82,8 @@ public class HttpClientService {
         CredentialsProvider credentialsProvider = CustomCredentialsProvider.getCredentialsProvider(httpClientInputs, uri);
         RequestConfig requestConfig = CustomRequestConfig.getDefaultRequestConfig(httpClientInputs);
         HttpClientContext context = CustomHttpClientContext.getHttpClientContext(httpClientInputs, credentialsProvider, uri);
-        String method = httpClientInputs.getMethod().toUpperCase();
         HttpEntity httpEntity = CustomEntity.getHttpEntity(httpClientInputs);
-        if (!method.equals("TRACE") && httpEntity != null) {
+        if (!httpClientInputs.getMethod().equalsIgnoreCase("TRACE") && httpEntity != null) {
             httpRequest.setEntity(httpEntity);
         }
 
