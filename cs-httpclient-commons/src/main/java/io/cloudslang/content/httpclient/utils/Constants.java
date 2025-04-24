@@ -25,6 +25,7 @@ public class Constants {
     public static final String PUT = "PUT";
     public static final String DELETE = "DELETE";
     public static final String PATCH = "PATCH";
+    public static final String HEAD = "HEAD";
 
     //DEFAULT VALUES
     public static final String STRICT = "strict";
