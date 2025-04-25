@@ -26,6 +26,10 @@ public class Descriptions {
         public static final String HTTP_CLIENT_DELETE_ACTION = "HTTP Client Delete";
         public static final String HTTP_CLIENT_POST_RAW_ACTION = "Http Client Post Raw";
         public static final String HTTP_CLIENT_TRACE_ACTION = "Http Client Trace";
+        public static final String HTTP_CLIENT_HEAD_ACTION = "HTTP Client Head";
+
+        
+
 
         //Inputs
         public static final String HTTP_CLIENT_ACTION_DESC = "This operation does an http request and a parsing of " +
