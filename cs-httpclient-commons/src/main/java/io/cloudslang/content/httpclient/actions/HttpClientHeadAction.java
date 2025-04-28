@@ -77,6 +77,7 @@ public class HttpClientHeadAction {
                                        @Param(value = USE_COOKIES, description = USE_COOKIES_DESC) String useCookies,
                                        @Param(value = FOLLOW_REDIRECTS, description = FOLLOW_REDIRECTS_DESC) String followRedirects,
                                        @Param(value = HEADERS, description = HEADERS_DESC) String headers,
+                                       @Param(value = DESTINATION_FILE, description = DESTINATION_FILE_DESC) String destinationFile,
 
                                        @Param(value = RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet,
                                        @Param(value = QUERY_PARAMS, description = QUERY_PARAMS_DESC) String queryParams,
@@ -149,6 +150,7 @@ public class HttpClientHeadAction {
                 .useCookies(useCookies)
                 .followRedirects(followRedirects)
                 .headers(headers)
+                .destinationFile(destinationFile)
 
                 .responseCharacterSet(responseCharacterSet)
                 .queryParams(queryParams)
