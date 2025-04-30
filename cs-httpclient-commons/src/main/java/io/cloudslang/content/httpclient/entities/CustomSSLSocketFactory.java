@@ -33,6 +33,7 @@ public class CustomSSLSocketFactory {
 
     private static SSLContext createSSLContext(HttpClientInputs httpClientInputs) {
         SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
+
         KeyStore keyStore;
 
         try {
@@ -45,9 +46,20 @@ public class CustomSSLSocketFactory {
             }
 
             if (Boolean.parseBoolean(httpClientInputs.getTrustAllRoots())) {
-                    sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
-            } else if (!httpClientInputs.getTrustKeystore().isEmpty())
-                sslContextBuilder.loadTrustMaterial(new File(httpClientInputs.getTrustKeystore()), httpClientInputs.getTrustPassword().toCharArray());
+                sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
+            } else {
+                String trustStorePath = httpClientInputs.getTrustKeystore();
+                String trustStorePassword = httpClientInputs.getTrustPassword();
+                // Fallback to system properties if values are empty
+                if (trustStorePath == null || trustStorePath.isEmpty()) {
+                    trustStorePath = System.getProperty(TRUSTSTORE_PROPERTY);
+                    trustStorePassword = System.getProperty(TRUSTSTORE_PASSWORD_PROPERTY);
+                }
+                if (trustStorePath != null && trustStorePassword != null)
+                    sslContextBuilder.loadTrustMaterial(new File(trustStorePath), trustStorePassword.toCharArray());
+                else
+                    throw new RuntimeException(EXCEPTION_TRUSTSTORE_NOT_FOUND);
+            }
 
             return sslContextBuilder.build();
         } catch (FileNotFoundException exception) {
