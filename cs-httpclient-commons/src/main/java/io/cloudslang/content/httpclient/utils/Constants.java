@@ -26,6 +26,8 @@ public class Constants {
     public static final String DELETE = "DELETE";
     public static final String PATCH = "PATCH";
     public static final String HEAD = "HEAD";
+    public static final String OPTIONS = "OPTIONS";
+
 
     public static final String TRACE = "TRACE";
     //DEFAULT VALUES
