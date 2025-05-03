@@ -27,6 +27,7 @@ public class Descriptions {
         public static final String HTTP_CLIENT_POST_RAW_ACTION = "Http Client Post Raw";
         public static final String HTTP_CLIENT_TRACE_ACTION = "Http Client Trace";
         public static final String HTTP_CLIENT_HEAD_ACTION = "HTTP Client Head";
+        public static final String HTTP_CLIENT_MULTIPART_POST_ACTION = "Http Client Multipart POST";
         public static final String HTTP_CLIENT_OPTIONS_ACTION = "HTTP Client Options";
         
 
