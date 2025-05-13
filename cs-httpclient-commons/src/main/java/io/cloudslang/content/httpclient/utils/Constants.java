@@ -96,4 +96,5 @@ public class Constants {
     public static final String EXCEPTION_TRUSTSTORE_NOT_FOUND = "Trust store path and password not provided, and no " +
             "default system properties were found. Please configure the trust store explicitly or ensure system " +
             "properties 'javax.net.ssl.trustStore' and 'javax.net.ssl.trustStorePassword' are set.";
+    public static final String EXCEPTION_INVALID_HEADER_FORMAT="Invalid header format. Headers should be separated by commas, and each header name-value pair must be separated by a colon (:).";
 }
