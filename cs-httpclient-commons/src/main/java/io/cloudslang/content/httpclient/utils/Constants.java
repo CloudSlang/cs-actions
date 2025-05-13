@@ -25,6 +25,9 @@ public class Constants {
     public static final String PUT = "PUT";
     public static final String DELETE = "DELETE";
     public static final String PATCH = "PATCH";
+    public static final String HEAD = "HEAD";
+    public static final String OPTIONS = "OPTIONS";
+
 
     public static final String TRACE = "TRACE";
     //DEFAULT VALUES
@@ -74,6 +77,8 @@ public class Constants {
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
     public static final String CONTENT_TYPE = "Content-Type";
+    public static final String TRUSTSTORE_PROPERTY ="javax.net.ssl.trustStore";
+    public static final String TRUSTSTORE_PASSWORD_PROPERTY="javax.net.ssl.trustStorePassword";
 
     //Exceptions
     public static final String EXCEPTION_NULL_EMPTY = "%s can't be null or empty.";
@@ -88,5 +93,8 @@ public class Constants {
     public static final String EXCEPTION_NOT_POSITIVE_VALUE = "%s is not a valid value for input %s. The value must be a positive number.";
     public static final String EXCEPTION_NEGATIVE_VALUE = "%s is not a valid timeout value for input %s. The value must be bigger or equal to 0.";
     public static final String EXCEPTION_CERTIFICATE_NOT_FOUND ="Truststore or Keystore file not found.";
+    public static final String EXCEPTION_TRUSTSTORE_NOT_FOUND = "Trust store path and password not provided, and no " +
+            "default system properties were found. Please configure the trust store explicitly or ensure system " +
+            "properties 'javax.net.ssl.trustStore' and 'javax.net.ssl.trustStorePassword' are set.";
     public static final String EXCEPTION_INVALID_HEADER_FORMAT="Invalid header format. Headers should be separated by commas, and each header name-value pair must be separated by a colon (:).";
 }
