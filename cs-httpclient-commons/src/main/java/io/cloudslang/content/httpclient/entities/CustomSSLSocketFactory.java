@@ -34,31 +34,35 @@ public class CustomSSLSocketFactory {
     private static SSLContext createSSLContext(HttpClientInputs httpClientInputs) {
         SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
 
-        KeyStore keyStore;
-
         try {
-            if (!httpClientInputs.getKeystore().isEmpty()) {
-                keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            boolean trustAllRoots = Boolean.parseBoolean(httpClientInputs.getTrustAllRoots());
+
+            // Skip keystore loading if trustAllRoots is true
+            if (!trustAllRoots && !httpClientInputs.getKeystore().isEmpty()) {
+                KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
                 try (InputStream in = new FileInputStream(httpClientInputs.getKeystore())) {
                     keyStore.load(in, httpClientInputs.getKeystorePassword().toCharArray());
                 }
                 sslContextBuilder.loadKeyMaterial(keyStore, httpClientInputs.getKeystorePassword().toCharArray());
             }
 
-            if (Boolean.parseBoolean(httpClientInputs.getTrustAllRoots())) {
+            if (trustAllRoots) {
                 sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
             } else {
                 String trustStorePath = httpClientInputs.getTrustKeystore();
                 String trustStorePassword = httpClientInputs.getTrustPassword();
+
                 // Fallback to system properties if values are empty
                 if (trustStorePath == null || trustStorePath.isEmpty()) {
                     trustStorePath = System.getProperty(TRUSTSTORE_PROPERTY);
                     trustStorePassword = System.getProperty(TRUSTSTORE_PASSWORD_PROPERTY);
                 }
-                if (trustStorePath != null && trustStorePassword != null)
+
+                if (trustStorePath != null && trustStorePassword != null) {
                     sslContextBuilder.loadTrustMaterial(new File(trustStorePath), trustStorePassword.toCharArray());
-                else
+                } else {
                     throw new RuntimeException(EXCEPTION_TRUSTSTORE_NOT_FOUND);
+                }
             }
 
             return sslContextBuilder.build();
