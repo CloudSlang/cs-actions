@@ -34,31 +34,38 @@ public class CustomSSLSocketFactory {
     private static SSLContext createSSLContext(HttpClientInputs httpClientInputs) {
         SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
 
-        KeyStore keyStore;
-
         try {
-            if (!httpClientInputs.getKeystore().isEmpty()) {
-                keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-                try (InputStream in = new FileInputStream(httpClientInputs.getKeystore())) {
-                    keyStore.load(in, httpClientInputs.getKeystorePassword().toCharArray());
-                }
-                sslContextBuilder.loadKeyMaterial(keyStore, httpClientInputs.getKeystorePassword().toCharArray());
-            }
+            boolean trustAllRoots = Boolean.parseBoolean(httpClientInputs.getTrustAllRoots());
 
-            if (Boolean.parseBoolean(httpClientInputs.getTrustAllRoots())) {
-                sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
-            } else {
+            //load keystore if trustAllRoots is false
+            if (!trustAllRoots) {
+                String keystorePath = httpClientInputs.getKeystore();
+                String keystorePassword = httpClientInputs.getKeystorePassword();
+
+                if (keystorePath == null || keystorePath.isEmpty())
+                    throw new RuntimeException(EXCEPTION_KEYSTORE_NOT_FOUND);
+
+                KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                try (InputStream in = new FileInputStream(keystorePath)) {
+                    keyStore.load(in, keystorePassword.toCharArray());
+                }
+                sslContextBuilder.loadKeyMaterial(keyStore, keystorePassword.toCharArray());
+
                 String trustStorePath = httpClientInputs.getTrustKeystore();
                 String trustStorePassword = httpClientInputs.getTrustPassword();
-                // Fallback to system properties if values are empty
+
                 if (trustStorePath == null || trustStorePath.isEmpty()) {
                     trustStorePath = System.getProperty(TRUSTSTORE_PROPERTY);
                     trustStorePassword = System.getProperty(TRUSTSTORE_PASSWORD_PROPERTY);
                 }
-                if (trustStorePath != null && trustStorePassword != null)
-                    sslContextBuilder.loadTrustMaterial(new File(trustStorePath), trustStorePassword.toCharArray());
-                else
+
+                if (trustStorePath == null || trustStorePassword == null)
                     throw new RuntimeException(EXCEPTION_TRUSTSTORE_NOT_FOUND);
+
+                sslContextBuilder.loadTrustMaterial(new File(trustStorePath), trustStorePassword.toCharArray());
+
+            } else {
+                sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
             }
 
             return sslContextBuilder.build();
