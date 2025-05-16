@@ -26,30 +26,43 @@ public class HeaderBuilder {
 
     public static void headerBuiler(HttpUriRequestBase httpRequest, HttpClientInputs httpClientInputs) {
         try {
-            if (!StringUtils.isEmpty(httpClientInputs.getHeaders())) {
-                if (!httpClientInputs.getContentType().isEmpty()) {
-                    String[] headerList = httpClientInputs.getHeaders().split(COMMA);
-                    boolean counter = false;
-                    for (String eachHeader : headerList) {
-                        if (eachHeader.toLowerCase().contains(CONTENT_TYPE.toLowerCase())) {
-                            httpRequest.setHeader(new HeaderObj(CONTENT_TYPE, httpClientInputs.getContentType()));
-                            counter = true;
-                        } else {
-                            String[] headerListSingle = eachHeader.split(COLON);
-                            httpRequest.setHeader(new HeaderObj(headerListSingle[0].trim(), headerListSingle[1]));
-                        }
+            boolean contentTypeSet = false;
+
+            String rawHeaders = httpClientInputs.getHeaders();
+            String contentType = httpClientInputs.getContentType();
+
+            if (!StringUtils.isEmpty(rawHeaders)) {
+                // Split by any line break (handles \n, \r, or \r\n)
+                String[] headerLines = rawHeaders.split("\\R+");
+
+                for (String line : headerLines) {
+                    if (line == null || line.trim().isEmpty()) continue;
+
+                    int colonIndex = line.indexOf(':');
+                    if (colonIndex == -1) {
+                        throw new IllegalArgumentException(EXCEPTION_INVALID_HEADER_FORMAT);
                     }
-                    if (!counter)
-                        httpRequest.setHeader(new HeaderObj(CONTENT_TYPE, httpClientInputs.getContentType()));
-                } else {
-                    String[] listheader = httpClientInputs.getHeaders().split(COMMA);
-                    for (String list : listheader) {
-                        String[] headerListSingle = list.split(COLON);
-                        httpRequest.setHeader(new HeaderObj(headerListSingle[0].trim(), headerListSingle[1]));
+
+                    String name = line.substring(0, colonIndex).trim();
+                    String value = line.substring(colonIndex + 1).trim();
+
+                    // If Content-Type header is in the input, override its value
+                    if (name.equalsIgnoreCase(CONTENT_TYPE) && !contentType.isEmpty()) {
+                        value = contentType;
+                        contentTypeSet = true;
+                    } else if (name.equalsIgnoreCase(CONTENT_TYPE)) {
+                        contentTypeSet = true;
                     }
+
+                    httpRequest.setHeader(new HeaderObj(name, value));
                 }
-            } else if (!httpClientInputs.getContentType().isEmpty())
-                httpRequest.setHeader(new HeaderObj(CONTENT_TYPE, httpClientInputs.getContentType()));
+            }
+
+            // If Content-Type wasn't set in headers but is available in input, set it explicitly
+            if (!contentTypeSet && !StringUtils.isEmpty(contentType)) {
+                httpRequest.setHeader(new HeaderObj(CONTENT_TYPE, contentType));
+            }
+
         } catch (Exception e) {
             throw new IllegalArgumentException(EXCEPTION_INVALID_HEADER_FORMAT);
         }
