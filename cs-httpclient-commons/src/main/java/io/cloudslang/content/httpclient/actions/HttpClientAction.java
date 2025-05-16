@@ -2,10 +2,8 @@
  * Copyright 2022-2025 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
  * The Apache License is available at
  * http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,7 +12,6 @@
  */
 
 package io.cloudslang.content.httpclient.actions;
-
 import com.hp.oo.sdk.content.annotations.*;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
@@ -37,7 +34,6 @@ import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-
 
 public class HttpClientAction {
 
@@ -102,6 +98,12 @@ public class HttpClientAction {
             @Param(value = Inputs.HTTPInputs.CONTENT_TYPE, description = CONTENT_TYPE_DESC) String contentType,
             @Param(value = Inputs.HTTPInputs.REQUEST_CHARACTER_SET, description = REQUEST_CHARACTER_SET_DESC) String requestCharacterSet,
 
+            @Param(value = Inputs.HTTPInputs.MULTIPART_BODIES, description = MULTIPART_BODIES_DESC) String multipartBodies,
+            @Param(value = Inputs.HTTPInputs.MULTIPART_BODIES_CONTENT_TYPE, description = MULTIPART_BODIES_CONTENT_TYPE_DESC) String multipartBodiesContentType,
+            @Param(value = Inputs.HTTPInputs.MULTIPART_FILES, description = MULTIPART_FILES_DESC) String multipartFiles,
+            @Param(value = Inputs.HTTPInputs.MULTIPART_FILES_CONTENT_TYPE, description = MULTIPART_FILES_CONTENT_TYPE_DESC) String multipartFilesContentType,
+            @Param(value = Inputs.HTTPInputs.MULTIPART_VALUES_ARE_URLENCODED, description = MULTIPART_VALUES_ARE_URL_ENCODED_DESC) String multipartValuesAreURLEncoded,
+
             @Param(value = Inputs.HTTPInputs.CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
             @Param(value = Inputs.HTTPInputs.RESPONSE_TIMEOUT, description = RESPONSE_TIMEOUT_DESC) String responseTimeout,
             @Param(value = Inputs.HTTPInputs.EXECUTION_TIMEOUT, description = EXECUTION_TIMEOUT_DESC) String executionTimeout,
@@ -109,7 +111,6 @@ public class HttpClientAction {
             @Param(value = Inputs.HTTPInputs.SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
             @Param(value = Inputs.HTTPInputs.SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool
     ) {
-        // Default values
         method = defaultIfEmpty(method, "GET");
         preemptiveAuth = defaultIfEmpty(preemptiveAuth, BOOLEAN_TRUE);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
@@ -126,11 +127,11 @@ public class HttpClientAction {
         useCookies = defaultIfEmpty(useCookies, BOOLEAN_TRUE);
         followRedirects = defaultIfEmpty(followRedirects, BOOLEAN_TRUE);
         formParamsAreURLEncoded = defaultIfEmpty(formParamsAreURLEncoded, BOOLEAN_FALSE);
+        multipartValuesAreURLEncoded = defaultIfEmpty(multipartValuesAreURLEncoded, BOOLEAN_FALSE);
         requestCharacterSet = defaultIfEmpty(requestCharacterSet, UTF_8);
         connectTimeout = defaultIfEmpty(connectTimeout, DEFAULT_CONNECT_TIMEOUT);
         responseTimeout = defaultIfEmpty(responseTimeout, DEFAULT_RESPONSE_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
-
 
         List<String> exceptionMessages = InputsValidator.verifyHttpCommonInputs(
                 authType, preemptiveAuth, proxyPort, tlsVersion,
@@ -143,7 +144,6 @@ public class HttpClientAction {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
         }
 
-        // Build HttpClientInputs
         HttpClientInputs httpClientInputs = HttpClientInputs.builder()
                 .url(url)
                 .method(method)
@@ -180,6 +180,11 @@ public class HttpClientAction {
                 .body(body)
                 .contentType(contentType)
                 .requestCharacterSet(requestCharacterSet)
+                .multipartBodies(multipartBodies)
+                .multipartBodiesContentType(multipartBodiesContentType)
+                .multipartFiles(multipartFiles)
+                .multipartFilesContentType(multipartFilesContentType)
+                .multipartValuesAreURLEncoded(multipartValuesAreURLEncoded)
                 .connectTimeout(connectTimeout)
                 .responseTimeout(responseTimeout)
                 .executionTimeout(executionTimeout)
@@ -194,4 +199,3 @@ public class HttpClientAction {
         }
     }
 }
-
