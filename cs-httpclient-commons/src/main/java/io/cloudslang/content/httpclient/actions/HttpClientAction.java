@@ -18,9 +18,12 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.utils.ErrorHandler;
 import io.cloudslang.content.httpclient.utils.Inputs;
 import io.cloudslang.content.httpclient.utils.InputsValidator;
 import io.cloudslang.content.utils.StringUtilities;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
@@ -194,8 +197,8 @@ public class HttpClientAction {
 
         try {
             return HttpClientService.execute(httpClientInputs);
-        } catch (Exception ex) {
-            return getFailureResultsMap(ex.getMessage());
+        } catch (Exception exception) {
+            return ErrorHandler.handleErrors(exception, new HashMap<>());
         }
     }
 }
