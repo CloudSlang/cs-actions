@@ -25,6 +25,7 @@ import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.utils.Constants;
 import io.cloudslang.content.httpclient.utils.ErrorHandler;
 import io.cloudslang.content.utils.StringUtilities;
 
@@ -106,8 +107,8 @@ public class HttpClientDeleteAction {
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
 
-        tlsVersion = defaultIfEmpty(tlsVersion, TLSv12);
-        allowedCiphers = defaultIfEmpty(allowedCiphers, DEFAULT_ALLOWED_CIPHERS);
+        tlsVersion = defaultIfEmpty(tlsVersion, TLSv13);
+        allowedCiphers = defaultIfEmpty(allowedCiphers, DEFAULT_ALLOWED_CIPHERS_TLSv1_3);
 
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, DEFAULT_CONNECTIONS_MAX_PER_ROUTE);
@@ -122,7 +123,7 @@ public class HttpClientDeleteAction {
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
         final List<String> exceptionMessages = verifyHttpCommonInputs(authType, preemptiveAuth, proxyPort, tlsVersion,
-                trustAllRoots, x509HostnameVerifier, useCookies, keepAlive, connectionsMaxPerRoute,
+                allowedCiphers, trustAllRoots,x509HostnameVerifier, useCookies, keepAlive, connectionsMaxPerRoute,
                 connectionsMaxTotal, BOOLEAN_FALSE, connectTimeout, responseTimeout, connectTimeout);
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
