@@ -21,8 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static io.cloudslang.content.httpclient.utils.Constants.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
@@ -50,6 +49,10 @@ public class InputsValidator {
         add(TLSv13);
     }};
 
+    private static final Set<String> ALLOWED_CIPHERS = new HashSet<>(Arrays.asList(
+            DEFAULT_ALLOWED_CIPHERS.split(",")
+    ));
+
     @NotNull
     public static List<String> verifyHttpCommonInputs(@NotNull final String authType,
                                                       @NotNull final String preemptiveAuth,
@@ -57,6 +60,7 @@ public class InputsValidator {
                                                       @NotNull final String proxyPort,
 
                                                       @NotNull final String tlsVersion,
+                                                      @NotNull final String allowedCiphers,
                                                       @NotNull final String trustAllRoots,
                                                       @NotNull final String x509HostnameVerifier,
 
@@ -76,6 +80,7 @@ public class InputsValidator {
         addVerifyPort(exceptionMessages, proxyPort, PROXY_PORT);
 
         addVerifyTlsVersion(exceptionMessages, tlsVersion, TLS_VERSION);
+        addVerifyAllowedCiphers(exceptionMessages,allowedCiphers, Inputs.HTTPInputs.ALLOWED_CIPHERS);
         addVerifyBoolean(exceptionMessages, trustAllRoots, TRUST_ALL_ROOTS);
         addVerifyx509HostnameVerifier(exceptionMessages, x509HostnameVerifier, X509_HOSTNAME_VERIFIER);
 //        addVerifyFile(exceptionMessages, trustKeystore, TRUST_KEYSTORE);
@@ -173,11 +178,40 @@ public class InputsValidator {
     }
 
     @NotNull
-    private static List<String> addVerifyTlsVersion(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
-        if (tlsVersions.stream().noneMatch(input::equalsIgnoreCase))
-            exceptions.add(String.format(EXCEPTION_INVALID_TLS_VERSION, input, inputName));
+    private static List<String> addVerifyTlsVersion(@NotNull List<String> exceptions,
+                                                    @NotNull final String input,
+                                                    @NotNull final String inputName) {
+        String[] inputVersions = input.split(",");
+
+        for (String version : inputVersions) {
+            String trimmedVersion = version.trim();
+            if (tlsVersions.stream().noneMatch(trimmedVersion::equalsIgnoreCase)) {
+                exceptions.add(String.format(EXCEPTION_INVALID_TLS_VERSION, trimmedVersion, inputName));
+            }
+        }
         return exceptions;
     }
+
+    @NotNull
+    private static List<String> addVerifyAllowedCiphers(@NotNull List<String> exceptions,
+                                                    @NotNull final String input,
+                                                    @NotNull final String inputName) {
+        String[] inputCiphers = input.split(",");
+        for (String cipher : inputCiphers) {
+            String trimmed = cipher.trim();
+            if (!ALLOWED_CIPHERS.contains(trimmed)) {
+                exceptions.add(String.format(EXCEPTION_INVALID_ALLOWED_CIPHERS, trimmed, inputName));
+            }
+        }
+        return exceptions;
+    }
+
+//    @NotNull
+//    private static List<String> addVerifyTlsVersion(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+//        if (tlsVersions.stream().noneMatch(input::equalsIgnoreCase))
+//            exceptions.add(String.format(EXCEPTION_INVALID_TLS_VERSION, input, inputName));
+//        return exceptions;
+//    }
 
     @NotNull
     private static List<String> addVerifyFile(@NotNull List<String> exceptions, @NotNull final String filePath, @NotNull final String inputName) {

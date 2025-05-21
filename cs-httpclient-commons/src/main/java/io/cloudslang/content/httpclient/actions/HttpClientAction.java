@@ -119,8 +119,8 @@ public class HttpClientAction {
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
-        tlsVersion = defaultIfEmpty(tlsVersion, TLSv12);
-        allowedCiphers = defaultIfEmpty(allowedCiphers, DEFAULT_ALLOWED_CIPHERS);
+        tlsVersion = defaultIfEmpty(tlsVersion, TLSv13);
+        allowedCiphers = defaultIfEmpty(allowedCiphers, DEFAULT_ALLOWED_CIPHERS_TLSv1_3);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, DEFAULT_CONNECTIONS_MAX_PER_ROUTE);
         connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, DEFAULT_CONNECTIONS_MAX_TOTAL);
@@ -137,7 +137,7 @@ public class HttpClientAction {
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
 
         List<String> exceptionMessages = InputsValidator.verifyHttpCommonInputs(
-                authType, preemptiveAuth, proxyPort, tlsVersion,
+                authType, preemptiveAuth, proxyPort, tlsVersion, allowedCiphers,
                 trustAllRoots, x509HostnameVerifier, useCookies,
                 keepAlive, connectionsMaxPerRoute, connectionsMaxTotal,
                 followRedirects, connectTimeout, responseTimeout, executionTimeout

@@ -64,8 +64,8 @@ public class HttpClientInputs {
     private final String multipartBodiesContentType;
     private final String multipartFilesContentType;
     private final String method;
-    private final String tlsVersion;
-    private final String allowedCiphers;
+    private String tlsVersion;
+    private String allowedCiphers;
 
     private final SerializableSessionObject cookieStoreSessionObject;
     private final GlobalSessionObject<?> connectionPoolSessionObject;
@@ -317,6 +317,12 @@ public class HttpClientInputs {
     public String getContentType() {
         return contentType;
     }
+
+    @NotNull
+    public void setTlsVersion(String tlsVersion) {this.tlsVersion =tlsVersion;}
+
+    @NotNull
+    public void setAllowedCiphers(String allowedCiphers) {this.allowedCiphers =allowedCiphers;}
 
     @NotNull
     public String getRequestCharacterSet() {

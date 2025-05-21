@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.util.Arrays;
 
 import static io.cloudslang.content.httpclient.utils.Constants.*;
 
@@ -86,8 +87,16 @@ public class CustomSSLSocketFactory {
     public static SSLConnectionSocketFactory createSSLSocketFactory(HttpClientInputs httpClientInputs) {
         SSLConnectionSocketFactoryBuilder builder = SSLConnectionSocketFactoryBuilder.create();
         builder.setHostnameVerifier(createHostnameVerifier(httpClientInputs.getX509HostnameVerifier()));
-        builder.setCiphers(httpClientInputs.getAllowedCiphers().split(COMMA));
-        builder.setTlsVersions(httpClientInputs.getTlsVersion().split(COMMA));
+        builder.setCiphers(
+                Arrays.stream(httpClientInputs.getAllowedCiphers().split(COMMA))
+                        .map(String::trim)
+                        .toArray(String[]::new)
+        );
+        builder.setTlsVersions(
+                Arrays.stream(httpClientInputs.getTlsVersion().split(COMMA))
+                        .map(String::trim)
+                        .toArray(String[]::new)
+        );
         builder.setSslContext(createSSLContext(httpClientInputs));
         return builder.build();
     }

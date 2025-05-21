@@ -49,13 +49,22 @@ public class Constants {
     public static final String HTTP_PORT = "80";
     public static final String HTTPS_PORT = "443";
 
-    public static final String DEFAULT_ALLOWED_CIPHERS = "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384," +
+    public static final String DEFAULT_ALLOWED_CIPHERS_TLSv1_2 = "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384," +
             "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256," +
             "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256," +
             "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384," +
             "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
 
-    public static final String DEFAULT_MULTIPART_BODIES_CONTENT_TYPE = "text/plain; charset=ISO-8859-1";
+    public static final String DEFAULT_ALLOWED_CIPHERS_TLSv1_3 = "TLS_AES_256_GCM_SHA384,TLS_CHACHA20_POLY1305_SHA256,TLS_AES_128_GCM_SHA256";
+
+    public static final String DEFAULT_ALLOWED_CIPHERS="TLS_AES_256_GCM_SHA384,TLS_CHACHA20_POLY1305_SHA256,TLS_AES_128_GCM_SHA256," +
+            "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_CBC_SHA256," +
+            "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256," +
+            "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_GCM_SHA384," +
+            "TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
+
+
+    public static final String DEFAULT_MULTIPART_BODIES_CONTENT_TYPE = "text/plain";
     public static final String DEFAULT_MULTIPART_FILES_CONTENT_TYPE = "application/octet-stream";
 
     //AUTH TYPE
@@ -89,6 +98,7 @@ public class Constants {
     public static final String EXCEPTION_INVALID_AUTH_TYPE = "%s for %s input is not a valid authType value. The valid values are: 'Basic','Digest','NTLM','ANONYMOUS'.";
     public static final String EXCEPTION_INVALID_HOSTNAME_VERIFIER = "%s for %s input is not a valid x509HostnameVerifier value. The valid values are: 'strict','allow_all'.";
     public static final String EXCEPTION_INVALID_TLS_VERSION = "%s for %s input is not a valid tlsVersion value. The valid values are: 'TLSv1.2','TLSv1.3'.";
+    public static final String EXCEPTION_INVALID_ALLOWED_CIPHERS = "%s for %s input is not a valid cipher value. The valid values are "+Constants.DEFAULT_ALLOWED_CIPHERS;
     public static final String EXCEPTION_INVALID_VALUE = "%s is not a valid value for input %s. The value must be an integer number.";
     public static final String EXCEPTION_NOT_POSITIVE_VALUE = "%s is not a valid value for input %s. The value must be a positive number.";
     public static final String EXCEPTION_NEGATIVE_VALUE = "%s is not a valid timeout value for input %s. The value must be bigger or equal to 0.";
@@ -97,5 +107,5 @@ public class Constants {
             "default system properties were found. Please configure the trust store explicitly or ensure system " +
             "properties 'javax.net.ssl.trustStore' and 'javax.net.ssl.trustStorePassword' are set.";
     public static final String EXCEPTION_KEYSTORE_NOT_FOUND="Keystore path must be provided when 'trustAllRoots' is set to false.";
-    public static final String EXCEPTION_INVALID_HEADER_FORMAT="Invalid header format. Headers should be separated by commas, and each header name-value pair must be separated by a colon (:).";
+    public static final String EXCEPTION_INVALID_HEADER_FORMAT="Invalid header format. Headers should be separated by new line, and each header name-value pair must be separated by a colon (:).";
 }
