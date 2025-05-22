@@ -49,6 +49,18 @@ import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Constants.ZERO;
 
 public class HttpClientService {
+    private static final String[] VALID_METHODS = {
+            "GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH", "TRACE" ,"MULTIPARTPOST","POSTRAW"
+    };
+
+    private static boolean isValidHttpMethod(String method) {
+        for (String validMethod : VALID_METHODS) {
+            if (validMethod.equalsIgnoreCase(method)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public static Map<String, String> execute(HttpClientInputs httpClientInputs) throws Exception {
 
         if (httpClientInputs == null) {
@@ -56,10 +68,9 @@ public class HttpClientService {
         }
 
         String method = httpClientInputs.getMethod();
-        if (method == null || method.trim().isEmpty()) {
-            throw new IllegalArgumentException("the value '" + method + "' is not a valid HTTP method");
+        if ((method == null || method.trim().isEmpty()) || !isValidHttpMethod(method)) {
+            throw new IllegalArgumentException("the 'method' input '" + method + "' is not a valid HTTP method");
         }
-
 
         String url = httpClientInputs.getUrl();
         if ((!url.matches("^(https?|ftp)://.*"))||(url ==null || url.trim().isEmpty())) {
