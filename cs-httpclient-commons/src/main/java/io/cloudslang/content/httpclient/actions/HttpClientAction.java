@@ -34,8 +34,8 @@ import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Constants.*;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.MULTIPART_VALUES_ARE_URLENCODED;
-import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.QUERY_PARAMS_ARE_URLENCODED;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.FORM_PARAMS_ARE_URLENCODED;
 import static io.cloudslang.content.httpclient.utils.InputsValidator.addVerifyBoolean;
 import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -147,6 +147,8 @@ public class HttpClientAction {
         );
         addVerifyBoolean(exceptionMessages,multipartValuesAreURLEncoded,MULTIPART_VALUES_ARE_URLENCODED);
         addVerifyBoolean(exceptionMessages,queryParamsAreURLEncoded,QUERY_PARAMS_ARE_URLENCODED);
+        addVerifyBoolean(exceptionMessages,queryParamsAreFormEncoded,QUERY_PARAMS_ARE_FORM_ENCODED);
+        addVerifyBoolean(exceptionMessages,formParamsAreURLEncoded,FORM_PARAMS_ARE_URLENCODED);
 
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
