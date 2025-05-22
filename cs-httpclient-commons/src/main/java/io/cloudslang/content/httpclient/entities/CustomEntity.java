@@ -97,13 +97,8 @@ public class CustomEntity {
             if (!StringUtils.isEmpty(httpClientInputs.getMultipartBodies())) {
 
                 List<? extends NameValuePair> list;
-                boolean multipartValuesAreURLEncoded = parseStrictBoolean(
-                        httpClientInputs.getMultipartValuesAreURLEncoded(),
-                        MULTIPART_VALUES_ARE_URLENCODED
-                );
-
                 list = getNameValuePairs(httpClientInputs.getMultipartBodies(),
-                        !multipartValuesAreURLEncoded,
+                        !Boolean.parseBoolean(httpClientInputs.getMultipartValuesAreURLEncoded()),
                         MULTIPART_BODIES,
                         MULTIPART_VALUES_ARE_URLENCODED);
 
@@ -129,15 +124,6 @@ public class CustomEntity {
             return multipartEntityBuilder.build();
         }
         return new StringEntity(EMPTY);
-    }
-    private static boolean parseStrictBoolean(String input, String inputName) {
-        if ("true".equalsIgnoreCase(input)) {
-            return true;
-        } else if ("false".equalsIgnoreCase(input)) {
-            return false;
-        } else {
-            throw new IllegalArgumentException("Invalid value for '" + inputName + "'. Expected 'true' or 'false' but got: " + input);
-        }
     }
 
     private static List<? extends NameValuePair> getNameValuePairs(String theInput, boolean encode, String constInput, String constEncode) {
