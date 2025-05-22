@@ -114,7 +114,7 @@ public class HttpClientAction {
             @Param(value = Inputs.HTTPInputs.SESSION_COOKIES, description = SESSION_COOKIES_DESC) SerializableSessionObject sessionCookies,
             @Param(value = Inputs.HTTPInputs.SESSION_CONNECTION_POOL, description = SESSION_CONNECTION_POOL_DESC) GlobalSessionObject sessionConnectionPool
     ) {
-        method = defaultIfEmpty(method, "GET");
+
         preemptiveAuth = defaultIfEmpty(preemptiveAuth, BOOLEAN_TRUE);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
