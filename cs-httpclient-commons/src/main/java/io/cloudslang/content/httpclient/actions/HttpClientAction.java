@@ -35,6 +35,7 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Constants.*;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.MULTIPART_VALUES_ARE_URLENCODED;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.QUERY_PARAMS_ARE_URLENCODED;
 import static io.cloudslang.content.httpclient.utils.InputsValidator.addVerifyBoolean;
 import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -93,7 +94,7 @@ public class HttpClientAction {
 
             @Param(value = Inputs.HTTPInputs.RESPONSE_CHARACTER_SET, description = RESPONSE_CHARACTER_SET_DESC) String responseCharacterSet,
             @Param(value = Inputs.HTTPInputs.QUERY_PARAMS, description = QUERY_PARAMS_DESC) String queryParams,
-            @Param(value = Inputs.HTTPInputs.QUERY_PARAMS_ARE_URLENCODED, description = QUERY_PARAMS_ARE_URLENCODED_DESC) String queryParamsAreURLEncoded,
+            @Param(value = QUERY_PARAMS_ARE_URLENCODED, description = QUERY_PARAMS_ARE_URLENCODED_DESC) String queryParamsAreURLEncoded,
             @Param(value = Inputs.HTTPInputs.QUERY_PARAMS_ARE_FORM_ENCODED, description = QUERY_PARAMS_ARE_FORM_ENCODED_DESC) String queryParamsAreFormEncoded,
 
             @Param(value = Inputs.HTTPInputs.FORM_PARAMS, description = FORM_PARAMS_DESC) String formParams,
@@ -107,7 +108,6 @@ public class HttpClientAction {
             @Param(value = Inputs.HTTPInputs.MULTIPART_BODIES_CONTENT_TYPE, description = MULTIPART_BODIES_CONTENT_TYPE_DESC) String multipartBodiesContentType,
             @Param(value = Inputs.HTTPInputs.MULTIPART_FILES, description = MULTIPART_FILES_DESC) String multipartFiles,
             @Param(value = Inputs.HTTPInputs.MULTIPART_FILES_CONTENT_TYPE, description = MULTIPART_FILES_CONTENT_TYPE_DESC) String multipartFilesContentType,
-            @Param(value = Inputs.HTTPInputs.MULTIPART_VALUES_ARE_URLENCODED, description = MULTIPART_VALUES_ARE_URL_ENCODED_DESC) String multipartValuesAreURLEncoded,
             @Param(value = MULTIPART_VALUES_ARE_URLENCODED, description = MULTIPART_VALUES_ARE_URL_ENCODED_DESC) String multipartValuesAreURLEncoded,
 
             @Param(value = Inputs.HTTPInputs.CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
@@ -146,6 +146,7 @@ public class HttpClientAction {
                 followRedirects, connectTimeout, responseTimeout, executionTimeout
         );
         addVerifyBoolean(exceptionMessages,multipartValuesAreURLEncoded,MULTIPART_VALUES_ARE_URLENCODED);
+        addVerifyBoolean(exceptionMessages,queryParamsAreURLEncoded,QUERY_PARAMS_ARE_URLENCODED);
 
         if (!exceptionMessages.isEmpty()) {
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));

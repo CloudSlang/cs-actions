@@ -36,11 +36,7 @@ public class UriBuilder {
 
     public static URI getUri(HttpClientInputs httpClientInputs) throws URISyntaxException, IllegalArgumentException {
         URIBuilder uriBuilder = new URIBuilder(httpClientInputs.getUrl());
-        String rawQueryParamsAreURLEncoded = httpClientInputs.getQueryParamsAreURLEncoded();
-        if (!"true".equalsIgnoreCase(rawQueryParamsAreURLEncoded) && !"false".equalsIgnoreCase(rawQueryParamsAreURLEncoded)) {
-            throw new IllegalArgumentException("Invalid value for 'queryParamsAreURLEncoded'. Allowed values are 'true' or 'false'.");
-        }
-        boolean bEncodeQueryParams = !Boolean.parseBoolean(rawQueryParamsAreURLEncoded);
+        boolean bEncodeQueryParams = !Boolean.parseBoolean(httpClientInputs.getQueryParamsAreURLEncoded());
         boolean bEncodeQueryParamsAsForm = Boolean.parseBoolean(httpClientInputs.getQueryParamsAreFormEncoded());
 
         if (!StringUtils.isEmpty(httpClientInputs.getQueryParams())) {
