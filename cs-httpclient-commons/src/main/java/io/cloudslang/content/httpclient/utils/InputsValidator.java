@@ -136,7 +136,7 @@ public class InputsValidator {
     }
 
     @NotNull
-    private static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
+    public static List<String> addVerifyBoolean(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
         if (isEmpty(input)) {
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, inputName));
         } else if (!isValid(input)) {

@@ -13,8 +13,6 @@
  * limitations under the License.
  */
 
-
-
 package io.cloudslang.content.httpclient.services;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
@@ -26,6 +24,7 @@ import org.apache.hc.client5.http.auth.CredentialsProvider;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.client5.http.entity.EntityBuilder;
 import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
 import org.apache.hc.client5.http.impl.auth.BasicScheme;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -38,6 +37,7 @@ import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpHost;
 
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -49,12 +49,39 @@ import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Constants.ZERO;
 
 public class HttpClientService {
+    private static final String[] VALID_METHODS = {
+            "GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH", "TRACE" ,"MULTIPARTPOST","POSTRAW"
+    };
+
+    private static boolean isValidHttpMethod(String method) {
+        for (String validMethod : VALID_METHODS) {
+            if (validMethod.equalsIgnoreCase(method)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public static Map<String, String> execute(HttpClientInputs httpClientInputs) throws Exception {
+
+        if (httpClientInputs == null) {
+            throw new IllegalArgumentException("Input data is missing. Please provide valid HttpClient inputs.");
+        }
+
+        String method = httpClientInputs.getMethod();
+        if ((method == null || method.trim().isEmpty()) || !isValidHttpMethod(method)) {
+            throw new IllegalArgumentException("the 'method' input '" + method + "' is not a valid HTTP method");
+        }
+
+        String url = httpClientInputs.getUrl();
+        if ((!url.matches("^(https?|ftp)://.*"))||(url ==null || url.trim().isEmpty())) {
+            throw new IllegalArgumentException("Invalid 'url' input.'" + url + "' is not a valid URL.");
+        }
 
         URI uri = UriBuilder.getUri(httpClientInputs);
         HttpUriRequestBase httpRequest = new HttpUriRequestBase(httpClientInputs.getMethod(), uri);
         SSLConnectionSocketFactory socketFactory = CustomSSLSocketFactory.createSSLSocketFactory(httpClientInputs);
         CustomConnectionManager customConnectionManager = new CustomConnectionManager();
+
 
         GlobalSessionObject globalSessionObject = httpClientInputs.getConnectionPoolSessionObject();
         if (globalSessionObject == null)
