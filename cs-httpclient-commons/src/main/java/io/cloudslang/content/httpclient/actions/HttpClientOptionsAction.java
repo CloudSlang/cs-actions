@@ -117,7 +117,7 @@ public class HttpClientOptionsAction {
         connectTimeout = defaultIfEmpty(connectTimeout, DEFAULT_CONNECT_TIMEOUT);
         responseTimeout = defaultIfEmpty(responseTimeout, DEFAULT_RESPONSE_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
-        headers = defaultIfEmpty(headers, "Content-Type: application/json");
+        keystore=defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE);
 
         // Validate inputs
         List<String> validationErrors = verifyHttpCommonInputs(authType, preemptiveAuth, proxyPort, tlsVersion,

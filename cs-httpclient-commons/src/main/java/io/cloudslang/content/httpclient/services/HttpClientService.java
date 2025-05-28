@@ -19,14 +19,10 @@ import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.httpclient.entities.*;
 import io.cloudslang.content.httpclient.utils.ExecutionTimeout;
-import org.apache.hc.client5.http.auth.AuthCache;
 import org.apache.hc.client5.http.auth.CredentialsProvider;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.cookie.CookieStore;
-import org.apache.hc.client5.http.entity.EntityBuilder;
-import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
-import org.apache.hc.client5.http.impl.auth.BasicScheme;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -35,8 +31,6 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.HttpHost;
-
 
 import java.io.IOException;
 import java.net.URI;
@@ -49,18 +43,6 @@ import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Constants.ZERO;
 
 public class HttpClientService {
-    private static final String[] VALID_METHODS = {
-            "GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH", "TRACE" ,"MULTIPARTPOST","POSTRAW"
-    };
-
-    private static boolean isValidHttpMethod(String method) {
-        for (String validMethod : VALID_METHODS) {
-            if (validMethod.equalsIgnoreCase(method)) {
-                return true;
-            }
-        }
-        return false;
-    }
     public static Map<String, String> execute(HttpClientInputs httpClientInputs) throws Exception {
 
         if (httpClientInputs == null) {
@@ -73,7 +55,7 @@ public class HttpClientService {
         }
 
         String url = httpClientInputs.getUrl();
-        if ((!url.matches("^(https?|ftp)://.*"))||(url ==null || url.trim().isEmpty())) {
+        if ((!url.matches("^(https?|ftp)://.*")) || (url == null || url.trim().isEmpty())) {
             throw new IllegalArgumentException("Invalid 'url' input.'" + url + "' is not a valid URL.");
         }
 
@@ -107,20 +89,13 @@ public class HttpClientService {
         PoolingHttpClientConnectionManager connectionManager = customConnectionManager.getConnectionManager(httpClientInputs, socketFactory, uri);
 
         CredentialsProvider credentialsProvider = CustomCredentialsProvider.getCredentialsProvider(httpClientInputs, uri);
+        HttpClientContext context = HttpClientContext.create();
+        context.setCredentialsProvider(credentialsProvider);
+
         RequestConfig requestConfig = CustomRequestConfig.getDefaultRequestConfig(httpClientInputs);
-        HttpClientContext context = CustomHttpClientContext.getHttpClientContext(httpClientInputs, credentialsProvider, uri);
         HttpEntity httpEntity = CustomEntity.getHttpEntity(httpClientInputs);
         if (!httpClientInputs.getMethod().equalsIgnoreCase("TRACE") && httpEntity != null) {
             httpRequest.setEntity(httpEntity);
-        }
-
-
-
-
-        if (Boolean.parseBoolean(httpClientInputs.getPreemptiveAuth())) {
-            AuthCache authCache = new BasicAuthCache();
-            authCache.put(new HttpHost(uri.getScheme(), uri.getHost()), new BasicScheme());
-            context.setAuthCache(authCache);
         }
 
         HeaderBuilder.headerBuiler(httpRequest, httpClientInputs);
@@ -171,5 +146,18 @@ public class HttpClientService {
         }
         result.put(RETURN_CODE, SUCCESS);
         return result;
+    }
+
+    private static final String[] VALID_METHODS = {
+            "GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH", "TRACE", "MULTIPARTPOST", "POSTRAW"
+    };
+
+    private static boolean isValidHttpMethod(String method) {
+        for (String validMethod : VALID_METHODS) {
+            if (validMethod.equalsIgnoreCase(method)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

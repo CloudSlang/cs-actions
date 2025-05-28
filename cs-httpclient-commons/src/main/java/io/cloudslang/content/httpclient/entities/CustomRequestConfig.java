@@ -16,34 +16,24 @@
 
 package io.cloudslang.content.httpclient.entities;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static io.cloudslang.content.httpclient.utils.Constants.ANONYMOUS;
 import static org.apache.hc.client5.http.auth.StandardAuthScheme.*;
 
 public class CustomRequestConfig {
 
-    private static String getAuthType(String authType) {
-        switch (authType.toUpperCase()) {
-            case "NTLM":
-                return NTLM;
-            case "DIGEST":
-                return DIGEST;
-            case "ANONYMOUS":
-                return ANONYMOUS;
-            default:
-                return BASIC;
-        }
-    }
-
     public static RequestConfig getDefaultRequestConfig(HttpClientInputs httpClientInputs) {
         RequestConfig.Builder requestConfigBuilder;
-        String authType = getAuthType(httpClientInputs.getAuthType());
+        String authType = httpClientInputs.getAuthType().toUpperCase();
 
         requestConfigBuilder = RequestConfig.custom()
                 .setConnectTimeout(Timeout.ofSeconds(Long.parseLong((httpClientInputs.getConnectTimeout()))))
@@ -53,10 +43,18 @@ public class CustomRequestConfig {
         if (Boolean.parseBoolean(httpClientInputs.getKeepAlive()))
             requestConfigBuilder.setConnectionKeepAlive((TimeValue.ofSeconds(-1)));
 
-        if (!authType.equalsIgnoreCase(ANONYMOUS))
-            requestConfigBuilder.setTargetPreferredAuthSchemes(Collections.singletonList(authType));
+        if (!authType.equalsIgnoreCase("ANONYMOUS")) {
+            List<String> authPrefs = new ArrayList<>();
+            // Order matters - add the preferred scheme first
+            authPrefs.add(authType);
+            // For NTLM, add fallback to Basic if needed
+            if (authType.equals("NTLM")) {
+                authPrefs.add("BASIC");
+            }
+            requestConfigBuilder.setTargetPreferredAuthSchemes(authPrefs);
+        }
 
-        if (!httpClientInputs.getProxyHost().isEmpty()) {
+        if (!StringUtils.isEmpty(httpClientInputs.getProxyHost())) {
             requestConfigBuilder.setProxyPreferredAuthSchemes(Collections.singletonList(BASIC));
             requestConfigBuilder.setProxy(new HttpHost(httpClientInputs.getProxyHost(), Integer.parseInt(httpClientInputs.getProxyPort())));
         }
