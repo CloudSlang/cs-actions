@@ -19,6 +19,10 @@ package io.cloudslang.content.httpclient.entities;
 import io.cloudslang.content.httpclient.utils.HeaderObj;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.core5.http.HttpHeaders;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import static io.cloudslang.content.httpclient.utils.Constants.*;
 
@@ -30,6 +34,12 @@ public class HeaderBuilder {
 
             String rawHeaders = httpClientInputs.getHeaders();
             String contentType = httpClientInputs.getContentType();
+            String username = httpClientInputs.getUsername();
+            String password = httpClientInputs.getPassword();
+
+            if(Boolean.parseBoolean(httpClientInputs.getPreemptiveAuth()) && httpClientInputs.getAuthType().equalsIgnoreCase(BASIC))
+                if(StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password))
+                    httpRequest.setHeader(HttpHeaders.AUTHORIZATION, encodeBasicAuth(username, password));
 
             if (!StringUtils.isEmpty(rawHeaders)) {
                 // Split by any line break (handles \n, \r, or \r\n)
@@ -47,7 +57,7 @@ public class HeaderBuilder {
                     String value = line.substring(colonIndex + 1).trim();
 
                     // If Content-Type header is in the input, override its value
-                    if (name.equalsIgnoreCase(CONTENT_TYPE) && !contentType.isEmpty()) {
+                    if (name.equalsIgnoreCase(CONTENT_TYPE) && !StringUtils.isEmpty(contentType)) {
                         value = contentType;
                         contentTypeSet = true;
                     } else if (name.equalsIgnoreCase(CONTENT_TYPE)) {
@@ -66,6 +76,11 @@ public class HeaderBuilder {
         } catch (Exception e) {
             throw new IllegalArgumentException(EXCEPTION_INVALID_HEADER_FORMAT);
         }
+
+    }
+    private static String encodeBasicAuth(String username, String password) {
+        String value = username + ":" + password;
+        return "Basic " + Base64.getEncoder().encodeToString(value.getBytes(StandardCharsets.UTF_8));
     }
 }
 

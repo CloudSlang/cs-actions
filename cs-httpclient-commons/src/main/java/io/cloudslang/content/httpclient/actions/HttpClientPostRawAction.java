@@ -131,6 +131,7 @@ public class HttpClientPostRawAction {
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         tlsVersion = defaultIfEmpty(tlsVersion, TLSv13);
+        keystore=defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE);
         allowedCiphers = defaultIfEmpty(allowedCiphers, DEFAULT_ALLOWED_CIPHERS_TLSv1_3);
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, DEFAULT_CONNECTIONS_MAX_PER_ROUTE);

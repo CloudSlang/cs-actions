@@ -16,6 +16,7 @@
 
 package io.cloudslang.content.httpclient.entities;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.ssl.*;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
 
@@ -43,7 +44,7 @@ public class CustomSSLSocketFactory {
                 String keystorePath = httpClientInputs.getKeystore();
                 String keystorePassword = httpClientInputs.getKeystorePassword();
 
-                if (keystorePath == null || keystorePath.isEmpty())
+                if (StringUtils.isEmpty(keystorePath))
                     throw new RuntimeException(EXCEPTION_KEYSTORE_NOT_FOUND);
 
                 KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -55,7 +56,7 @@ public class CustomSSLSocketFactory {
                 String trustStorePath = httpClientInputs.getTrustKeystore();
                 String trustStorePassword = httpClientInputs.getTrustPassword();
 
-                if (trustStorePath == null || trustStorePath.isEmpty()) {
+                if (StringUtils.isEmpty(trustStorePath)) {
                     trustStorePath = System.getProperty(TRUSTSTORE_PROPERTY);
                     trustStorePassword = System.getProperty(TRUSTSTORE_PASSWORD_PROPERTY);
                 }

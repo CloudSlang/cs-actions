@@ -109,6 +109,7 @@ public class HttpClientDeleteAction {
 
         tlsVersion = defaultIfEmpty(tlsVersion, TLSv13);
         allowedCiphers = defaultIfEmpty(allowedCiphers, DEFAULT_ALLOWED_CIPHERS_TLSv1_3);
+        keystore=defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE);
 
         keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_FALSE);
         connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, DEFAULT_CONNECTIONS_MAX_PER_ROUTE);
