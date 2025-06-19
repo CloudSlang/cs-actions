@@ -38,6 +38,7 @@ public class Constants {
     public static final String TLSv12 = "TLSv1.2";
     public static final String TLSv13 = "TLSv1.3";
     public static final String DEFAULT_CONTENT_TYPE = "application/json";
+    public static final String DEFAULT_OPTIONS_HEADER = "Content-Type:application/json";
 
     public static final String DEFAULT_CONNECTIONS_MAX_PER_ROUTE = "2";
     public static final String DEFAULT_CONNECTIONS_MAX_TOTAL = "20";
