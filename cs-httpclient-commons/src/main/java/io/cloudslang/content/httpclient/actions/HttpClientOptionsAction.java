@@ -118,6 +118,7 @@ public class HttpClientOptionsAction {
         responseTimeout = defaultIfEmpty(responseTimeout, DEFAULT_RESPONSE_TIMEOUT);
         executionTimeout = defaultIfEmpty(executionTimeout, DEFAULT_EXECUTION_TIMEOUT);
         keystore=defaultIfEmpty(keystore, DEFAULT_JAVA_KEYSTORE);
+        headers=defaultIfEmpty(headers,DEFAULT_OPTIONS_HEADER);
 
         // Validate inputs
         List<String> validationErrors = verifyHttpCommonInputs(authType, preemptiveAuth, proxyPort, tlsVersion,
