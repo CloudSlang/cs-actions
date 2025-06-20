@@ -74,7 +74,6 @@ public class Inputs {
 
         public static final String MULTIPART_VALUES_ARE_URLENCODED = "multipartValuesAreURLEncoded";
         public final static String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
-        public final static String SESSION_COOKIES = "httpClientCookieSession";
-
+        public final static String SESSION_COOKIES = "httpClient5CookieSession";
     }
 }
