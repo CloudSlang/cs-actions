@@ -41,6 +41,33 @@
         <tag>master</tag>
     </scm>
 
+    <developers>
+        <developer>
+            <name>Mihai David</name>
+            <email>mihai.david@hp.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
+            <name>Adina Tusa</name>
+            <email>adina.tusa@hp.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
+            <name>Avi Moradi</name>
+            <email>avi.moradi@hp.com</email>
+            <organization>HP Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+        <developer>
+            <name>Mihail Cristian Tusa</name>
+            <email>mihail-cristian.tusa@hpe.com</email>
+            <organization>HPE Software</organization>
+            <organizationUrl>http://www8.hp.com/us/en/software/enterprise-software.html</organizationUrl>
+        </developer>
+    </developers>
+
     <distributionManagement>
         <repository>
             <id>ossrh</id>
