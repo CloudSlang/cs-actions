@@ -179,6 +179,19 @@ public class HttpUtils {
     }
 
     @NotNull
+    public static String getDeleteSnapshotQueryParams(@NotNull String deleteSnapshots,
+                                                      @NotNull String logicalTimestamp) {
+        final StringBuilder queryParams = new StringBuilder()
+                .append(Constants.DeleteSnapshotConstants.DELETE_SNAPSHOTS)
+                .append(deleteSnapshots)
+                .append(Constants.Common.AND)
+                .append(Constants.DeleteSnapshotConstants.LOGICAL_TIMESTAMP)
+                .append(logicalTimestamp);
+        return queryParams.toString();
+    }
+
+
+    @NotNull
     public static String getQueryParams(String filter, String offset, String length,
                                         String sortOrder, String sortAttribute, String includeVMDiskConfigInfo, final String includeVMNicConfigInfo) {
         final StringBuilder queryParams = new StringBuilder()

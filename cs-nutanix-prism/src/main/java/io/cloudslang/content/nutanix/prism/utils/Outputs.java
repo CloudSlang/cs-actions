@@ -28,6 +28,7 @@ public class Outputs extends OutputNames {
     public static class GetTaskDetailsOutputs {
         public static final String VM_UUID = "vmUUID";
         public static final String TASK_STATUS = "taskStatus";
+        public static final String SNAPSHORT_UUID ="snapshotUUID";
     }
 
 }

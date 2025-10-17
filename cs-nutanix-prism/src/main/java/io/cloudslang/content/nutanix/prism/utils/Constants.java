@@ -146,4 +146,12 @@ public class Constants {
         public static final String TASK_UUID_PATH = "task_uuid";
     }
 
+    public static class  DeleteSnapshotConstants{
+        public static final String DELETE_SNAPSHOT_OPERATION_NAME = "Delete Snapshot";
+        public static final String DELETE_SNAPSHOT_PATH = "/snapshots/";
+        public static final String TASK_UUID_PATH = "task_uuid";
+        public static final String DELETE_SNAPSHOTS = "delete_snapshots=";
+        public static final String LOGICAL_TIMESTAMP = "logical_timestamp=";
+    }
+
 }

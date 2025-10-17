@@ -59,6 +59,8 @@ public class Descriptions {
         public static final String TASK_UUID_DESC = "The UUID of the task that will be created in Nutanix Prism after " +
                 "submission of the API request.";
         public static final String VM_UUID_DESC = "The UUID of the virtual machine.";
+        public static final String SNAPSHORT_UUID_DESC = "The UUID of the snapshort.";
+
     }
 
 
@@ -197,6 +199,15 @@ public class Descriptions {
                 "the /tasks/poll API.";
         public static final String DELETE_SNAPSHOTS_DESC = "Delete virtual machine snapshots";
         public static final String LOGICAL_TIMESTAMP_DESC = "The virtual logical timestamp of the virtual machine.";
+    }
+    public static class DeleteSnapshot{
+        public static final String DELETE_SNAPSHOT_OPERATION_DESC = "Deletes a snapshot of a virtual machine." +
+                "This is an idempotent operation. If the snapshot is currently being used, it will be " +
+                "forcefully deleted." +
+                "This is an asynchronous operation that results in the creation of a task object. The UUID of " +
+                "this task object is returned as the response of this operation. This task can be monitored by using " +
+                "the /tasks/poll API.";
+
     }
 
     public static class SetVMPowerState {

@@ -67,6 +67,11 @@ public class Inputs extends InputNames {
         public static final String LOGICAL_TIMESTAMP = "logicalTimestamp";
     }
 
+    public static class DeleteSnapshotInputs {
+        public static final String DELETE_SNAPSHOTS = "deleteSnapshots";
+        public static final String LOGICAL_TIMESTAMP = "logicalTimestamp";
+    }
+
     public static class SetVMPowerStateInputs {
         public static final String HOST_UUID = "hostUUID";
         public static final String POWER_STATE = "powerState";
