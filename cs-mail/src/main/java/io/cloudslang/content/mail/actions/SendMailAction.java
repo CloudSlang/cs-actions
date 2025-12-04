@@ -33,12 +33,42 @@ import io.cloudslang.content.mail.utils.ResultUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
+import javax.activation.CommandMap;
+import javax.activation.MailcapCommandMap;
+import io.cloudslang.content.mail.handlers.ImageDataContentHandler;
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 
 
 /**
  * Created by giloan on 10/30/2014.
  */
 public class SendMailAction {
+
+    static {
+        try {
+            MailcapCommandMap mailcap = new MailcapCommandMap();
+            mailcap.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
+            mailcap.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
+            mailcap.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+            mailcap.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
+            mailcap.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
+            boolean pngHandlerAvailable = false;
+            try { Class.forName("com.sun.mail.handlers.image_png"); pngHandlerAvailable = true; } catch (Throwable ignored) {}
+            if (pngHandlerAvailable) {
+                mailcap.addMailcap("image/png;; x-java-content-handler=com.sun.mail.handlers.image_png");
+                mailcap.addMailcap("image/jpeg;; x-java-content-handler=com.sun.mail.handlers.image_jpeg");
+                mailcap.addMailcap("image/gif;; x-java-content-handler=com.sun.mail.handlers.image_gif");
+                mailcap.addMailcap("image/*;; x-java-content-handler=com.sun.mail.handlers.image_jpeg");
+            } else {
+                mailcap.addMailcap("image/png;; x-java-content-handler=io.cloudslang.content.mail.handlers.ImageDataContentHandler");
+                mailcap.addMailcap("image/jpeg;; x-java-content-handler=io.cloudslang.content.mail.handlers.ImageDataContentHandler");
+                mailcap.addMailcap("image/gif;; x-java-content-handler=io.cloudslang.content.mail.handlers.ImageDataContentHandler");
+                mailcap.addMailcap("image/*;; x-java-content-handler=io.cloudslang.content.mail.handlers.ImageDataContentHandler");
+            }
+            CommandMap.setDefaultCommandMap(mailcap);
+        } catch (Throwable ignored) { }
+    }
 
     /**
      * The operation sends a smtp email.
