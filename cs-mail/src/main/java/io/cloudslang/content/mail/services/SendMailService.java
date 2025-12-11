@@ -50,6 +50,8 @@ import javax.mail.internet.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -120,7 +122,12 @@ public class SendMailService {
             } else {
                 mimeBodyPart.setContent(input.getBody(), MimeTypes.TEXT_PLAIN + ";charset=" + input.getCharacterSet());
             }
-            mimeBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, input.getContentTransferEncoding());
+            String encoding = "base64";
+            if (StringUtils.isNotBlank(input.getContentTransferEncoding()) &&
+                    !"quoted-printable".equalsIgnoreCase(input.getContentTransferEncoding())) {
+                encoding = input.getContentTransferEncoding();
+            }
+            mimeBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, encoding);
             mimeBodyPart = encryptMimeBodyPart(mimeBodyPart);
 
             multipart.addBodyPart(mimeBodyPart);
@@ -137,16 +144,41 @@ public class SendMailService {
                     }
 
                     MimeBodyPart messageBodyPart = new MimeBodyPart();
-                    messageBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, input.getContentTransferEncoding());
                     messageBodyPart.setDataHandler(new DataHandler(source));
-                    messageBodyPart.setFileName(MimeUtility.encodeText(
-                            attachment.substring(attachment.lastIndexOf(java.io.File.separator) + 1),
-                            input.getCharacterSet(),
-                            input.getEncodingScheme())
-                    );
+
+                    // Extract raw filename
+                    String rawFileName = attachment.substring(attachment.lastIndexOf(java.io.File.separator) + 1);
+
+                    // Encode filename for MIME (RFC 2047)
+                    String encodedFileName = MimeUtility.encodeText(rawFileName, input.getCharacterSet(), input.getEncodingScheme());
+
+                    // Encode filename for RFC 5987 (filename*)
+                    String encodedFileNameRFC5987 = "utf-8''" + URLEncoder.encode(rawFileName, "UTF-8").replace("+", "%20");
+
+                    // Set filename
+                    messageBodyPart.setFileName(encodedFileName);
+
+                    // Explicitly set MIME headers to ensure compatibility with Outlook Web
+                    messageBodyPart.setHeader("Content-Disposition",
+                            "attachment; filename=\"" + encodedFileName + "\"; filename*=" + encodedFileNameRFC5987);
+                    messageBodyPart.setHeader("Content-Type",
+                            "application/octet-stream; name=\"" + encodedFileName + "\"");
+                    messageBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, encoding);
+
+                    // Encrypt attachment
                     messageBodyPart = encryptMimeBodyPart(messageBodyPart);
+
+                    // Add to multipart
                     multipart.addBodyPart(messageBodyPart);
                 }
+            }
+            // Encrypt the entire multipart
+            MimeBodyPart finalBody = new MimeBodyPart();
+            finalBody.setContent(multipart);
+            if (input.isEncryptedMessage()) {
+                OutputEncryptor outputEncryptor = new BcCMSContentEncryptorBuilder(
+                        input.getEncryptionAlgorithm().getAsn10ObjId()).build();
+                finalBody = gen.generate(finalBody, outputEncryptor);
             }
 
             Session session = Session.getInstance(props, null);
