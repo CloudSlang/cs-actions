@@ -122,9 +122,9 @@ public class SendMailService {
             } else {
                 mimeBodyPart.setContent(input.getBody(), MimeTypes.TEXT_PLAIN + ";charset=" + input.getCharacterSet());
             }
-            String encoding = "base64";
+            String encoding = Encodings.BASE64;
             if (StringUtils.isNotBlank(input.getContentTransferEncoding()) &&
-                    !"quoted-printable".equalsIgnoreCase(input.getContentTransferEncoding())) {
+                    !Encodings.QUOTED_PRINTABLE.equalsIgnoreCase(input.getContentTransferEncoding())) {
                 encoding = input.getContentTransferEncoding();
             }
             mimeBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, encoding);
