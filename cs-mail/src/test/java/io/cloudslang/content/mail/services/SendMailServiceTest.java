@@ -134,7 +134,7 @@ public class SendMailServiceTest {
     private static final String SMTP_PASSWORD_CONFIG = "mail.smtp.password";
     private static final String SMTP_AUTH_CONFIG = "mail.smtp.auth";
     private static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
-    private static final String DEFAULT_CONTENT_TRANSFER_ENCODING = "quoted-printable";
+    private static final String DEFAULT_CONTENT_TRANSFER_ENCODING = "base64";
     private static final String TEXT_HTML = "text/html";
     private static final String TEXT_PLAIN = "text/plain";
     private static final String CHARSET_CST = ";charset=";
