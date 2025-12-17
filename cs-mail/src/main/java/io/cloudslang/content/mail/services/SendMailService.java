@@ -122,11 +122,17 @@ public class SendMailService {
             } else {
                 mimeBodyPart.setContent(input.getBody(), MimeTypes.TEXT_PLAIN + ";charset=" + input.getCharacterSet());
             }
+//            String encoding = Encodings.BASE64;
+//            if (StringUtils.isNotBlank(input.getContentTransferEncoding()) &&
+//                    !Encodings.QUOTED_PRINTABLE.equalsIgnoreCase(input.getContentTransferEncoding())) {
+//                encoding = input.getContentTransferEncoding();
+//            }
+
             String encoding = Encodings.BASE64;
-            if (StringUtils.isNotBlank(input.getContentTransferEncoding()) &&
-                    !Encodings.QUOTED_PRINTABLE.equalsIgnoreCase(input.getContentTransferEncoding())) {
+            if (StringUtils.isNotBlank(input.getContentTransferEncoding())) {
                 encoding = input.getContentTransferEncoding();
             }
+
             mimeBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, encoding);
             mimeBodyPart = encryptMimeBodyPart(mimeBodyPart);
 
@@ -146,19 +152,13 @@ public class SendMailService {
                     MimeBodyPart messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setDataHandler(new DataHandler(source));
 
-                    // Extract raw filename
+                    messageBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, encoding);
+
                     String rawFileName = attachment.substring(attachment.lastIndexOf(java.io.File.separator) + 1);
-
-                    // Encode filename for MIME (RFC 2047)
                     String encodedFileName = MimeUtility.encodeText(rawFileName, input.getCharacterSet(), input.getEncodingScheme());
+                    String encodedFileNameRFC5987 = "utf-8''" + URLEncoder.encode(rawFileName, StandardCharsets.UTF_8.name()).replace("+", "%20");
 
-                    // Encode filename for RFC 5987 (filename*)
-                    String encodedFileNameRFC5987 = "utf-8''" + URLEncoder.encode(rawFileName, "UTF-8").replace("+", "%20");
-
-                    // Set filename
                     messageBodyPart.setFileName(encodedFileName);
-
-                    // Explicitly set MIME headers to ensure compatibility with Outlook Web
                     messageBodyPart.setHeader("Content-Disposition",
                             "attachment; filename=\"" + encodedFileName + "\"; filename*=" + encodedFileNameRFC5987);
                     messageBodyPart.setHeader("Content-Type",

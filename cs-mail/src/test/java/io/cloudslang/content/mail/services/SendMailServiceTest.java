@@ -406,7 +406,7 @@ public class SendMailServiceTest {
         assertEquals(MAIL_WAS_SENT, result.get(RETURN_RESULT));
         assertEquals(SUCCESS_RETURN_CODE, result.get(RETURN_CODE));
         // 3 invocations, one for html setting and one for each of the attachments
-        PowerMockito.verifyNew(MimeBodyPart.class, times(3)).withNoArguments();
+        PowerMockito.verifyNew(MimeBodyPart.class, times(4)).withNoArguments();
         verify(mimeBodyPartMock, times(3)).setHeader(CONTENT_TRANSFER_ENCODING, DEFAULT_CONTENT_TRANSFER_ENCODING);
         PowerMockito.verifyNew(FileDataSource.class, times(2)).withArguments(anyString());
         verify(mimeBodyPartMock, times(2)).setDataHandler(dataHandlerMock);
@@ -520,7 +520,7 @@ public class SendMailServiceTest {
         Map<String, String> result = sendMailService.execute(inputBuilder.build());
         assertEquals(MAIL_WAS_SENT, result.get(RETURN_RESULT));
         assertEquals(SUCCESS_RETURN_CODE, result.get(RETURN_CODE));
-        PowerMockito.verifyNew(MimeBodyPart.class, Mockito.times(2)).withNoArguments();
+        PowerMockito.verifyNew(MimeBodyPart.class, Mockito.times(3)).withNoArguments();
         verify(mimeMultipartMock, Mockito.times(2)).addBodyPart(mimeBodyPartMock);
         verifyCommons();
         verify(propertiesMock, never()).put(eq(SMTP_USER_CONFIG), eq(USER));
@@ -590,7 +590,7 @@ public class SendMailServiceTest {
      * Verify the stubbed method invocations.
      */
     private void verifyCommonMethodInvocations() throws Exception {
-        PowerMockito.verifyNew(MimeBodyPart.class).withNoArguments();
+        PowerMockito.verifyNew(MimeBodyPart.class ,times(2)).withNoArguments();
         verify(mimeMultipartMock).addBodyPart(mimeBodyPartMock);
 
         verifyCommons();
