@@ -601,7 +601,7 @@ public class SendMailServiceTest {
         verify(propertiesMock).put(eq(SMTP_PORT_CONFIG), eq(PORT));
         PowerMockito.verifyStatic(Mockito.times(1));
         Session.getInstance(propertiesMock, null);
-        verify(mimeBodyPartMock).setHeader(CONTENT_TRANSFER_ENCODING, DEFAULT_CONTENT_TRANSFER_ENCODING);
+        verify(mimeBodyPartMock ,times(2)).setHeader(CONTENT_TRANSFER_ENCODING, DEFAULT_CONTENT_TRANSFER_ENCODING);
         verify(smtpMessageMock).setContent(mimeMultipartMock);
         verify(smtpMessageMock).setFrom(Matchers.<InternetAddress>any());
         verify(smtpMessageMock).setSubject(anyString());
