@@ -122,13 +122,11 @@ public class SendMailService {
             } else {
                 mimeBodyPart.setContent(input.getBody(), MimeTypes.TEXT_PLAIN + ";charset=" + input.getCharacterSet());
             }
-
-            String encoding = Encodings.QUOTED_PRINTABLE;
-            if (StringUtils.isNotBlank(input.getContentTransferEncoding())) {
+            String encoding = Encodings.BASE64;
+            if (StringUtils.isNotBlank(input.getContentTransferEncoding()) &&
+                    !Encodings.QUOTED_PRINTABLE.equalsIgnoreCase(input.getContentTransferEncoding())) {
                 encoding = input.getContentTransferEncoding();
             }
-
-
             mimeBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, encoding);
             mimeBodyPart = encryptMimeBodyPart(mimeBodyPart);
 
