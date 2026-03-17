@@ -146,4 +146,9 @@ public class Constants {
         public static final String TASK_UUID_PATH = "task_uuid";
     }
 
+    public static class CreateSnapshotConstants {
+        public static final String CREATE_SNAPSHOT_OPERATION_NAME = "Create Snapshot";
+        public static final String TASK_UUID_PATH = "task_uuid";
+    }
+
 }

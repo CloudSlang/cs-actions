@@ -110,7 +110,10 @@ public class Inputs extends InputNames {
         public static final String REQUESTED_IP_ADDRESS = "requestedIPAddress";
         public static final String IS_CONNECTED = "isConnected";
         public static final String VLAN_ID = "vlanId";
+    }
 
-
+    public static class CreateSnapshotInputs {
+        public static final String SNAPSHOT_NAME = "snapshotName";
+        public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
     }
 }
