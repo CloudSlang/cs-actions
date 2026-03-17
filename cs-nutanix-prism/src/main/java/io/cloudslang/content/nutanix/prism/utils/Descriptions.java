@@ -299,6 +299,16 @@ public class Descriptions {
                 "This is optional and can be used for consistency checks.";
     }
 
+    public static class DeleteSnapshot {
+        public static final String DELETE_SNAPSHOT_OPERATION_DESC = "Deletes a snapshot of a virtual machine. " +
+                "This is an asynchronous operation that results in the creation of a task object. " +
+                "The UUID of this task object is returned as the response of this operation. " +
+                "This task can be monitored by using the /tasks/poll API.";
+        public static final String SNAPSHOT_UUID_DESC = "The UUID of the snapshot to be deleted.";
+        public static final String VM_LOGICAL_TIMESTAMP_DESC = "The virtual logical timestamp of the virtual machine. " +
+                "This is optional and can be used for consistency checks.";
+    }
+
     public static class Counter {
         public static final String FAILURE_MESSAGE = "Something went wrong";
         public static final String COUNTER_DESC = "Counts from one number to another number.";

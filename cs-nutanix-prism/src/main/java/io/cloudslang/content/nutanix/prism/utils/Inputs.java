@@ -116,4 +116,9 @@ public class Inputs extends InputNames {
         public static final String SNAPSHOT_NAME = "snapshotName";
         public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
     }
+
+    public static class DeleteSnapshotInputs {
+        public static final String SNAPSHOT_UUID = "snapshotUUID";
+        public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
+    }
 }

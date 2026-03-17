@@ -4,7 +4,7 @@ package io.cloudslang.content.nutanix.prism.utils;
 
 public class Constants {
     public static class Common {
-        public static final String API = "/api/nutanix/";
+        public static final String API = "/PrismGateway/services/rest/";
         public static final String DEFAULT_API_VERSION = "v2.0";
         public static final String NEW_LINE = "\n";
         public static final String DEFAULT_PROXY_PORT = "8080";
@@ -148,6 +148,11 @@ public class Constants {
 
     public static class CreateSnapshotConstants {
         public static final String CREATE_SNAPSHOT_OPERATION_NAME = "Create Snapshot";
+        public static final String TASK_UUID_PATH = "task_uuid";
+    }
+
+    public static class DeleteSnapshotConstants {
+        public static final String DELETE_SNAPSHOT_OPERATION_NAME = "Delete Snapshot";
         public static final String TASK_UUID_PATH = "task_uuid";
     }
 
