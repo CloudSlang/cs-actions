@@ -289,6 +289,15 @@ public class Descriptions {
                 "To connect a VM to a different virtual network, it is necessary to create a new NIC";
     }
 
+    public static class CreateSnapshot {
+        public static final String CREATE_SNAPSHOT_OPERATION_DESC = "Creates a snapshot of a virtual machine. " +
+                "This is an asynchronous operation that results in the creation of a task object. " +
+                "The UUID of this task object is returned as the response of this operation. " +
+                "This task can be monitored by using the /tasks/poll API.";
+        public static final String SNAPSHOT_NAME_DESC = "The name of the snapshot to be created.";
+        public static final String VM_LOGICAL_TIMESTAMP_DESC = "The virtual logical timestamp of the virtual machine. " +
+                "This is optional and can be used for consistency checks.";
+    }
 
     public static class Counter {
         public static final String FAILURE_MESSAGE = "Something went wrong";
