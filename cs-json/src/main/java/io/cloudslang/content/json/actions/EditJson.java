@@ -22,7 +22,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
-import com.jayway.jsonpath.internal.JsonContext;
+import com.jayway.jsonpath.DocumentContext;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -79,7 +79,7 @@ public class EditJson {
                                        @Param(value = Constants.InputNames.VALIDATE_VALUE) String validateValue) {
 
         Map<String, String> returnResult = new HashMap<>();
-        JsonContext jsonContext;
+        DocumentContext jsonContext;
         boolean validateValueBoolean = JsonUtils.parseBooleanWithDefault(validateValue, true);
         try {
             JsonUtils.validateEditJsonInputs(jsonObject, jsonPath, action, name, value);
@@ -91,7 +91,7 @@ public class EditJson {
         String result;
         try {
             Object valueObject;
-            JsonContext valueJsonContext;
+            DocumentContext valueJsonContext;
             try {
                 valueJsonContext = JsonUtils.getValidJsonContext(value);
                 valueObject = valueJsonContext.json();
@@ -111,7 +111,7 @@ public class EditJson {
     }
 
 
-    private Object editJson(String jsonPath, String action, String name, Object value, JsonContext jsonContext) {
+    private Object editJson(String jsonPath, String action, String name, Object value, DocumentContext jsonContext) {
         ActionsEnum myAction = ActionsEnum.valueOf(action.toLowerCase());
         Object json = null;
 

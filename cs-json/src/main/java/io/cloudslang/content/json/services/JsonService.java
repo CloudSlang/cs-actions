@@ -24,9 +24,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.InvalidJsonException;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.internal.JsonContext;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
@@ -53,7 +53,7 @@ public class JsonService {
 
     @NotNull
     public static JsonNode evaluateJsonPathQuery(@Nullable final String jsonObject, @Nullable final String jsonPath) {
-        final JsonContext jsonContext = JsonUtils.getValidJsonContext(jsonObject);
+        final DocumentContext jsonContext = JsonUtils.getValidJsonContext(jsonObject);
         final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
         return jsonContext.read(path);
     }
