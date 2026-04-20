@@ -23,8 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.internal.JsonContext;
 import com.jayway.jsonpath.spi.json.AbstractJsonProvider;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import io.cloudslang.content.constants.OtherValues;
@@ -123,15 +123,13 @@ public class JsonUtils {
 
 
     @NotNull
-    public static JsonContext getValidJsonContext(final String jsonObject) {
+    public static DocumentContext getValidJsonContext(final String jsonObject) {
         try {
             final ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider(objectMapper);
             final Configuration configuration = Configuration.defaultConfiguration()
                     .jsonProvider(provider);
-            final JsonContext jsonContext = new JsonContext(configuration);
-            jsonContext.parse(jsonObject);
-            return jsonContext;
+            return JsonPath.using(configuration).parse(jsonObject);
         } catch (IllegalArgumentException iae) {
             throw hammerIllegalArgumentExceptionWithMessage(INVALID_JSONOBJECT, iae);
         }
