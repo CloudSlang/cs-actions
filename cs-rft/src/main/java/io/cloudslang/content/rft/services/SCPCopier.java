@@ -76,6 +76,7 @@ public class SCPCopier {
             String proxyHost = remoteSecureCopyInputs.getProxyHost();
             if (!StringUtils.isEmpty(proxyHost)) session.setProxy(new ProxyHTTP(proxyHost, StringUtils.toInt(remoteSecureCopyInputs.getProxyPort(), Constants.DEFAULT_PROXY_PORT)));
 
+            configureModernAlgorithms(session);
             establishKnownHostsConfiguration(ConnectionUtils.resolveKnownHosts(remoteSecureCopyInputs.getKnownHostsPolicy(), remoteSecureCopyInputs.getKnownHostsPath()), jsch, session);
             establishPrivateKeyFile(ConnectionUtils.getKeyFile(remoteSecureCopyInputs.getDestPrivateKeyFile(), remoteSecureCopyInputs.getDestPassword()), jsch, session, false);
 
@@ -166,6 +167,7 @@ public class SCPCopier {
             String proxyHost = remoteSecureCopyInputs.getProxyHost();
             if (!StringUtils.isEmpty(proxyHost)) session.setProxy(new ProxyHTTP(proxyHost, StringUtils.toInt(remoteSecureCopyInputs.getProxyPort(), Constants.DEFAULT_PROXY_PORT)));
 
+            configureModernAlgorithms(session);
             establishKnownHostsConfiguration(ConnectionUtils.resolveKnownHosts(remoteSecureCopyInputs.getKnownHostsPolicy(), remoteSecureCopyInputs.getKnownHostsPath()), jsch, session);
             establishPrivateKeyFile(ConnectionUtils.getKeyFile(remoteSecureCopyInputs.getSrcPrivateKeyFile(), remoteSecureCopyInputs.getSrcPassword()), jsch, session, true);
 
@@ -307,6 +309,20 @@ public class SCPCopier {
                 jsch.addIdentity(keyFilePath);
             }
         }
+    }
+
+    private void configureModernAlgorithms(Session session) {
+        session.setConfig("kex",
+                "curve25519-sha256,curve25519-sha256@libssh.org," +
+                "ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521," +
+                "diffie-hellman-group18-sha512,diffie-hellman-group16-sha512," +
+                "diffie-hellman-group14-sha256,diffie-hellman-group14-sha1");
+        session.setConfig("server_host_key",
+                "ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521," +
+                "rsa-sha2-512,rsa-sha2-256,ssh-rsa");
+        session.setConfig("PubkeyAcceptedAlgorithms",
+                "ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521," +
+                "rsa-sha2-512,rsa-sha2-256,ssh-rsa");
     }
     private int checkAck(InputStream in) throws IOException {
         int b = in.read();

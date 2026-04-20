@@ -47,8 +47,15 @@ public class SCPService {
         boolean successfullyCopied = false;
 
         try {
+            JSch.setLogger(new com.jcraft.jsch.Logger() {
+                public boolean isEnabled(int level) { return true; }
+                public void log(int level, String message) {
+                    System.out.println("[JSCH-DEBUG] " + message);
+                }
+            });
             JSch jsch = new JSch();
             Session session = jsch.getSession(inputs.getUsername(), inputs.getHost(), Integer.parseInt(inputs.getPort()));
+            configureModernAlgorithms(session);
             establishPasswordOrPrivateKeyFile(jsch, session, inputs.getPrivateKey(), inputs.getPassword());
 
             if (!StringUtils.isEmpty(inputs.getProxyHost())) {
@@ -125,6 +132,7 @@ public class SCPService {
 
             JSch jschRemoteToLocal = new JSch();
             Session sessionRemoteToLocal = jschRemoteToLocal.getSession(inputs.getSourceUsername(), inputs.getSourceHost(), Integer.parseInt(inputs.getSourcePort()));
+            configureModernAlgorithms(sessionRemoteToLocal);
 
             if (!StringUtils.isEmpty(inputs.getProxyHost())) {
                 ProxyHTTP proxy = new ProxyHTTP(inputs.getProxyHost(), Integer.parseInt(inputs.getProxyPort()));
@@ -140,6 +148,7 @@ public class SCPService {
 
             JSch jschLocalToRemote = new JSch();
             Session sessionLocalToRemote = jschLocalToRemote.getSession(inputs.getDestinationUsername(), inputs.getDestinationHost(), Integer.parseInt(inputs.getDestinationPort()));
+            configureModernAlgorithms(sessionLocalToRemote);
 
             if (!StringUtils.isEmpty(inputs.getProxyHost())) {
                 ProxyHTTP proxy = new ProxyHTTP(inputs.getProxyHost(), Integer.parseInt(inputs.getProxyPort()));
@@ -414,6 +423,20 @@ public class SCPService {
         } else {
             session.setPassword(password);
         }
+    }
+
+    private void configureModernAlgorithms(Session session) {
+        session.setConfig("kex",
+                "curve25519-sha256,curve25519-sha256@libssh.org," +
+                "ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521," +
+                "diffie-hellman-group18-sha512,diffie-hellman-group16-sha512," +
+                "diffie-hellman-group14-sha256,diffie-hellman-group14-sha1");
+        session.setConfig("server_host_key",
+                "ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521," +
+                "rsa-sha2-512,rsa-sha2-256,ssh-rsa");
+        session.setConfig("PubkeyAcceptedAlgorithms",
+                "ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521," +
+                "rsa-sha2-512,rsa-sha2-256,ssh-rsa");
     }
 
 

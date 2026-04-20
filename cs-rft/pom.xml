@@ -98,9 +98,9 @@
             <version>${cs-commons.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.jcraft</groupId>
+            <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.55</version>
+            <version>0.2.21</version>
         </dependency>
         <!--Testing dependencies -->
         <dependency>
@@ -190,6 +190,10 @@
                 <exclusion>
                     <groupId>com.hp.oo.sdk</groupId>
                     <artifactId>oo-legacy-action-plugin</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.jcraft</groupId>
+                    <artifactId>jsch</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
