@@ -22,7 +22,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-ssh</artifactId>
-    <version>0.0.57-SNAPSHOT</version>
+    <version>0.0.46</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -112,7 +112,7 @@
         <dependency>
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.2.18</version>
+            <version>0.1.55</version>
         </dependency>
         <dependency>
             <groupId>org.dom4j</groupId>
