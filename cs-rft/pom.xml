@@ -22,7 +22,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-rft</artifactId>
-    <version>1.0.14-SNAPSHOT</version>
+    <version>1.0.16-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.2.21</version>
+            <version>0.2.18</version>
         </dependency>
         <!--Testing dependencies -->
         <dependency>
@@ -190,10 +190,6 @@
                 <exclusion>
                     <groupId>com.hp.oo.sdk</groupId>
                     <artifactId>oo-legacy-action-plugin</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.jcraft</groupId>
-                    <artifactId>jsch</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
