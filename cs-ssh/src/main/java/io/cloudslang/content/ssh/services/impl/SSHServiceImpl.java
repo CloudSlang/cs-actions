@@ -13,42 +13,28 @@
  * limitations under the License.
  */
 
+
+
+
+
 package io.cloudslang.content.ssh.services.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Locale;
-import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.ProxyHTTP;
-import com.jcraft.jsch.Session;
-
-import io.cloudslang.content.ssh.entities.CommandResult;
-import io.cloudslang.content.ssh.entities.ConnectionDetails;
-import io.cloudslang.content.ssh.entities.IdentityKey;
-import io.cloudslang.content.ssh.entities.KnownHostsFile;
-import io.cloudslang.content.ssh.entities.SSHConnection;
+import com.jcraft.jsch.*;
+import io.cloudslang.content.ssh.entities.*;
 import io.cloudslang.content.ssh.exceptions.SSHException;
 import io.cloudslang.content.ssh.exceptions.TimeoutException;
 import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.utils.CacheUtils;
 import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
 import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author ioanvranauhp
@@ -63,9 +49,7 @@ public class SSHServiceImpl implements SSHService {
     private static final String KNOWN_HOSTS_STRICT = "strict";
     private static final String KNOWN_HOSTS_ADD = "add";
     private static final String ALLOWED_CIPHERS = "aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
-    private static final String KEX = ",curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group18-sha512,diffie-hellman-group16-sha512,diffie-hellman-group14-sha256,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1";
-    private static final String ADDITIONAL_HOST_KEY_ALGORITHMS = ",ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa,ssh-dss";
-    private static final String ADDITIONAL_PUBKEY_ALGORITHMS = ",ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa,ssh-dss";
+    private static final String KEX = ",ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha256,diffie-hellman-group1-sha1,diffie-hellman-group-exchange-sha1";
     public static final String EXIT_COMMAND = "exit";
     private Session session;
     private Channel execChannel;
@@ -82,35 +66,26 @@ public class SSHServiceImpl implements SSHService {
      * @param identityKey                 The private key file or string.
      * @param knownHostsFile              The known_hosts file and policy.
      * @param connectTimeout              The open SSH session timeout.
-     * @param keepContextForExpectCommand Use the same channel for the expect
-     *                                    command.
-     * @param proxyHTTP                   The proxy settings, parse it as null if no
-     *                                    proxy settings required
-     * @param allowedCiphers              The list of allowed ciphers. If not empty,
-     *                                    it will be used to overwrite the default
-     *                                    list.
+     * @param keepContextForExpectCommand Use the same channel for the expect command.
+     * @param proxyHTTP                   The proxy settings, parse it as null if no proxy settings required
+     * @param allowedCiphers              The list of allowed ciphers. If not empty, it will be used to overwrite the default list.
      */
     public SSHServiceImpl(ConnectionDetails details, IdentityKey identityKey, KnownHostsFile knownHostsFile,
-            int connectTimeout, boolean keepContextForExpectCommand, ProxyHTTP proxyHTTP, String allowedCiphers)
-            throws SSHException {
+                          int connectTimeout, boolean keepContextForExpectCommand, ProxyHTTP proxyHTTP, String allowedCiphers) throws SSHException {
         JSch jsch = new JSch();
-        String finalListOfAllowedCiphers = StringUtilities.isNotBlank(allowedCiphers) ? allowedCiphers
-                : ALLOWED_CIPHERS;
+        String finalListOfAllowedCiphers = StringUtilities.isNotBlank(allowedCiphers) ? allowedCiphers : ALLOWED_CIPHERS;
         JSch.setConfig("cipher.s2c", finalListOfAllowedCiphers);
         JSch.setConfig("cipher.c2s", finalListOfAllowedCiphers);
         JSch.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");
         // Check if the configuration already contains the value before appending
-        String serverHostKey = JSch.getConfig("server_host_key");
-        if (serverHostKey == null || !serverHostKey.contains("rsa-sha2-256")) {
-            JSch.setConfig("server_host_key", (serverHostKey != null ? serverHostKey : "") + ADDITIONAL_HOST_KEY_ALGORITHMS);
+        if (!JSch.getConfig("server_host_key").contains("ssh-rsa,ssh-dss")) {
+            JSch.setConfig("server_host_key", JSch.getConfig("server_host_key") + ",ssh-rsa,ssh-dss");
         }
-        String pubkeyAlgorithms = JSch.getConfig("PubkeyAcceptedAlgorithms");
-        if (pubkeyAlgorithms == null || !pubkeyAlgorithms.contains("rsa-sha2-256")) {
-            JSch.setConfig("PubkeyAcceptedAlgorithms", (pubkeyAlgorithms != null ? pubkeyAlgorithms : "") + ADDITIONAL_PUBKEY_ALGORITHMS);
+        if (!JSch.getConfig("PubkeyAcceptedAlgorithms").contains("ssh-rsa,ssh-dss")) {
+            JSch.setConfig("PubkeyAcceptedAlgorithms", JSch.getConfig("PubkeyAcceptedAlgorithms") + ",ssh-rsa,ssh-dss");
         }
-        String kex = JSch.getConfig("kex");
-        if (kex == null || !kex.contains("curve25519-sha256")) {
-            JSch.setConfig("kex", (kex != null ? kex : "") + KEX);
+        if (!JSch.getConfig("kex").contains(KEX)) {
+            JSch.setConfig("kex", JSch.getConfig("kex") + KEX);
         }
 
         try {
@@ -226,7 +201,7 @@ public class SSHServiceImpl implements SSHService {
             return commandResult;
         } catch (JSchException | IOException e) {
             throw new RuntimeException(e);
-        } finally {
+        }finally {
             if (channelShell != null && channelShell.isConnected()) {
                 channelShell.disconnect();
             }
@@ -265,7 +240,7 @@ public class SSHServiceImpl implements SSHService {
             channel.setAgentForwarding(agentForwarding);
             out = new ByteArrayOutputStream();
             channel.setOutputStream(out);
-            err = new ByteArrayOutputStream();
+             err = new ByteArrayOutputStream();
             channel.setErrStream(err);
 
             // connect to the channel and run the command(s)
@@ -293,8 +268,7 @@ public class SSHServiceImpl implements SSHService {
             }
 
             channel.disconnect();
-            // The exit status is only available after the channel was closed (more exactly,
-            // just before the channel is closed).
+            // The exit status is only available after the channel was closed (more exactly, just before the channel is closed).
             result.setExitCode(channel.getExitStatus());
 
             if (timedOut) {
@@ -304,7 +278,7 @@ public class SSHServiceImpl implements SSHService {
             return result;
         } catch (JSchException | UnsupportedEncodingException | TimeoutException e) {
             throw new RuntimeException(e);
-        } finally {
+        }finally {
             if (channel != null && channel.isConnected()) {
                 channel.disconnect();
             }
