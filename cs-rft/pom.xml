@@ -22,7 +22,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-rft</artifactId>
-    <version>1.0.16-SNAPSHOT</version>
+    <version>1.0.18-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -190,6 +190,10 @@
                 <exclusion>
                     <groupId>com.hp.oo.sdk</groupId>
                     <artifactId>oo-legacy-action-plugin</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.jcraft</groupId>
+                    <artifactId>jsch</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
