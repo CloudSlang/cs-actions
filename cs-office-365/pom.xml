@@ -99,6 +99,7 @@
                 <artifactId>netty-bom</artifactId>
                 <version>4.2.15.Final</version>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
