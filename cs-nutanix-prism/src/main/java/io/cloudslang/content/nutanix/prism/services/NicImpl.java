@@ -9,7 +9,7 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAddNicInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDeleteNICInputs;
 import io.cloudslang.content.nutanix.prism.services.models.nics.AddNicRequestBody;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

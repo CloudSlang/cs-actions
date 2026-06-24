@@ -21,8 +21,8 @@ package io.cloudslang.content.httpclient.build.conn;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.SessionResource;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

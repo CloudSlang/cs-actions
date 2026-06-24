@@ -10,7 +10,7 @@ import io.cloudslang.content.nutanix.prism.entities.*;
 import io.cloudslang.content.nutanix.prism.services.models.virtualmachines.CreateVMRequestBody;
 import io.cloudslang.content.nutanix.prism.services.models.virtualmachines.SetVMPowerStateRequestBody;
 import io.cloudslang.content.nutanix.prism.services.models.virtualmachines.UpdateVMRequestBody;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

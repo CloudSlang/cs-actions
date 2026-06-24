@@ -18,7 +18,7 @@
 package io.cloudslang.content.alibaba.utils;
 
 import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest;
-import com.sun.istack.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;

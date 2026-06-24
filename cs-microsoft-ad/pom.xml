@@ -70,7 +70,7 @@
         <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.13.1</junit.version>
         <common-codec.version>1.15</common-codec.version>
-        <cs-http-client.version>0.1.96</cs-http-client.version>
+        <cs-http-client.version>0.1.97-SNAPSHOT</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -148,14 +148,14 @@
             <version>${cs-http-client.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.6.1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.14</version>
+            <groupId>org.apache.httpcomponents.core5</groupId>
+            <artifactId>httpcore5</artifactId>
+            <version>5.4.2</version>
         </dependency>
 
         <!-- Testing dependencies -->
@@ -182,16 +182,6 @@
             <artifactId>powermock-api-mockito</artifactId>
             <version>1.6.5</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.14</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -281,6 +271,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>

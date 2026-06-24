@@ -19,7 +19,7 @@ package io.cloudslang.content.couchbase.factory.views;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
-import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+import static org.apache.hc.core5.http.ContentType.APPLICATION_JSON;
 
 /**
  * Created by TusaM

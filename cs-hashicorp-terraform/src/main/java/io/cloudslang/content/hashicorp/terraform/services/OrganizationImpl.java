@@ -9,7 +9,7 @@ import io.cloudslang.content.hashicorp.terraform.entities.TerraformOrganizationI
 import io.cloudslang.content.hashicorp.terraform.services.models.organization.CreateOrganizationRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

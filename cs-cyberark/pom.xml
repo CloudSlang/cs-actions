@@ -97,7 +97,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-httpclient-commons</artifactId>
-            <version>0.0.6</version>
+            <version>0.0.24-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.junit</groupId>
@@ -193,6 +193,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>

@@ -21,8 +21,8 @@ package io.cloudslang.content.httpclient.build;
 
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.CookieStore;
-import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.hc.client5.http.cookie.BasicCookieStore;
+import org.apache.hc.client5.http.cookie.CookieStore;
 
 import java.io.*;
 

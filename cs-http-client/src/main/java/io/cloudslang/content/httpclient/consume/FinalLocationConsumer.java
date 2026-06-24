@@ -20,8 +20,8 @@
 package io.cloudslang.content.httpclient.consume;
 
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.HttpHost;
-import org.apache.http.client.utils.URIUtils;
+import org.apache.hc.client5.http.utils.URIUtils;
+import org.apache.hc.core5.http.HttpHost;
 
 import java.net.URI;
 import java.net.URISyntaxException;

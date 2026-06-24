@@ -24,8 +24,8 @@ import jcifs.ntlmssp.Type1Message;
 import jcifs.ntlmssp.Type2Message;
 import jcifs.ntlmssp.Type3Message;
 import jcifs.util.Base64;
-import org.apache.http.impl.auth.NTLMEngine;
-import org.apache.http.impl.auth.NTLMEngineException;
+import org.apache.hc.client5.http.impl.auth.NTLMEngine;
+import org.apache.hc.client5.http.impl.auth.NTLMEngineException;
 
 import java.io.IOException;
 
@@ -44,7 +44,7 @@ public class JCIFSEngine implements NTLMEngine {
         return Base64.encode(type1Message.toByteArray());
     }
 
-    public String generateType3Msg(final String username, final String password,
+    public String generateType3Msg(final String username, final char[] password,
                                    final String domain, final String workstation, final String challenge)
             throws NTLMEngineException {
         Type2Message type2Message;
@@ -56,7 +56,7 @@ public class JCIFSEngine implements NTLMEngine {
         final int type2Flags = type2Message.getFlags();
         final int type3Flags = type2Flags
                 & (~(NtlmFlags.NTLMSSP_TARGET_TYPE_DOMAIN | NtlmFlags.NTLMSSP_TARGET_TYPE_SERVER));
-        final Type3Message type3Message = new Type3Message(type2Message, password, domain,
+        final Type3Message type3Message = new Type3Message(type2Message, password != null ? new String(password) : null, domain,
                 username, workstation, type3Flags);
         return Base64.encode(type3Message.toByteArray());
     }

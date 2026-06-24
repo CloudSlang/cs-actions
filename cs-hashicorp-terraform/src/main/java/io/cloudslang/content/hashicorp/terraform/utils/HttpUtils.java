@@ -5,7 +5,7 @@ package io.cloudslang.content.hashicorp.terraform.utils;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;

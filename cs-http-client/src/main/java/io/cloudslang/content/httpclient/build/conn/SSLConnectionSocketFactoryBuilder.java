@@ -19,7 +19,11 @@
 package io.cloudslang.content.httpclient.build.conn;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.conn.ssl.*;
+import org.apache.hc.client5.http.ssl.DefaultHostnameVerifier;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.apache.hc.core5.ssl.SSLContexts;
 
 import javax.net.ssl.HostnameVerifier;
 import java.io.File;
@@ -32,7 +36,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -76,13 +79,11 @@ public class SSLConnectionSocketFactoryBuilder {
     private boolean hasTLS2;
 
     public static boolean checkEquality(String[] subArray, String[] largeArray) {
-
         for (String aLargeArray : largeArray)
             for (int j = 0; j < subArray.length; j++)
                 if ((aLargeArray.toUpperCase()).equals((subArray[j]).toUpperCase())) {
                     subArray[j] = aLargeArray;
                 }
-
         return Arrays.asList(largeArray).containsAll(Arrays.asList(subArray));
     }
 
@@ -117,9 +118,7 @@ public class SSLConnectionSocketFactoryBuilder {
         String javaKeystore = System.getProperty("java.home") + "/lib/security/cacerts";
         if (!trustAllRoots) {
             boolean useClientCert = StringUtils.isNotEmpty(keystore);
-            //validate SSL certificates sent by the server
             boolean useTrustCert = StringUtils.isNotEmpty(trustKeystore);
-
             boolean storeExists = new File(javaKeystore).exists();
 
             if (!useClientCert && storeExists) {
@@ -138,51 +137,25 @@ public class SSLConnectionSocketFactoryBuilder {
                 trustKeystore = "file:" + trustKeystore;
             }
             createTrustKeystore(sslContextBuilder, useTrustCert);
-            //todo client key authentication should not depend on 'trustAllRoots'
             createKeystore(sslContextBuilder, useClientCert);
         } else {
             try {
-                //need to override isTrusted() method to accept CA certs because the Apache HTTP Client ver.4.3 will only accepts self-signed certificates
                 KeyStore keyStore = createKeyStore(new URL("file:" + keystore), keystorePassword);
                 sslContextBuilder.loadKeyMaterial(keyStore, keystorePassword.toCharArray());
 
                 String internalJavaKeystoreUri = "file:" + javaKeystore;
                 KeyStore javaTrustStore = createKeyStore(new URL(internalJavaKeystoreUri), changeit);
-                sslContextBuilder.loadTrustMaterial(javaTrustStore, new TrustSelfSignedStrategy() {
-                    @Override
-                    public boolean isTrusted(X509Certificate[] chain, String authType)
-                            throws CertificateException {
-                        return true;
-                    }
-                });
+                sslContextBuilder.loadTrustMaterial(javaTrustStore, (chain, authType) -> true);
             } catch (Exception e) {
                 throw new IllegalArgumentException(e.getMessage() + ". " + TRUST_ALL_ROOTS_ERROR + trustAllRoots, e);
             }
         }
 
-        sslContextBuilder.useSSL();
-        sslContextBuilder.useTLS();
-
-        SSLConnectionSocketFactory sslsf = null;
+        SSLConnectionSocketFactory sslsf;
         try {
             String x509HostnameVerifierStr = x509HostnameVerifierInputValue.toLowerCase();
             HostnameVerifier x509HostnameVerifier = createHostnameVerifier(x509HostnameVerifierStr);
-//            X509HostnameVerifier x509HostnameVerifier;
-//            switch (x509HostnameVerifierStr) {
-//                case "strict":
-//                    x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
-//                    break;
-//                case "browser_compatible":
-//                    x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
-//                    break;
-//                case "allow_all":
-//                    x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-//                    break;
-//                default:
-//                    throw new IllegalArgumentException("Invalid value '" + x509HostnameVerifierInputValue + "' for input 'x509HostnameVerifier'. Valid values: 'strict','browser_compatible','allow_all'.");
-//            }
 
-            // Allow SSLv3, TLSv1, TLSv1.1 and TLSv1.2 protocols only. Client-server communication starts with TLSv1.2 and fallbacks to SSLv3 if needed.
             if (!StringUtils.isEmpty(inputTLS)) {
                 Set<String> protocolSet = new HashSet<>(Arrays.asList(inputTLS.trim().split(",")));
                 String[] protocolArray = protocolSet.toArray(new String[0]);
@@ -199,18 +172,16 @@ public class SSLConnectionSocketFactoryBuilder {
 
                 if (flag) {
                     if (cypherArray != null) {
-                        if (checkIfTLS2orTLS3(protocolArray, TLSv12))
-                            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), ARRAY_TLSv12, cypherArray, x509HostnameVerifier);
-                        if (checkIfTLS2orTLS3(protocolArray, TLSv13))
-                            sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), ARRAY_TLSv13, cypherArray, x509HostnameVerifier);
+                        String[] tlsVersions = checkIfTLS2orTLS3(protocolArray, TLSv13) ? ARRAY_TLSv13 : ARRAY_TLSv12;
+                        sslsf = buildSslConnectionSocketFactory(sslContextBuilder, tlsVersions, cypherArray, x509HostnameVerifier);
                     } else {
-                        sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
+                        sslsf = buildSslConnectionSocketFactory(sslContextBuilder, protocolArray, null, x509HostnameVerifier);
                     }
                 } else {
-                    sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), protocolArray, null, x509HostnameVerifier);
+                    sslsf = buildSslConnectionSocketFactory(sslContextBuilder, protocolArray, null, x509HostnameVerifier);
                 }
             } else {
-                sslsf = new SSLConnectionSocketFactory(sslContextBuilder.build(), SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
+                sslsf = buildSslConnectionSocketFactory(sslContextBuilder, SUPPORTED_PROTOCOLS, null, x509HostnameVerifier);
             }
 
         } catch (Exception e) {
@@ -220,6 +191,23 @@ public class SSLConnectionSocketFactoryBuilder {
             throw new RuntimeException(e.getMessage() + ". " + SSL_CONNECTION_ERROR, e);
         }
         return sslsf;
+    }
+
+    protected SSLConnectionSocketFactory buildSslConnectionSocketFactory(SSLContextBuilder sslContextBuilder,
+                                                                          String[] protocols,
+                                                                          String[] ciphers,
+                                                                          HostnameVerifier hostnameVerifier) throws Exception {
+        org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder builder =
+                org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder.create()
+                        .setSslContext(sslContextBuilder.build())
+                        .setHostnameVerifier(hostnameVerifier);
+        if (protocols != null) {
+            builder.setTlsVersions(protocols);
+        }
+        if (ciphers != null) {
+            builder.setCiphers(ciphers);
+        }
+        return builder.build();
     }
 
     protected void createKeystore(SSLContextBuilder sslContextBuilder, boolean useClientCert) {
@@ -240,9 +228,8 @@ public class SSLConnectionSocketFactoryBuilder {
         if (useTrustCert) {
             KeyStore trustKeyStore;
             try {
-                //todo should we do this 'create' in each and every step?
                 trustKeyStore = createKeyStore(new URL(trustKeystore), trustPassword);
-                sslContextBuilder.loadTrustMaterial(trustKeyStore);
+                sslContextBuilder.loadTrustMaterial(trustKeyStore, null);
             } catch (IOException ioe) {
                 throw new IllegalArgumentException(ioe.getMessage() + ". " + BAD_TRUST_KEYSTORE_ERROR, ioe);
             } catch (GeneralSecurityException gse) {

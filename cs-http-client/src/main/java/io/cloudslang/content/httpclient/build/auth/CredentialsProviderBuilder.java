@@ -21,14 +21,12 @@ package io.cloudslang.content.httpclient.build.auth;
 
 import io.cloudslang.content.httpclient.build.Utils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.NTCredentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.Credentials;
+import org.apache.hc.client5.http.auth.NTCredentials;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 
-import java.security.Principal;
 import java.util.Locale;
 
 public class CredentialsProviderBuilder {
@@ -87,27 +85,27 @@ public class CredentialsProviderBuilder {
         return this;
     }
 
-    public CredentialsProvider buildCredentialsProvider() {
-        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+    public BasicCredentialsProvider buildCredentialsProvider() {
+        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
         if (!StringUtils.isEmpty(username)) {
             Credentials credentials;
             if (authTypes.contains(AuthTypes.NTLM)) {
                 String[] domainAndUsername = getDomainUsername(username);
-                credentials = new NTCredentials(domainAndUsername[1], password, host, domainAndUsername[0]);
+                credentials = new NTCredentials(domainAndUsername[1], password != null ? password.toCharArray() : null, host, domainAndUsername[0]);
             } else {
-                credentials = new UsernamePasswordCredentials(username, password);
+                credentials = new UsernamePasswordCredentials(username, password != null ? password.toCharArray() : null);
             }
             credentialsProvider.setCredentials(new AuthScope(host, Integer.parseInt(port)), credentials);
         } else if (authTypes.contains(AuthTypes.KERBEROS)) {
             credentialsProvider.setCredentials(new AuthScope(host, Integer.parseInt(port)), new Credentials() {
                 @Override
-                public Principal getUserPrincipal() {
+                public java.security.Principal getUserPrincipal() {
                     return null;
                 }
 
                 @Override
-                public String getPassword() {
+                public char[] getPassword() {
                     return null;
                 }
             });
@@ -119,7 +117,7 @@ public class CredentialsProviderBuilder {
                 intProxyPort = Utils.validatePortNumber(proxyPort);
             }
             credentialsProvider.setCredentials(new AuthScope(proxyHost, intProxyPort),
-                    new UsernamePasswordCredentials(proxyUsername, proxyPassword));
+                    new UsernamePasswordCredentials(proxyUsername, proxyPassword != null ? proxyPassword.toCharArray() : null));
         }
 
         return credentialsProvider;

@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.httpclient.build;
 
-import org.apache.http.NameValuePair;
+import org.apache.hc.core5.http.NameValuePair;
 import org.junit.Test;
 
 import java.util.List;

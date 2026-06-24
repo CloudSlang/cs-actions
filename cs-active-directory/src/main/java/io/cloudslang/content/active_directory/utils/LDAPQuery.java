@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.active_directory.utils;
 
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.hc.client5.http.ssl.DefaultHostnameVerifier;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -46,22 +46,14 @@ public class LDAPQuery {
     private boolean bUseSecureAuth = true;
 
     private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
-        String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
-
-        X509HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
-        ;
-        switch (x509HostnameVerifierStr) {
-            case "strict":
-                x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
-                break;
-            case "browser_compatible":
-                x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
-                break;
+        switch (hostnameVerifier.toLowerCase()) {
             case "allow_all":
-                x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-                break;
+                return NoopHostnameVerifier.INSTANCE;
+            case "strict":
+            case "browser_compatible":
+            default:
+                return new DefaultHostnameVerifier();
         }
-        return x509HostnameVerifier;
     }
 
     public DirContext MakeLDAPConnection(String host, String username, String password,  String timeout,
