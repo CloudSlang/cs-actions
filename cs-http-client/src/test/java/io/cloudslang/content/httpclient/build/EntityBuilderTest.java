@@ -19,10 +19,10 @@
 
 package io.cloudslang.content.httpclient.build;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.StringEntity;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.io.entity.FileEntity;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,8 +62,7 @@ public class EntityBuilderTest {
                 .buildEntity();
         assertThat(httpEntity, instanceOf(StringEntity.class));
         StringEntity stringEntity = (StringEntity) httpEntity;
-        assertNull(stringEntity.getContentType());
-    }
+        assertNull(stringEntity.getContentType());    }
 
     @Test
     public void buildEntityWithContentType() {
@@ -74,7 +73,8 @@ public class EntityBuilderTest {
                 .buildEntity();
         assertThat(httpEntity, instanceOf(StringEntity.class));
         StringEntity stringEntity = (StringEntity) httpEntity;
-        assertEquals(CONTENT_TYPE, stringEntity.getContentType().getValue());
+        // HC5: getContentType() returns String directly
+        assertEquals(CONTENT_TYPE, stringEntity.getContentType());
     }
 
     @Test
@@ -90,7 +90,8 @@ public class EntityBuilderTest {
                 .buildEntity();
         assertThat(httpEntity, instanceOf(FileEntity.class));
         FileEntity fileEntity = (FileEntity) httpEntity;
-        assertEquals(CONTENT_TYPE, fileEntity.getContentType().getValue());
+        // HC5: getContentType() returns String directly
+        assertEquals(CONTENT_TYPE, fileEntity.getContentType());
     }
 
     @Test

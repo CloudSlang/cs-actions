@@ -16,10 +16,11 @@
 
 
 
-
 package io.cloudslang.content.httpclient.build.conn;
 
-import org.apache.http.conn.ssl.*;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.apache.hc.core5.ssl.SSLContexts;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -30,7 +31,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyStore;
@@ -47,7 +47,8 @@ import static org.powermock.api.mockito.PowerMockito.*;
  * Date: 8/20/14
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({SSLContexts.class, System.class, SSLConnectionSocketFactoryBuilder.class, KeyStore.class})
+@PrepareForTest({SSLContexts.class, System.class, SSLConnectionSocketFactoryBuilder.class,
+        KeyStore.class, org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder.class})
 public class SSLConnectionSocketFactoryBuilderTest {
 
     public static final String BAD_TRUST_KEYSTORE_ERROR = "The trust keystore provided in the 'trustKeystore' input is corrupted OR the password (in the 'trustPassword' input) is incorrect";
@@ -61,8 +62,6 @@ public class SSLConnectionSocketFactoryBuilderTest {
     private SSLConnectionSocketFactoryBuilder builder;
     @Mock
     private SSLContextBuilder sslContextBuilderMock;
-    @Mock
-    private File fileMock;
     @Mock
     private SSLContext sslCtxMock;
     @Mock
@@ -80,6 +79,14 @@ public class SSLConnectionSocketFactoryBuilderTest {
 
             protected void createKeystore(SSLContextBuilder sslContextBuilder, boolean useClientCert) {
             }
+
+            @Override
+            protected SSLConnectionSocketFactory buildSslConnectionSocketFactory(SSLContextBuilder sslCtxBuilder,
+                                                                                  String[] protocols,
+                                                                                  String[] ciphers,
+                                                                                  HostnameVerifier hostnameVerifier) {
+                return sslsfMock;
+            }
         };
 
         mockStatic(SSLContexts.class);
@@ -87,54 +94,32 @@ public class SSLConnectionSocketFactoryBuilderTest {
 
         when(SSLContexts.custom()).thenReturn(sslContextBuilderMock);
         when(System.getProperty("java.home")).thenReturn("javaHome");
-        whenNew(File.class).withArguments(anyString()).thenReturn(fileMock);
-
-        when(fileMock.exists()).thenReturn(true);
-        when(sslContextBuilderMock.useSSL()).thenReturn(null);
-        when(sslContextBuilderMock.useTLS()).thenReturn(null);
-        when(sslContextBuilderMock.build()).thenReturn(sslCtxMock);
-
-        prepareSSLConnectionSocketFactory();
+        whenNew(java.io.File.class).withArguments(anyString()).thenReturn(mock(java.io.File.class));
 
         SSLConnectionSocketFactory sslsf = builder.build();
         assertNotNull(sslsf);
         assertEquals(sslsfMock, sslsf);
     }
 
-    private void prepareSSLConnectionSocketFactory() throws Exception {
-        whenNew(SSLConnectionSocketFactory.class)
-                .withParameterTypes(SSLContext.class, String[].class, String[].class, HostnameVerifier.class)
-                .withArguments(isA(SSLContext.class), isA(String[].class), isNull(), isA(HostnameVerifier.class))
-                .thenReturn(sslsfMock);
-    }
-
     @Test
     public void buildWithTrustAllRoots() throws Exception {
-        builder = new SSLConnectionSocketFactoryBuilder();
+        builder = new SSLConnectionSocketFactoryBuilder() {
+            @Override
+            protected SSLConnectionSocketFactory buildSslConnectionSocketFactory(SSLContextBuilder sslCtxBuilder,
+                                                                                  String[] protocols,
+                                                                                  String[] ciphers,
+                                                                                  HostnameVerifier hostnameVerifier) {
+                return sslsfMock;
+            }
+        };
         builder.setTrustAllRoots("true");
         builder.setKeystore(System.getProperty("java.home") + "/lib/security/cacerts");
         builder.setKeystorePassword("changeit");
 
-
-
-
-
-
-
-
-
-
         mockStatic(SSLContexts.class);
-
         when(SSLContexts.custom()).thenReturn(sslContextBuilderMock);
-
-        when(sslContextBuilderMock.useTLS()).thenReturn(null);
-        when(sslContextBuilderMock.useSSL()).thenReturn(null);
-        when(sslContextBuilderMock.loadTrustMaterial(isA(KeyStore.class), isA(TrustStrategy.class))).thenReturn(null);
-
+        when(sslContextBuilderMock.loadTrustMaterial(isA(KeyStore.class), any())).thenReturn(sslContextBuilderMock);
         when(sslContextBuilderMock.build()).thenReturn(sslCtxMock);
-
-        prepareSSLConnectionSocketFactory();
 
         SSLConnectionSocketFactory sslsf = builder.build();
         assertNotNull(sslsf);
@@ -144,7 +129,6 @@ public class SSLConnectionSocketFactoryBuilderTest {
     @Test
     public void createTrustKeystore() throws Exception {
         builder = new SSLConnectionSocketFactoryBuilder() {
-
             @Override
             protected KeyStore createKeyStore(final URL url, final String password) {
                 return keyStoreMock;
@@ -152,10 +136,10 @@ public class SSLConnectionSocketFactoryBuilderTest {
         };
         builder.setTrustKeystore("file:" + KEYSTORE)
                 .setTrustPassword(PASSWORD);
-        when(sslContextBuilderMock.loadTrustMaterial(keyStoreMock)).thenReturn(sslContextBuilderMock);
+        when(sslContextBuilderMock.loadTrustMaterial(keyStoreMock, null)).thenReturn(sslContextBuilderMock);
 
         builder.createTrustKeystore(sslContextBuilderMock, true);
-        verify(sslContextBuilderMock).loadTrustMaterial(keyStoreMock);
+        verify(sslContextBuilderMock).loadTrustMaterial(keyStoreMock, null);
     }
 
     @Test
@@ -167,7 +151,6 @@ public class SSLConnectionSocketFactoryBuilderTest {
         exception.expectMessage(BAD_TRUST_KEYSTORE_ERROR);
 
         builder.createTrustKeystore(sslContextBuilderMock, true);
-
     }
 
     @Test

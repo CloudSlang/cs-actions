@@ -19,9 +19,10 @@
 
 package io.cloudslang.content.httpclient.build;
 
-import org.apache.http.Consts;
-import org.apache.http.entity.ContentType;
+import org.apache.hc.core5.http.ContentType;
 import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -39,10 +40,10 @@ public class ContentTypeBuilderTest {
     public void buildContentType() {
         ContentType contentType = new ContentTypeBuilder()
                 .setContentType(APPLICATION_JSON_CONTENT_TYPE)
-                .setRequestCharacterSet(Consts.UTF_8.name()).buildContentType();
+                .setRequestCharacterSet(StandardCharsets.UTF_8.name()).buildContentType();
 
         assertEquals(APPLICATION_JSON_CONTENT_TYPE, contentType.getMimeType());
-        assertEquals(Consts.UTF_8.name(), contentType.getCharset().name());
+        assertEquals(StandardCharsets.UTF_8.name(), contentType.getCharset().name());
     }
 
     @Test
@@ -57,10 +58,10 @@ public class ContentTypeBuilderTest {
     public void buildContentTypeWithRequestCharacterSet() {
         ContentType contentType = new ContentTypeBuilder()
                 .setContentType("application/json; charset=UTF-8")
-                .setRequestCharacterSet(Consts.ISO_8859_1.name()).buildContentType();
+                .setRequestCharacterSet(StandardCharsets.ISO_8859_1.name()).buildContentType();
 
         assertEquals(APPLICATION_JSON_CONTENT_TYPE, contentType.getMimeType().toString());
-        assertEquals(Consts.ISO_8859_1.name(), contentType.getCharset().name());
+        assertEquals(StandardCharsets.ISO_8859_1.name(), contentType.getCharset().name());
     }
 
 }

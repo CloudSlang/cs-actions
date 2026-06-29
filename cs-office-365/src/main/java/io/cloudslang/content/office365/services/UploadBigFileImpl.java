@@ -30,8 +30,8 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.AddAttachmentInputs;
 import okhttp3.*;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.SSLContext;

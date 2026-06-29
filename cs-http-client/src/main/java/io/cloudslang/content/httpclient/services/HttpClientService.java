@@ -16,7 +16,6 @@
 
 
 
-
 package io.cloudslang.content.httpclient.services;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
@@ -36,27 +35,26 @@ import io.cloudslang.content.httpclient.consume.StatusConsumer;
 import io.cloudslang.content.httpclient.execute.HttpClientExecutor;
 import io.cloudslang.content.httpclient.utils.ExecutionTimeout;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.auth.AuthSchemeProvider;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.config.Lookup;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.entity.ContentType;
-import org.apache.http.impl.DefaultConnectionReuseStrategy;
-import org.apache.http.impl.NoConnectionReuseStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.auth.AuthSchemeFactory;
+import org.apache.hc.client5.http.auth.CredentialsProvider;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.config.Lookup;
+import org.apache.hc.core5.http.impl.DefaultConnectionReuseStrategy;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,10 +117,9 @@ public class HttpClientService {
                             httpComponents.getCookieStore(),
                             httpClientInputs.getCookieStoreSessionObject());
 
-                    checkKeepAlive(httpComponents.getHttpRequestBase(),
-                            httpComponents.getConnManager(),
-                            httpClientInputs.getKeepAlive(),
-                            httpResponse);
+            checkKeepAlive(httpComponents.getConnManager(),
+                    httpClientInputs.getKeepAlive(),
+                    httpResponse);
         } else {
             ExecutionTimeout.runWithTimeout(new Runnable() {
                 @Override
@@ -139,8 +136,7 @@ public class HttpClientService {
                             httpComponents.getCookieStore(),
                             httpClientInputs.getCookieStoreSessionObject());
 
-                    checkKeepAlive(httpComponents.getHttpRequestBase(),
-                            httpComponents.getConnManager(),
+                    checkKeepAlive(httpComponents.getConnManager(),
                             httpClientInputs.getKeepAlive(),
                             httpResponse);
                 }
@@ -191,7 +187,7 @@ public class HttpClientService {
                 .setChunkedRequestEntity(httpClientInputs.getChunkedRequestEntity())
                 .buildEntity();
 
-        HttpRequestBase httpRequestBase = requestBuilder
+        HttpUriRequestBase httpRequestBase = requestBuilder
                 .setMethod(httpClientInputs.getMethod())
                 .setUri(uri)
                 .setEntity(httpEntity).build();
@@ -199,7 +195,7 @@ public class HttpClientService {
         List<Header> theHeaders = headersBuilder
                 .setHeaders(httpClientInputs.getHeaders())
                 .setContentType(theContentType)
-                .setEntityContentType(httpEntity != null ? httpEntity.getContentType() : null)
+                .setEntityContentType(httpEntity != null ? new org.apache.hc.core5.http.message.BasicHeader("Content-Type", httpEntity.getContentType()) : null)
                 .buildHeaders();
 
         RequestConfig requestConfig = requestConfigBuilder
@@ -228,7 +224,7 @@ public class HttpClientService {
                 .buildCredentialsProvider();
         httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
-        Lookup<AuthSchemeProvider> authSchemeLookup = authSchemeProviderLookupBuilder
+        Lookup<AuthSchemeFactory> authSchemeLookup = authSchemeProviderLookupBuilder
                 .setAuthTypes(authTypes)
                 .setHost(uri.getHost())
                 .setHeaders(theHeaders)
@@ -242,7 +238,7 @@ public class HttpClientService {
                 .buildAuthSchemeProviderLookup();
         httpClientBuilder.setDefaultAuthSchemeRegistry(authSchemeLookup);
 
-        httpRequestBase.setHeaders(theHeaders.toArray(new Header[theHeaders.size()]));
+        httpRequestBase.setHeaders(theHeaders.toArray(new Header[0]));
 
         CookieStore cookieStore = cookieStoreBuilder
                 .setUseCookies(httpClientInputs.getUseCookies())
@@ -280,11 +276,11 @@ public class HttpClientService {
         if (StringUtils.isEmpty(httpClientInputs.getKeepAlive()) || Boolean.parseBoolean(httpClientInputs.getKeepAlive())) {
             httpClientBuilder.setConnectionReuseStrategy(DefaultConnectionReuseStrategy.INSTANCE);
         } else {
-            httpClientBuilder.setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE);
+            httpClientBuilder.setConnectionReuseStrategy((request, response, context) -> false);
             httpClientBuilder.disableConnectionState();
         }
 
-        httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
+        httpClientBuilder.disableAutomaticRetries();
 
         CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
 
@@ -306,11 +302,9 @@ public class HttpClientService {
         return result;
     }
 
-
     public CloseableHttpResponse execute(CloseableHttpClient closeableHttpClient,
-                                         HttpRequestBase httpRequestBase,
+                                         HttpUriRequestBase httpRequestBase,
                                          HttpClientContext context) {
-
         return httpClientExecutor
                 .setCloseableHttpClient(closeableHttpClient)
                 .setHttpRequestBase(httpRequestBase)
@@ -324,8 +318,7 @@ public class HttpClientService {
                                              URI uri,
                                              HttpClientContext httpClientContext,
                                              CookieStore cookieStore,
-                                             SerializableSessionObject cookieStoreSessionObject
-    ) {
+                                             SerializableSessionObject cookieStoreSessionObject) {
         Map<String, String> result = new HashMap<>();
 
         try {
@@ -338,13 +331,18 @@ public class HttpClientService {
             throw new RuntimeException(e);
         }
 
+        List<URI> redirectLocations = httpClientContext.getRedirectLocations() != null
+                ? httpClientContext.getRedirectLocations().getAll()
+                : Collections.emptyList();
+
+        org.apache.hc.core5.http.HttpHost targetHost = new org.apache.hc.core5.http.HttpHost(uri.getScheme(), uri.getHost(), uri.getPort());
         finalLocationConsumer
                 .setUri(uri)
-                .setRedirectLocations(httpClientContext.getRedirectLocations())
-                .setTargetHost(httpClientContext.getTargetHost()).consume(result);
+                .setRedirectLocations(redirectLocations)
+                .setTargetHost(targetHost).consume(result);
 
-        headersConsumer.setHeaders(httpResponse.getAllHeaders()).consume(result);
-        statusConsumer.setStatusLine(httpResponse.getStatusLine()).consume(result);
+        headersConsumer.setHeaders(httpResponse.getHeaders()).consume(result);
+        statusConsumer.setStatusLine(httpResponse).consume(result);
 
         if (cookieStore != null) {
             try {
@@ -359,19 +357,16 @@ public class HttpClientService {
         return result;
     }
 
-    private void checkKeepAlive(HttpRequestBase httpRequestBase, PoolingHttpClientConnectionManager connManager,
+    private void checkKeepAlive(PoolingHttpClientConnectionManager connManager,
                                 String keepAliveInput, CloseableHttpResponse httpResponse) {
         boolean keepAlive = StringUtils.isBlank(keepAliveInput) || Boolean.parseBoolean(keepAliveInput);
-        if (keepAlive) {
-            httpRequestBase.releaseConnection();
-        } else {
+        if (!keepAlive) {
             try {
                 httpResponse.close();
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
-            httpRequestBase.releaseConnection();
-            connManager.closeExpiredConnections();
+            connManager.closeExpired();
         }
     }
 

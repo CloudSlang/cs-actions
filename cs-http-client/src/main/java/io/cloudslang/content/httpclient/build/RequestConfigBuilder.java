@@ -13,15 +13,12 @@
  * limitations under the License.
  */
 
-
-
-
-
 package io.cloudslang.content.httpclient.build;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.client.config.RequestConfig;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.util.Timeout;
 
 public class RequestConfigBuilder {
     private String connectionTimeout = "0";
@@ -72,10 +69,9 @@ public class RequestConfigBuilder {
         }
         int connectionTimeout = Integer.parseInt(this.connectionTimeout);
         int socketTimeout = Integer.parseInt(this.socketTimeout);
-        //todo should we also allow user to enable redirects prohibited by the HTTP specification (on POST and PUT)? See 'LaxRedirectStrategy'
         return RequestConfig.custom()
-                .setConnectTimeout(connectionTimeout <= 0 ? connectionTimeout : connectionTimeout * 1000)
-                .setSocketTimeout(socketTimeout <= 0 ? socketTimeout : socketTimeout * 1000)
+                .setConnectTimeout(connectionTimeout <= 0 ? Timeout.ofMilliseconds(0) : Timeout.ofSeconds(connectionTimeout))
+                .setResponseTimeout(socketTimeout <= 0 ? Timeout.ofMilliseconds(0) : Timeout.ofSeconds(socketTimeout))
                 .setProxy(proxy)
                 .setRedirectsEnabled(Boolean.parseBoolean(followRedirects)).build();
     }

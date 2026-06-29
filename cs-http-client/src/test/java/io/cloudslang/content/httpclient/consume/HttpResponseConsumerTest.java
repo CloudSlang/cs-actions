@@ -16,14 +16,11 @@
 
 
 
-
 package io.cloudslang.content.httpclient.consume;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.Consts;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.entity.BasicHttpEntity;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.io.entity.BasicHttpEntity;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +30,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.*;
-import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +54,7 @@ public class HttpResponseConsumerTest {
     private static final String RETURN_RESULT = "returnResult";
     private HttpResponseConsumer httpResponseConsumer;
     @Mock
-    private HttpResponse httpResponseMock;
+    private ClassicHttpResponse httpResponseMock;
     @Mock
     private InputStream inputStreamMock;
     @Mock
@@ -83,7 +80,7 @@ public class HttpResponseConsumerTest {
         setHttpResponseEntity("text/plain;charset=");
 
         mockStatic(IOUtils.class);
-        when(IOUtils.toString(inputStreamMock, Consts.ISO_8859_1.name())).thenReturn("doc");
+        when(IOUtils.toString(inputStreamMock, StandardCharsets.ISO_8859_1.name())).thenReturn("doc");
         httpResponseConsumer
                 .setHttpResponse(httpResponseMock)
                 .setDestinationFile(null)
@@ -97,7 +94,7 @@ public class HttpResponseConsumerTest {
         setHttpResponseEntity(CONTENT_TYPE);
 
         mockStatic(IOUtils.class);
-        when(IOUtils.toString(inputStreamMock, Consts.UTF_8.name())).thenReturn("doc");
+        when(IOUtils.toString(inputStreamMock, StandardCharsets.UTF_8.name())).thenReturn("doc");
         httpResponseConsumer
                 .setHttpResponse(httpResponseMock)
                 .setDestinationFile(null)
@@ -126,10 +123,10 @@ public class HttpResponseConsumerTest {
     }
 
     private void setHttpResponseEntity(String contentType) {
-        BasicHttpEntity entity = new BasicHttpEntity();
-        entity.setContent(inputStreamMock);
-        Header contentTypeHeader = new HeaderEntity("Content-Type", contentType);
-        entity.setContentType(contentTypeHeader);
+        // HC5: BasicHttpEntity(InputStream content, ContentType)
+        org.apache.hc.core5.http.io.entity.BasicHttpEntity entity =
+                new org.apache.hc.core5.http.io.entity.BasicHttpEntity(inputStreamMock,
+                        org.apache.hc.core5.http.ContentType.parse(contentType.endsWith("=") ? "text/plain" : contentType));
         when(httpResponseMock.getEntity()).thenReturn(entity);
     }
 

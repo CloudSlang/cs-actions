@@ -21,14 +21,14 @@ package io.cloudslang.content.httpclient.build;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.entity.AbstractHttpEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
+import org.apache.hc.core5.http.io.entity.FileEntity;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -129,9 +129,7 @@ public class EntityBuilder {
             httpEntity = new FileEntity(file, contentType);
         }
         if (httpEntity != null) {
-            if (!StringUtils.isEmpty(chunkedRequestEntity)) {
-                httpEntity.setChunked(Boolean.parseBoolean(chunkedRequestEntity));
-            }
+            // Note: setChunked() was removed in HC5; chunked transfer is handled at request level
             return httpEntity;
         }
 

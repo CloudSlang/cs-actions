@@ -25,7 +25,7 @@ import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderActions.CREATE_FOLDER;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderActions.DELETE_FILE_OR_FOLDER;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
+import static org.apache.hc.client5.http.classic.methods.HttpPost.METHOD_NAME;
 
 /**
  * Created by TusaM

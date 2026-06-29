@@ -13,33 +13,23 @@
  * limitations under the License.
  */
 
-
-
-
-
 package io.cloudslang.content.httpclient.execute;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.HttpHostConnectException;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.hc.client5.http.HttpHostConnectException;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.TimeUnit;
 
-/**
- * Created with IntelliJ IDEA.
- * User: davidmih
- * Date: 7/28/14
- */
 public class HttpClientExecutor {
-    private HttpRequestBase httpRequestBase;
+    private HttpUriRequestBase httpRequestBase;
     private CloseableHttpClient closeableHttpClient;
     private HttpClientContext context;
 
-    public HttpClientExecutor setHttpRequestBase(HttpRequestBase httpRequestBase) {
+    public HttpClientExecutor setHttpRequestBase(HttpUriRequestBase httpRequestBase) {
         this.httpRequestBase = httpRequestBase;
         return this;
     }
@@ -56,14 +46,13 @@ public class HttpClientExecutor {
 
     public CloseableHttpResponse execute() {
         CloseableHttpResponse response;
-        try  {
-             response = closeableHttpClient.execute(httpRequestBase, context);
+        try {
+            response = closeableHttpClient.execute(httpRequestBase, context);
         } catch (SocketTimeoutException ste) {
             throw new RuntimeException("Socket timeout: " + ste.getMessage(), ste);
         } catch (HttpHostConnectException connectEx) {
             throw new RuntimeException("Connection error: " + connectEx.getMessage(), connectEx);
         } catch (IOException e) {
-
             throw new RuntimeException("Error while executing http request: " + e.getMessage(), e);
         }
         return response;

@@ -20,7 +20,7 @@
 package io.cloudslang.content.httpclient.build.auth;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.config.AuthSchemes;
+import org.apache.hc.client5.http.auth.StandardAuthScheme;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,10 +32,10 @@ import java.util.Set;
  * Date: 10/8/14
  */
 public class AuthTypes implements Iterable<String> {
-    public static final String BASIC = AuthSchemes.BASIC.toUpperCase();
-    public static final String DIGEST = AuthSchemes.DIGEST.toUpperCase();
-    public static final String NTLM = AuthSchemes.NTLM.toUpperCase();
-    public static final String KERBEROS = AuthSchemes.KERBEROS.toUpperCase();
+    public static final String BASIC = StandardAuthScheme.BASIC.toUpperCase();
+    public static final String DIGEST = StandardAuthScheme.DIGEST.toUpperCase();
+    public static final String NTLM = StandardAuthScheme.NTLM.toUpperCase();
+    public static final String KERBEROS = StandardAuthScheme.KERBEROS.toUpperCase();
 
     public static final String DEFAULT = BASIC;
     public static final String ANY = "ANY";

@@ -6,7 +6,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;

@@ -58,7 +58,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
-import static org.apache.http.client.config.AuthSchemes.BASIC;
+import static org.apache.hc.client5.http.auth.StandardAuthScheme.BASIC;
 
 /**
  * Created by Mihai Tusa

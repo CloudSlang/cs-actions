@@ -13,18 +13,14 @@
  * limitations under the License.
  */
 
-
-
-
-
 package io.cloudslang.content.httpclient.components;
 
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
 
 import java.net.URI;
 
@@ -35,7 +31,7 @@ import java.net.URI;
  */
 public class HttpComponents {
     private CloseableHttpClient closeableHttpClient;
-    private HttpRequestBase httpRequestBase;
+    private HttpUriRequestBase httpRequestBase;
     private HttpClientContext httpClientContext;
     private PoolingHttpClientConnectionManager connManager;
     private CookieStore cookieStore;
@@ -50,11 +46,11 @@ public class HttpComponents {
         this.closeableHttpClient = closeableHttpClient;
     }
 
-    public HttpRequestBase getHttpRequestBase() {
+    public HttpUriRequestBase getHttpRequestBase() {
         return httpRequestBase;
     }
 
-    public void setHttpRequestBase(HttpRequestBase httpRequestBase) {
+    public void setHttpRequestBase(HttpUriRequestBase httpRequestBase) {
         this.httpRequestBase = httpRequestBase;
     }
 

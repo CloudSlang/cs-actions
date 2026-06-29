@@ -16,12 +16,9 @@
 
 
 
-
 package io.cloudslang.content.httpclient.consume;
 
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
-import org.apache.http.ParseException;
+import org.apache.hc.core5.http.Header;
 
 /**
  * User: Adina Tusa
@@ -48,8 +45,8 @@ public class HeaderEntity implements Header {
     }
 
     @Override
-    public HeaderElement[] getElements() throws ParseException {
-        return new HeaderElement[0];
+    public boolean isSensitive() {
+        return false;
     }
 
     @Override

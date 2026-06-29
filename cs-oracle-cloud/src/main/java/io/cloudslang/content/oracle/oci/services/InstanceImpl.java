@@ -10,7 +10,7 @@ import io.cloudslang.content.oracle.oci.entities.inputs.*;
 import io.cloudslang.content.oracle.oci.services.models.instances.CreateInstanceRequestBody;
 import io.cloudslang.content.oracle.oci.services.models.instances.UpdateInstanceRequestBody;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
