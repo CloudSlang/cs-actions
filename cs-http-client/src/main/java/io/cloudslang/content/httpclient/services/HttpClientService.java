@@ -41,9 +41,9 @@ import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.cookie.CookieStore;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.ContentType;
@@ -105,7 +105,7 @@ public class HttpClientService {
             httpClientInputs.setExecutionTimeout(ZERO);
         }
         if (httpClientInputs.getExecutionTimeout().equals("0")) {
-                    CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
+                    ClassicHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
                             httpComponents.getHttpRequestBase(),
                             httpComponents.getHttpClientContext());
 
@@ -124,7 +124,7 @@ public class HttpClientService {
             ExecutionTimeout.runWithTimeout(new Runnable() {
                 @Override
                 public void run() {
-                    CloseableHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
+                    ClassicHttpResponse httpResponse = execute(httpComponents.getCloseableHttpClient(),
                             httpComponents.getHttpRequestBase(),
                             httpComponents.getHttpClientContext());
 
@@ -302,7 +302,7 @@ public class HttpClientService {
         return result;
     }
 
-    public CloseableHttpResponse execute(CloseableHttpClient closeableHttpClient,
+    public ClassicHttpResponse execute(CloseableHttpClient closeableHttpClient,
                                          HttpUriRequestBase httpRequestBase,
                                          HttpClientContext context) {
         return httpClientExecutor
@@ -312,7 +312,7 @@ public class HttpClientService {
                 .execute();
     }
 
-    public Map<String, String> parseResponse(CloseableHttpResponse httpResponse,
+    public Map<String, String> parseResponse(ClassicHttpResponse httpResponse,
                                              String responseCharacterSet,
                                              String destinationFile,
                                              URI uri,
@@ -358,7 +358,7 @@ public class HttpClientService {
     }
 
     private void checkKeepAlive(PoolingHttpClientConnectionManager connManager,
-                                String keepAliveInput, CloseableHttpResponse httpResponse) {
+                                String keepAliveInput, ClassicHttpResponse httpResponse) {
         boolean keepAlive = StringUtils.isBlank(keepAliveInput) || Boolean.parseBoolean(keepAliveInput);
         if (!keepAlive) {
             try {
