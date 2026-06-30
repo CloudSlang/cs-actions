@@ -49,8 +49,15 @@ public class FinalLocationConsumer {
     }
 
     public void consume(Map<String, String> returnResult) {
+        if (uri == null) {
+            throw new IllegalArgumentException("could not determine '" + HttpClientService.FINAL_LOCATION
+                    + "': uri is null");
+        }
         URI location;
         try {
+            if (targetHost != null) {
+                new URI(targetHost.toURI());
+            }
             location = URIUtils.resolve(uri, targetHost, redirectLocations);
         } catch (URISyntaxException e) {
             //this is not a fatal error

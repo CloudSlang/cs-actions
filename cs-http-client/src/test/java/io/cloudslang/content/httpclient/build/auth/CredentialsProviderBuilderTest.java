@@ -45,7 +45,9 @@ public class CredentialsProviderBuilderTest {
         assertThat(credentials, instanceOf(NTCredentials.class));
         NTCredentials ntCredentials = (NTCredentials) credentials;
         assertEquals("DOMAIN", ntCredentials.getDomain());
-        assertEquals("HOST", ntCredentials.getWorkstation());
+        // In httpclient5 5.3+, the workstation parameter is no longer settable via constructor;
+        // NTCredentials always resolves the local hostname via InetAddress.getLocalHost().getHostName().
+        assertThat(ntCredentials.getWorkstation(), org.hamcrest.CoreMatchers.notNullValue());
         assertEquals("pass", new String(ntCredentials.getPassword()));
         Credentials proxyCredentials = credentialsProvider.getCredentials(new AuthScope("proxy", 8080), null);
         assertThat(proxyCredentials, instanceOf(UsernamePasswordCredentials.class));
