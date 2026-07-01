@@ -22,9 +22,9 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.cookie.CookieStore;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ public class HttpClientServiceTest {
     @Mock
     private HttpClientContext httpClientContext;
     @Mock
-    private ClassicHttpResponse httpResponse;
+    private CloseableHttpResponse httpResponse;
     @Mock
     private String responseCharacterSet;
     @Mock

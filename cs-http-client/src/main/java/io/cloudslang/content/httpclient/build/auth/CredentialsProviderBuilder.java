@@ -92,10 +92,7 @@ public class CredentialsProviderBuilder {
             Credentials credentials;
             if (authTypes.contains(AuthTypes.NTLM)) {
                 String[] domainAndUsername = getDomainUsername(username);
-                // Use the non-deprecated NTCredentials(char[] password, String userName, String domain, String netbiosDomain)
-                // constructor. In httpclient5 5.3+, the workstation parameter in the old 4-arg constructor is ignored;
-                // the workstation is always resolved from the local hostname via InetAddress.getLocalHost().
-                credentials = new NTCredentials(password != null ? password.toCharArray() : null, domainAndUsername[1], domainAndUsername[0], null);
+                credentials = new NTCredentials(domainAndUsername[1], password != null ? password.toCharArray() : null, host, domainAndUsername[0]);
             } else {
                 credentials = new UsernamePasswordCredentials(username, password != null ? password.toCharArray() : null);
             }
