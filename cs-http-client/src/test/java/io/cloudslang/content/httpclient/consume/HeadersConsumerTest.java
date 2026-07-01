@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.httpclient.consume;
 
-import org.apache.hc.core5.http.Header;
+import org.apache.http.Header;
 import org.junit.Before;
 import org.junit.Test;
 

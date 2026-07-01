@@ -21,7 +21,7 @@ package io.cloudslang.content.httpclient.build;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.core5.http.NameValuePair;
+import org.apache.http.NameValuePair;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -66,9 +66,9 @@ public class URIBuilder {
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException("the value '" + url + "' is not a valid URL", e);
         }
-        org.apache.hc.core5.net.URIBuilder uriBuilder;
+        org.apache.http.client.utils.URIBuilder uriBuilder;
         try {
-            uriBuilder = new org.apache.hc.core5.net.URIBuilder(url);
+            uriBuilder = new org.apache.http.client.utils.URIBuilder(url);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("the value '" + url + "' is not a valid URI", e);
         }
@@ -79,10 +79,7 @@ public class URIBuilder {
         if (!StringUtils.isEmpty(queryParams)) {
             try {
                 if (bEncodeQueryParamsAsForm) {
-                    List<? extends NameValuePair> params = Utils.urlEncodeMultipleParams(queryParams, bEncodeQueryParams);
-                    for (NameValuePair param : params) {
-                        uriBuilder.addParameter(param.getName(), param.getValue());
-                    }
+                    uriBuilder.addParameters((List<NameValuePair>) Utils.urlEncodeMultipleParams(queryParams, bEncodeQueryParams));
                 } else {
                     uriBuilder.setCustomQuery(Utils.urlEncodeQueryParams(queryParams, bEncodeQueryParams));
                 }

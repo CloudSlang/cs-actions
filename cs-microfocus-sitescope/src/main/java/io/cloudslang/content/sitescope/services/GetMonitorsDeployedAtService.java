@@ -29,7 +29,7 @@ import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
 import io.cloudslang.content.sitescope.utils.RemoteServer;
 import io.cloudslang.content.utils.OutputUtilities;
-import org.apache.hc.core5.net.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

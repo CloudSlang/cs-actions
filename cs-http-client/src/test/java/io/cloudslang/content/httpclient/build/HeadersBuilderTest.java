@@ -19,10 +19,10 @@
 
 package io.cloudslang.content.httpclient.build;
 
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.message.BasicHeader;
-import org.apache.hc.core5.http.message.BufferedHeader;
+import org.apache.http.Header;
+import org.apache.http.entity.ContentType;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BufferedHeader;
 import org.junit.Test;
 
 import java.util.List;

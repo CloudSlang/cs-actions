@@ -6,7 +6,7 @@ import java.util.Map;
 
 import io.cloudslang.content.hashicorp.terraform.entities.ListOAuthClientInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import org.apache.hc.core5.net.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.jetbrains.annotations.NotNull;

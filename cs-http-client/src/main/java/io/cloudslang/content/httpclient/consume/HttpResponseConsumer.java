@@ -23,12 +23,13 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.NameValuePair;
+import org.apache.http.Consts;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicHeaderValueParser;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Map;
 
@@ -38,11 +39,11 @@ import java.util.Map;
  * Date: 7/28/14
  */
 public class HttpResponseConsumer {
-    private ClassicHttpResponse httpResponse;
+    private HttpResponse httpResponse;
     private String responseCharacterSet;
     private String destinationFile;
 
-    public HttpResponseConsumer setHttpResponse(ClassicHttpResponse httpResponse) {
+    public HttpResponseConsumer setHttpResponse(HttpResponse httpResponse) {
         this.httpResponse = httpResponse;
         return this;
     }
@@ -60,18 +61,19 @@ public class HttpResponseConsumer {
     public void consume(Map<String, String> result) throws IOException {
         if (httpResponse.getEntity() != null) {
             if (responseCharacterSet == null || responseCharacterSet.isEmpty()) {
-                String contentTypeHeader = httpResponse.getEntity().getContentType();
-                if (contentTypeHeader != null) {
-                    try {
-                        ContentType ct = ContentType.parse(contentTypeHeader);
-                        if (ct.getCharset() != null) {
-                            responseCharacterSet = ct.getCharset().name();
+                Header contentType = httpResponse.getEntity().getContentType();
+                if (contentType != null) {
+                    String value = contentType.getValue();
+                    NameValuePair[] nameValuePairs = BasicHeaderValueParser.parseParameters(value, BasicHeaderValueParser.INSTANCE);
+                    for (NameValuePair nameValuePair : nameValuePairs) {
+                        if (nameValuePair.getName().equalsIgnoreCase("charset")) {
+                            responseCharacterSet = nameValuePair.getValue();
+                            break;
                         }
-                    } catch (Exception ignored) {
                     }
                 }
                 if (responseCharacterSet == null || responseCharacterSet.isEmpty()) {
-                    responseCharacterSet = StandardCharsets.ISO_8859_1.name();
+                    responseCharacterSet = Consts.ISO_8859_1.name();
                 }
             }
             consumeResponseContent(result);

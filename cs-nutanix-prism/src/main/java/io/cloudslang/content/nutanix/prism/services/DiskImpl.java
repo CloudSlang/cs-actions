@@ -11,7 +11,7 @@ import io.cloudslang.content.nutanix.prism.entities.NutanixDetachDisksInputs;
 import io.cloudslang.content.nutanix.prism.exceptions.NutanixDetachDiskException;
 import io.cloudslang.content.nutanix.prism.services.models.disks.AttachDisksRequestBody;
 import io.cloudslang.content.nutanix.prism.services.models.disks.DetachDisksRequestBody;
-import org.apache.hc.core5.net.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

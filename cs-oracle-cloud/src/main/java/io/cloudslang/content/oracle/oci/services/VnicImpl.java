@@ -8,7 +8,7 @@ import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCIVnicAttachmentInputs;
 import io.cloudslang.content.oracle.oci.services.models.instances.AttachVnicRequestBody;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
-import org.apache.hc.core5.net.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

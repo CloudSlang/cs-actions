@@ -21,7 +21,8 @@ package io.cloudslang.content.httpclient.build;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.core5.http.ContentType;
+import org.apache.http.ParseException;
+import org.apache.http.entity.ContentType;
 
 import java.nio.charset.UnsupportedCharsetException;
 
@@ -52,10 +53,7 @@ public class ContentTypeBuilder {
         if (StringUtils.isNotBlank(contentType)) {
             try {
                 parsedContentType = ContentType.parse(contentType);
-            } catch (UnsupportedCharsetException e) {
-                throw new IllegalArgumentException("Could not parse input '"
-                        + HttpClientInputs.CONTENT_TYPE + "'. " + e.getMessage(), e);
-            } catch (IllegalArgumentException e) {
+            } catch (ParseException | UnsupportedCharsetException e) {
                 throw new IllegalArgumentException("Could not parse input '"
                         + HttpClientInputs.CONTENT_TYPE + "'. " + e.getMessage(), e);
             }

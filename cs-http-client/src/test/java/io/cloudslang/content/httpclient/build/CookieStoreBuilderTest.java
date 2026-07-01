@@ -20,8 +20,8 @@
 package io.cloudslang.content.httpclient.build;
 
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
-import org.apache.hc.client5.http.cookie.CookieStore;
-import org.apache.hc.client5.http.cookie.BasicCookieStore;
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.junit.Before;
 import org.junit.Test;
 

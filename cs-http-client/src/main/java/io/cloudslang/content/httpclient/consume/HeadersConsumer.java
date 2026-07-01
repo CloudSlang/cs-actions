@@ -20,7 +20,7 @@
 package io.cloudslang.content.httpclient.consume;
 
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.hc.core5.http.Header;
+import org.apache.http.Header;
 
 import java.util.Map;
 

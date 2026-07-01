@@ -242,7 +242,7 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
             throws IOException {
         OutputStream out = tunnel.getOutputStream();
         String msg = "CONNECT " + host + ":" + port + " HTTP/1.0\n"
-                + "User-Agent: Java/" + System.getProperty("java.version") + "\r\n\r\n";
+                + "User-Agent: " + sun.net.www.protocol.http.HttpURLConnection.userAgent + "\r\n\r\n";
         byte b[];
         try {
             //We really do want ASCII7 -- the http protocol doesn't change with locale.

@@ -20,8 +20,9 @@
 package io.cloudslang.content.httpclient.build;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
-import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class RequestBuilderTest {
 
     @Test
     public void testMethods() throws URISyntaxException {
-        HttpUriRequestBase httpRequestBase = new RequestBuilder().setUri(new URI("/")).setMethod("GET").build();
+        HttpRequestBase httpRequestBase = new RequestBuilder().setUri(new URI("/")).setMethod("GET").build();
         assertEquals(httpRequestBase.getMethod(), "GET");
         httpRequestBase = new RequestBuilder().setUri(new URI("/")).setMethod("POST").build();
         assertEquals(httpRequestBase.getMethod(), "POST");
@@ -68,8 +69,8 @@ public class RequestBuilderTest {
 
     @Test
     public void testEntity() throws URISyntaxException, IOException {
-        HttpUriRequestBase httpRequestBase = new RequestBuilder().setUri(new URI("https://localhost:443/lalal?dd=3")).setMethod("POST").setEntity(
+        HttpEntityEnclosingRequestBase httpRequestBase = (HttpEntityEnclosingRequestBase) new RequestBuilder().setUri(new URI("https://localhost:443/lalal?dd=3")).setMethod("POST").setEntity(
                 new StringEntity("my custom entity")).build();
-        assertEquals(IOUtils.toString(httpRequestBase.getEntity().getContent(), "UTF-8"), "my custom entity");
+        assertEquals(IOUtils.toString(httpRequestBase.getEntity().getContent()), "my custom entity");
     }
 }
