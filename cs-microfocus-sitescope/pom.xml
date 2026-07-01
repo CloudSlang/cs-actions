@@ -89,7 +89,7 @@
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.13.1</junit.version>
-        <cs-http-client.version>0.1.97-SNAPSHOT</cs-http-client.version>
+        <cs-http-client.version>0.1.96</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -264,7 +264,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>

@@ -20,12 +20,11 @@
 package io.cloudslang.content.httpclient.build;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.message.BasicHeader;
-import org.apache.hc.core5.http.message.BufferedHeader;
-import org.apache.hc.core5.util.CharArrayBuffer;
+import org.apache.http.Header;
+import org.apache.http.entity.ContentType;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BufferedHeader;
+import org.apache.http.util.CharArrayBuffer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,11 +62,7 @@ public class HeadersBuilder {
                 while ((str = in.readLine()) != null) {
                     CharArrayBuffer charArrayBuffer = new CharArrayBuffer(str.length());
                     charArrayBuffer.append(str);
-                    try {
-                        headersArr.add(new BufferedHeader(charArrayBuffer));
-                    } catch (ParseException pe) {
-                        throw new IllegalArgumentException(pe);
-                    }
+                    headersArr.add(new BufferedHeader(charArrayBuffer));
                 }
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);

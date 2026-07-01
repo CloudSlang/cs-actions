@@ -16,10 +16,11 @@
 
 
 
+
 package io.cloudslang.content.httpclient.consume;
 
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.http.StatusLine;
 
 import java.util.Map;
 
@@ -29,23 +30,23 @@ import java.util.Map;
  * Date: 7/28/14
  */
 public class StatusConsumer {
-    private HttpResponse httpResponse;
+    private StatusLine statusLine;
 
-    public StatusConsumer setStatusLine(HttpResponse httpResponse) {
-        this.httpResponse = httpResponse;
+    public StatusConsumer setStatusLine(StatusLine statusLine) {
+        this.statusLine = statusLine;
         return this;
     }
 
     public void consume(Map<String, String> returnResult) {
-        int statusCode = (this.httpResponse != null) ? this.httpResponse.getCode() : 0;
-        returnResult.put(HttpClientService.STATUS_CODE, String.valueOf(statusCode));
+        int statusLine = (this.statusLine != null) ? this.statusLine.getStatusCode() : 0;
+        returnResult.put(HttpClientService.STATUS_CODE, String.valueOf(statusLine));
 
-        String protocolVersion = (this.httpResponse != null && this.httpResponse.getVersion() != null) ?
-                this.httpResponse.getVersion().toString() : "";
+        String protocolVersion = (this.statusLine != null && this.statusLine.getProtocolVersion() != null) ?
+                this.statusLine.getProtocolVersion().toString() : "";
         returnResult.put(HttpClientService.PROTOCOL_VERSION, protocolVersion);
 
-        String reasonPhrase = (this.httpResponse != null && this.httpResponse.getReasonPhrase() != null) ?
-                this.httpResponse.getReasonPhrase() : "";
+        String reasonPhrase = (this.statusLine != null && this.statusLine.getReasonPhrase() != null) ?
+                this.statusLine.getReasonPhrase() : "";
         returnResult.put(HttpClientService.REASON_PHRASE, reasonPhrase);
     }
 }

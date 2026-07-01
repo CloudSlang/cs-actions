@@ -25,8 +25,8 @@ package io.cloudslang.content.httpclient.build;
  * Date: 7/29/14
  */
 
-import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.core5.util.Timeout;
+import org.apache.http.HttpException;
+import org.apache.http.client.config.RequestConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -60,7 +60,7 @@ public class RequestConfigBuilderTest {
     }
 
     @Test
-    public void buildProxyRoute() throws URISyntaxException {
+    public void buildProxyRoute() throws URISyntaxException, HttpException {
         RequestConfig reqConfig = requestConfigBuilder
                 .setProxyHost("myproxy.com")
                 .setProxyPort("80")
@@ -70,24 +70,22 @@ public class RequestConfigBuilderTest {
                 .buildRequestConfig();
         assertNotNull(reqConfig);
         assertFalse(reqConfig.isRedirectsEnabled());
-        // HC5: negative/zero timeouts map to Timeout.ofMilliseconds(0) (infinite wait)
-        assertEquals(Timeout.ofMilliseconds(0), reqConfig.getConnectTimeout());
-        assertEquals(Timeout.ofMilliseconds(0), reqConfig.getResponseTimeout());
+        assertEquals("-2", String.valueOf(reqConfig.getConnectTimeout()));
+        assertEquals("-2", String.valueOf(reqConfig.getSocketTimeout()));
         assertNotNull(reqConfig.getProxy());
         assertEquals("myproxy.com", reqConfig.getProxy().getHostName());
         assertEquals("80", String.valueOf(reqConfig.getProxy().getPort()));
     }
 
     @Test
-    public void buildNoProxyRoute() throws URISyntaxException {
+    public void buildNoProxyRoute() throws URISyntaxException, HttpException {
         RequestConfig reqConfig = requestConfigBuilder
                 .buildRequestConfig();
 
         assertNotNull(reqConfig);
         assertTrue(reqConfig.isRedirectsEnabled());
-        // HC5: 0 timeout → Timeout.ofMilliseconds(0) (infinite wait)
-        assertEquals(Timeout.ofMilliseconds(0), reqConfig.getConnectTimeout());
-        assertEquals(Timeout.ofMilliseconds(0), reqConfig.getResponseTimeout());
+        assertEquals("0", String.valueOf(reqConfig.getConnectTimeout()));
+        assertEquals("0", String.valueOf(reqConfig.getSocketTimeout()));
         assertNull(reqConfig.getProxy());
     }
 

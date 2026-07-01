@@ -16,19 +16,12 @@
 
 
 
+
 package io.cloudslang.content.httpclient.build;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import org.apache.hc.client5.http.classic.methods.HttpDelete;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.classic.methods.HttpHead;
-import org.apache.hc.client5.http.classic.methods.HttpOptions;
-import org.apache.hc.client5.http.classic.methods.HttpPatch;
-import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.classic.methods.HttpPut;
-import org.apache.hc.client5.http.classic.methods.HttpTrace;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
-import org.apache.hc.core5.http.HttpEntity;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.*;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -62,7 +55,7 @@ public class RequestBuilder {
         return this;
     }
 
-    public HttpUriRequestBase build() {
+    public HttpRequestBase build() {
         if (method == null) {
             throw new IllegalArgumentException("The 'method' input is required. Provide one of " + Arrays.asList(methods).toString());
         }
@@ -71,10 +64,11 @@ public class RequestBuilder {
             throw new IllegalArgumentException("invalid '" + HttpClientInputs.METHOD + "' input '" + method + "'");
         }
 
-        HttpUriRequestBase requestBase = new HttpUriRequestBase(method, uri);
-        if (entity != null) {
-            requestBase.setEntity(entity);
-        }
-        return requestBase;
+        org.apache.http.client.methods.RequestBuilder requestBuilder
+                = org.apache.http.client.methods.RequestBuilder.create(method);
+        requestBuilder.setUri(uri);
+        requestBuilder.setEntity(entity);
+
+        return (HttpRequestBase) requestBuilder.build();
     }
 }

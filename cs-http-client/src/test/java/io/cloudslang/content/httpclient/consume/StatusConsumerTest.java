@@ -16,18 +16,16 @@
 
 
 
+
 package io.cloudslang.content.httpclient.consume;
 
-import org.apache.hc.core5.http.HttpResponse;
-import org.apache.hc.core5.http.ProtocolVersion;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.StatusLine;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * User: Adina Tusa
@@ -45,11 +43,23 @@ public class StatusConsumerTest {
     @Test
     public void consume() {
         Map<String, String> returnResult = new HashMap<>();
-        HttpResponse response = mock(HttpResponse.class);
-        when(response.getCode()).thenReturn(200);
-        when(response.getVersion()).thenReturn(new ProtocolVersion("HTTP", 1, 1));
-        when(response.getReasonPhrase()).thenReturn("OK");
-        statusConsumer.setStatusLine(response).consume(returnResult);
+        StatusLine statusLine = new StatusLine() {
+            @Override
+            public ProtocolVersion getProtocolVersion() {
+                return new ProtocolVersion("HTTP", 1, 1);
+            }
+
+            @Override
+            public int getStatusCode() {
+                return 200;
+            }
+
+            @Override
+            public String getReasonPhrase() {
+                return "OK";
+            }
+        };
+        statusConsumer.setStatusLine(statusLine).consume(returnResult);
     }
 
     @Test

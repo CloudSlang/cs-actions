@@ -13,18 +13,23 @@
  * limitations under the License.
  */
 
+
+
+
+
 package io.cloudslang.content.httpclient;
+
 
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.httpclient.components.HttpComponents;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
-import org.apache.hc.client5.http.cookie.CookieStore;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +46,10 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 
+/**
+ * User: bancl
+ * Date: 10/16/2015
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({HttpClientService.class})
 public class HttpClientServiceTest {
@@ -49,7 +58,7 @@ public class HttpClientServiceTest {
     @Mock
     private HttpClientInputs httpClientInputs;
     @Mock
-    private HttpUriRequestBase httpRequestBase;
+    private HttpRequestBase httpRequestBase;
     @Mock
     private HttpComponents httpComponents;
     @Mock
@@ -57,7 +66,7 @@ public class HttpClientServiceTest {
     @Mock
     private HttpClientContext httpClientContext;
     @Mock
-    private ClassicHttpResponse httpResponse;
+    private CloseableHttpResponse httpResponse;
     @Mock
     private String responseCharacterSet;
     @Mock
@@ -101,7 +110,7 @@ public class HttpClientServiceTest {
         PowerMockito.when(httpClientInputs.getKeepAlive()).thenReturn("true");
         Map<String, String> result1 = httpClientService.execute(httpClientInputs);
         assertEquals(result, result1);
-        // In HC5, releaseConnection() is removed; no call expected
+        Mockito.verify(httpRequestBase, times(1)).releaseConnection();
     }
 
     @Test
@@ -110,6 +119,7 @@ public class HttpClientServiceTest {
         Map<String, String> result1 = httpClientService.execute(httpClientInputs);
         assertEquals(result, result1);
         Mockito.verify(httpResponse, times(1)).close();
-        Mockito.verify(connManager, times(1)).closeExpired();
+        Mockito.verify(httpRequestBase, times(1)).releaseConnection();
+        Mockito.verify(connManager, times(1)).closeExpiredConnections();
     }
 }

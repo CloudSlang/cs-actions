@@ -54,7 +54,7 @@ import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USERNAM
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USE_COOKIES;
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.hc.client5.http.classic.methods.HttpGet.METHOD_NAME;
+import static org.apache.http.client.methods.HttpGet.METHOD_NAME;
 
 public class GetAutoFailOverSettings {
     /**

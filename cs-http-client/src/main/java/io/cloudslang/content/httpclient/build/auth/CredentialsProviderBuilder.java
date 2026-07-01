@@ -21,12 +21,14 @@ package io.cloudslang.content.httpclient.build.auth;
 
 import io.cloudslang.content.httpclient.build.Utils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.client5.http.auth.AuthScope;
-import org.apache.hc.client5.http.auth.Credentials;
-import org.apache.hc.client5.http.auth.NTCredentials;
-import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
-import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 
+import java.security.Principal;
 import java.util.Locale;
 
 public class CredentialsProviderBuilder {
@@ -85,30 +87,27 @@ public class CredentialsProviderBuilder {
         return this;
     }
 
-    public BasicCredentialsProvider buildCredentialsProvider() {
-        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+    public CredentialsProvider buildCredentialsProvider() {
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
         if (!StringUtils.isEmpty(username)) {
             Credentials credentials;
             if (authTypes.contains(AuthTypes.NTLM)) {
                 String[] domainAndUsername = getDomainUsername(username);
-                // Use the non-deprecated NTCredentials(char[] password, String userName, String domain, String netbiosDomain)
-                // constructor. In httpclient5 5.3+, the workstation parameter in the old 4-arg constructor is ignored;
-                // the workstation is always resolved from the local hostname via InetAddress.getLocalHost().
-                credentials = new NTCredentials(password != null ? password.toCharArray() : null, domainAndUsername[1], domainAndUsername[0], null);
+                credentials = new NTCredentials(domainAndUsername[1], password, host, domainAndUsername[0]);
             } else {
-                credentials = new UsernamePasswordCredentials(username, password != null ? password.toCharArray() : null);
+                credentials = new UsernamePasswordCredentials(username, password);
             }
             credentialsProvider.setCredentials(new AuthScope(host, Integer.parseInt(port)), credentials);
         } else if (authTypes.contains(AuthTypes.KERBEROS)) {
             credentialsProvider.setCredentials(new AuthScope(host, Integer.parseInt(port)), new Credentials() {
                 @Override
-                public java.security.Principal getUserPrincipal() {
+                public Principal getUserPrincipal() {
                     return null;
                 }
 
                 @Override
-                public char[] getPassword() {
+                public String getPassword() {
                     return null;
                 }
             });
@@ -120,7 +119,7 @@ public class CredentialsProviderBuilder {
                 intProxyPort = Utils.validatePortNumber(proxyPort);
             }
             credentialsProvider.setCredentials(new AuthScope(proxyHost, intProxyPort),
-                    new UsernamePasswordCredentials(proxyUsername, proxyPassword != null ? proxyPassword.toCharArray() : null));
+                    new UsernamePasswordCredentials(proxyUsername, proxyPassword));
         }
 
         return credentialsProvider;

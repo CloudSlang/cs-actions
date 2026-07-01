@@ -29,7 +29,7 @@ import io.cloudslang.content.azure.entities.models.streamanalytics.StartStreamin
 import io.cloudslang.content.azure.utils.HttpUtils;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.hc.core5.net.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

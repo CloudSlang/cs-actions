@@ -23,7 +23,7 @@ import io.cloudslang.content.httpclient.build.auth.AuthTypes;
 import io.cloudslang.content.xml.entities.SimpleNamespaceContext;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.http.client.methods.HttpGet;
 import org.jdom2.input.SAXBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

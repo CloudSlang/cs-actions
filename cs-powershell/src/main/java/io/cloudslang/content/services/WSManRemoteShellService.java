@@ -28,7 +28,7 @@ import io.cloudslang.content.utils.ResourceLoader;
 import io.cloudslang.content.utils.WSManUtils;
 import io.cloudslang.content.utils.XMLUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.http.client.methods.HttpPost;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

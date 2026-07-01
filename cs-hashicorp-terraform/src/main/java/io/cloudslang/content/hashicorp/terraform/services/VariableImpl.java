@@ -16,7 +16,7 @@ import io.cloudslang.content.utils.StringUtilities;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
-import org.apache.hc.core5.net.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

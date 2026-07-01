@@ -20,7 +20,7 @@ package io.cloudslang.content.dca.utils;
 import io.cloudslang.content.dca.models.DcaAuthModel;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.core5.net.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;

@@ -23,7 +23,7 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Clust
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALL_TYPE_HEADER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1;
-import static org.apache.hc.core5.http.ContentType.APPLICATION_JSON;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 /**
  * Created by TusaM

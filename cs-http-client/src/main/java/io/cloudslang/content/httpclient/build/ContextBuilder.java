@@ -21,14 +21,13 @@ package io.cloudslang.content.httpclient.build;
 
 import io.cloudslang.content.httpclient.build.auth.AuthTypes;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.client5.http.auth.AuthCache;
-import org.apache.hc.client5.http.auth.AuthSchemeFactory;
-import org.apache.hc.client5.http.auth.CredentialsProvider;
-import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
-import org.apache.hc.client5.http.impl.auth.BasicScheme;
-import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.core5.http.HttpHost;
-import org.apache.hc.core5.http.config.Lookup;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthSchemeProvider;
+import org.apache.http.client.AuthCache;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.config.Lookup;
+import org.apache.http.impl.client.BasicAuthCache;
 
 import java.net.URI;
 
@@ -38,13 +37,13 @@ import java.net.URI;
  * Date: 10/7/14
  */
 public class ContextBuilder {
-    private Lookup<AuthSchemeFactory> authSchemeLookup;
+    private Lookup<AuthSchemeProvider> authSchemeLookup;
     private URI uri;
     private AuthTypes authTypes;
     private CredentialsProvider credentialsProvider;
     private String preemptiveAuth;
 
-    public ContextBuilder setAuthSchemeLookup(Lookup<AuthSchemeFactory> authSchemeLookup) {
+    public ContextBuilder setAuthSchemeLookup(Lookup<AuthSchemeProvider> authSchemeLookup) {
         this.authSchemeLookup = authSchemeLookup;
         return this;
     }
@@ -74,19 +73,12 @@ public class ContextBuilder {
             preemptiveAuth = "true";
         }
         HttpClientContext context = HttpClientContext.create();
-        context.setCredentialsProvider(credentialsProvider);
         if (authTypes.size() == 1 && Boolean.parseBoolean(preemptiveAuth) && !authTypes.contains(AuthTypes.ANONYMOUS)) {
-            try {
-                AuthCache authCache = new BasicAuthCache();
-                HttpHost targetHost = new HttpHost(uri.getScheme(), uri.getHost(), uri.getPort());
-                AuthSchemeFactory factory = authSchemeLookup.lookup(authTypes.iterator().next());
-                if (factory != null) {
-                    authCache.put(targetHost, factory.create(context));
-                    context.setAuthCache(authCache);
-                }
-            } catch (Exception ignored) {
-                // Preemptive auth setup is best-effort; fall back to challenge-response
-            }
+            AuthCache authCache = new BasicAuthCache();
+            authCache.put(new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme()),
+                    authSchemeLookup.lookup(authTypes.iterator().next()).create(context));
+            context.setCredentialsProvider(credentialsProvider);
+            context.setAuthCache(authCache);
         }
         return context;
     }

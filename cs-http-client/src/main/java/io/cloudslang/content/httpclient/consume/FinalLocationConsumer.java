@@ -20,8 +20,8 @@
 package io.cloudslang.content.httpclient.consume;
 
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.hc.client5.http.utils.URIUtils;
-import org.apache.hc.core5.http.HttpHost;
+import org.apache.http.HttpHost;
+import org.apache.http.client.utils.URIUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -49,15 +49,8 @@ public class FinalLocationConsumer {
     }
 
     public void consume(Map<String, String> returnResult) {
-        if (uri == null) {
-            throw new IllegalArgumentException("could not determine '" + HttpClientService.FINAL_LOCATION
-                    + "': uri is null");
-        }
         URI location;
         try {
-            if (targetHost != null) {
-                new URI(targetHost.toURI());
-            }
             location = URIUtils.resolve(uri, targetHost, redirectLocations);
         } catch (URISyntaxException e) {
             //this is not a fatal error

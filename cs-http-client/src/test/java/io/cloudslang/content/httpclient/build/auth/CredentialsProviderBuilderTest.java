@@ -19,11 +19,12 @@
 
 package io.cloudslang.content.httpclient.build.auth;
 
-import org.apache.hc.client5.http.auth.AuthScope;
-import org.apache.hc.client5.http.auth.Credentials;
-import org.apache.hc.client5.http.auth.NTCredentials;
-import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
-import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.AuthSchemes;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -32,6 +33,11 @@ import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Created with IntelliJ IDEA.
+ * User: tusaa
+ * Date: 7/2/14
+ */
 public class CredentialsProviderBuilderTest {
 
     @Rule
@@ -39,17 +45,15 @@ public class CredentialsProviderBuilderTest {
 
     @Test
     public void createNtlmCredentialsProvider() {
-        BasicCredentialsProvider credentialsProvider = getCredentialsProvider("NTLM");
-        Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80), null);
+        CredentialsProvider credentialsProvider = getCredentialsProvider(AuthSchemes.NTLM);
+        Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80));
 
         assertThat(credentials, instanceOf(NTCredentials.class));
         NTCredentials ntCredentials = (NTCredentials) credentials;
         assertEquals("DOMAIN", ntCredentials.getDomain());
-        // In httpclient5 5.3+, the workstation parameter is no longer settable via constructor;
-        // NTCredentials always resolves the local hostname via InetAddress.getLocalHost().getHostName().
-        assertThat(ntCredentials.getWorkstation(), org.hamcrest.CoreMatchers.notNullValue());
-        assertEquals("pass", new String(ntCredentials.getPassword()));
-        Credentials proxyCredentials = credentialsProvider.getCredentials(new AuthScope("proxy", 8080), null);
+        assertEquals("HOST", ntCredentials.getWorkstation());
+        assertEquals("pass", ntCredentials.getPassword());
+        Credentials proxyCredentials = credentialsProvider.getCredentials(new AuthScope("proxy", 8080));
         assertThat(proxyCredentials, instanceOf(UsernamePasswordCredentials.class));
         UsernamePasswordCredentials userCredentials = (UsernamePasswordCredentials) proxyCredentials;
         assertEquals("proxyUsername", userCredentials.getUserName());
@@ -57,20 +61,20 @@ public class CredentialsProviderBuilderTest {
 
     @Test
     public void createKerberosCredentialsProvider() {
-        BasicCredentialsProvider credentialsProvider = getCredentialsProvider("KERBEROS");
-        Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80), null);
+        CredentialsProvider credentialsProvider = getCredentialsProvider(AuthSchemes.KERBEROS);
+        Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80));
 
         assertThat(credentials, instanceOf(Credentials.class));
     }
 
     @Test
     public void createDefaultCredentialsProvider() {
-        BasicCredentialsProvider credentialsProvider = getCredentialsProvider("");
-        Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80), null);
+        CredentialsProvider credentialsProvider = getCredentialsProvider("");
+        Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80));
 
         assertThat(credentials, instanceOf(UsernamePasswordCredentials.class));
         UsernamePasswordCredentials userCredentials = (UsernamePasswordCredentials) credentials;
-        assertEquals("pass", new String(userCredentials.getPassword()));
+        assertEquals("pass", userCredentials.getPassword());
     }
 
     @Test
@@ -105,7 +109,7 @@ public class CredentialsProviderBuilderTest {
         builder.buildCredentialsProvider();
     }
 
-    private BasicCredentialsProvider getCredentialsProvider(String authType) {
+    private CredentialsProvider getCredentialsProvider(String authType) {
         AuthTypes authTypes = new AuthTypes(authType);
         CredentialsProviderBuilder builder = new CredentialsProviderBuilder()
                 .setAuthTypes(authTypes)

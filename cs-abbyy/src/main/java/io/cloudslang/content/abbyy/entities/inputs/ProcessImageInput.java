@@ -21,7 +21,7 @@ import io.cloudslang.content.abbyy.constants.*;
 import io.cloudslang.content.abbyy.entities.others.*;
 import io.cloudslang.content.abbyy.utils.InputParser;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.core5.net.URIBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URISyntaxException;

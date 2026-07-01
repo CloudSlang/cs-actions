@@ -24,20 +24,21 @@ import io.cloudslang.content.httpclient.build.Utils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.client5.http.auth.AuthScheme;
-import org.apache.hc.client5.http.auth.AuthSchemeFactory;
-import org.apache.hc.client5.http.auth.KerberosConfig;
-import org.apache.hc.client5.http.auth.StandardAuthScheme;
-import org.apache.hc.client5.http.impl.auth.*;
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.config.Lookup;
-import org.apache.hc.core5.http.config.RegistryBuilder;
-import org.apache.hc.core5.http.message.BasicHeader;
-import org.apache.hc.core5.http.protocol.HttpContext;
+import org.apache.http.Header;
+import org.apache.http.auth.AuthScheme;
+import org.apache.http.auth.AuthSchemeProvider;
+import org.apache.http.client.config.AuthSchemes;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.impl.auth.*;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HttpContext;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,6 +91,7 @@ public class AuthSchemeProviderLookupBuilder {
     public AuthSchemeProviderLookupBuilder setPassword(String password) {
         this.password = password;
         return this;
+
     }
 
     public AuthSchemeProviderLookupBuilder setProxyUsername(String proxyUsername) {
@@ -100,20 +102,20 @@ public class AuthSchemeProviderLookupBuilder {
     public AuthSchemeProviderLookupBuilder setProxyPassword(String proxyPassword) {
         this.proxyPassword = proxyPassword;
         return this;
-    }
 
+    }
     public AuthSchemeProviderLookupBuilder setHeaders(List<Header> headers) {
         this.headers = headers;
         return this;
     }
 
-    public Lookup<AuthSchemeFactory> buildAuthSchemeProviderLookup() {
-        RegistryBuilder<AuthSchemeFactory> registryBuilder = RegistryBuilder.create();
+    public Lookup<AuthSchemeProvider> buildAuthSchemeProviderLookup() {
+        RegistryBuilder<AuthSchemeProvider> registryBuilder = RegistryBuilder.create();
 
         for (String type : authTypes) {
             switch (type.trim()) {
                 case "NTLM":
-                    registryBuilder.register(StandardAuthScheme.NTLM, new AuthSchemeFactory() {
+                    registryBuilder.register(AuthSchemes.NTLM, new AuthSchemeProvider() {
                         @Override
                         public AuthScheme create(HttpContext httpContext) {
                             return new NTLMScheme(new JCIFSEngine());
@@ -121,20 +123,20 @@ public class AuthSchemeProviderLookupBuilder {
                     });
                     break;
                 case "BASIC":
-                    registryBuilder.register(StandardAuthScheme.BASIC, new BasicSchemeFactory(java.nio.charset.Charset.forName(Utils.DEFAULT_CHARACTER_SET)));
+                    registryBuilder.register(AuthSchemes.BASIC, new BasicSchemeFactory(Charset.forName(Utils.DEFAULT_CHARACTER_SET)));
                     if(!isEmpty(proxyUsername) && !isEmpty(proxyPassword)){
                         String value = proxyUsername + ":" + proxyPassword;
-                        byte[] encodedValue = Base64.encodeBase64(value.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                        byte[] encodedValue = Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8));
                         headers.add(new BasicHeader("Proxy-Authorization", "Basic " + new String(encodedValue)));
                     }
                     if(!isEmpty(username) && !isEmpty(password)) {
                         String value = username + ":" + password;
-                        byte[] encodedValue = Base64.encodeBase64(value.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                        byte[] encodedValue = Base64.encodeBase64(value.getBytes(StandardCharsets.UTF_8));
                         headers.add(new BasicHeader("Authorization", "Basic " + new String(encodedValue)));
                     }
                     break;
                 case "DIGEST":
-                    registryBuilder.register(StandardAuthScheme.DIGEST, new DigestSchemeFactory());
+                    registryBuilder.register(AuthSchemes.DIGEST, new DigestSchemeFactory());
                     break;
                 case "KERBEROS":
                     if (kerberosConfigFile != null) {
@@ -172,9 +174,8 @@ public class AuthSchemeProviderLookupBuilder {
                     System.setProperty("javax.security.auth.useSubjectCredsOnly", "false");
 
                     boolean skipPort = Boolean.parseBoolean(skipPortAtKerberosDatabaseLookup);
-                    KerberosConfig kerberosConfig = KerberosConfig.custom().setStripPort(skipPort ? KerberosConfig.Option.ENABLE : KerberosConfig.Option.DISABLE).build();
-                    registryBuilder.register(StandardAuthScheme.KERBEROS, new KerberosSchemeFactory(kerberosConfig, null));
-                    registryBuilder.register(StandardAuthScheme.SPNEGO, new SPNegoSchemeFactory(kerberosConfig, null));
+                    registryBuilder.register(AuthSchemes.KERBEROS, new KerberosSchemeFactory(skipPort));
+                    registryBuilder.register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory(skipPort));
                     break;
                 case AuthTypes.ANONYMOUS:
                     break;

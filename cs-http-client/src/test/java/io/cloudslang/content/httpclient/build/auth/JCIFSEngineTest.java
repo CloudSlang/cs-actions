@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.httpclient.build.auth;
 
-import org.apache.hc.client5.http.impl.auth.NTLMEngineException;
+import org.apache.http.impl.auth.NTLMEngineException;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
