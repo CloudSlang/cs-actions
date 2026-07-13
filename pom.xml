@@ -66,7 +66,7 @@
         <cs-http-client.version>0.1.94</cs-http-client.version>
         <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.13.1</junit.version>
-        <apache-poi.version>3.14</apache-poi.version>
+        <apache-poi.version>4.1.1</apache-poi.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
