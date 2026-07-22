@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 import java.util.*;
 
 import static io.cloudslang.content.httpclient.utils.Constants.*;
@@ -223,5 +225,41 @@ public class InputsValidator {
 
     private static boolean isValidFile(@NotNull final String filePath) {
         return new File(filePath).exists();
+    }
+
+    @NotNull
+    public static List<String> addVerifyDestinationFile(@NotNull List<String> exceptions, @Nullable final String filePath, @NotNull final String inputName) {
+        if (isEmpty(filePath))
+            return exceptions;
+        if (!isValidDestinationPath(filePath))
+            exceptions.add(String.format(EXCEPTION_DESTINATION_FILE_NOT_FOUND, filePath, inputName));
+        return exceptions;
+    }
+
+    private static boolean isValidDestinationPath(@NotNull final String filePath) {
+        final File file = new File(filePath);
+        if (file.isDirectory())
+            return false;
+        final File parent = file.getParentFile();
+        return parent != null && parent.isDirectory();
+    }
+    
+    @NotNull
+    public static List<String> addVerifyResponseCharacterSet(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+        if(isEmpty(input)){
+            return exceptions;
+        }
+        if(!isValidResponseCharacterSet(input)){
+            exceptions.add(String.format(EXCEPTION_INVALID_CHARSET, input, inputName));
+        }
+        return exceptions;
+    }
+
+    private static boolean isValidResponseCharacterSet(@NotNull String input) {
+        try {
+            return Charset.isSupported(input.trim());
+        } catch (IllegalCharsetNameException exception) {
+            return false;
+        }
     }
 }

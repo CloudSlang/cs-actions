@@ -40,6 +40,7 @@ import static io.cloudslang.content.httpclient.utils.Constants.*;
         import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
         import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 import static io.cloudslang.content.httpclient.utils.InputsValidator.addVerifyBoolean;
+import static io.cloudslang.content.httpclient.utils.InputsValidator.addVerifyResponseCharacterSet;
 import static io.cloudslang.content.httpclient.utils.InputsValidator.verifyHttpCommonInputs;
 import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.*;
         import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -134,6 +135,7 @@ public class HttpClientHeadAction {
                 connectionsMaxTotal, followRedirects, connectTimeout, responseTimeout, connectTimeout);
         addVerifyBoolean(exceptionMessages,queryParamsAreURLEncoded,QUERY_PARAMS_ARE_URLENCODED);
         addVerifyBoolean(exceptionMessages,queryParamsAreFormEncoded,QUERY_PARAMS_ARE_FORM_ENCODED);
+        addVerifyResponseCharacterSet(exceptionMessages,responseCharacterSet,RESPONSE_CHARACTER_SET);
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
