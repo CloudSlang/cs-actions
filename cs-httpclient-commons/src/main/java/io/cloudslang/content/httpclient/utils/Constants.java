@@ -93,6 +93,8 @@ public class Constants {
     //Exceptions
     public static final String EXCEPTION_NULL_EMPTY = "%s can't be null or empty.";
     public static final String EXCEPTION_INVALID_PATH = "%s for %s input is not a valid path.";
+    public static final String EXCEPTION_DESTINATION_FILE_NOT_FOUND = "%s for %s input is not a valid path or the file could not be found.";
+    public static final String EXCEPTION_INVALID_CHARSET = "%s for %s input is not a valid charset";
     public static final String EXCEPTION_INVALID_BOOLEAN = "%s for %s input is not a valid boolean value.";
     public static final String EXCEPTION_INVALID_NUMBER = "%s for %s input is not a valid number value.";
     public static final String EXCEPTION_INVALID_PORT = "%s for %s input is not a valid port.";

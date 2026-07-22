@@ -39,6 +39,7 @@ import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.FORM_PARAMS_ARE_URLENCODED;
 import static io.cloudslang.content.httpclient.utils.InputsValidator.addVerifyBoolean;
+import static io.cloudslang.content.httpclient.utils.InputsValidator.addVerifyDestinationFile;
 import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
@@ -149,6 +150,7 @@ public class HttpClientAction {
                 keepAlive, connectionsMaxPerRoute, connectionsMaxTotal,
                 followRedirects, connectTimeout, responseTimeout, executionTimeout
         );
+        addVerifyDestinationFile(exceptionMessages, destinationFile, DESTINATION_FILE);
         addVerifyBoolean(exceptionMessages,multipartValuesAreURLEncoded,MULTIPART_VALUES_ARE_URLENCODED);
         addVerifyBoolean(exceptionMessages,queryParamsAreURLEncoded,QUERY_PARAMS_ARE_URLENCODED);
         addVerifyBoolean(exceptionMessages,queryParamsAreFormEncoded,QUERY_PARAMS_ARE_FORM_ENCODED);
