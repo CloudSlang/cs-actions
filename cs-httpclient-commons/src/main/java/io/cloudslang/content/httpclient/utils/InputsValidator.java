@@ -230,8 +230,8 @@ public class InputsValidator {
     @NotNull
     public static List<String> addVerifyDestinationFile(@NotNull List<String> exceptions, @Nullable final String filePath, @NotNull final String inputName) {
         if (isEmpty(filePath))
-            return exceptions;
-        if (!isValidDestinationPath(filePath))
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, filePath));
+        else if (!isValidDestinationPath(filePath))
             exceptions.add(String.format(EXCEPTION_DESTINATION_FILE_NOT_FOUND, filePath, inputName));
         return exceptions;
     }
@@ -247,9 +247,9 @@ public class InputsValidator {
     @NotNull
     public static List<String> addVerifyResponseCharacterSet(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
         if(isEmpty(input)){
-            return exceptions;
+            exceptions.add(String.format(EXCEPTION_NULL_EMPTY, input));
         }
-        if(!isValidResponseCharacterSet(input)){
+        else if(!isValidResponseCharacterSet(input)){
             exceptions.add(String.format(EXCEPTION_INVALID_CHARSET, input, inputName));
         }
         return exceptions;
