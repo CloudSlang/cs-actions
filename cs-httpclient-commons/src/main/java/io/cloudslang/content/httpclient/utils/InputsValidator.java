@@ -228,7 +228,7 @@ public class InputsValidator {
     }
 
     @NotNull
-    public static List<String> addVerifyDestinationFile(@NotNull List<String> exceptions, @Nullable final String filePath, @NotNull final String inputName) {
+    public static List<String> addVerifyDestinationFile(@NotNull List<String> exceptions, final String filePath, @NotNull final String inputName) {
         if (isEmpty(filePath))
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, filePath));
         else if (!isValidDestinationPath(filePath))
@@ -245,7 +245,7 @@ public class InputsValidator {
     }
     
     @NotNull
-    public static List<String> addVerifyResponseCharacterSet(@NotNull List<String> exceptions, @NotNull final String input, @NotNull final String inputName) {
+    public static List<String> addVerifyResponseCharacterSet(@NotNull List<String> exceptions,final String input, @NotNull final String inputName) {
         if(isEmpty(input)){
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, input));
         }
