@@ -28,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -77,22 +76,28 @@ public class MSSqlDatabase implements SqlDatabase {
         setJavaLibraryPath(sqlJdbcAuthFilePath);
     }
 
-    private static void setJavaLibraryPath(String sqlJdbcAuthFilePath) {
-        String javaLibraryPath = System.getProperty(JAVA_LIBRARY_PATH);
+    private static boolean dllLoaded = false;
 
-        if (StringUtils.isEmpty(javaLibraryPath)) {
-            javaLibraryPath = sqlJdbcAuthFilePath;
-        } else {
-            javaLibraryPath = javaLibraryPath.substring(0, javaLibraryPath.length() - 1) + sqlJdbcAuthFilePath + System.getProperty(PATH_SEPARATOR) + CURRENT_DIRECTORY_NOTATION;
+    private static synchronized void setJavaLibraryPath(String sqlJdbcAuthFilePath) {
+        if (dllLoaded) {
+            return;
         }
-        System.setProperty(JAVA_LIBRARY_PATH, javaLibraryPath);
+
+        File dllFile = new File(sqlJdbcAuthFilePath, MSSQL_FILE_DRIVER);
+        if (!dllFile.exists()) {
+            throw new RuntimeException("Expected DLL not found at: " + dllFile.getAbsolutePath());
+        }
 
         try {
-            Field sysPathsField = ClassLoader.class.getDeclaredField(SYS_PATHS);
-            sysPathsField.setAccessible(true);
-            sysPathsField.set(null, null);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(INACCESSIBLE_OR_INEXISTENT_SYS_PATHS_FIELD_EXCEPTION);
+            System.load(dllFile.getAbsolutePath());
+            dllLoaded = true;
+        } catch (UnsatisfiedLinkError e) {
+            String message = e.getMessage();
+            if (message != null && message.contains("already loaded in another classloader")) {
+                dllLoaded = true;
+            } else {
+                throw new RuntimeException("Failed to load sqljdbc_auth.dll from path: " + dllFile.getAbsolutePath(), e);
+            }
         }
     }
 

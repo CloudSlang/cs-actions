@@ -41,6 +41,10 @@ public class SCPService {
     private static final String KNOWN_HOSTS_ALLOW = "allow";
     private static final String KNOWN_HOSTS_STRICT = "strict";
     private static final String KNOWN_HOSTS_ADD = "add";
+    private static final String ADDITIONAL_CIPHERS = ",aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
+    private static final String KEX_ALGORITHMS = ",curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group18-sha512,diffie-hellman-group16-sha512,diffie-hellman-group14-sha256,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1";
+    private static final String ADDITIONAL_HOST_KEY_ALGORITHMS = ",ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa,ssh-dss";
+    private static final String ADDITIONAL_PUBKEY_ALGORITHMS = ",ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa,ssh-dss";
 
     public Map<String, String> executeSCPCopyFile(SCPCopyFileInputs inputs) {
         Map<String, String> results = new HashMap<>();
@@ -48,7 +52,9 @@ public class SCPService {
 
         try {
             JSch jsch = new JSch();
+            configureAlgorithms();
             Session session = jsch.getSession(inputs.getUsername(), inputs.getHost(), Integer.parseInt(inputs.getPort()));
+            session.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");
             establishPasswordOrPrivateKeyFile(jsch, session, inputs.getPrivateKey(), inputs.getPassword());
 
             if (!StringUtils.isEmpty(inputs.getProxyHost())) {
@@ -124,7 +130,9 @@ public class SCPService {
             String temporaryDestFilePath = temporaryDestFile.getCanonicalPath().replace("\\", "\\\\");
 
             JSch jschRemoteToLocal = new JSch();
+            configureAlgorithms();
             Session sessionRemoteToLocal = jschRemoteToLocal.getSession(inputs.getSourceUsername(), inputs.getSourceHost(), Integer.parseInt(inputs.getSourcePort()));
+            sessionRemoteToLocal.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");
 
             if (!StringUtils.isEmpty(inputs.getProxyHost())) {
                 ProxyHTTP proxy = new ProxyHTTP(inputs.getProxyHost(), Integer.parseInt(inputs.getProxyPort()));
@@ -140,6 +148,7 @@ public class SCPService {
 
             JSch jschLocalToRemote = new JSch();
             Session sessionLocalToRemote = jschLocalToRemote.getSession(inputs.getDestinationUsername(), inputs.getDestinationHost(), Integer.parseInt(inputs.getDestinationPort()));
+            sessionLocalToRemote.setConfig("PreferredAuthentications", "publickey,password,keyboard-interactive");
 
             if (!StringUtils.isEmpty(inputs.getProxyHost())) {
                 ProxyHTTP proxy = new ProxyHTTP(inputs.getProxyHost(), Integer.parseInt(inputs.getProxyPort()));
@@ -405,14 +414,37 @@ public class SCPService {
     }
 
     protected void establishPasswordOrPrivateKeyFile(JSch jsch, Session session, String keyFilePath, String password) throws JSchException {
-        if (!keyFilePath.isEmpty()) {
-            if (!password.isEmpty()) {
+        if (keyFilePath != null && !keyFilePath.isEmpty()) {
+            if (password != null && !password.isEmpty()) {
                 jsch.addIdentity(keyFilePath, password);
             } else {
                 jsch.addIdentity(keyFilePath);
             }
         } else {
             session.setPassword(password);
+        }
+    }
+
+    private void configureAlgorithms() {
+        String ciphersS2C = JSch.getConfig("cipher.s2c");
+        if (ciphersS2C == null || !ciphersS2C.contains("aes128-ctr")) {
+            JSch.setConfig("cipher.s2c", (ciphersS2C != null ? ciphersS2C : "") + ADDITIONAL_CIPHERS);
+        }
+        String ciphersC2S = JSch.getConfig("cipher.c2s");
+        if (ciphersC2S == null || !ciphersC2S.contains("aes128-ctr")) {
+            JSch.setConfig("cipher.c2s", (ciphersC2S != null ? ciphersC2S : "") + ADDITIONAL_CIPHERS);
+        }
+        String serverHostKey = JSch.getConfig("server_host_key");
+        if (serverHostKey == null || !serverHostKey.contains("rsa-sha2-256")) {
+            JSch.setConfig("server_host_key", (serverHostKey != null ? serverHostKey : "") + ADDITIONAL_HOST_KEY_ALGORITHMS);
+        }
+        String pubkeyAlgorithms = JSch.getConfig("PubkeyAcceptedAlgorithms");
+        if (pubkeyAlgorithms == null || !pubkeyAlgorithms.contains("rsa-sha2-256")) {
+            JSch.setConfig("PubkeyAcceptedAlgorithms", (pubkeyAlgorithms != null ? pubkeyAlgorithms : "") + ADDITIONAL_PUBKEY_ALGORITHMS);
+        }
+        String kex = JSch.getConfig("kex");
+        if (kex == null || !kex.contains("curve25519-sha256")) {
+            JSch.setConfig("kex", (kex != null ? kex : "") + KEX_ALGORITHMS);
         }
     }
 
