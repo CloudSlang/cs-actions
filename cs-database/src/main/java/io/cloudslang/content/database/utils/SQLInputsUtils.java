@@ -250,7 +250,7 @@ public class SQLInputsUtils {
     private static Map<String, String> createDBClassValues() {
         final Map<String, String> concurValues = new HashMap<>();
         concurValues.put(ORACLE_DB_TYPE, ORACLE_JDBC_DRIVER);
-        concurValues.put(MSSQL_DB_TYPE, SQLSERVER_JDBC_DRIVER);
+        concurValues.put(MSSQL_DB_TYPE, JTDS_JDBC_DRIVER);
         concurValues.put(SYBASE_DB_TYPE, SYBASE_JTDS_DRIVER);
         concurValues.put(NETCOOL_DB_TYPE, NETCOOL_DRIVER);
         concurValues.put(DB2_DB_TYPE, DB2_DRIVER);
