@@ -17,7 +17,7 @@
 package io.cloudslang.content.mail.constants;
 
 public final class SecurityConstants {
-    public static final String BOUNCY_CASTLE_PROVIDER = "BC";
+    public static final String BOUNCY_CASTLE_PROVIDER = "BCFIPS";
     public static final String PKCS_KEYSTORE_TYPE = "PKCS12";
     public static final String ENCRYPTED_CONTENT_TYPE = "application/pkcs7-mime;\\s*name=\"?smime.p7m\"?;\\s*" +
             "smime-type=enveloped-data";
