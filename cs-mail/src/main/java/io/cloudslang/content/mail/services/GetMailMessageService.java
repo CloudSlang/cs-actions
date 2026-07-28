@@ -26,7 +26,7 @@ import io.cloudslang.content.mail.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.cms.*;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider;
 import org.bouncycastle.mail.smime.SMIMEEnveloped;
 import org.bouncycastle.mail.smime.SMIMEUtil;
 
@@ -35,10 +35,10 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
+import jakarta.mail.*;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.internet.MimeUtility;
 
 import static io.cloudslang.content.mail.constants.Constants.*;
 
@@ -57,7 +57,7 @@ public class GetMailMessageService {
 
             if (input.isEncryptedMessage()) {
                 if (Security.getProvider(SecurityConstants.BOUNCY_CASTLE_PROVIDER) == null) {
-                    Security.addProvider(new BouncyCastleProvider());
+                    Security.addProvider(new BouncyCastleFipsProvider());
                 }
                 ks = KeyStore.getInstance(SecurityConstants.PKCS_KEYSTORE_TYPE, SecurityConstants.BOUNCY_CASTLE_PROVIDER);
                 recId = SecurityUtils.addDecryptionSettings(ks, input);
