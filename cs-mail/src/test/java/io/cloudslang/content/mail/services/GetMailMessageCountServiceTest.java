@@ -32,8 +32,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.mail.Folder;
-import javax.mail.Store;
+import jakarta.mail.Folder;
+import jakarta.mail.Store;
 
 import java.util.Map;
 import java.util.Properties;

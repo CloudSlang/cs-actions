@@ -40,7 +40,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.mail.*;
+import jakarta.mail.*;
 import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;

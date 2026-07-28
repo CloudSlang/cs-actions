@@ -36,17 +36,16 @@ import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.operator.OutputEncryptor;
 import org.bouncycastle.util.encoders.Base64;
-import org.htmlparser.Parser;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.*;
+import jakarta.activation.DataHandler;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
@@ -248,14 +247,15 @@ public class SendMailService {
         return result;
     }
 
-    private void processHTMLBodyWithBASE64Images(MimeMultipart multipart) throws ParserException,
+    private void processHTMLBodyWithBASE64Images(MimeMultipart multipart) throws
             MessagingException, NoSuchAlgorithmException, SMIMEException, java.security.NoSuchProviderException, CMSException {
         if (null != input.getBody() && input.getBody().contains(Encodings.BASE64)) {
-            Parser parser = new Parser(input.getBody());
-            NodeList nodeList = parser.parse(null);
+            boolean isFullDocument = StringUtils.containsIgnoreCase(input.getBody(), "<html");
+            Document document = Jsoup.parse(input.getBody());
+            document.outputSettings().prettyPrint(false);
             HtmlImageNodeVisitor htmlImageNodeVisitor = new HtmlImageNodeVisitor();
-            nodeList.visitAllNodesWith(htmlImageNodeVisitor);
-            input.setBody(nodeList.toHtml());
+            htmlImageNodeVisitor.visitDocument(document);
+            input.setBody(isFullDocument ? document.html() : document.body().html());
 
             addAllBase64ImagesToMimeMultipart(multipart, htmlImageNodeVisitor.getBase64Images());
         }

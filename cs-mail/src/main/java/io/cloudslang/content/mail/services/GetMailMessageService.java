@@ -35,10 +35,10 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.MimeUtility;
+import jakarta.mail.*;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.internet.MimeUtility;
 
 import static io.cloudslang.content.mail.constants.Constants.*;
 
