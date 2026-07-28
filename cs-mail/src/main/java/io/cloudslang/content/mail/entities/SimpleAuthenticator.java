@@ -19,8 +19,8 @@
 
 package io.cloudslang.content.mail.entities;
 
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
 
 /**
  * Created by giloan on 11/3/2014.

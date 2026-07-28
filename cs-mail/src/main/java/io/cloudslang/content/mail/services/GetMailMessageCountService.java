@@ -22,7 +22,7 @@ import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
 
-import javax.mail.*;
+import jakarta.mail.*;
 import java.util.HashMap;
 import java.util.Map;
 
