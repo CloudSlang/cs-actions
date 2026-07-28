@@ -334,8 +334,11 @@ public class SCPCopier {
         else {
             String keyFilePath = keyFile.getKeyFilePath();
             String passPhrase = keyFile.getPassPhrase();
-            byte[] passphraseBytes = (passPhrase != null) ? passPhrase.getBytes(java.nio.charset.StandardCharsets.UTF_8) : null;
-            jsch.addIdentity(keyFilePath, passphraseBytes);
+            if (passPhrase != null) {
+                jsch.addIdentity(keyFilePath, passPhrase);
+            } else {
+                jsch.addIdentity(keyFilePath);
+            }
         }
     }
 
