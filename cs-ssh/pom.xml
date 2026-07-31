@@ -86,6 +86,7 @@
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>1.1.0</central-publishing-maven-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <cs-commons.version>0.0.7</cs-commons.version>
@@ -206,8 +207,8 @@
                     </configuration>
                 </plugin>
                 <!--
-                    Default deploy skipped to prevent accidental deployment to ossrh.
-                    Actual deployment handled by deploy-internal profile.
+                    Default deploy skipped to prevent deployment directly to the (now-retired) ossrh URL.
+                    Actual publishing to Maven Central is handled by central-publishing-maven-plugin below.
                 -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -226,6 +227,30 @@
                         </execution>
                     </executions>
                 </plugin>
+                <!--
+                    Publishes to Maven Central via the Central Publisher Portal.
+                    Legacy OSSRH (oss.sonatype.org) was fully retired on 2025-06-30, so this
+                    plugin (not distributionManagement) is what actually performs the release.
+                    NOTE: this plugin was missing entirely from the original pom.
+                -->
+                <plugin>
+                    <groupId>io.github.mavenplugins</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <executions>
+                        <execution>
+                            <id>publish-artifacts</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>publish</goal>
+                            </goals>
+                            <configuration>
+                                <publishingServerId>central</publishingServerId>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
@@ -235,6 +260,29 @@
         </pluginManagement>
 
         <plugins>
+            <!--
+                FIX: maven-source-plugin, maven-javadoc-plugin and maven-deploy-plugin were
+                declared only under <pluginManagement>, so their <executions> never actually
+                ran. central-publishing-maven-plugin was missing altogether. Declaring the
+                stubs below (config inherited from pluginManagement) makes deployment/publishing
+                actually work.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.github.mavenplugins</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
