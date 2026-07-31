@@ -90,6 +90,7 @@
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <central-publishing-maven-plugin.version>1.1.0</central-publishing-maven-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
         <cs-http-client.version>0.1.96</cs-http-client.version>
@@ -293,8 +294,8 @@
                     </configuration>
                 </plugin>
                 <!--
-                    Default deploy is skipped to prevent accidental deployment to ossrh/Maven Central.
-                    Actual deployment is handled by the deploy-internal profile using altDeploymentRepository.
+                    Default deploy is skipped to prevent deployment directly to the (now-retired) ossrh URL.
+                    Actual publishing to Maven Central is handled by central-publishing-maven-plugin below.
                 -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -316,7 +317,7 @@
                 <plugin>
                     <groupId>io.github.mavenplugins</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>1.1.0</version>
+                    <version>${central-publishing-maven-plugin.version}</version>
                     <extensions>true</extensions>
                     <executions>
                         <execution>
@@ -340,6 +341,30 @@
         </pluginManagement>
 
         <plugins>
+            <!--
+                FIX: maven-source-plugin, maven-javadoc-plugin, maven-deploy-plugin and
+                central-publishing-maven-plugin were declared only under <pluginManagement>,
+                so their <executions> never actually ran during the build/deploy lifecycle
+                (pluginManagement only supplies defaults for plugins that are also invoked
+                here in <plugins>). Adding the stub references below makes Maven apply the
+                managed executions for real - this is what makes deployment/publishing work.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.github.mavenplugins</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+            </plugin>
             <!--License checker for build-->
             <plugin>
                 <groupId>com.mycila</groupId>
