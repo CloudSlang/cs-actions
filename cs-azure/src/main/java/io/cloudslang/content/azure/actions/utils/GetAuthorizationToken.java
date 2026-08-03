@@ -23,7 +23,7 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.microsoft.aad.adal4j.AuthenticationResult;
+import com.microsoft.aad.msal4j.IAuthenticationResult;
 import io.cloudslang.content.azure.entities.AuthorizationTokenInputs;
 import io.cloudslang.content.azure.services.AuthorizationTokenImpl;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -115,7 +115,7 @@ public class GetAuthorizationToken {
         }
 
         try {
-            final AuthenticationResult result = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
+            final IAuthenticationResult result = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
                     .username(username)
                     .password(password)
                     .clientId(clientId)
@@ -126,7 +126,7 @@ public class GetAuthorizationToken {
                     .proxyUsername(proxyUsername)
                     .proxyPassword(proxyPassword)
                     .build());
-            return getSuccessResultsMap(result.getAccessTokenType() + SPACE + result.getAccessToken());
+            return getSuccessResultsMap("Bearer" + SPACE + result.accessToken());
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

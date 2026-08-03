@@ -28,7 +28,8 @@ import io.cloudslang.content.utils.ResourceLoader;
 import io.cloudslang.content.utils.WSManUtils;
 import io.cloudslang.content.utils.XMLUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.methods.HttpPost;
+
+import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -117,9 +118,8 @@ public class WSManRemoteShellService {
      */
     public Map<String, String> runCommand(WSManRequestInputs wsManRequestInputs) throws Exception {
         HttpClientService csHttpClient = new HttpClientService();
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
         URL url = buildURL(wsManRequestInputs, WSMAN_RESOURCE_URI);
-        httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
+        HttpClientInputs httpClientInputs = buildCommonHttpInputs(url, wsManRequestInputs);
         String shellId = createShell(csHttpClient, httpClientInputs, wsManRequestInputs);
         WSManUtils.validateUUID(shellId, SHELL_ID);
         String commandStr = WSManUtils.constructCommand(wsManRequestInputs, this.psEdition);
@@ -131,44 +131,39 @@ public class WSManRemoteShellService {
     }
 
     /**
-     * Configures the HttpClientInputs object with the most common http parameters.
+     * Builds the HttpClientInputs object with the most common http parameters using builder pattern.
      *
-     * @param httpClientInputs
      * @param url
      * @param wsManRequestInputs
      * @return the configured HttpClientInputs object.
-     * @throws MalformedURLException
      */
-    private static HttpClientInputs setCommonHttpInputs(HttpClientInputs httpClientInputs, URL url, WSManRequestInputs wsManRequestInputs) throws MalformedURLException {
-        httpClientInputs.setUrl(url.toString());
-        httpClientInputs.setUsername(wsManRequestInputs.getUsername());
-        httpClientInputs.setPassword(wsManRequestInputs.getPassword());
-        httpClientInputs.setAuthType(wsManRequestInputs.getAuthType());
-        httpClientInputs.setKerberosConfFile(wsManRequestInputs.getKerberosConfFile());
-        httpClientInputs.setKerberosLoginConfFile(wsManRequestInputs.getKerberosLoginConfFile());
-        httpClientInputs.setKerberosSkipPortCheck(wsManRequestInputs.getKerberosSkipPortForLookup());
-        httpClientInputs.setTrustAllRoots(wsManRequestInputs.getTrustAllRoots());
-        httpClientInputs.setX509HostnameVerifier(wsManRequestInputs.getX509HostnameVerifier());
-        httpClientInputs.setProxyHost(wsManRequestInputs.getProxyHost());
-        httpClientInputs.setProxyPort(wsManRequestInputs.getProxyPort());
-        httpClientInputs.setProxyUsername(wsManRequestInputs.getProxyUsername());
-        httpClientInputs.setProxyPassword(wsManRequestInputs.getProxyPassword());
-        httpClientInputs.setKeystore(wsManRequestInputs.getKeystore());
-        httpClientInputs.setKeystorePassword(wsManRequestInputs.getKeystorePassword());
-        httpClientInputs.setTrustKeystore(wsManRequestInputs.getTrustKeystore());
-        httpClientInputs.setTrustPassword(wsManRequestInputs.getTrustPassword());
-        String headers = httpClientInputs.getHeaders();
-        if (StringUtils.isEmpty(headers)) {
-            httpClientInputs.setHeaders(CONTENT_TYPE_HEADER);
-        } else {
-            httpClientInputs.setHeaders(headers + NEW_LINE_SEPARATOR + CONTENT_TYPE_HEADER);
-        }
-        httpClientInputs.setMethod(HttpPost.METHOD_NAME);
-        return httpClientInputs;
+    private static HttpClientInputs buildCommonHttpInputs(URL url, WSManRequestInputs wsManRequestInputs) {
+        return HttpClientInputs.builder()
+                .url(url.toString())
+                .username(wsManRequestInputs.getUsername())
+                .password(wsManRequestInputs.getPassword())
+                .authType(wsManRequestInputs.getAuthType())
+                .kerberosConfFile(wsManRequestInputs.getKerberosConfFile())
+                .kerberosLoginConfFile(wsManRequestInputs.getKerberosLoginConfFile())
+                .kerberosSkipPortCheck(wsManRequestInputs.getKerberosSkipPortForLookup())
+                .trustAllRoots(wsManRequestInputs.getTrustAllRoots())
+                .x509HostnameVerifier(wsManRequestInputs.getX509HostnameVerifier())
+                .proxyHost(wsManRequestInputs.getProxyHost())
+                .proxyPort(wsManRequestInputs.getProxyPort())
+                .proxyUsername(wsManRequestInputs.getProxyUsername())
+                .proxyPassword(wsManRequestInputs.getProxyPassword())
+                .keystore(wsManRequestInputs.getKeystore())
+                .keystorePassword(wsManRequestInputs.getKeystorePassword())
+                .trustKeystore(wsManRequestInputs.getTrustKeystore())
+                .trustPassword(wsManRequestInputs.getTrustPassword())
+                .headers(CONTENT_TYPE_HEADER)
+                .method(HttpPost.METHOD_NAME)
+                .build();
     }
 
     /**
      * This method executes a request with the given CSHttpClient, HttpClientInputs and body.
+     * Rebuilds HttpClientInputs with the body since the class is immutable.
      *
      * @param csHttpClient
      * @param httpClientInputs
@@ -176,8 +171,29 @@ public class WSManRemoteShellService {
      * @return the result of the request execution.
      */
     private Map<String, String> executeRequestWithBody(HttpClientService csHttpClient, HttpClientInputs httpClientInputs, String body) throws Exception {
-        httpClientInputs.setBody(body);
-        Map<String, String> requestResponse = csHttpClient.execute(httpClientInputs);
+        HttpClientInputs inputsWithBody = HttpClientInputs.builder()
+                .url(httpClientInputs.getUrl())
+                .username(httpClientInputs.getUsername())
+                .password(httpClientInputs.getPassword())
+                .authType(httpClientInputs.getAuthType())
+                .kerberosConfFile(httpClientInputs.getKerberosConfFile())
+                .kerberosLoginConfFile(httpClientInputs.getKerberosLoginConfFile())
+                .kerberosSkipPortCheck(httpClientInputs.getKerberosSkipPortCheck())
+                .trustAllRoots(httpClientInputs.getTrustAllRoots())
+                .x509HostnameVerifier(httpClientInputs.getX509HostnameVerifier())
+                .proxyHost(httpClientInputs.getProxyHost())
+                .proxyPort(httpClientInputs.getProxyPort())
+                .proxyUsername(httpClientInputs.getProxyUsername())
+                .proxyPassword(httpClientInputs.getProxyPassword())
+                .keystore(httpClientInputs.getKeystore())
+                .keystorePassword(httpClientInputs.getKeystorePassword())
+                .trustKeystore(httpClientInputs.getTrustKeystore())
+                .trustPassword(httpClientInputs.getTrustPassword())
+                .headers(httpClientInputs.getHeaders())
+                .method(httpClientInputs.getMethod())
+                .body(body)
+                .build();
+        Map<String, String> requestResponse = csHttpClient.execute(inputsWithBody);
         if (UNAUTHORIZED_STATUS_CODE.equals(requestResponse.get(STATUS_CODE))) {
             throw new RuntimeException(UNAUTHORIZED_EXCEPTION_MESSAGE);
         }

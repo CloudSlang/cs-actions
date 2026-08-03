@@ -70,6 +70,9 @@ public class HttpClientInputs {
     private final SerializableSessionObject cookieStoreSessionObject;
     private final GlobalSessionObject<?> connectionPoolSessionObject;
     private final String queryParamsAreFormEncoded;
+    private final String kerberosConfFile;
+    private final String kerberosLoginConfFile;
+    private final String kerberosSkipPortCheck;
 
     @NotNull
     public static HttpClientInputsBuilder builder(){return new HttpClientInputsBuilder();}
@@ -82,7 +85,8 @@ public class HttpClientInputs {
             "sourceFile", "body", "contentType", "requestCharacterSet", "multipartBodies", "multipartFiles",
             "multipartValuesAreURLEncoded", "multipartBodiesContentType", "multipartFilesContentType",
             "method", "tlsVersion", "allowedCiphers", "cookieStoreSessionObject",
-            "connectionPoolSessionObject", "queryParamsAreFormEncoded"})
+            "connectionPoolSessionObject", "queryParamsAreFormEncoded", "kerberosConfFile", "kerberosLoginConfFile",
+            "kerberosSkipPortCheck"})
     public HttpClientInputs(String url, String authType, String preemptiveAuth, String username, String password,
                             String proxyHost, String proxyPort, String proxyUsername, String proxyPassword,
                             String trustAllRoots, String x509HostnameVerifier, String trustKeystore, String trustPassword,
@@ -95,7 +99,8 @@ public class HttpClientInputs {
                             String multipartValuesAreURLEncoded, String multipartBodiesContentType,
                             String multipartFilesContentType, String method,
                             String tlsVersion, String allowedCiphers, SerializableSessionObject cookieStoreSessionObject,
-                            GlobalSessionObject<?> connectionPoolSessionObject, String queryParamsAreFormEncoded) {
+                            GlobalSessionObject<?> connectionPoolSessionObject, String queryParamsAreFormEncoded,
+                            String kerberosConfFile, String kerberosLoginConfFile, String kerberosSkipPortCheck) {
         this.url = url;
         this.authType = authType;
         this.preemptiveAuth = preemptiveAuth;
@@ -141,6 +146,9 @@ public class HttpClientInputs {
         this.cookieStoreSessionObject = cookieStoreSessionObject;
         this.connectionPoolSessionObject = connectionPoolSessionObject;
         this.queryParamsAreFormEncoded = queryParamsAreFormEncoded;
+        this.kerberosConfFile = kerberosConfFile;
+        this.kerberosLoginConfFile = kerberosLoginConfFile;
+        this.kerberosSkipPortCheck = kerberosSkipPortCheck;
     }
 
     @NotNull
@@ -374,6 +382,18 @@ public class HttpClientInputs {
         return queryParamsAreFormEncoded;
     }
 
+    public String getKerberosConfFile() {
+        return kerberosConfFile;
+    }
+
+    public String getKerberosLoginConfFile() {
+        return kerberosLoginConfFile;
+    }
+
+    public String getKerberosSkipPortCheck() {
+        return kerberosSkipPortCheck;
+    }
+
     public static class HttpClientInputsBuilder {
         private String url = EMPTY;
         private String authType = EMPTY;
@@ -421,6 +441,9 @@ public class HttpClientInputs {
         private SerializableSessionObject cookieStoreSessionObject;
         private GlobalSessionObject<?> connectionPoolSessionObject;
         private String queryParamsAreFormEncoded = EMPTY;
+        private String kerberosConfFile = EMPTY;
+        private String kerberosLoginConfFile = EMPTY;
+        private String kerberosSkipPortCheck = EMPTY;
 
         HttpClientInputsBuilder() {
         }
@@ -685,6 +708,21 @@ public class HttpClientInputs {
             return this;
         }
 
+        public HttpClientInputsBuilder kerberosConfFile(final String kerberosConfFile){
+            this.kerberosConfFile = kerberosConfFile;
+            return this;
+        }
+
+        public HttpClientInputsBuilder kerberosLoginConfFile(final String kerberosLoginConfFile){
+            this.kerberosLoginConfFile = kerberosLoginConfFile;
+            return this;
+        }
+
+        public HttpClientInputsBuilder kerberosSkipPortCheck(final String kerberosSkipPortCheck){
+            this.kerberosSkipPortCheck = kerberosSkipPortCheck;
+            return this;
+        }
+
         public HttpClientInputs build(){
             return new HttpClientInputs(url, authType, preemptiveAuth, username, password, proxyHost, proxyPort, proxyUsername,
                     proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword,
@@ -693,7 +731,8 @@ public class HttpClientInputs {
                     queryParamsAreURLEncoded, formParams, formParamsAreURLEncoded, sourceFile, body, contentType,
                     requestCharacterSet, multipartBodies, multipartFiles, multipartValuesAreURLEncoded, multipartBodiesContentType,
                     multipartFilesContentType, method, tlsVersion, allowedCiphers, cookieStoreSessionObject,
-                    connectionPoolSessionObject, queryParamsAreFormEncoded);
+                    connectionPoolSessionObject, queryParamsAreFormEncoded, kerberosConfFile, kerberosLoginConfFile,
+                    kerberosSkipPortCheck);
         }
 
     }

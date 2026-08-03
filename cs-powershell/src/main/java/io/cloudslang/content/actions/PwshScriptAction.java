@@ -31,6 +31,18 @@ import io.cloudslang.content.utils.Constants;
 import java.util.Map;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.Constants.InputNames.*;
 import static io.cloudslang.content.utils.Constants.Others.CHANGEIT;
 import static io.cloudslang.content.utils.Constants.Others.DEFAULT_JAVA_KEYSTORE;

@@ -74,7 +74,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.10</score-content-sdk.version>
-        <cs-http-client.version>0.1.96</cs-http-client.version>
+        <cs-httpclient-commons.version>0.0.26-SNAPSHOT</cs-httpclient-commons.version>
         <cs-commons.version>0.0.7</cs-commons.version>
         <junit.version>4.12</junit.version>
         <!--Misc properties-->
@@ -93,13 +93,18 @@
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-http-client</artifactId>
-            <version>${cs-http-client.version}</version>
+            <artifactId>cs-httpclient-commons</artifactId>
+            <version>${cs-httpclient-commons.version}</version>
         </dependency>
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
             <version>${cs-commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
         </dependency>
         <!--Test dependencies-->
         <dependency>

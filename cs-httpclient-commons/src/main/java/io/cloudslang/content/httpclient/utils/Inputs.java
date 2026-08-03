@@ -18,7 +18,7 @@ package io.cloudslang.content.httpclient.utils;
 
 public class Inputs {
 
-    public class HTTPInputs {
+    public static class HTTPInputs {
 
         //FROM WIKI
         //==============================================================================================================
@@ -75,5 +75,20 @@ public class Inputs {
         public static final String MULTIPART_VALUES_ARE_URLENCODED = "multipartValuesAreURLEncoded";
         public final static String SESSION_CONNECTION_POOL = "httpClientPoolingConnectionManager";
         public final static String SESSION_COOKIES = "httpClient5CookieSession";
+
+        public static final String KERBEROS_CONFIG_FILE = "kerberosConfFile";
+        public static final String KERBEROS_LOGIN_CONFIG_FILE = "kerberosLoginConfFile";
+        public static final String KERBEROS_SKIP_PORT_CHECK = "kerberosSkipPortForLookup";
+
+        public String getBody() {
+            return body;
+        }
+
+        public void setBody(String body) {
+            this.body = body;
+        }
+
+        private String body;
+
     }
 }

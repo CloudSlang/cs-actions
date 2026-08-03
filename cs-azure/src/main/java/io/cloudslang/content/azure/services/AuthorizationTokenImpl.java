@@ -19,8 +19,9 @@
 
 package io.cloudslang.content.azure.services;
 
-import com.microsoft.aad.adal4j.AuthenticationContext;
-import com.microsoft.aad.adal4j.AuthenticationResult;
+import com.microsoft.aad.msal4j.IAuthenticationResult;
+import com.microsoft.aad.msal4j.PublicClientApplication;
+import com.microsoft.aad.msal4j.UserNamePasswordParameters;
 import io.cloudslang.content.azure.entities.AuthorizationTokenInputs;
 import io.cloudslang.content.azure.utils.DateUtilities;
 import org.apache.commons.codec.binary.Base64;
@@ -28,10 +29,9 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.Mac;
+import java.net.Proxy;
+import java.util.Collections;
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static io.cloudslang.content.azure.utils.Constants.SHARED_ACCESS_SIGNATURE;
 import static io.cloudslang.content.azure.utils.HttpUtils.getProxy;
@@ -52,12 +52,18 @@ public class AuthorizationTokenImpl {
     }
 
     @NotNull
-    public static AuthenticationResult getToken(@NotNull final AuthorizationTokenInputs inputs) throws Exception {
-        final ExecutorService service = Executors.newSingleThreadExecutor();
-        final AuthenticationContext context = new AuthenticationContext(inputs.getAuthority(), false, service);
-        context.setProxy(getProxy(inputs.getProxyHost(), inputs.getProxyPort(), inputs.getProxyUsername(), inputs.getProxyPassword()));
-        final Future<AuthenticationResult> future = context.acquireToken(inputs.getResource(), inputs.getClientId(), inputs.getUsername(), inputs.getPassword(), null);
-        service.shutdown();
-        return future.get();
+    public static IAuthenticationResult getToken(@NotNull final AuthorizationTokenInputs inputs) throws Exception {
+        final Proxy proxy = getProxy(inputs.getProxyHost(), inputs.getProxyPort(), inputs.getProxyUsername(), inputs.getProxyPassword());
+        final PublicClientApplication.Builder appBuilder = PublicClientApplication
+                .builder(inputs.getClientId())
+                .authority(inputs.getAuthority());
+        if (proxy != Proxy.NO_PROXY) {
+            appBuilder.proxy(proxy);
+        }
+        final PublicClientApplication app = appBuilder.build();
+        final UserNamePasswordParameters parameters = UserNamePasswordParameters
+                .builder(Collections.singleton(inputs.getResource() + "/.default"), inputs.getUsername(), inputs.getPassword().toCharArray())
+                .build();
+        return app.acquireToken(parameters).get();
     }
 }

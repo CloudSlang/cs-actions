@@ -69,7 +69,6 @@ public class HttpUtils {
         return results;
     }
 
-    @NotNull
     public static void parseApiExceptionMessage(@NotNull final Map<String, String> result) {
 
         String exception = result.get(EXCEPTION);
