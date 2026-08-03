@@ -126,27 +126,20 @@
             <artifactId>commons-logging</artifactId>
             <version>1.4.0</version>
         </dependency>
-        <!-- FIPS-validated BouncyCastle distribution (bc-fips 2.0.x line) -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bc-fips</artifactId>
-            <version>2.0.1</version>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.84</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcutil-fips</artifactId>
-            <version>2.0.6</version>
+            <artifactId>bcjmail-jdk18on</artifactId>
+            <version>1.84</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-fips</artifactId>
-            <version>2.0.11</version>
-        </dependency>
-        <!-- Jakarta Mail S/MIME APIs, FIPS distribution -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcjmail-fips</artifactId>
-            <version>2.0.5</version>
+            <artifactId>bcpkix-jdk18on</artifactId>
+            <version>1.84</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>

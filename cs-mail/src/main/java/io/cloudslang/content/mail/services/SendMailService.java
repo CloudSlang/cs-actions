@@ -27,10 +27,11 @@ import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import io.cloudslang.content.mail.utils.HtmlImageNodeVisitor;
 import io.cloudslang.content.mail.utils.ProxyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
-import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
-import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider;
+import org.bouncycastle.cms.bc.BcCMSContentEncryptorBuilder;
+import org.bouncycastle.cms.bc.BcRSAKeyTransRecipientInfoGenerator;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.operator.OutputEncryptor;
@@ -53,7 +54,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.*;
 import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -175,9 +175,8 @@ public class SendMailService {
             MimeBodyPart finalBody = new MimeBodyPart();
             finalBody.setContent(multipart);
             if (input.isEncryptedMessage()) {
-                OutputEncryptor outputEncryptor = new JceCMSContentEncryptorBuilder(
-                        input.getEncryptionAlgorithm().getAsn10ObjId())
-                        .setProvider(SecurityConstants.BOUNCY_CASTLE_PROVIDER).build();
+                OutputEncryptor outputEncryptor = new BcCMSContentEncryptorBuilder(
+                        input.getEncryptionAlgorithm().getAsn10ObjId()).build();
                 finalBody = gen.generate(finalBody, outputEncryptor);
             }
 
@@ -282,9 +281,7 @@ public class SendMailService {
 
     private MimeBodyPart encryptMimeBodyPart(MimeBodyPart mimeBodyPart) throws SMIMEException, CMSException {
         if (input.isEncryptedMessage()) {
-            OutputEncryptor outputEncryptor = new JceCMSContentEncryptorBuilder(
-                    input.getEncryptionAlgorithm().getAsn10ObjId())
-                    .setProvider(SecurityConstants.BOUNCY_CASTLE_PROVIDER).build();
+            OutputEncryptor outputEncryptor = new BcCMSContentEncryptorBuilder(input.getEncryptionAlgorithm().getAsn10ObjId()).build();
             mimeBodyPart = gen.generate(mimeBodyPart, outputEncryptor);
         }
         return mimeBodyPart;
@@ -296,7 +293,7 @@ public class SendMailService {
             char[] smimePw = input.getEncryptionKeystorePassword().toCharArray();
             gen = new SMIMEEnvelopedGenerator();
             if (Security.getProvider(SecurityConstants.BOUNCY_CASTLE_PROVIDER) == null) {
-                Security.addProvider(new BouncyCastleFipsProvider());
+                Security.addProvider(new BouncyCastleProvider());
             }
             KeyStore ks = KeyStore.getInstance(SecurityConstants.PKCS_KEYSTORE_TYPE, SecurityConstants.BOUNCY_CASTLE_PROVIDER);
             ks.load(publicKeystoreInputStream, smimePw);
@@ -321,11 +318,12 @@ public class SendMailService {
                 throw new Exception("The key with alias \"" + input.getEncryptionKeyAlias() + "\" can't be found in given keystore.");
             }
 
+            X509CertificateHolder certificateHolder = new X509CertificateHolder(chain[0].getEncoded());
+
             //
             // create the generator for creating an smime/encrypted message
             //
-            gen.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator((X509Certificate) chain[0])
-                    .setProvider(SecurityConstants.BOUNCY_CASTLE_PROVIDER));
+            gen.addRecipientInfoGenerator(new BcRSAKeyTransRecipientInfoGenerator(certificateHolder));
         }
     }
 

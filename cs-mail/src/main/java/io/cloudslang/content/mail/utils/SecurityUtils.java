@@ -22,7 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cms.KeyTransRecipientId;
 import org.bouncycastle.cms.RecipientId;
-import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -35,7 +35,7 @@ public final class SecurityUtils {
     public static KeyTransRecipientId addDecryptionSettings(KeyStore ks, DecryptableMailInput input) throws Exception {
         char[] smimePw = input.getDecryptionKeystorePassword().toCharArray();
 
-        java.security.Security.addProvider(new BouncyCastleFipsProvider());
+        java.security.Security.addProvider(new BouncyCastleProvider());
 
         try (InputStream decryptionStream = new URL(input.getDecryptionKeystore()).openStream()) {
             ks.load(decryptionStream, smimePw);
