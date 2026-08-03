@@ -29,8 +29,8 @@ import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.utils.ProxyUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import jakarta.mail.*;
-import jakarta.mail.NoSuchProviderException;
+import javax.mail.*;
+import javax.mail.NoSuchProviderException;
 import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;

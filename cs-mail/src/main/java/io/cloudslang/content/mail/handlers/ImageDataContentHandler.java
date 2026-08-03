@@ -14,9 +14,9 @@
  */
 package io.cloudslang.content.mail.handlers;
 
-import jakarta.activation.ActivationDataFlavor;
-import jakarta.activation.DataContentHandler;
-import jakarta.activation.DataSource;
+import javax.activation.DataContentHandler;
+import javax.activation.DataSource;
+import java.awt.datatransfer.DataFlavor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,15 +28,15 @@ import java.io.OutputStream;
  */
 public class ImageDataContentHandler implements DataContentHandler {
 
-    private static final ActivationDataFlavor BYTE_ARRAY_FLAVOR = new ActivationDataFlavor(byte[].class, "application/octet-stream", "byte array");
+    private static final DataFlavor BYTE_ARRAY_FLAVOR = new DataFlavor(byte[].class, "application/octet-stream");
 
     @Override
-    public ActivationDataFlavor[] getTransferDataFlavors() {
-        return new ActivationDataFlavor[]{BYTE_ARRAY_FLAVOR};
+    public DataFlavor[] getTransferDataFlavors() {
+        return new DataFlavor[]{BYTE_ARRAY_FLAVOR};
     }
 
     @Override
-    public Object getTransferData(ActivationDataFlavor df, DataSource ds) throws IOException {
+    public Object getTransferData(DataFlavor df, DataSource ds) throws IOException {
         if (BYTE_ARRAY_FLAVOR.equals(df)) {
             return getContent(ds);
         }

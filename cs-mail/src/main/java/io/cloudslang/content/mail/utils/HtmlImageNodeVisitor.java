@@ -19,8 +19,8 @@
 
 package io.cloudslang.content.mail.utils;
 
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.htmlparser.Tag;
+import org.htmlparser.visitors.NodeVisitor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,23 +30,21 @@ import java.util.Random;
  * User: bancl
  * Date: 4/15/2015
  */
-public class HtmlImageNodeVisitor {
-    private static final String BASE64 = "base64";
-
+public class HtmlImageNodeVisitor extends NodeVisitor {
     private Map<String,String> base64ImagesMap = new HashMap<>();
 
     public HtmlImageNodeVisitor() {
     }
 
-    public void visitDocument(Document document) {
-        for (Element img : document.select("img")) {
-            String imageValue = img.attr("src");
+    public void visitTag(Tag tag) {
+        if (tag.getRawTagName().equalsIgnoreCase("img")) {
+            String imageValue = tag.getAttribute("src");
 
-            if (imageValue.contains(BASE64)) {
+            if (imageValue.contains("base64")) {
                 String contentId = getContentId();
-                img.attr("src", "cid:" + contentId);
+                tag.setAttribute("src", "cid:" + contentId);
                 base64ImagesMap.put(contentId,
-                        imageValue.substring(imageValue.indexOf(BASE64) + 7));
+                        imageValue.substring(imageValue.indexOf("base64") + 7, imageValue.length()));
             }
         }
     }

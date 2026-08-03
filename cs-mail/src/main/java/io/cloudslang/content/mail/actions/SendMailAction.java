@@ -33,11 +33,11 @@ import io.cloudslang.content.mail.utils.ResultUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
-import jakarta.activation.CommandMap;
-import jakarta.activation.MailcapCommandMap;
+import javax.activation.CommandMap;
+import javax.activation.MailcapCommandMap;
 import io.cloudslang.content.mail.handlers.ImageDataContentHandler;
-import jakarta.activation.MimeType;
-import jakarta.activation.MimeTypeParseException;
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 
 
 /**
