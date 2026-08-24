@@ -303,7 +303,7 @@
                 <plugin>
                     <groupId>io.github.mavenplugins</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>1.1.0</version>
+                    <version>${central-publishing-maven-plugin.version}</version>
                     <extensions>true</extensions>
                     <executions>
                         <execution>
@@ -327,6 +327,29 @@
         </pluginManagement>
 
         <plugins>
+		<!--
+                FIX: these plugins were previously declared only under <pluginManagement>,
+                so their <executions> (attach-sources, attach-javadocs, deploy skip, and
+                Central Portal publishing) never actually ran. Declaring them here (even
+                without repeating version/config) makes Maven apply the managed executions
+                for real during the build/deploy lifecycle.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.github.mavenplugins</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
