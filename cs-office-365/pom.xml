@@ -349,7 +349,6 @@
             <plugin>
                 <groupId>io.github.mavenplugins</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <extensions>true</extensions>
             </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
