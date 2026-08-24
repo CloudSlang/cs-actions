@@ -27,7 +27,7 @@ import static io.cloudslang.content.office365.utils.InputsValidation.verifyCommo
 import static io.cloudslang.content.office365.utils.InputsValidation.verifyGetMessageInputs;
 import static org.junit.Assert.assertEquals;
 
-public class InputsValidationUtils {
+public class InputsValidationUtilsTest {
 
     public static final String CONNECT_TIMEOUT = "2";
     public static final String SOCKET_TIMEOUT = "10";
