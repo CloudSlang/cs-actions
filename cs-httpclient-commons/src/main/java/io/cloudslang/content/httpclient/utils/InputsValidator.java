@@ -232,7 +232,8 @@ public class InputsValidator {
         if (isEmpty(filePath))
             exceptions.add(String.format(EXCEPTION_NULL_EMPTY, filePath));
         else if (!isValidDestinationPath(filePath))
-            exceptions.add(String.format(EXCEPTION_DESTINATION_FILE_NOT_FOUND, filePath, inputName));
+            if (!isEmpty(filePath) && !isValidDestinationPath(filePath))
+                exceptions.add(String.format(EXCEPTION_DESTINATION_FILE_NOT_FOUND, filePath, inputName));
         return exceptions;
     }
 
