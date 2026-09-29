@@ -43,7 +43,6 @@ import static io.cloudslang.content.httpclient.utils.Constants.*;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 import static io.cloudslang.content.httpclient.utils.InputsValidator.addVerifyBoolean;
-import static io.cloudslang.content.httpclient.utils.InputsValidator.addVerifyDestinationFile;
 import static io.cloudslang.content.httpclient.utils.InputsValidator.verifyHttpCommonInputs;
 import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -146,7 +145,6 @@ public class HttpClientPatchAction {
         final List<String> exceptionMessages = verifyHttpCommonInputs(authType, preemptiveAuth, proxyPort, tlsVersion,
                 allowedCiphers, trustAllRoots, x509HostnameVerifier, useCookies, keepAlive, connectionsMaxPerRoute,
                 connectionsMaxTotal, followRedirects, connectTimeout, responseTimeout, connectTimeout);
-        addVerifyDestinationFile(exceptionMessages, destinationFile, DESTINATION_FILE);
         addVerifyBoolean(exceptionMessages,queryParamsAreURLEncoded,QUERY_PARAMS_ARE_URLENCODED);
         addVerifyBoolean(exceptionMessages,queryParamsAreFormEncoded,QUERY_PARAMS_ARE_FORM_ENCODED);
         addVerifyBoolean(exceptionMessages,formParamsAreURLEncoded,FORM_PARAMS_ARE_URLENCODED);
