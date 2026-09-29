@@ -42,7 +42,6 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.httpclient.utils.Constants.*;
 import static io.cloudslang.content.httpclient.utils.Descriptions.HTTPClient.*;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
-import static io.cloudslang.content.httpclient.utils.InputsValidator.addVerifyDestinationFile;
 import static io.cloudslang.content.httpclient.utils.InputsValidator.verifyHttpCommonInputs;
 import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
@@ -136,7 +135,6 @@ public class HttpClientPutAction {
         final List<String> exceptionMessages = verifyHttpCommonInputs(authType, preemptiveAuth, proxyPort, tlsVersion,
                 allowedCiphers, trustAllRoots, x509HostnameVerifier, useCookies, keepAlive, connectionsMaxPerRoute,
                 connectionsMaxTotal, followRedirects, connectTimeout, responseTimeout, connectTimeout);
-        addVerifyDestinationFile(exceptionMessages, destinationFile, DESTINATION_FILE);
         if (!exceptionMessages.isEmpty())
             return getFailureResultsMap(StringUtilities.join(exceptionMessages, NEW_LINE));
 
