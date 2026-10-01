@@ -162,6 +162,8 @@ public class SendMailServiceTest {
     @Mock
     private MimeMultipart mimeMultipartMock;
     @Mock
+    private MimeMultipart relatedMimeMultipartMock;
+    @Mock
     private InternetAddress recipientMock;
     @Mock
     private MimeBodyPart mimeBodyPartMock;
@@ -193,10 +195,12 @@ public class SendMailServiceTest {
         PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", anyObject(),
                 anyObject());
         PowerMockito.whenNew(SMTPMessage.class).withArguments(sessionMock).thenReturn(smtpMessageMock);
-        PowerMockito.whenNew(MimeMultipart.class).withNoArguments().thenReturn(mimeMultipartMock);
+        PowerMockito.whenNew(MimeMultipart.class).withArguments("multipart/mixed").thenReturn(mimeMultipartMock);
+        PowerMockito.whenNew(MimeMultipart.class).withArguments("multipart/related").thenReturn(relatedMimeMultipartMock);
         PowerMockito.whenNew(MimeBodyPart.class).withNoArguments().thenReturn(mimeBodyPartMock);
         Mockito.doNothing().when(mimeBodyPartMock).setHeader(anyString(), anyString());
         Mockito.doNothing().when(mimeMultipartMock).addBodyPart(mimeBodyPartMock);
+        Mockito.doNothing().when(relatedMimeMultipartMock).addBodyPart(mimeBodyPartMock);
         Mockito.doNothing().when(smtpMessageMock).setContent(mimeMultipartMock);
         Mockito.doNothing().when(smtpMessageMock).setFrom(Matchers.<InternetAddress>any());
         Mockito.doNothing().when(smtpMessageMock).setSubject(anyString());
@@ -518,7 +522,9 @@ public class SendMailServiceTest {
         assertEquals(MAIL_WAS_SENT, result.get(RETURN_RESULT));
         assertEquals(SUCCESS_RETURN_CODE, result.get(RETURN_CODE));
         PowerMockito.verifyNew(MimeBodyPart.class, Mockito.times(3)).withNoArguments();
-        verify(mimeMultipartMock, Mockito.times(2)).addBodyPart(mimeBodyPartMock);
+        PowerMockito.verifyNew(MimeMultipart.class).withArguments("multipart/related");
+        verify(relatedMimeMultipartMock, Mockito.times(2)).addBodyPart(mimeBodyPartMock);
+        verify(mimeMultipartMock).addBodyPart(mimeBodyPartMock);
         verifyCommons();
         verify(propertiesMock, never()).put(eq(SMTP_USER_CONFIG), eq(USER));
         verify(propertiesMock, never()).put(eq(SMTP_PASSWORD_CONFIG), eq(PASSWORD));
@@ -604,7 +610,7 @@ public class SendMailServiceTest {
         verify(smtpMessageMock).setSubject(anyString());
         PowerMockito.verifyNew(Properties.class).withNoArguments();
         PowerMockito.verifyNew(SMTPMessage.class).withArguments(sessionMock);
-        PowerMockito.verifyNew(MimeMultipart.class).withNoArguments();
+        PowerMockito.verifyNew(MimeMultipart.class).withArguments("multipart/mixed");
         PowerMockito.verifyNew(InternetAddress.class, atLeastOnce()).withArguments(anyString());
     }
 }

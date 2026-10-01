@@ -16,26 +16,25 @@
 package io.cloudslang.content.winrm.service;
 
 import io.cloudslang.content.winrm.entities.WinRMInputs;
-import io.cloudsoft.winrm4j.client.WinRmClientContext;
-import io.cloudsoft.winrm4j.winrm.WinRmTool;
-import io.cloudsoft.winrm4j.winrm.WinRmToolResponse;
-import org.apache.http.client.config.AuthSchemes;
-import org.apache.http.conn.ssl.DefaultHostnameVerifier;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.metricshub.winrm.WinRMClient;
+import org.metricshub.winrm.AuthScheme;
+import org.metricshub.winrm.CommandResult;
 
 import javax.net.ssl.*;
 import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import java.security.UnrecoverableKeyException;
+import java.time.Duration;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.STDERR;
@@ -48,208 +47,182 @@ import static io.cloudslang.content.winrm.utils.Outputs.WinRMOutputs.STDOUT;
 public class WinRMService {
 
     public static Map<String, String> execute(WinRMInputs winRMInputs) throws Exception {
+        try {
+            // Configure Kerberos if needed
+            if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
+                configureKerberos(winRMInputs);
+            }
 
-        boolean useHttps = winRMInputs.getProtocol().equalsIgnoreCase(HTTPS);
-        if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS)) {
-//            if (!winRMInputs.getUseSubjectCredsOnly().isEmpty())
-//                System.setProperty("javax.security.auth.useSubjectCredsOnly", winRMInputs.getUseSubjectCredsOnly());
-//            else
-//                System.setProperty("javax.security.auth.useSubjectCredsOnly", BOOLEAN_TRUE);
+            // Build WinRM client
+            WinRMClient.Builder builder = WinRMClient.builder(winRMInputs.getHost());
 
-            if (!winRMInputs.getKerberosConfFile().isEmpty()) {
-                if (new File(winRMInputs.getKerberosConfFile()).exists()) {
-                    System.setProperty("java.security.krb5.conf", winRMInputs.getKerberosConfFile());
+            // Set credentials
+            builder.credentials(winRMInputs.getUsername(), winRMInputs.getPassword().toCharArray());
+
+            // Set authentication scheme
+            AuthScheme authScheme = getAuthScheme(winRMInputs.getAuthType());
+            builder.authentication(authScheme);
+
+            // Set port and protocol
+            int port = Integer.parseInt(winRMInputs.getPort());
+            boolean useHttps = winRMInputs.getProtocol().equalsIgnoreCase(HTTPS);
+            if (useHttps) {
+                builder.https().port(port);
+            } else {
+                builder.port(port);
+            }
+
+            // Set timeout
+            long timeoutSeconds = winRMInputs.getOperationTimeout();
+            builder.timeout(Duration.ofSeconds(timeoutSeconds));
+
+            // Handle SSL/TLS configuration
+            if (useHttps) {
+                if (Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
+                    builder.trustAllCertificates();
                 } else {
-                    BufferedWriter bw = null;
-                    try {
-                        File tempFile = Files.createTempFile(KRB5, CONF).toFile();
-                        bw = new BufferedWriter(new FileWriter(tempFile));
-                        bw.write(winRMInputs.getKerberosConfFile().replace(SLASH_NEW_LINE, System.getProperty(LINE_SEPARATOR)));
-                        tempFile.deleteOnExit();
-                        System.setProperty("java.security.krb5.conf", tempFile.getAbsolutePath());
-                    } finally {
-                        if (bw != null)
-                            bw.close();
+                    configureSSLContext(builder, winRMInputs);
+                }
+            }
+
+            // Execute command using try-with-resources
+            try (WinRMClient client = builder.build()) {
+                CommandResult result;
+
+                if (winRMInputs.getCommandType().equalsIgnoreCase(CMD)) {
+                    // Execute CMD command
+                    if (!winRMInputs.getWorkingDirectory().isEmpty()) {
+                        result = client.command(winRMInputs.getCommand())
+                                .workingDirectory(winRMInputs.getWorkingDirectory())
+                                .execute();
+                    } else {
+                        result = client.command(winRMInputs.getCommand()).execute();
+                    }
+                } else {
+                    // Execute PowerShell command
+                    if (!winRMInputs.getConfigurationName().isEmpty()) {
+                        // Encoded command with configuration name
+                        String encodedCmd = encodeCommand(winRMInputs.getCommand(), winRMInputs.getConfigurationName());
+                        result = client.command(encodedCmd).execute();
+                    } else {
+                        result = client.powerShell(winRMInputs.getCommand()).execute();
                     }
                 }
-                sun.security.krb5.Config.refresh();
+
+                // Process and return results
+                return processResults(result);
             }
-//            if (!winRMInputs.getKerberosLoginConfFile().isEmpty()) {
-//                if (new File(winRMInputs.getKerberosLoginConfFile()).exists()) {
-//                    System.setProperty("java.security.auth.login.config", winRMInputs.getKerberosLoginConfFile());
-//                } else {
-//                    BufferedWriter bw = null;
-//                    try {
-//                        File tempFile = Files.createTempFile(LOGIN, CONF).toFile();
-//                        bw = new BufferedWriter(new FileWriter(tempFile));
-//                        bw.write(winRMInputs.getKerberosLoginConfFile().replace(SLASH_NEW_LINE, System.getProperty(LINE_SEPARATOR)));
-//                        tempFile.deleteOnExit();
-//                        System.setProperty("java.security.auth.login.config", tempFile.getAbsolutePath());
-//                    } finally {
-//                        if (bw != null)
-//                            bw.close();
-//                    }
-//                }
-//            } else
-//                System.setProperty("java.security.auth.login.config", EMPTY_STRING);
+
+        } catch (Exception e) {
+            return getFailureResultsMap("WinRM Error: " + e.getMessage());
         }
+    }
 
-
-        WinRmTool.Builder builder;
-
-        if (winRMInputs.getDomain().isEmpty())
-            builder = WinRmTool.Builder.builder(winRMInputs.getHost(), winRMInputs.getUsername(), winRMInputs.getPassword());
-        else
-            builder = WinRmTool.Builder.builder(winRMInputs.getHost(), winRMInputs.getDomain(), winRMInputs.getUsername(), winRMInputs.getPassword());
-        builder.authenticationScheme(authScheme(winRMInputs.getAuthType()))
-                .port(Integer.parseInt(winRMInputs.getPort()))
-                .useHttps(useHttps)
-                .disableCertificateChecks(Boolean.parseBoolean(winRMInputs.getTrustAllRoots()));
-
-        if (!winRMInputs.getProxyHost().isEmpty())
-            builder.proxy(winRMInputs.getProxyHost(), winRMInputs.getProxyPort());
-
-        if (!winRMInputs.getProxyUsername().isEmpty() && !winRMInputs.getProxyPassword().isEmpty())
-            builder.proxyCredentials(winRMInputs.getProxyUsername(), winRMInputs.getProxyPassword());
-
-        if (!winRMInputs.getWorkingDirectory().isEmpty())
-            builder.workingDirectory(winRMInputs.getWorkingDirectory());
-
-        if (winRMInputs.getAuthType().equalsIgnoreCase(KERBEROS))
-            builder.requestNewKerberosTicket(Boolean.parseBoolean(winRMInputs.getRequestNewKerberosTicket()));
-
-        //Setting SSLContext with TLS and certificates
-        if (!Boolean.parseBoolean(winRMInputs.getTrustAllRoots())) {
-            try {
-                KeyStore keyStore = KeyStore.getInstance(JKS);
-                keyStore.load(Files.newInputStream(Paths.get(winRMInputs.getKeystore())), winRMInputs.getKeystorePassword().toCharArray());
-                // Create key manager
-                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(SunX509);
-                keyManagerFactory.init(keyStore, winRMInputs.getKeystorePassword().toCharArray());
-                KeyManager[] km = keyManagerFactory.getKeyManagers();
-                // Create trust manager
-                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(SunX509);
-                trustManagerFactory.init(keyStore);
-                TrustManager[] tm = trustManagerFactory.getTrustManagers();
-                // Initialize SSLContext
-                SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
-                sslContext.init(km, tm, new SecureRandom());
-                sslContext.createSSLEngine();
-
-                builder.sslContext(sslContext);
-                builder.hostnameVerifier(getHostnameVerifier(winRMInputs.getX509HostnameVerifier()));
-            } catch (Exception exception) {
-                return getFailureResultsMap(exception);
+    /**
+     * Configure Kerberos authentication settings
+     */
+    private static void configureKerberos(WinRMInputs winRMInputs) throws Exception {
+        if (!winRMInputs.getKerberosConfFile().isEmpty()) {
+            if (new File(winRMInputs.getKerberosConfFile()).exists()) {
+                System.setProperty("java.security.krb5.conf", winRMInputs.getKerberosConfFile());
+            } else {
+                // Treat as content and create temp file
+                BufferedWriter bw = null;
+                try {
+                    File tempFile = Files.createTempFile(KRB5, CONF).toFile();
+                    bw = new BufferedWriter(new FileWriter(tempFile));
+                    bw.write(winRMInputs.getKerberosConfFile().replace(SLASH_NEW_LINE, System.getProperty(LINE_SEPARATOR)));
+                    tempFile.deleteOnExit();
+                    System.setProperty("java.security.krb5.conf", tempFile.getAbsolutePath());
+                } finally {
+                    if (bw != null) {
+                        bw.close();
+                    }
+                }
             }
-        } else {
-            try {
-                SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
-                sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
-                sslContext.createSSLEngine();
-
-                builder.sslContext(sslContext);
-
-            } catch (Exception exception) {
-                return getFailureResultsMap(exception);
-            }
+            sun.security.krb5.Config.refresh();
         }
+    }
 
-        WinRmToolResponse res;
-        WinRmClientContext context = null;
+    /**
+     * Configure SSL context with custom keystore
+     */
+    private static void configureSSLContext(WinRMClient.Builder builder, WinRMInputs winRMInputs) 
+            throws KeyStoreException, CertificateException, NoSuchAlgorithmException, 
+                   UnrecoverableKeyException, java.io.IOException {
         try {
-            context = WinRmClientContext.newInstance();
-            WinRmTool tool = builder.context(context).build();
-            //Setting operation timeout
-            long userTimeout = winRMInputs.getOperationTimeout() * 1000L;
-            tool.setOperationTimeout(userTimeout);
+            KeyStore keyStore = KeyStore.getInstance(JKS);
+            keyStore.load(
+                Files.newInputStream(Paths.get(winRMInputs.getKeystore())),
+                winRMInputs.getKeystorePassword().toCharArray()
+            );
 
-            if (winRMInputs.getCommandType().equalsIgnoreCase(CMD))
-                res = tool.executeCommand(winRMInputs.getCommand());
-            else {
-                if (winRMInputs.getConfigurationName().isEmpty())
-                    res = tool.executePs(winRMInputs.getCommand());
-                else
-                    res = tool.executeCommand(compilePs(winRMInputs.getCommand(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
-            }
-        } finally {
-            if (context != null)
-                context.shutdown();
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(SunX509);
+            keyManagerFactory.init(keyStore, winRMInputs.getKeystorePassword().toCharArray());
+
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(SunX509);
+            trustManagerFactory.init(keyStore);
+
+            SSLContext sslContext = SSLContext.getInstance(tlsVersion(winRMInputs.getTlsVersion()));
+            sslContext.init(
+                keyManagerFactory.getKeyManagers(),
+                trustManagerFactory.getTrustManagers(),
+                new SecureRandom()
+            );
+
+            builder.sslContext(sslContext);
+        } catch (Exception e) {
+            throw new RuntimeException("SSL context configuration failed: " + e.getMessage(), e);
         }
+    }
 
-        Map<String, String> results;
-        if (res.getStatusCode() == 0) {
-            results = getSuccessResultsMap(res.getStdOut());
-            results.put(STDOUT, res.getStdOut());
+    /**
+     * Map authentication type string to AuthScheme enum
+     */
+    private static AuthScheme getAuthScheme(String authType) {
+        if (authType.equalsIgnoreCase(KERBEROS)) {
+            return AuthScheme.KERBEROS;
         } else {
-            results = getFailureResultsMap(res.getStdErr());
-            results.put(STDERR, res.getStdErr());
+            // Default to NTLM for both "NTLM" and "BASIC"
+            return AuthScheme.NTLM;
         }
-        results.put(COMMAND_EXIT_CODE, String.valueOf(res.getStatusCode()));
-        return results;
     }
 
-    private static String compilePs(String psScript, String configurationName) {
-        byte[] cmd = psScript.getBytes(StandardCharsets.UTF_16LE);
-        String arg = DatatypeConverter.printBase64Binary(cmd);
-        return "powershell -ConfigurationName " + configurationName + " -encodedcommand " + arg;
+    /**
+     * Encode PowerShell command with configuration name
+     */
+    private static String encodeCommand(String command, String configurationName) {
+        byte[] cmd = command.getBytes(StandardCharsets.UTF_16LE);
+        String encoded = DatatypeConverter.printBase64Binary(cmd);
+        return "powershell -ConfigurationName " + configurationName + " -encodedcommand " + encoded;
     }
 
-    private static String authScheme(String authScheme) {
-        String authType = authScheme;
-        switch (authType.toLowerCase()) {
-            case "basic":
-                authType = AuthSchemes.BASIC;
-                break;
-            case "ntlm":
-                authType = AuthSchemes.NTLM;
-                break;
-            case "kerberos":
-                authType = AuthSchemes.KERBEROS;
-                break;
-        }
-        return authType;
-    }
-
+    /**
+     * Convert TLS version string to standard Java format
+     */
     private static String tlsVersion(String tlsVersion) {
-        String tls_version = tlsVersion;
         switch (tlsVersion.toLowerCase()) {
             case "tlsv1":
-                tls_version = TLSv1;
-                break;
+                return TLSv1;
             case "tlsv1.1":
-                tls_version = TLSv1_1;
-                break;
+                return TLSv1_1;
             case "tlsv1.2":
-                tls_version = TLSv1_2;
-                break;
+                return TLSv1_2;
             case "tlsv1.3":
-                tls_version = TLSv1_3;
-                break;
+                return TLSv1_3;
+            default:
+                return TLSv1_2;
         }
-        return tls_version;
     }
 
-
-    private static HostnameVerifier getHostnameVerifier(String hostnameVerifier) {
-        if (hostnameVerifier.equalsIgnoreCase(ALLOW_ALL))
-            return new NoopHostnameVerifier();
-        else
-            return new DefaultHostnameVerifier();
-    }
-
-    private static TrustManager getTrustAllRoots() {
-        return new X509TrustManager() {
-            @Override
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-            }
-
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-        };
+    /**
+     * Process CommandResult into output map
+     */
+    private static Map<String, String> processResults(CommandResult result) {
+        Map<String, String> resultMap = getSuccessResultsMap(result.stdout());
+        resultMap.put(STDOUT, result.stdout());
+        resultMap.put(STDERR, result.stderr());
+        resultMap.put(COMMAND_EXIT_CODE, String.valueOf(result.exitCode()));
+        return resultMap;
     }
 }
