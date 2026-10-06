@@ -1,0 +1,236 @@
+package io.cloudslang.content.nutanix.prism.services.models.disks;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
+
+public class UpdateDisksRequestBody {
+	@JsonProperty("uuid")
+	String vmUUID;
+	@JsonProperty("vm_disks")
+	ArrayList<VMDisks> vmDisks;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonProperty("vm_logical_timestamp")
+	Long vmLogicalTimestamp;
+
+	public String getVmUUID() {
+		return vmUUID;
+	}
+
+	public void setVmUUID(String vmUUID) {
+		this.vmUUID = vmUUID;
+	}
+
+	public ArrayList<VMDisks> getVmDisks() {
+		return vmDisks;
+	}
+
+	public void setVmDisks(ArrayList<VMDisks> vmDisks) {
+		this.vmDisks = vmDisks;
+	}
+
+	public Long getVmLogicalTimestamp() {
+		return vmLogicalTimestamp;
+	}
+
+	public void setVmLogicalTimestamp(Long vmLogicalTimestamp) {
+		this.vmLogicalTimestamp = vmLogicalTimestamp;
+	}
+
+	public class VMDisks {
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		DiskAddress disk_address;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		VMDiskClone vm_disk_clone;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		VMDiskCreate vm_disk_create;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		Boolean flash_mode_enabled;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		Boolean is_cdrom;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		Boolean is_empty;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		Boolean is_scsi_pass_through;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		Boolean is_thin_provisioned;
+
+		public DiskAddress getDisk_address() {
+			return disk_address;
+		}
+
+		public void setDisk_address(DiskAddress disk_address) {
+			this.disk_address = disk_address;
+		}
+
+		public VMDiskClone getVm_disk_clone() {
+			return vm_disk_clone;
+		}
+
+		public void setVm_disk_clone(VMDiskClone vm_disk_clone) {
+			this.vm_disk_clone = vm_disk_clone;
+		}
+
+		public VMDiskCreate getVm_disk_create() {
+			return vm_disk_create;
+		}
+
+		public void setVm_disk_create(VMDiskCreate vm_disk_create) {
+			this.vm_disk_create = vm_disk_create;
+		}
+
+		public Boolean getFlash_mode_enabled() {
+			return flash_mode_enabled;
+		}
+
+		public void setFlash_mode_enabled(Boolean flash_mode_enabled) {
+			this.flash_mode_enabled = flash_mode_enabled;
+		}
+
+		public Boolean getIs_cdrom() {
+			return is_cdrom;
+		}
+
+		public void setIs_cdrom(Boolean is_cdrom) {
+			this.is_cdrom = is_cdrom;
+		}
+
+		public Boolean getIs_empty() {
+			return is_empty;
+		}
+
+		public void setIs_empty(Boolean is_empty) {
+			this.is_empty = is_empty;
+		}
+
+		public Boolean getIs_scsi_pass_through() {
+			return is_scsi_pass_through;
+		}
+
+		public void setIs_scsi_pass_through(Boolean is_scsi_pass_through) {
+			this.is_scsi_pass_through = is_scsi_pass_through;
+		}
+
+		public Boolean getIs_thin_provisioned() {
+			return is_thin_provisioned;
+		}
+
+		public void setIs_thin_provisioned(Boolean is_thin_provisioned) {
+			this.is_thin_provisioned = is_thin_provisioned;
+		}
+	}
+
+	public class DiskAddress {
+		@JsonInclude(JsonInclude.Include.NON_EMPTY)
+		String device_bus;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		Integer device_index;
+		@JsonInclude(JsonInclude.Include.NON_EMPTY)
+		String vmdisk_uuid;
+
+		public String getDevice_bus() {
+			return device_bus;
+		}
+
+		public void setDevice_bus(String device_bus) {
+			this.device_bus = device_bus;
+		}
+
+		public Integer getDevice_index() {
+			return device_index;
+		}
+
+		public void setDevice_index(Integer device_index) {
+			this.device_index = device_index;
+		}
+
+		public String getVmdisk_uuid() {
+			return vmdisk_uuid;
+		}
+
+		public void setVmdisk_uuid(String vmdisk_uuid) {
+			this.vmdisk_uuid = vmdisk_uuid;
+		}
+	}
+
+	public class VMDiskCreate {
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		Long size;
+		@JsonInclude(JsonInclude.Include.NON_EMPTY)
+		String storage_container_uuid;
+
+		public Long getSize() {
+			return size;
+		}
+
+		public void setSize(Long size) {
+			this.size = size;
+		}
+
+		public String getStorage_container_uuid() {
+			return storage_container_uuid;
+		}
+
+		public void setStorage_container_uuid(String storage_container_uuid) {
+			this.storage_container_uuid = storage_container_uuid;
+		}
+	}
+
+	public class VMDiskClone {
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		CloneDiskAddress disk_address;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		Long minimum_size;
+		@JsonInclude(JsonInclude.Include.NON_EMPTY)
+		String storage_container_uuid;
+
+		public CloneDiskAddress getDisk_address() {
+			return disk_address;
+		}
+
+		public void setDisk_address(CloneDiskAddress disk_address) {
+			this.disk_address = disk_address;
+		}
+
+		public Long getMinimum_size() {
+			return minimum_size;
+		}
+
+		public void setMinimum_size(Long minimum_size) {
+			this.minimum_size = minimum_size;
+		}
+
+		public String getStorage_container_uuid() {
+			return storage_container_uuid;
+		}
+
+		public void setStorage_container_uuid(String storage_container_uuid) {
+			this.storage_container_uuid = storage_container_uuid;
+		}
+	}
+
+	public class CloneDiskAddress {
+		@JsonInclude(JsonInclude.Include.NON_EMPTY)
+		String vmdisk_uuid;
+		@JsonInclude(JsonInclude.Include.NON_EMPTY)
+		String ndfs_filepath;
+
+		public String getVmdisk_uuid() {
+			return vmdisk_uuid;
+		}
+
+		public void setVmdisk_uuid(String vmdisk_uuid) {
+			this.vmdisk_uuid = vmdisk_uuid;
+		}
+
+		public String getNdfs_filepath() {
+			return ndfs_filepath;
+		}
+
+		public void setNdfs_filepath(String ndfs_filepath) {
+			this.ndfs_filepath = ndfs_filepath;
+		}
+	}
+}
+

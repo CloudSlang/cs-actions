@@ -271,6 +271,42 @@ public class Descriptions {
                 "enabled for the particular disk. Provide a list of comma separated boolean values.";
     }
 
+    public static class UpdateDisks {
+        public static final String UPDATE_DISKS_OPERATION_DESC = "Updates disks of a virtual machine. " +
+                "A disk can be resized, updated with flash mode, or have its properties changed. " +
+                "This is an asynchronous operation that results in the creation of a task object. " +
+                "The UUID of this task object is returned as the response of this operation.";
+        public static final String VM_DISK_UUID_LIST_DESC = "The VM disk UUID list. If multiple disks need to be " +
+                "updated, add comma separated UUIDs.";
+        public static final String DEVICE_BUS_LIST_DESC = "The device bus List. List the device buses in the same " +
+                "order that the disk UUIDs are listed, separated by commas. " +
+                "Valid values: sata,scsi,ide,pci";
+        public static final String DEVICE_INDEX_LIST_DESC = "The device indices list. List the device indices in the " +
+                "same order that the disk UUIDs are listed, separated by commas.";
+        public static final String VM_DISK_SIZE_LIST_DESC = "The size of each disk in GiB to be set for the disks. " +
+                "If multiple disks need to be updated, add comma separated sizes.";
+        public static final String IS_CDROM_LIST_DESC = "Whether disk drive is CD-ROM drive or disk drive. If " +
+                "multiple disks need to be updated, add comma separated boolean values.";
+        public static final String IS_EMPTY_DISK_LIST_DESC = "Whether the drive should be empty. This field only " +
+                "applies to CD-ROM drives, otherwise it is ignored. If multiple disks need to be updated, " +
+                "add comma separated boolean values.";
+        public static final String STORAGE_CONTAINER_UUID_LIST_DESC = "The storage container UUID for each disk. " +
+                "If multiple disks need to be updated, add comma separated UUIDs.";
+        public static final String NDFS_FILE_PATH_LIST_DESC = "NDFS path to the virtual disk. List the path in " +
+                "the same order as of disk UUIDs, separated by commas.";
+        public static final String IS_FLASH_MODE_ENABLED_LIST_DESC = "If the value is 'true' then flash mode will be " +
+                "enabled for the particular disk. Provide a list of comma separated boolean values.";
+        public static final String SOURCE_VM_DISK_UUID_LIST_DESC = "The source VM disk UUID List for cloning. " +
+                "If multiple disks need to be updated, add comma separated UUIDs.";
+        public static final String VM_DISK_MINIMUM_SIZE_LIST_DESC = "The minimum size of the disk when cloning. " +
+                "If multiple disks need to be updated, add comma separated disk sizes in GiB.";
+        public static final String IS_SCSI_PASS_THROUGH_LIST_DESC = "Whether the SCSI disk should be in passthrough mode. " +
+                "Provide a list of comma separated boolean values.";
+        public static final String IS_THIN_PROVISIONED_LIST_DESC = "If the value is 'true' then disk uses thin provision. " +
+                "Provide a list of comma separated boolean values.";
+        public static final String VM_LOGICAL_TIMESTAMP_DESC = "The virtual logical timestamp of the virtual machine.";
+    }
+
     public static class DeleteNIC {
         public static final String DELETE_NIC_OPERATION_DESC = "Deletes a NIC from a virtual machine.";
         public static final String VM_LOGICAL_TIMESTAMP_DESC = "The virtual logical timestamp of the virtual machine.";

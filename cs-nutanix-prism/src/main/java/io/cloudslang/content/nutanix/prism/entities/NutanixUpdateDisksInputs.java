@@ -1,0 +1,264 @@
+
+package io.cloudslang.content.nutanix.prism.entities;
+
+import org.jetbrains.annotations.NotNull;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
+public class NutanixUpdateDisksInputs {
+    private final String vmUUID;
+    private final String vmDiskUUIDList;
+    private final String deviceBusList;
+    private final String deviceIndexList;
+    private final String isCDROMList;
+    private final String isEmptyDiskList;
+    private final String sourceVMDiskUUIDList;
+    private final String vmDiskMinimumSizeList;
+    private final String ndfsFilepathList;
+    private final String vmDiskSizeList;
+    private final String storageContainerUUIDList;
+    private final String isSCSIPassThroughList;
+    private final String isThinProvisionedList;
+    private final String isFlashModeEnabledList;
+    private final String vmLogicalTimestamp;
+    private final NutanixCommonInputs commonInputs;
+
+    @java.beans.ConstructorProperties({"vmUUID", "vmDiskUUIDList", "deviceBusList", "deviceIndexList",
+            "isCDROMList", "isEmptyDiskList", "sourceVMDiskUUIDList", "vmDiskMinimumSizeList",
+            "ndfsFilepathList", "vmDiskSizeList", "storageContainerUUIDList", "isSCSIPassThroughList",
+            "isThinProvisionedList", "isFlashModeEnabledList", "vmLogicalTimestamp", "commonInputs"})
+    public NutanixUpdateDisksInputs(String vmUUID, String vmDiskUUIDList, String deviceBusList,
+                                    String deviceIndexList, String isCDROMList, String isEmptyDiskList,
+                                    String sourceVMDiskUUIDList, String vmDiskMinimumSizeList,
+                                    String ndfsFilepathList, String vmDiskSizeList, String storageContainerUUIDList,
+                                    String isSCSIPassThroughList, String isThinProvisionedList,
+                                    String isFlashModeEnabledList, String vmLogicalTimestamp,
+                                    NutanixCommonInputs commonInputs) {
+        this.vmUUID = vmUUID;
+        this.vmDiskUUIDList = vmDiskUUIDList;
+        this.deviceBusList = deviceBusList;
+        this.deviceIndexList = deviceIndexList;
+        this.isCDROMList = isCDROMList;
+        this.isEmptyDiskList = isEmptyDiskList;
+        this.sourceVMDiskUUIDList = sourceVMDiskUUIDList;
+        this.vmDiskMinimumSizeList = vmDiskMinimumSizeList;
+        this.ndfsFilepathList = ndfsFilepathList;
+        this.vmDiskSizeList = vmDiskSizeList;
+        this.storageContainerUUIDList = storageContainerUUIDList;
+        this.isSCSIPassThroughList = isSCSIPassThroughList;
+        this.isThinProvisionedList = isThinProvisionedList;
+        this.isFlashModeEnabledList = isFlashModeEnabledList;
+        this.vmLogicalTimestamp = vmLogicalTimestamp;
+        this.commonInputs = commonInputs;
+    }
+
+    public static NutanixUpdateDisksInputsBuilder builder() {
+        return new NutanixUpdateDisksInputsBuilder();
+    }
+
+    @NotNull
+    public String getVmUUID() {
+        return vmUUID;
+    }
+
+    @NotNull
+    public String getVmDiskUUIDList() {
+        return vmDiskUUIDList;
+    }
+
+    @NotNull
+    public String getDeviceBusList() {
+        return deviceBusList;
+    }
+
+    @NotNull
+    public String getDeviceIndexList() {
+        return deviceIndexList;
+    }
+
+    @NotNull
+    public String getIsCDROMList() {
+        return isCDROMList;
+    }
+
+    @NotNull
+    public String getIsEmptyDiskList() {
+        return isEmptyDiskList;
+    }
+
+    @NotNull
+    public String getSourceVMDiskUUIDList() {
+        return sourceVMDiskUUIDList;
+    }
+
+    @NotNull
+    public String getVmDiskMinimumSizeList() {
+        return vmDiskMinimumSizeList;
+    }
+
+    @NotNull
+    public String getNdfsFilepathList() {
+        return ndfsFilepathList;
+    }
+
+    @NotNull
+    public String getVmDiskSizeList() {
+        return vmDiskSizeList;
+    }
+
+    @NotNull
+    public String getStorageContainerUUIDList() {
+        return storageContainerUUIDList;
+    }
+
+    @NotNull
+    public String getIsSCSIPassThroughList() {
+        return isSCSIPassThroughList;
+    }
+
+    @NotNull
+    public String getIsThinProvisionedList() {
+        return isThinProvisionedList;
+    }
+
+    @NotNull
+    public String getIsFlashModeEnabledList() {
+        return isFlashModeEnabledList;
+    }
+
+    @NotNull
+    public String getVmLogicalTimestamp() {
+        return vmLogicalTimestamp;
+    }
+
+    @NotNull
+    public NutanixCommonInputs getCommonInputs() {
+        return commonInputs;
+    }
+
+    public static class NutanixUpdateDisksInputsBuilder {
+        private String vmUUID = EMPTY;
+        private String vmDiskUUIDList = EMPTY;
+        private String deviceBusList = EMPTY;
+        private String deviceIndexList = EMPTY;
+        private String isCDROMList = EMPTY;
+        private String isEmptyDiskList = EMPTY;
+        private String sourceVMDiskUUIDList = EMPTY;
+        private String vmDiskMinimumSizeList = EMPTY;
+        private String ndfsFilepathList = EMPTY;
+        private String vmDiskSizeList = EMPTY;
+        private String storageContainerUUIDList = EMPTY;
+        private String isSCSIPassThroughList = EMPTY;
+        private String isThinProvisionedList = EMPTY;
+        private String isFlashModeEnabledList = EMPTY;
+        private String vmLogicalTimestamp = EMPTY;
+        private NutanixCommonInputs commonInputs;
+
+        NutanixUpdateDisksInputsBuilder() {
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder vmUUID(@NotNull final String vmUUID) {
+            this.vmUUID = vmUUID;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder vmDiskUUIDList(@NotNull final String vmDiskUUIDList) {
+            this.vmDiskUUIDList = vmDiskUUIDList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder deviceBusList(@NotNull final String deviceBusList) {
+            this.deviceBusList = deviceBusList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder deviceIndexList(@NotNull final String deviceIndexList) {
+            this.deviceIndexList = deviceIndexList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder isCDROMList(@NotNull final String isCDROMList) {
+            this.isCDROMList = isCDROMList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder isEmptyDiskList(@NotNull final String isEmptyDiskList) {
+            this.isEmptyDiskList = isEmptyDiskList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder sourceVMDiskUUIDList(@NotNull final String sourceVMDiskUUIDList) {
+            this.sourceVMDiskUUIDList = sourceVMDiskUUIDList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder vmDiskMinimumSizeList(@NotNull final String vmDiskMinimumSizeList) {
+            this.vmDiskMinimumSizeList = vmDiskMinimumSizeList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder ndfsFilepathList(@NotNull final String ndfsFilepathList) {
+            this.ndfsFilepathList = ndfsFilepathList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder vmDiskSizeList(@NotNull final String vmDiskSizeList) {
+            this.vmDiskSizeList = vmDiskSizeList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder storageContainerUUIDList(@NotNull final String storageContainerUUIDList) {
+            this.storageContainerUUIDList = storageContainerUUIDList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder isSCSIPassThroughList(@NotNull final String isSCSIPassThroughList) {
+            this.isSCSIPassThroughList = isSCSIPassThroughList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder isThinProvisionedList(@NotNull final String isThinProvisionedList) {
+            this.isThinProvisionedList = isThinProvisionedList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder isFlashModeEnabledList(@NotNull final String isFlashModeEnabledList) {
+            this.isFlashModeEnabledList = isFlashModeEnabledList;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder vmLogicalTimestamp(@NotNull final String vmLogicalTimestamp) {
+            this.vmLogicalTimestamp = vmLogicalTimestamp;
+            return this;
+        }
+
+        @NotNull
+        public NutanixUpdateDisksInputsBuilder commonInputs(@NotNull final NutanixCommonInputs commonInputs) {
+            this.commonInputs = commonInputs;
+            return this;
+        }
+
+        public NutanixUpdateDisksInputs build() {
+            return new NutanixUpdateDisksInputs(vmUUID, vmDiskUUIDList, deviceBusList, deviceIndexList,
+                    isCDROMList, isEmptyDiskList, sourceVMDiskUUIDList, vmDiskMinimumSizeList, ndfsFilepathList,
+                    vmDiskSizeList, storageContainerUUIDList, isSCSIPassThroughList, isThinProvisionedList,
+                    isFlashModeEnabledList, vmLogicalTimestamp, commonInputs);
+        }
+    }
+}
+

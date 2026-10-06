@@ -91,6 +91,12 @@ public class Constants {
         public static final String TASK_UUID_PATH = "task_uuid";
     }
 
+    public static class UpdateDisksConstants {
+        public static final String UPDATE_DISKS_OPERATION_NAME = "Update Disks";
+        public static final String UPDATE_DISKS_PATH = "/disks/update";
+        public static final String TASK_UUID_PATH = "task_uuid";
+    }
+
     public static class DeleteNICConstants {
         public static final String DELETE_NIC_OPERATION_NAME = "Delete NIC";
         public static final String DELETE_NIC_PATH = "/nics/";

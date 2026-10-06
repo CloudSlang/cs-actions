@@ -1,5 +1,3 @@
-
-
 package io.cloudslang.content.nutanix.prism.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,6 +6,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAttachDisksInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDetachDisksInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixUpdateDisksInputs;
 import io.cloudslang.content.nutanix.prism.exceptions.NutanixDetachDiskException;
 import io.cloudslang.content.nutanix.prism.services.models.disks.AttachDisksRequestBody;
 import io.cloudslang.content.nutanix.prism.services.models.disks.DetachDisksRequestBody;
@@ -21,6 +20,7 @@ import static io.cloudslang.content.nutanix.prism.services.HttpCommons.setCommon
 import static io.cloudslang.content.nutanix.prism.utils.Constants.AttachDisksConstants.ATTACH_DISKS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DetachDisksConstants.DETACH_DISKS_PATH;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.UpdateDisksConstants.UPDATE_DISKS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.GET_VM_DETAILS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getUriBuilder;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -222,5 +222,112 @@ public class DiskImpl {
                 .append(ATTACH_DISKS_PATH);
         uriBuilder.setPath(pathString.toString());
         return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static Map<String, String> updateDisks(@NotNull final io.cloudslang.content.nutanix.prism.entities.NutanixUpdateDisksInputs nutanixUpdateDisksInputs)
+            throws Exception {
+        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        httpClientInputs.setUrl(updateDisksURL(nutanixUpdateDisksInputs));
+
+        httpClientInputs.setAuthType(BASIC);
+        httpClientInputs.setMethod(PUT);
+
+        httpClientInputs.setBody(updateDisksBody(nutanixUpdateDisksInputs));
+
+        httpClientInputs.setUsername(nutanixUpdateDisksInputs.getCommonInputs().getUsername());
+        httpClientInputs.setPassword(nutanixUpdateDisksInputs.getCommonInputs().getPassword());
+        httpClientInputs.setContentType(APPLICATION_API_JSON);
+        setCommonHttpInputs(httpClientInputs, nutanixUpdateDisksInputs.getCommonInputs());
+        return new HttpClientService().execute(httpClientInputs);
+    }
+
+    @NotNull
+    public static String updateDisksURL(io.cloudslang.content.nutanix.prism.entities.NutanixUpdateDisksInputs nutanixUpdateDisksInputs) throws Exception {
+
+        final URIBuilder uriBuilder = getUriBuilder(nutanixUpdateDisksInputs.getCommonInputs());
+        StringBuilder pathString = new StringBuilder()
+                .append(API)
+                .append(nutanixUpdateDisksInputs.getCommonInputs().getAPIVersion())
+                .append(GET_VM_DETAILS_PATH)
+                .append(PATH_SEPARATOR)
+                .append(nutanixUpdateDisksInputs.getVmUUID())
+                .append(UPDATE_DISKS_PATH);
+        uriBuilder.setPath(pathString.toString());
+        return uriBuilder.build().toURL().toString();
+    }
+
+    @NotNull
+    public static String updateDisksBody(io.cloudslang.content.nutanix.prism.entities.NutanixUpdateDisksInputs nutanixUpdateDisksInputs) throws
+            Exception {
+        String requestBody = EMPTY;
+        ObjectMapper updateDisksMapper = new ObjectMapper();
+        ArrayList vmDiskList = new ArrayList();
+        String[] deviceBusArray = nutanixUpdateDisksInputs.getDeviceBusList().split(",");
+        String[] deviceIndexArray = nutanixUpdateDisksInputs.getDeviceIndexList().split(",");
+        String[] vmDiskUUIDArray = nutanixUpdateDisksInputs.getVmDiskUUIDList().split(",");
+        String[] vmDiskSizeArray = nutanixUpdateDisksInputs.getVmDiskSizeList().split(",");
+        String[] isCDROMArray = nutanixUpdateDisksInputs.getIsCDROMList().split(",");
+        String[] isEmptyArray = nutanixUpdateDisksInputs.getIsEmptyDiskList().split(",");
+        String[] storageContainerUUIDArray = nutanixUpdateDisksInputs.getStorageContainerUUIDList().split(",");
+        String[] ndfsFilepathArray = nutanixUpdateDisksInputs.getNdfsFilepathList().split(",");
+        String[] isFlashModeEnabledArray = nutanixUpdateDisksInputs.getIsFlashModeEnabledList().split(",");
+        String[] isSCSIPassThroughArray = nutanixUpdateDisksInputs.getIsSCSIPassThroughList().split(",");
+        String[] isThinProvisionedArray = nutanixUpdateDisksInputs.getIsThinProvisionedList().split(",");
+
+        if ((vmDiskUUIDArray.length == deviceBusArray.length) && (vmDiskUUIDArray.length == deviceIndexArray.length)) {
+            for (int i = 0; i < vmDiskUUIDArray.length; i++) {
+                ObjectMapper mapper = new ObjectMapper();
+                com.fasterxml.jackson.databind.node.ObjectNode vmDisk = mapper.createObjectNode();
+
+                vmDisk.put("uuid", vmDiskUUIDArray[i]);
+
+                if (deviceBusArray[0] != "" && (vmDiskUUIDArray.length == deviceBusArray.length)) {
+                    com.fasterxml.jackson.databind.node.ObjectNode diskAddress = mapper.createObjectNode();
+                    diskAddress.put("device_bus", deviceBusArray[i]);
+                    if (deviceIndexArray[0] != "" && (vmDiskUUIDArray.length == deviceIndexArray.length))
+                        diskAddress.put("device_index", Integer.parseInt(deviceIndexArray[i]));
+                    vmDisk.set("disk_address", diskAddress);
+                }
+
+                if (vmDiskSizeArray[0] != "" && (vmDiskUUIDArray.length == vmDiskSizeArray.length))
+                    vmDisk.put("disk_size_bytes", Long.parseLong(vmDiskSizeArray[i]) * 1024 * 1024 * 1024);
+
+                if (isCDROMArray[0] != "" && (vmDiskUUIDArray.length == isCDROMArray.length))
+                    vmDisk.put("is_cdrom", Boolean.parseBoolean(isCDROMArray[i]));
+
+                if (isEmptyArray[0] != "" && (vmDiskUUIDArray.length == isEmptyArray.length))
+                    vmDisk.put("is_empty", Boolean.parseBoolean(isEmptyArray[i]));
+
+                if (storageContainerUUIDArray[0] != "" && (vmDiskUUIDArray.length == storageContainerUUIDArray.length))
+                    vmDisk.put("storage_container_uuid", storageContainerUUIDArray[i]);
+
+                if (ndfsFilepathArray[0] != "" && (vmDiskUUIDArray.length == ndfsFilepathArray.length))
+                    vmDisk.put("ndfs_filepath", ndfsFilepathArray[i]);
+
+                if (isFlashModeEnabledArray[0] != "" && (vmDiskUUIDArray.length == isFlashModeEnabledArray.length))
+                    vmDisk.put("flash_mode_enabled", Boolean.parseBoolean(isFlashModeEnabledArray[i]));
+
+                if (isSCSIPassThroughArray[0] != "" && (vmDiskUUIDArray.length == isSCSIPassThroughArray.length))
+                    vmDisk.put("is_scsi_pass_through", Boolean.parseBoolean(isSCSIPassThroughArray[i]));
+
+                if (isThinProvisionedArray[0] != "" && (vmDiskUUIDArray.length == isThinProvisionedArray.length))
+                    vmDisk.put("is_thin_provisioned", Boolean.parseBoolean(isThinProvisionedArray[i]));
+
+                vmDiskList.add(vmDisk);
+            }
+            com.fasterxml.jackson.databind.node.ObjectNode root = updateDisksMapper.createObjectNode();
+            root.set("vm_disks", updateDisksMapper.valueToTree(vmDiskList));
+            if (nutanixUpdateDisksInputs.getVmLogicalTimestamp() != "" && !nutanixUpdateDisksInputs.getVmLogicalTimestamp().isEmpty())
+                root.put("vm_logical_timestamp", Long.parseLong(nutanixUpdateDisksInputs.getVmLogicalTimestamp()));
+            try {
+                requestBody = updateDisksMapper.writeValueAsString(root);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new Exception("Size of vmDiskUUIDList, deviceBusList and deviceIndexList should be same");
+        }
+        return requestBody;
     }
 }

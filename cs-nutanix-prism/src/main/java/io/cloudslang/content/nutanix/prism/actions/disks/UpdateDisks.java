@@ -1,0 +1,182 @@
+
+package io.cloudslang.content.nutanix.prism.actions.disks;
+
+import com.hp.oo.sdk.content.annotations.Action;
+import com.hp.oo.sdk.content.annotations.Output;
+import com.hp.oo.sdk.content.annotations.Param;
+import com.hp.oo.sdk.content.annotations.Response;
+import com.jayway.jsonpath.JsonPath;
+import io.cloudslang.content.constants.ReturnCodes;
+import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixUpdateDisksInputs;
+import io.cloudslang.content.utils.StringUtilities;
+
+import java.util.List;
+import java.util.Map;
+
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.constants.ResponseNames.FAILURE;
+import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
+import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.nutanix.prism.services.DiskImpl.updateDisks;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.UpdateDisksConstants.TASK_UUID_PATH;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.UpdateDisksConstants.UPDATE_DISKS_OPERATION_NAME;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.Common.*;
+import static io.cloudslang.content.nutanix.prism.utils.Descriptions.UpdateDisks.*;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getFailureResults;
+import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getOperationResults;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PASSWORD;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_HOST;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.PROXY_USERNAME;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.USERNAME;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.CommonInputs.*;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.UpdateDisksInputs.*;
+import static io.cloudslang.content.nutanix.prism.utils.Inputs.GetVMDetailsInputs.VM_UUID;
+import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.TASK_UUID;
+import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
+
+public class UpdateDisks {
+    @Action(name = UPDATE_DISKS_OPERATION_NAME,
+            description = UPDATE_DISKS_OPERATION_DESC,
+            outputs = {
+                    @Output(value = RETURN_RESULT, description = RETURN_RESULT_DESC),
+                    @Output(value = EXCEPTION, description = EXCEPTION_DESC),
+                    @Output(value = STATUS_CODE, description = STATUS_CODE_DESC),
+                    @Output(value = TASK_UUID, description = TASK_UUID_DESC)
+            },
+            responses = {
+                    @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL,
+                            responseType = RESOLVED, description = SUCCESS_DESC),
+                    @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL,
+                            responseType = ERROR, description = FAILURE_DESC)
+            })
+    public Map<String, String> execute(@Param(value = HOSTNAME, required = true, description = HOSTNAME_DESC) String hostname,
+                                       @Param(value = PORT, description = PORT_DESC) String port,
+                                       @Param(value = USERNAME, required = true, description = USERNAME_DESC) String username,
+                                       @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
+                                       @Param(value = VM_UUID, required = true, description = VM_UUID_DESC) String vmUUID,
+                                       @Param(value = VM_DISK_UUID_LIST, required = true, description = VM_DISK_UUID_LIST_DESC) String vmDiskUUIDList,
+                                       @Param(value = DEVICE_BUS_LIST, required = true, description = DEVICE_BUS_LIST_DESC) String deviceBusList,
+                                       @Param(value = DEVICE_INDEX_LIST, required = true, description = DEVICE_INDEX_LIST_DESC) String deviceIndexList,
+                                       @Param(value = VM_DISK_SIZE_LIST, description = VM_DISK_SIZE_LIST_DESC) String vmDiskSizeList,
+                                       @Param(value = IS_CDROM_LIST, description = IS_CDROM_LIST_DESC) String isCDROMList,
+                                       @Param(value = IS_EMPTY_DISK_LIST, description = IS_EMPTY_DISK_LIST_DESC) String isEmptyDiskList,
+                                       @Param(value = STORAGE_CONTAINER_UUID_LIST, description = STORAGE_CONTAINER_UUID_LIST_DESC) String storageContainerUUIDList,
+                                       @Param(value = NDFS_FILE_PATH_LIST, description = NDFS_FILE_PATH_LIST_DESC) String ndfsFilepathList,
+                                       @Param(value = IS_FLASH_MODE_ENABLED_LIST, description = IS_FLASH_MODE_ENABLED_LIST_DESC) String isFlashModeEnabledList,
+                                       @Param(value = SOURCE_VM_DISK_UUID_LIST, description = SOURCE_VM_DISK_UUID_LIST_DESC) String sourceVMDiskUUIDList,
+                                       @Param(value = VM_DISK_MINIMUM_SIZE_LIST, description = VM_DISK_MINIMUM_SIZE_LIST_DESC) String vmDiskMinimumSizeList,
+                                       @Param(value = IS_SCSI_PASS_THROUGH_LIST, description = IS_SCSI_PASS_THROUGH_LIST_DESC) String isSCSIPassThroughList,
+                                       @Param(value = IS_THIN_PROVISIONED_LIST, description = IS_THIN_PROVISIONED_LIST_DESC) String isThinProvisionedList,
+                                       @Param(value = VM_LOGICAL_TIMESTAMP, description = VM_LOGICAL_TIMESTAMP_DESC) String vmLogicalTimestamp,
+                                       @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
+                                       @Param(value = PROXY_HOST, description = PROXY_HOST_DESC) String proxyHost,
+                                       @Param(value = PROXY_PORT, description = PROXY_PORT_DESC) String proxyPort,
+                                       @Param(value = PROXY_USERNAME, description = PROXY_USERNAME_DESC) String proxyUsername,
+                                       @Param(value = PROXY_PASSWORD, encrypted = true, description = PROXY_PASSWORD_DESC) String proxyPassword,
+                                       @Param(value = TRUST_ALL_ROOTS, description = TRUST_ALL_ROOTS_DESC) String trustAllRoots,
+                                       @Param(value = X509_HOSTNAME_VERIFIER, description = X509_DESC) String x509HostnameVerifier,
+                                       @Param(value = TRUST_KEYSTORE, description = TRUST_KEYSTORE_DESC) String trustKeystore,
+                                       @Param(value = TRUST_PASSWORD, encrypted = true, description = TRUST_PASSWORD_DESC) String trustPassword,
+                                       @Param(value = CONNECT_TIMEOUT, description = CONNECT_TIMEOUT_DESC) String connectTimeout,
+                                       @Param(value = SOCKET_TIMEOUT, description = SOCKET_TIMEOUT_DESC) String socketTimeout,
+                                       @Param(value = KEEP_ALIVE, description = KEEP_ALIVE_DESC) String keepAlive,
+                                       @Param(value = CONNECTIONS_MAX_PER_ROUTE, description = CONN_MAX_ROUTE_DESC) String connectionsMaxPerRoute,
+                                       @Param(value = CONNECTIONS_MAX_TOTAL, description = CONN_MAX_TOTAL_DESC) String connectionsMaxTotal) {
+        port = defaultIfEmpty(port, DEFAULT_NUTANIX_PORT);
+        apiVersion = defaultIfEmpty(apiVersion, DEFAULT_API_VERSION);
+        vmDiskSizeList = defaultIfEmpty(vmDiskSizeList, EMPTY);
+        isCDROMList = defaultIfEmpty(isCDROMList, EMPTY);
+        isEmptyDiskList = defaultIfEmpty(isEmptyDiskList, EMPTY);
+        storageContainerUUIDList = defaultIfEmpty(storageContainerUUIDList, EMPTY);
+        ndfsFilepathList = defaultIfEmpty(ndfsFilepathList, EMPTY);
+        isFlashModeEnabledList = defaultIfEmpty(isFlashModeEnabledList, EMPTY);
+        sourceVMDiskUUIDList = defaultIfEmpty(sourceVMDiskUUIDList, EMPTY);
+        vmDiskMinimumSizeList = defaultIfEmpty(vmDiskMinimumSizeList, EMPTY);
+        isSCSIPassThroughList = defaultIfEmpty(isSCSIPassThroughList, EMPTY);
+        isThinProvisionedList = defaultIfEmpty(isThinProvisionedList, EMPTY);
+        vmLogicalTimestamp = defaultIfEmpty(vmLogicalTimestamp, EMPTY);
+        proxyHost = defaultIfEmpty(proxyHost, EMPTY);
+        proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
+        proxyUsername = defaultIfEmpty(proxyUsername, EMPTY);
+        proxyPassword = defaultIfEmpty(proxyPassword, EMPTY);
+        trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
+        x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
+        trustKeystore = defaultIfEmpty(trustKeystore, DEFAULT_JAVA_KEYSTORE);
+        trustPassword = defaultIfEmpty(trustPassword, CHANGEIT);
+        connectTimeout = defaultIfEmpty(connectTimeout, CONNECT_TIMEOUT_CONST);
+        socketTimeout = defaultIfEmpty(socketTimeout, ZERO);
+        keepAlive = defaultIfEmpty(keepAlive, BOOLEAN_TRUE);
+        connectionsMaxPerRoute = defaultIfEmpty(connectionsMaxPerRoute, CONNECTIONS_MAX_PER_ROUTE_CONST);
+        connectionsMaxTotal = defaultIfEmpty(connectionsMaxTotal, CONNECTIONS_MAX_TOTAL_CONST);
+
+        final List<String> exceptionMessage = verifyCommonInputs(proxyPort, trustAllRoots,
+                connectTimeout, socketTimeout, keepAlive, connectionsMaxPerRoute, connectionsMaxTotal);
+        if (!exceptionMessage.isEmpty()) {
+            return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
+        }
+
+        try {
+            final Map<String, String> result = updateDisks(NutanixUpdateDisksInputs.builder()
+                    .vmUUID(vmUUID)
+                    .vmDiskUUIDList(vmDiskUUIDList)
+                    .deviceBusList(deviceBusList)
+                    .deviceIndexList(deviceIndexList)
+                    .vmDiskSizeList(vmDiskSizeList)
+                    .isCDROMList(isCDROMList)
+                    .isEmptyDiskList(isEmptyDiskList)
+                    .storageContainerUUIDList(storageContainerUUIDList)
+                    .ndfsFilepathList(ndfsFilepathList)
+                    .isFlashModeEnabledList(isFlashModeEnabledList)
+                    .sourceVMDiskUUIDList(sourceVMDiskUUIDList)
+                    .vmDiskMinimumSizeList(vmDiskMinimumSizeList)
+                    .isSCSIPassThroughList(isSCSIPassThroughList)
+                    .isThinProvisionedList(isThinProvisionedList)
+                    .vmLogicalTimestamp(vmLogicalTimestamp)
+                    .commonInputs(NutanixCommonInputs.builder()
+                            .hostname(hostname)
+                            .port(port)
+                            .username(username)
+                            .password(password)
+                            .apiVersion(apiVersion)
+                            .proxyHost(proxyHost)
+                            .proxyPort(proxyPort)
+                            .proxyUsername(proxyUsername)
+                            .proxyPassword(proxyPassword)
+                            .trustAllRoots(trustAllRoots)
+                            .x509HostnameVerifier(x509HostnameVerifier)
+                            .trustKeystore(trustKeystore)
+                            .trustPassword(trustPassword)
+                            .connectTimeout(connectTimeout)
+                            .socketTimeout(socketTimeout)
+                            .keepAlive(keepAlive)
+                            .connectionsMaxPerRoot(connectionsMaxPerRoute)
+                            .connectionsMaxTotal(connectionsMaxTotal)
+                            .build()).build());
+
+            final String returnMessage = result.get(RETURN_RESULT);
+            final Map<String, String> results = getOperationResults(result, returnMessage, returnMessage, returnMessage);
+            final int statusCode = Integer.parseInt(result.get(STATUS_CODE));
+            if (statusCode >= 200 && statusCode < 300) {
+                final String taskUUID = JsonPath.read(returnMessage, TASK_UUID_PATH);
+                results.put(TASK_UUID, taskUUID);
+            } else {
+                return getFailureResults(hostname, statusCode, returnMessage, returnMessage);
+            }
+            return results;
+        } catch (Exception exception) {
+            return getFailureResultsMap(exception);
+        }
+    }
+
+}
+
