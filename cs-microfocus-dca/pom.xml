@@ -75,19 +75,19 @@
         <maven-license-plugin.version>3.0</maven-license-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <score-content-sdk.version>1.10.10</score-content-sdk.version>
+        <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <commons-collection.version>4.1</commons-collection.version>
-        <cs-commons.version>0.0.7</cs-commons.version>
+        <cs-commons.version>0.0.9</cs-commons.version>
         <cs-xml.version>0.0.23</cs-xml.version>
-        <cs-http-client.version>0.1.94</cs-http-client.version>
+        <cs-http-client.version>0.1.96</cs-http-client.version>
         <jackson.version>2.22.3</jackson.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.target>17</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
         <custom.nexus>overwritten_by_ci</custom.nexus>
-        <lombok.version>1.16.20</lombok.version>
+        <lombok.version>1.18.48</lombok.version>
     </properties>
 
     <dependencies>
@@ -171,9 +171,8 @@
                             </goals>
                         </execution>
                     </executions>
-                    <!--Disabled doclint due to javadoc changes in Java 8 -->
                     <configuration>
-                        <additionalparam>-Xdoclint:none</additionalparam>
+                        <doclint>none</doclint>
                     </configuration>
                 </plugin>
                 <plugin>

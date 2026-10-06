@@ -79,9 +79,9 @@
         <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <score-content-sdk.version>1.10.10</score-content-sdk.version>
-        <cs-commons.version>0.0.7</cs-commons.version>
-        <junit.version>4.13.1</junit.version>
+        <score-content-sdk.version>1.10.11</score-content-sdk.version>
+        <cs-commons.version>0.0.9</cs-commons.version>
+        <junit.version>4.13.2</junit.version>
         <pdfbox.version>2.0.31</pdfbox.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -154,9 +154,8 @@
                             </goals>
                         </execution>
                     </executions>
-                    <!--Disabled doclint due to javadoc changes in Java 8 -->
                     <configuration>
-                        <additionalparam>-Xdoclint:none</additionalparam>
+                        <doclint>none</doclint>
                     </configuration>
                 </plugin>
                 <plugin>

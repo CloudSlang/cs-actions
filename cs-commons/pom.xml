@@ -67,15 +67,15 @@
 
     <properties>
         <!--Maven versions-->
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <license-maven-plugin.version>3.0</license-maven-plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <junit.version>4.13.1</junit.version>
+        <junit.version>4.13.2</junit.version>
         <jetbrains-annotations.version>17.0.0</jetbrains-annotations.version>
         <apache-commons-lang3.version>3.9</apache-commons-lang3.version>
         <!--Misc properties-->
@@ -135,7 +135,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <additionalparam>-Xdoclint:none</additionalparam>
+                        <doclint>none</doclint>
                     </configuration>
                 </plugin>
                 <plugin>

@@ -75,7 +75,7 @@
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <cs-commons.version>0.0.7</cs-commons.version>
+        <cs-commons.version>0.0.9</cs-commons.version>
         <jackson-databind.version>2.22.3</jackson-databind.version>
         <commons-compress.version>1.26.1</commons-compress.version>
         <commons-io.version>2.17.0</commons-io.version>
@@ -83,7 +83,7 @@
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.target>17</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
         <custom.nexus>overwritten_by_ci</custom.nexus>
     </properties>
@@ -176,6 +176,11 @@
             <version>3.21.0-GA</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
+            <version>4.0.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -206,9 +211,8 @@
                             </goals>
                         </execution>
                     </executions>
-                    <!--Disabled doclint due to javadoc changes in Java 8 -->
                     <configuration>
-                        <additionalparam>-Xdoclint:none</additionalparam>
+                        <doclint>none</doclint>
                     </configuration>
                 </plugin>
                 <plugin>

@@ -72,8 +72,8 @@
         <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <score-content-sdk.version>1.10.10</score-content-sdk.version>
-        <cs-commons.version>0.0.6</cs-commons.version>
+        <score-content-sdk.version>1.10.11</score-content-sdk.version>
+        <cs-commons.version>0.0.9</cs-commons.version>
         <commons-io.version>2.17.0</commons-io.version>
         <pdfbox.version>2.0.25</pdfbox.version>
         <zip4j.version>2.11.5</zip4j.version>
@@ -85,7 +85,7 @@
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.target>17</maven.compiler.target>
         <maven.sources.skip>true</maven.sources.skip>
         <custom.nexus>overwritten_by_ci</custom.nexus>
     </properties>
@@ -215,7 +215,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <additionalparam>-Xdoclint:none</additionalparam>
+                        <doclint>none</doclint>
                     </configuration>
                 </plugin>
                 <plugin>
