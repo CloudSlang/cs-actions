@@ -30,7 +30,19 @@ import io.cloudslang.content.utils.Constants;
 
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.AUTH_TYPE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.Constants.InputNames.*;
 import static io.cloudslang.content.utils.Constants.Others.*;
 import static io.cloudslang.content.utils.Constants.OutputNames.*;
@@ -131,9 +143,9 @@ public class PowerShellScriptAction {
             @Param(value = X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
             @Param(value = TRUST_KEYSTORE) String trustKeystore,
             @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = KERBEROS_CONFIG_FILE) String kerberosConfFile,
-            @Param(value = KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
-            @Param(value = KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
+            @Param(value = "kerberosConfFile") String kerberosConfFile,
+            @Param(value = "kerberosLoginConfFile") String kerberosLoginConfFile,
+            @Param(value = "kerberosSkipPortForLookup") String kerberosSkipPortForLookup,
             @Param(value = KEYSTORE) String keystore,
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,

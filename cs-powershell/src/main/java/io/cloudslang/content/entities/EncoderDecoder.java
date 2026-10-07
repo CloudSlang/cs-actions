@@ -18,9 +18,8 @@
 
 package io.cloudslang.content.entities;
 
-import org.apache.commons.codec.binary.Base64;
-
 import java.nio.charset.Charset;
+import java.util.Base64;
 
 /**
  * Created by giloan on 4/3/2016.
@@ -35,7 +34,7 @@ public class EncoderDecoder {
      * @return The encoded byte sequence using the base64 encoding.
      */
     public static String encodeStringInBase64(String str, Charset charset) {
-        return new String(Base64.encodeBase64(str.getBytes(charset)));
+        return Base64.getEncoder().encodeToString(str.getBytes(charset));
     }
 
     /**
@@ -45,6 +44,6 @@ public class EncoderDecoder {
      * @return The decoded string value.
      */
     public static String decodeBase64String(String str) {
-        return new String(Base64.decodeBase64(str));
+        return new String(Base64.getDecoder().decode(str));
     }
 }

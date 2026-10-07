@@ -28,7 +28,6 @@ import io.cloudslang.content.utils.ResourceLoader;
 import io.cloudslang.content.utils.WSManUtils;
 import io.cloudslang.content.utils.XMLUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.methods.HttpPost;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -38,6 +37,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -72,7 +72,6 @@ public class WSManRemoteShellService {
 
     private static final String UNAUTHORIZED_STATUS_CODE = "401";
     private static final String WSMAN_RESOURCE_URI = "/wsman";
-    private static final String NEW_LINE_SEPARATOR = "\\n";
     private static final String UUID_LABEL = "uuid:";
     private static final String PLACEHOLDER_NOT_FOUND = "Resource does not contain the expected placeholder name: ";
     private static final String CREATE_SHELL_REQUEST_XML = "templates/CreateShell.xml";
@@ -117,9 +116,8 @@ public class WSManRemoteShellService {
      */
     public Map<String, String> runCommand(WSManRequestInputs wsManRequestInputs) throws Exception {
         HttpClientService csHttpClient = new HttpClientService();
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
         URL url = buildURL(wsManRequestInputs, WSMAN_RESOURCE_URI);
-        httpClientInputs = setCommonHttpInputs(httpClientInputs, url, wsManRequestInputs);
+        HttpClientInputs httpClientInputs = buildCommonHttpInputs(url, wsManRequestInputs);
         String shellId = createShell(csHttpClient, httpClientInputs, wsManRequestInputs);
         WSManUtils.validateUUID(shellId, SHELL_ID);
         String commandStr = WSManUtils.constructCommand(wsManRequestInputs, this.psEdition);
@@ -139,32 +137,27 @@ public class WSManRemoteShellService {
      * @return the configured HttpClientInputs object.
      * @throws MalformedURLException
      */
-    private static HttpClientInputs setCommonHttpInputs(HttpClientInputs httpClientInputs, URL url, WSManRequestInputs wsManRequestInputs) throws MalformedURLException {
-        httpClientInputs.setUrl(url.toString());
-        httpClientInputs.setUsername(wsManRequestInputs.getUsername());
-        httpClientInputs.setPassword(wsManRequestInputs.getPassword());
-        httpClientInputs.setAuthType(wsManRequestInputs.getAuthType());
-        httpClientInputs.setKerberosConfFile(wsManRequestInputs.getKerberosConfFile());
-        httpClientInputs.setKerberosLoginConfFile(wsManRequestInputs.getKerberosLoginConfFile());
-        httpClientInputs.setKerberosSkipPortCheck(wsManRequestInputs.getKerberosSkipPortForLookup());
-        httpClientInputs.setTrustAllRoots(wsManRequestInputs.getTrustAllRoots());
-        httpClientInputs.setX509HostnameVerifier(wsManRequestInputs.getX509HostnameVerifier());
-        httpClientInputs.setProxyHost(wsManRequestInputs.getProxyHost());
-        httpClientInputs.setProxyPort(wsManRequestInputs.getProxyPort());
-        httpClientInputs.setProxyUsername(wsManRequestInputs.getProxyUsername());
-        httpClientInputs.setProxyPassword(wsManRequestInputs.getProxyPassword());
-        httpClientInputs.setKeystore(wsManRequestInputs.getKeystore());
-        httpClientInputs.setKeystorePassword(wsManRequestInputs.getKeystorePassword());
-        httpClientInputs.setTrustKeystore(wsManRequestInputs.getTrustKeystore());
-        httpClientInputs.setTrustPassword(wsManRequestInputs.getTrustPassword());
-        String headers = httpClientInputs.getHeaders();
-        if (StringUtils.isEmpty(headers)) {
-            httpClientInputs.setHeaders(CONTENT_TYPE_HEADER);
-        } else {
-            httpClientInputs.setHeaders(headers + NEW_LINE_SEPARATOR + CONTENT_TYPE_HEADER);
-        }
-        httpClientInputs.setMethod(HttpPost.METHOD_NAME);
-        return httpClientInputs;
+    private static HttpClientInputs buildCommonHttpInputs(URL url, WSManRequestInputs wsManRequestInputs) {
+        return HttpClientInputs.builder()
+                .url(url.toString())
+                .authType(StringUtils.defaultIfBlank(wsManRequestInputs.getAuthType(), "Basic"))
+                .username(StringUtils.defaultString(wsManRequestInputs.getUsername()))
+                .password(StringUtils.defaultString(wsManRequestInputs.getPassword()))
+                .trustAllRoots(StringUtils.defaultString(wsManRequestInputs.getTrustAllRoots()))
+                .x509HostnameVerifier(StringUtils.defaultString(wsManRequestInputs.getX509HostnameVerifier()))
+                .proxyHost(StringUtils.defaultString(wsManRequestInputs.getProxyHost()))
+                .proxyPort(StringUtils.defaultString(wsManRequestInputs.getProxyPort()))
+                .proxyUsername(StringUtils.defaultString(wsManRequestInputs.getProxyUsername()))
+                .proxyPassword(StringUtils.defaultString(wsManRequestInputs.getProxyPassword()))
+                .keystore(StringUtils.defaultString(wsManRequestInputs.getKeystore()))
+                .keystorePassword(StringUtils.defaultString(wsManRequestInputs.getKeystorePassword()))
+                .trustKeystore(StringUtils.defaultString(wsManRequestInputs.getTrustKeystore()))
+                .trustPassword(StringUtils.defaultString(wsManRequestInputs.getTrustPassword()))
+                .headers(CONTENT_TYPE_HEADER)
+                .method("POST")
+                .requestCharacterSet(StandardCharsets.UTF_8.toString())
+                .responseCharacterSet(StandardCharsets.UTF_8.toString())
+                .build();
     }
 
     /**
@@ -176,12 +169,36 @@ public class WSManRemoteShellService {
      * @return the result of the request execution.
      */
     private Map<String, String> executeRequestWithBody(HttpClientService csHttpClient, HttpClientInputs httpClientInputs, String body) throws Exception {
-        httpClientInputs.setBody(body);
-        Map<String, String> requestResponse = csHttpClient.execute(httpClientInputs);
+        HttpClientInputs requestInputs = buildRequestInputs(httpClientInputs, body);
+        Map<String, String> requestResponse = HttpClientService.execute(requestInputs);
         if (UNAUTHORIZED_STATUS_CODE.equals(requestResponse.get(STATUS_CODE))) {
             throw new RuntimeException(UNAUTHORIZED_EXCEPTION_MESSAGE);
         }
         return requestResponse;
+    }
+
+    private static HttpClientInputs buildRequestInputs(HttpClientInputs httpClientInputs, String body) {
+        return HttpClientInputs.builder()
+                .url(httpClientInputs.getUrl())
+                .authType(httpClientInputs.getAuthType())
+                .username(httpClientInputs.getUsername())
+                .password(httpClientInputs.getPassword())
+                .proxyHost(httpClientInputs.getProxyHost())
+                .proxyPort(httpClientInputs.getProxyPort())
+                .proxyUsername(httpClientInputs.getProxyUsername())
+                .proxyPassword(httpClientInputs.getProxyPassword())
+                .trustAllRoots(httpClientInputs.getTrustAllRoots())
+                .x509HostnameVerifier(httpClientInputs.getX509HostnameVerifier())
+                .trustKeystore(httpClientInputs.getTrustKeystore())
+                .trustPassword(httpClientInputs.getTrustPassword())
+                .keystore(httpClientInputs.getKeystore())
+                .keystorePassword(httpClientInputs.getKeystorePassword())
+                .headers(httpClientInputs.getHeaders())
+                .method(httpClientInputs.getMethod())
+                .requestCharacterSet(httpClientInputs.getRequestCharacterSet())
+                .responseCharacterSet(httpClientInputs.getResponseCharacterSet())
+                .body(body)
+                .build();
     }
 
     /**
