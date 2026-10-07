@@ -9,7 +9,7 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAddNicInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDeleteNICInputs;
 import io.cloudslang.content.nutanix.prism.services.models.nics.AddNicRequestBody;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -30,37 +30,43 @@ public class NicImpl {
 
     public static Map<String, String> AddNic(@NotNull final NutanixAddNicInputs nutanixAddNicInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(AddNicURL(nutanixAddNicInputs));
-        setCommonHttpInputs(httpClientInputs, nutanixAddNicInputs.getCommonInputs());
+        String body;
         try {
-            httpClientInputs.setBody(AddNicBody(nutanixAddNicInputs));
+            body = AddNicBody(nutanixAddNicInputs);
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }
-        httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setUsername(nutanixAddNicInputs.getCommonInputs().getUsername());
-        httpClientInputs.setPassword(nutanixAddNicInputs.getCommonInputs().getPassword());
-        httpClientInputs.setContentType(APPLICATION_API_JSON);
-        return new HttpClientService().execute(httpClientInputs);
+        HttpClientInputs httpClientInputs = HttpClientInputs.builder()
+                .url(AddNicURL(nutanixAddNicInputs))
+                .authType(BASIC)
+                .method(POST)
+                .username(nutanixAddNicInputs.getCommonInputs().getUsername())
+                .password(nutanixAddNicInputs.getCommonInputs().getPassword())
+                .contentType(APPLICATION_API_JSON)
+                .body(body)
+                .build();
+        httpClientInputs = setCommonHttpInputs(httpClientInputs, nutanixAddNicInputs.getCommonInputs());
+        return HttpClientService.execute(httpClientInputs);
     }
 
     @NotNull
     public static Map<String, String> deleteNic(@NotNull final NutanixDeleteNICInputs nutanixDeleteNICInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(deleteNicURL(nutanixDeleteNICInputs));
-        httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setMethod(DELETE);
-        httpClientInputs.setUsername(nutanixDeleteNICInputs.getCommonInputs().getUsername());
-        httpClientInputs.setPassword(nutanixDeleteNICInputs.getCommonInputs().getPassword());
-        httpClientInputs.setContentType(APPLICATION_API_JSON);
-        if (isEmpty(nutanixDeleteNICInputs.getVmLogicalTimestamp())) {
-            httpClientInputs.setQueryParams(getQueryParams(nutanixDeleteNICInputs.getVmLogicalTimestamp()));
+        final HttpClientInputs.HttpClientInputsBuilder builder = HttpClientInputs.builder()
+                .url(deleteNicURL(nutanixDeleteNICInputs))
+                .authType(BASIC)
+                .method(DELETE)
+                .username(nutanixDeleteNICInputs.getCommonInputs().getUsername())
+                .password(nutanixDeleteNICInputs.getCommonInputs().getPassword())
+                .contentType(APPLICATION_API_JSON);
+        
+        if (!isEmpty(nutanixDeleteNICInputs.getVmLogicalTimestamp())) {
+            builder.queryParams(getQueryParams(nutanixDeleteNICInputs.getVmLogicalTimestamp()));
         }
-        setCommonHttpInputs(httpClientInputs, nutanixDeleteNICInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        
+        HttpClientInputs httpClientInputs = builder.build();
+        httpClientInputs = setCommonHttpInputs(httpClientInputs, nutanixDeleteNICInputs.getCommonInputs());
+        return HttpClientService.execute(httpClientInputs);
     }
 
     @NotNull
