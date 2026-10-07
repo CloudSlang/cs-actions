@@ -19,13 +19,13 @@
 package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.ExceptionValues;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by victor on 04.09.2016.
@@ -60,12 +60,9 @@ public class CollectionUtilitiesTest {
     }
 
     private void testInvalidMap(String mapStr, String pairDelimiter, String keyValueDelimiter) {
-        try {
-            CollectionUtilities.toMap(mapStr, pairDelimiter, keyValueDelimiter);
-            assertFalse(true);
-        } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), "a:b:c" + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_KEY_VALUE_PAIR);
-        }
+        assertThatThrownBy(() -> CollectionUtilities.toMap(mapStr, pairDelimiter, keyValueDelimiter))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("a:b:c" + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_KEY_VALUE_PAIR);
     }
 
     @Test

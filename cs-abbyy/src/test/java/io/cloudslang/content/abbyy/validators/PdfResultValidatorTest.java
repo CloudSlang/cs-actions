@@ -21,29 +21,27 @@ import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({PdfResultValidator.class})
 public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
 
     @Mock
     private AbbyyApi abbyyApiMock;
+    @TempDir
+    private Path tempDir;
 
 
     @Test
@@ -104,15 +102,12 @@ public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
     public void validateAfterDownload_resultSizeIsTooBig_ValidationException() throws Exception {
         //Arrange
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
-        final String targetPath = "dummy";
-
-        PowerMockito.mockStatic(Paths.class);
-        PowerMockito.when(Paths.get(anyString())).thenReturn(null);
-        PowerMockito.mockStatic(Files.class);
-        PowerMockito.when(Files.size(any(Path.class))).thenReturn(Limits.MAX_SIZE_OF_PDF_FILE + 1);
-
-        //Act
-        ValidationException ex = this.sut.validateAfterDownload(abbyyInput, targetPath);
+        Path resultFile = Files.createFile(tempDir.resolve("oversized.pdf"));
+        ValidationException ex;
+        try (MockedStatic<Files> files = mockStatic(Files.class)) {
+            files.when(() -> Files.size(resultFile)).thenReturn(Limits.MAX_SIZE_OF_PDF_FILE + 1);
+            ex = this.sut.validateAfterDownload(abbyyInput, resultFile.toString());
+        }
 
         //Assert
         assertNotNull(ex);
@@ -123,15 +118,10 @@ public class PdfResultValidatorTest extends AbbyyResultValidatorTest {
     public void validateAfterDownload_resultIsValid_nullReturned() throws Exception {
         //Arrange
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
-        final String result = "result";
-
-        PowerMockito.mockStatic(Paths.class);
-        PowerMockito.when(Paths.get(anyString())).thenReturn(null);
-        PowerMockito.mockStatic(Files.class);
-        PowerMockito.when(Files.size(any(Path.class))).thenReturn(Limits.MAX_SIZE_OF_PDF_FILE - 1);
+        Path resultFile = Files.write(tempDir.resolve("result.pdf"), new byte[]{'%'});
 
         //Act
-        ValidationException ex = sut.validateAfterDownload(abbyyInput, result);
+        ValidationException ex = sut.validateAfterDownload(abbyyInput, resultFile.toString());
 
         //Assert
         assertNull(ex);

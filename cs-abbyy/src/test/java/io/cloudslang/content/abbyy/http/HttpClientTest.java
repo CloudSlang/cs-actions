@@ -26,26 +26,26 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClient.class, HttpClientService.class})
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class HttpClientTest {
 
     private static final String url = "url";
@@ -69,7 +69,6 @@ public class HttpClientTest {
     private static final String keystore = "keystore";
     private static final String keystorePassword = "keystorePassword";
     private static final Integer connectTimeout = 1;
-    private static final Integer executionTimeout = 0;
     private static final Integer socketTimeout = 1;
     private static final Boolean useCookies = true;
     private static final Boolean keepAlive = false;
@@ -99,13 +98,11 @@ public class HttpClientTest {
     private static final GlobalSessionObject httpClientPoolingConnectionManager = null;
 
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     @Mock
     private HttpClientRequest httpRequestMock;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockHttpClientRequest();
     }
@@ -126,26 +123,25 @@ public class HttpClientTest {
         rawResponse.put(HttpClientOutputNames.STATUS_CODE, statusCode);
         rawResponse.put(HttpClientOutputNames.RESPONSE_HEADERS, responseHeaders);
         rawResponse.put(HttpClientOutputNames.RETURN_CODE, returnCode);
-        PowerMockito.mockStatic(HttpClientService.class);
-        PowerMockito.when(HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(rawResponse);
+        try (MockedStatic<HttpClientService> httpClientService = mockStatic(HttpClientService.class);
+             MockedConstruction<HttpClientResponse.Builder> responseBuilder =
+                     mockConstruction(HttpClientResponse.Builder.class,
+                             withSettings().defaultAnswer(CALLS_REAL_METHODS),
+                             (builder, context) -> when(builder.build()).thenReturn(null))) {
+            httpClientService.when(() -> HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(rawResponse);
 
-        HttpClientResponse.Builder httpClientResponseBuilderSpy = new HttpClientResponse.Builder();
-        httpClientResponseBuilderSpy = PowerMockito.spy(httpClientResponseBuilderSpy);
-        when(httpClientResponseBuilderSpy.build()).thenReturn(null);
-        PowerMockito.whenNew(HttpClientResponse.Builder.class).withAnyArguments().thenReturn(httpClientResponseBuilderSpy);
+            //Act
+            HttpClient.execute(httpRequestMock);
 
-        //Act
-        HttpClient.execute(httpRequestMock);
-
-        //Assert
-        PowerMockito.verifyStatic();
-        HttpClientService.execute(any(HttpClientInputs.class));
-
-        verify(httpClientResponseBuilderSpy).returnResult(returnResult);
-        verify(httpClientResponseBuilderSpy).exception(exception);
-        verify(httpClientResponseBuilderSpy).statusCode(statusCode);
-        verify(httpClientResponseBuilderSpy).responseHeaders(responseHeaders);
-        verify(httpClientResponseBuilderSpy).returnCode(returnCode);
+            //Assert
+            httpClientService.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)));
+            HttpClientResponse.Builder responseBuilderMock = responseBuilder.constructed().get(0);
+            verify(responseBuilderMock).returnResult(returnResult);
+            verify(responseBuilderMock).exception(exception);
+            verify(responseBuilderMock).statusCode(statusCode);
+            verify(responseBuilderMock).responseHeaders(responseHeaders);
+            verify(responseBuilderMock).returnCode(returnCode);
+        }
     }
 
 
@@ -164,19 +160,12 @@ public class HttpClientTest {
         rawResponse.put(HttpClientOutputNames.STATUS_CODE, statusCode);
         rawResponse.put(HttpClientOutputNames.RESPONSE_HEADERS, responseHeaders);
         rawResponse.put(HttpClientOutputNames.RETURN_CODE, returnCode);
-        PowerMockito.mockStatic(HttpClientService.class);
-        PowerMockito.when(HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(rawResponse);
+        try (MockedStatic<HttpClientService> httpClientService = mockStatic(HttpClientService.class)) {
+            httpClientService.when(() -> HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(rawResponse);
 
-        HttpClientResponse.Builder httpClientResponseBuilderSpy = new HttpClientResponse.Builder();
-        httpClientResponseBuilderSpy = PowerMockito.spy(httpClientResponseBuilderSpy);
-        when(httpClientResponseBuilderSpy.build()).thenReturn(null);
-        PowerMockito.whenNew(HttpClientResponse.Builder.class).withAnyArguments().thenReturn(httpClientResponseBuilderSpy);
-
-        //Assert
-        this.exception.expect(HttpClientException.class);
-
-        //Act
-        HttpClient.execute(httpRequestMock);
+            //Assert and Act
+            assertThrows(HttpClientException.class, () -> HttpClient.execute(httpRequestMock));
+        }
     }
 
 

@@ -26,13 +26,10 @@ import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,15 +38,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@PrepareForTest({ProcessImageService.class})
 public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput> {
 
+    @TempDir
+    private Path tempDir;
 
     @Mock
     private AbbyyResultValidator xmlResultValidatorMock;
@@ -71,18 +69,15 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
 
         Map<String, String> resultsDummy = new HashMap<>();
 
-        try {
-            //Act
-            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+        //Act
+        AbbyySdkException ex = assertThrows(AbbyySdkException.class,
+                () -> this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy));
 
-            //Assert
-            fail();
-        } catch (AbbyySdkException ex) {
-            assertTrue(ex.getMessage().contains(ExceptionMsgs.EXPORT_FORMAT_AND_RESULT_URLS_DO_NOT_MATCH));
-            assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
-            assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
-            assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
-        }
+        //Assert
+        assertTrue(ex.getMessage().contains(ExceptionMsgs.EXPORT_FORMAT_AND_RESULT_URLS_DO_NOT_MATCH));
+        assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
+        assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
+        assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
     }
 
 
@@ -107,19 +102,16 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
         when(this.pdfResultValidatorMock.validateBeforeDownload(eq(requestMock), anyString()))
                 .thenReturn(new ValidationException(errMsg));
 
-        try {
-            //Act
-            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+        //Act
+        AbbyySdkException ex = assertThrows(AbbyySdkException.class,
+                () -> this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy));
 
-            //Assert
-            fail();
-        } catch (AbbyySdkException ex) {
-            assertTrue(ex.getMessage().contains(ValidationException.class.getSimpleName()));
-            assertTrue(ex.getMessage().contains(errMsg));
-            assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
-            assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
-            assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
-        }
+        //Assert
+        assertTrue(ex.getMessage().contains(ValidationException.class.getSimpleName()));
+        assertTrue(ex.getMessage().contains(errMsg));
+        assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
+        assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
+        assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
     }
 
 
@@ -132,15 +124,12 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
         when(requestMock.getExportFormats())
                 .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML, ExportFormat.PDF_SEARCHABLE));
         Path destinationFileMock = mock(Path.class);
-        when(destinationFileMock.toAbsolutePath()).thenReturn(Paths.get(StringUtils.EMPTY));
+        when(destinationFileMock.toAbsolutePath()).thenReturn(tempDir);
         when(requestMock.getDestinationFile()).thenReturn(destinationFileMock);
-
         AbbyyResponse responseMock = mockAbbyyResponse();
         when(responseMock.getResultUrls()).thenReturn(Arrays.asList("txt", "xml", "pdf"));
 
         Map<String, String> resultsDummy = new HashMap<>();
-
-        PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(mock(FileWriter.class));
 
         when(this.txtResultValidatorMock.validateAfterDownload(any(AbbyyInput.class), anyString()))
                 .thenReturn(new ValidationException(errMsg));
@@ -148,21 +137,23 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
                 .thenReturn(new ValidationException(errMsg));
         when(this.pdfResultValidatorMock.validateAfterDownload(any(AbbyyInput.class), anyString()))
                 .thenReturn(new ValidationException(errMsg));
+        when(this.abbyyApiMock.getResult(eq(requestMock), eq("pdf"), eq(ExportFormat.PDF_SEARCHABLE),
+                anyString(), eq(false))).thenAnswer(invocation -> {
+            Files.createFile(Paths.get(invocation.getArgument(3, String.class)));
+            return null;
+        });
 
 
-        try {
-            //Act
-            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+        //Act
+        AbbyySdkException ex = assertThrows(AbbyySdkException.class,
+                () -> this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy));
 
-            //Assert
-            fail();
-        } catch (AbbyySdkException ex) {
-            assertTrue(ex.getMessage().contains(ValidationException.class.getSimpleName()));
-            assertTrue(ex.getMessage().contains(errMsg));
-            assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
-            assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
-            assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
-        }
+        //Assert
+        assertTrue(ex.getMessage().contains(ValidationException.class.getSimpleName()));
+        assertTrue(ex.getMessage().contains(errMsg));
+        assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
+        assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
+        assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
     }
 
 
@@ -173,34 +164,24 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
 
         ProcessImageInput requestMock = mockAbbyyRequest();
         when(requestMock.getExportFormats())
-                .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML, ExportFormat.PDF_SEARCHABLE));
-        Path destinationFileMock = mock(Path.class);
-        when(destinationFileMock.toAbsolutePath()).thenReturn(Paths.get(StringUtils.EMPTY));
-        when(requestMock.getDestinationFile()).thenReturn(destinationFileMock);
-
+                .thenReturn(Arrays.asList(ExportFormat.TXT, ExportFormat.XML));
         AbbyyResponse responseMock = mockAbbyyResponse();
-        when(responseMock.getResultUrls()).thenReturn(Arrays.asList("txt", "xml", "pdf"));
+        when(responseMock.getResultUrls()).thenReturn(Arrays.asList("txt", "xml"));
 
         Map<String, String> resultsDummy = new HashMap<>();
 
-        PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(mock(FileWriter.class));
-
-        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), isNull(), anyBoolean()))
                 .thenThrow(new TimeoutException(errMsg));
 
-        try {
-            //Act
-            this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy);
+        //Act
+        AbbyySdkException ex = assertThrows(AbbyySdkException.class,
+                () -> this.sut.handleTaskCompleted(requestMock, responseMock, resultsDummy));
 
-            //Assert
-            fail();
-        } catch (AbbyySdkException ex) {
-            assertTrue(ex.getMessage().contains(TimeoutException.class.getSimpleName()));
-            assertTrue(ex.getMessage().contains(errMsg));
-            assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
-            assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
-            assertTrue(ex.getMessage().contains(ExportFormat.PDF_SEARCHABLE.toString()));
-        }
+        //Assert
+        assertTrue(ex.getMessage().contains(TimeoutException.class.getSimpleName()), ex.getMessage());
+        assertTrue(ex.getMessage().contains(errMsg));
+        assertTrue(ex.getMessage().contains(ExportFormat.TXT.toString()));
+        assertTrue(ex.getMessage().contains(ExportFormat.XML.toString()));
     }
 
 
@@ -218,7 +199,7 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
 
         Map<String, String> resultsDummy = new HashMap<>();
 
-        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), isNull(), anyBoolean()))
                 .thenReturn(result);
 
         //Act
@@ -241,9 +222,7 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
         when(requestMock.getApplicationId()).thenReturn("dummy");
         when(requestMock.getPassword()).thenReturn("dummy");
         when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
-        Path sourceFileMock = Paths.get(StringUtils.EMPTY);
-        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
-        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
+        Path sourceFileMock = Paths.get("source.pdf");
         when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
         when(requestMock.getDestinationFile()).thenReturn(null);
         when(requestMock.getProfile()).thenReturn(Profile.TEXT_EXTRACTION);

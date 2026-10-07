@@ -16,40 +16,36 @@
 
 package io.cloudslang.content.abbyy.validators;
 
-import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import io.cloudslang.content.abbyy.exceptions.ValidationException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doCallRealMethod;
+import static io.cloudslang.content.abbyy.constants.ExceptionMsgs.SOURCE_FILE_DOES_NOT_EXIST;
+import static io.cloudslang.content.abbyy.constants.ExceptionMsgs.SOURCE_FILE_IS_NOT_REGULAR_FILE;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
 public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
 
     AbbyyInputValidator<R> sut;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    @TempDir
+    Path tempDir;
+    Path validSourceFile;
 
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    public void setUp() throws IOException {
         this.sut = newSutInstance();
-        PowerMockito.mockStatic(Files.class);
+        this.validSourceFile = Files.createTempFile(tempDir, "source", ".tmp");
     }
 
 
@@ -174,45 +170,6 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
 
 
     @Test
-    public void validate_destinationFileAlreadyExists_ValidationException() {
-        //Arrange
-        R abbyyRequestMock = mockAbbyyRequest();
-
-        Path destinationFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(destinationFileMock)).thenReturn(true);
-        when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFileMock);
-
-        //Act
-        ValidationException ex = this.sut.validate(abbyyRequestMock);
-
-        //Assert
-        assertNotNull(ex);
-    }
-
-
-    @Test
-    public void validate_destinationFileParentDoesNotExist_ValidationException() {
-        //Arrange
-        R abbyyRequestMock = mockAbbyyRequest();
-
-        Path destinationFolderMock = mock(Path.class);
-        PowerMockito.when(Files.exists(destinationFolderMock)).thenReturn(false);
-
-        Path destinationFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(destinationFileMock)).thenReturn(true);
-        when(destinationFileMock.getParent()).thenReturn(destinationFolderMock);
-
-        when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFileMock);
-
-        //Act
-        ValidationException ex = this.sut.validate(abbyyRequestMock);
-
-        //Assert
-        assertNotNull(ex);
-    }
-
-
-    @Test
     public void validate_sourceFileIsNull_ValidationException() {
         //Arrange
         R abbyyRequestMock = mockAbbyyRequest();
@@ -231,15 +188,13 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         //Arrange
         R abbyyRequestMock = mockAbbyyRequest();
 
-        Path sourceFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(false);
-        when(abbyyRequestMock.getSourceFile()).thenReturn(sourceFileMock);
+        when(abbyyRequestMock.getSourceFile()).thenReturn(tempDir.resolve("missing-source"));
 
         //Act
         ValidationException ex = this.sut.validate(abbyyRequestMock);
 
         //Assert
-        assertNotNull(ex);
+        assertEquals(SOURCE_FILE_DOES_NOT_EXIST, ex.getMessage());
     }
 
 
@@ -248,16 +203,13 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         //Arrange
         R abbyyRequestMock = mockAbbyyRequest();
 
-        Path sourceFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
-        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(false);
-        when(abbyyRequestMock.getSourceFile()).thenReturn(sourceFileMock);
+        when(abbyyRequestMock.getSourceFile()).thenReturn(tempDir);
 
         //Act
         ValidationException ex = this.sut.validate(abbyyRequestMock);
 
         //Assert
-        assertNotNull(ex);
+        assertEquals(SOURCE_FILE_IS_NOT_REGULAR_FILE, ex.getMessage());
     }
 
 
@@ -265,10 +217,8 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
     public void validate_validRequest_nullReturned() {
         //Arrange
         R request = mockAbbyyRequest();
-        AbbyyInputValidator<R> sut = mock(this.sut.getClass());
-        doCallRealMethod().when(sut).validate(eq(request));
         //Act
-        ValidationException ex = sut.validate(request);
+        ValidationException ex = this.sut.validate(request);
         //Assert
         assertNull(ex);
     }

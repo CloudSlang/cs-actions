@@ -126,10 +126,9 @@ public class ProcessTextFieldInput extends AbbyyInput {
 
     @Override
     public @NotNull String getUrl() throws URISyntaxException {
-        URIBuilder urlBuilder = new URIBuilder()
-                .setScheme(this.getLocationId().getProtocol())
-                .setHost(String.format(Urls.HOST_TEMPLATE, this.getLocationId().toString(),
-                        Endpoints.PROCESS_TEXT_FIELD));
+        URIBuilder urlBuilder = new URIBuilder(String.format("%s://%s",
+                this.getLocationId().getProtocol(),
+                String.format(Urls.HOST_TEMPLATE, this.getLocationId(), Endpoints.PROCESS_TEXT_FIELD)));
 
         if (this.getRegion() != null) {
             urlBuilder.addParameter(QueryParams.REGION, this.getRegion().toString());

@@ -17,14 +17,14 @@
 
 package io.cloudslang.content.json.actions;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by nane on 2/9/2016.
@@ -39,12 +39,12 @@ public class RemoveEmptyElementTest {
     private RemoveEmptyElementAction actionUnderTest;
     private Map<String, String> returnResult;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         actionUnderTest = new RemoveEmptyElementAction();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         actionUnderTest = null;
         returnResult = null;

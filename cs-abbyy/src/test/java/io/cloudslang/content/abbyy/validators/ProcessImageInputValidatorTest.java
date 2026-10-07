@@ -16,6 +16,7 @@
 
 package io.cloudslang.content.abbyy.validators;
 
+import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 import io.cloudslang.content.abbyy.constants.Limits;
 import io.cloudslang.content.abbyy.entities.inputs.ProcessImageInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
@@ -23,32 +24,27 @@ import io.cloudslang.content.abbyy.entities.others.LocationId;
 import io.cloudslang.content.abbyy.entities.others.TextType;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@PrepareForTest({String.class, ProcessImageInputValidator.class})
 public class ProcessImageInputValidatorTest extends AbbyyInputValidatorTest<ProcessImageInput> {
 
     @Test
     public void validate_destinationFileIsNull_nullReturned() {
         //Arrange
         ProcessImageInput abbyyRequestMock = mockAbbyyRequest();
-        PowerMockito.when(abbyyRequestMock.getDestinationFile()).thenReturn(null);
+        when(abbyyRequestMock.getDestinationFile()).thenReturn(null);
         //Act
         ValidationException ex = this.sut.validate(abbyyRequestMock);
         //Assert
@@ -61,15 +57,14 @@ public class ProcessImageInputValidatorTest extends AbbyyInputValidatorTest<Proc
         //Arrange
         ProcessImageInput abbyyRequestMock = mockAbbyyRequest();
 
-        Path destinationFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(destinationFileMock)).thenReturn(false);
-        PowerMockito.when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFileMock);
+        Path destinationFolder = tempDir.resolve("missing-folder");
+        when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFolder);
 
         //Act
         ValidationException ex = this.sut.validate(abbyyRequestMock);
 
         //Assert
-        assertNotNull(ex);
+        assertEquals(ExceptionMsgs.DESTINATION_FOLDER_DOES_NOT_EXIST, ex.getMessage());
     }
 
 
@@ -78,16 +73,13 @@ public class ProcessImageInputValidatorTest extends AbbyyInputValidatorTest<Proc
         //Arrange
         ProcessImageInput abbyyRequestMock = mockAbbyyRequest();
 
-        Path destinationFolderMock = mock(Path.class);
-        PowerMockito.when(Files.exists(destinationFolderMock)).thenReturn(true);
-        PowerMockito.when(Files.isDirectory(destinationFolderMock)).thenReturn(false);
-        when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFolderMock);
+        when(abbyyRequestMock.getDestinationFile()).thenReturn(validSourceFile);
 
         //Act
         ValidationException ex = this.sut.validate(abbyyRequestMock);
 
         //Assert
-        assertNotNull(ex);
+        assertEquals(ExceptionMsgs.DESTINATION_FOLDER_IS_NOT_FOLDER, ex.getMessage());
     }
 
 
@@ -128,7 +120,7 @@ public class ProcessImageInputValidatorTest extends AbbyyInputValidatorTest<Proc
 
 
     @Test
-    public void validate_textTypesContainsNullValue_nullReturned() {
+    public void validate_textTypesContainsNullValue_ValidationException() {
         //Arrange
         ProcessImageInput request = mockAbbyyRequest();
         when(request.getTextTypes()).thenReturn(Arrays.asList(TextType.OCR_A, null));
@@ -228,10 +220,7 @@ public class ProcessImageInputValidatorTest extends AbbyyInputValidatorTest<Proc
         when(requestMock.getPassword()).thenReturn("dummy");
         when(requestMock.getProxyPort()).thenReturn((short) 20);
         when(requestMock.getDestinationFile()).thenReturn(null);
-        Path sourceFileMock = Paths.get(StringUtils.EMPTY);
-        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
-        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
-        when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
+        when(requestMock.getSourceFile()).thenReturn(validSourceFile);
         when(requestMock.getConnectTimeout()).thenReturn(0);
         when(requestMock.getSocketTimeout()).thenReturn(0);
         when(requestMock.getConnectionsMaxPerRoute()).thenReturn(20);

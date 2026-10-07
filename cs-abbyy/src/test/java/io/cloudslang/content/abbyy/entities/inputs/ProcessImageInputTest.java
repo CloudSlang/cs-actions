@@ -18,9 +18,11 @@ package io.cloudslang.content.abbyy.entities.inputs;
 
 import io.cloudslang.content.abbyy.entities.others.*;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.net.URI;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProcessImageInputTest {
     @Test
@@ -54,6 +56,8 @@ public class ProcessImageInputTest {
 
         //Assert
         assertEquals(expectedUrl, url);
+        assertEquals("cloud-eu.ocrsdk.com", URI.create(url).getHost());
+        assertEquals("/processImage", URI.create(url).getRawPath());
     }
 
 

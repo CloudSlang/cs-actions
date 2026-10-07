@@ -24,43 +24,43 @@ import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyInputValidator;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockitoAnnotations;
 
-import java.nio.file.Files;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Thread.class})
 public abstract class AbbyyServiceTest<R extends AbbyyInput> {
 
     AbbyyService<R> sut;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     @Mock
     AbbyyInputValidator<R> requestValidatorMock;
     @Mock
     AbbyyApi abbyyApiMock;
+    private AutoCloseable mocks;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
+        this.mocks = MockitoAnnotations.openMocks(this);
         this.sut = newSutInstance();
-        PowerMockito.mockStatic(Thread.class);
-        PowerMockito.mockStatic(Files.class);
+    }
+
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        this.mocks.close();
     }
 
 
@@ -71,15 +71,11 @@ public abstract class AbbyyServiceTest<R extends AbbyyInput> {
         ValidationException expectedEx = new ValidationException("msg");
         when(this.requestValidatorMock.validate(eq(request))).thenReturn(expectedEx);
 
-        try {
-            //Act
-            this.sut.execute(request);
+        //Act
+        ValidationException actualEx = assertThrows(ValidationException.class, () -> this.sut.execute(request));
 
-            //Assert
-            fail();
-        } catch (ValidationException ex) {
-            assertEquals(expectedEx, ex);
-        }
+        //Assert
+        assertSame(expectedEx, actualEx);
     }
 
 
@@ -92,11 +88,8 @@ public abstract class AbbyyServiceTest<R extends AbbyyInput> {
         when(responseMock.getTaskStatus()).thenReturn(AbbyyResponse.TaskStatus.NOT_ENOUGH_CREDITS);
         when(this.abbyyApiMock.request(eq(request))).thenReturn(responseMock);
 
-        //Assert
-        this.exception.expect(AbbyySdkException.class);
-
         //Act
-        this.sut.execute(request);
+        assertThrows(AbbyySdkException.class, () -> this.sut.execute(request));
     }
 
 
@@ -113,15 +106,11 @@ public abstract class AbbyyServiceTest<R extends AbbyyInput> {
 
         when(this.abbyyApiMock.getTaskStatus(eq(request), anyString())).thenReturn(responseMock);
 
-        try {
-            //Act
-            this.sut.execute(request);
+        //Act
+        TimeoutException ex = assertThrows(TimeoutException.class, () -> this.sut.execute(request));
 
-            //Assert
-            fail();
-        } catch (TimeoutException ex) {
-            assertEquals(String.valueOf(true), ex.getResultsMap().get(OutputNames.TIMED_OUT));
-        }
+        //Assert
+        assertEquals(String.valueOf(true), ex.getResultsMap().get(OutputNames.TIMED_OUT));
     }
 
 
@@ -141,15 +130,11 @@ public abstract class AbbyyServiceTest<R extends AbbyyInput> {
 
         when(this.abbyyApiMock.getTaskStatus(eq(request), anyString())).thenReturn(responseMock);
 
-        try {
-            //Act
-            this.sut.execute(request);
+        //Act
+        AbbyySdkException ex = assertThrows(AbbyySdkException.class, () -> this.sut.execute(request));
 
-            //Assert
-            fail();
-        } catch (AbbyySdkException ex) {
-            assertTrue(ex.getMessage().contains(expecterErr));
-        }
+        //Assert
+        assertTrue(ex.getMessage().contains(expecterErr));
     }
 
 

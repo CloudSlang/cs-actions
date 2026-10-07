@@ -16,29 +16,50 @@
 
 package io.cloudslang.content.abbyy.validators;
 
+import io.cloudslang.content.abbyy.constants.ExceptionMsgs;
 import io.cloudslang.content.abbyy.constants.Limits;
-import io.cloudslang.content.abbyy.entities.others.LocationId;
 import io.cloudslang.content.abbyy.entities.inputs.ProcessTextFieldInput;
+import io.cloudslang.content.abbyy.entities.others.LocationId;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.junit.jupiter.api.Test;
 
-import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@PrepareForTest({ProcessTextFieldInputValidator.class})
 public class ProcessTextFieldInputValidatorTest extends AbbyyInputValidatorTest<ProcessTextFieldInput> {
+
+    @Test
+    public void validate_destinationFileAlreadyExists_ValidationException() throws IOException {
+        ProcessTextFieldInput request = mockAbbyyRequest();
+        Path destinationFile = Files.createFile(tempDir.resolve("existing-destination.txt"));
+        when(request.getDestinationFile()).thenReturn(destinationFile);
+
+        ValidationException ex = sut.validate(request);
+
+        assertEquals(ExceptionMsgs.DESTINATION_FILE_ALREADY_EXISTS, ex.getMessage());
+    }
+
+
+    @Test
+    public void validate_destinationFileParentDoesNotExist_ValidationException() {
+        ProcessTextFieldInput request = mockAbbyyRequest();
+        Path destinationFile = tempDir.resolve("missing-parent").resolve("destination.txt");
+        when(request.getDestinationFile()).thenReturn(destinationFile);
+
+        ValidationException ex = sut.validate(request);
+
+        assertEquals(ExceptionMsgs.DESTINATION_FOLDER_DOES_NOT_EXIST, ex.getMessage());
+    }
 
     @Test
     public void validate_languagesIsNull_nullReturned() {
@@ -119,10 +140,7 @@ public class ProcessTextFieldInputValidatorTest extends AbbyyInputValidatorTest<
         when(requestMock.getPassword()).thenReturn("dummy");
         when(requestMock.getProxyPort()).thenReturn((short) 20);
         when(requestMock.getDestinationFile()).thenReturn(null);
-        Path sourceFileMock = Paths.get(StringUtils.EMPTY);
-        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
-        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
-        when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
+        when(requestMock.getSourceFile()).thenReturn(validSourceFile);
         when(requestMock.getConnectTimeout()).thenReturn(0);
         when(requestMock.getSocketTimeout()).thenReturn(0);
         when(requestMock.getConnectionsMaxPerRoute()).thenReturn(20);

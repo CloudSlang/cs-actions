@@ -16,13 +16,13 @@
 
 package io.cloudslang.content.json.actions;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONOBJECT;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by vranau

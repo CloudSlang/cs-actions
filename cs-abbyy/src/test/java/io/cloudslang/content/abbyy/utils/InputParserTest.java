@@ -20,21 +20,13 @@ package io.cloudslang.content.abbyy.utils;
 import io.cloudslang.content.abbyy.entities.others.LocationId;
 import io.cloudslang.content.abbyy.entities.others.Region;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(PowerMockRunner.class)
 public class InputParserTest {
 
     private static final String INPUT_NAME = "dummy";
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     @Test
@@ -75,14 +67,9 @@ public class InputParserTest {
         //Arrange
         final String value = null;
 
-        try {
-            //Act
-            InputParser.parseShort(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> InputParser.parseShort(value, INPUT_NAME));
+        assertTrue(ex.getMessage().contains(INPUT_NAME));
     }
 
 
@@ -91,14 +78,9 @@ public class InputParserTest {
         //Arrange
         final String value = "not a number";
 
-        try {
-            //Act
-            InputParser.parseShort(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> InputParser.parseShort(value, INPUT_NAME));
+        assertTrue(ex.getMessage().contains(INPUT_NAME));
     }
 
 
@@ -118,14 +100,9 @@ public class InputParserTest {
         //Arrange
         final String value = null;
 
-        try {
-            //Act
-            InputParser.parseInt(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> InputParser.parseInt(value, INPUT_NAME));
+        assertTrue(ex.getMessage().contains(INPUT_NAME));
     }
 
 
@@ -134,14 +111,9 @@ public class InputParserTest {
         //Arrange
         final String value = "not a number";
 
-        try {
-            //Act
-            InputParser.parseInt(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> InputParser.parseInt(value, INPUT_NAME));
+        assertTrue(ex.getMessage().contains(INPUT_NAME));
     }
 
 
@@ -161,14 +133,9 @@ public class InputParserTest {
         //Arrange
         final String value = null;
 
-        try {
-            //Act
-            InputParser.parseBoolean(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> InputParser.parseBoolean(value, INPUT_NAME));
+        assertTrue(ex.getMessage().contains(INPUT_NAME));
     }
 
 
@@ -177,14 +144,9 @@ public class InputParserTest {
         //Arrange
         final String value = "dummy";
 
-        try {
-            //Act
-            InputParser.parseBoolean(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> InputParser.parseBoolean(value, INPUT_NAME));
+        assertTrue(ex.getMessage().contains(INPUT_NAME));
     }
 
 
@@ -193,14 +155,9 @@ public class InputParserTest {
         //Arrange
         final String value = "True";
 
-        try {
-            //Act
-            InputParser.parseBoolean(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> InputParser.parseBoolean(value, INPUT_NAME));
+        assertTrue(ex.getMessage().contains(INPUT_NAME));
     }
 
 
@@ -209,14 +166,9 @@ public class InputParserTest {
         //Arrange
         final String value = "False";
 
-        try {
-            //Act
-            InputParser.parseBoolean(value, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> InputParser.parseBoolean(value, INPUT_NAME));
+        assertTrue(ex.getMessage().contains(INPUT_NAME));
     }
 
 
@@ -246,10 +198,8 @@ public class InputParserTest {
     public void parseRegion_nullStr_IllegalArgumentException() throws Exception {
         //Arrange
         final String str = null;
-        //Assert
-        exception.expect(IllegalArgumentException.class);
         //Act
-        InputParser.parseRegion(str);
+        assertThrows(IllegalArgumentException.class, () -> InputParser.parseRegion(str));
     }
 
 
@@ -257,10 +207,8 @@ public class InputParserTest {
     public void parseRegion_invalidLength_IllegalArgumentException() throws Exception {
         //Arrange
         final String str = "-1,-1,-1";
-        //Assert
-        exception.expect(IllegalArgumentException.class);
         //Act
-        InputParser.parseRegion(str);
+        assertThrows(IllegalArgumentException.class, () -> InputParser.parseRegion(str));
     }
 
 
@@ -268,10 +216,8 @@ public class InputParserTest {
     public void parseRegion_coordinateIsNotNumber_NumberFormatException() throws Exception {
         //Arrange
         final String str = "-1,-1,-1,asd";
-        //Assert
-        exception.expect(NumberFormatException.class);
         //Act
-        InputParser.parseRegion(str);
+        assertThrows(NumberFormatException.class, () -> InputParser.parseRegion(str));
     }
 
 
@@ -279,10 +225,8 @@ public class InputParserTest {
     public void parseRegion_coordinateIsInvalidNumber_IllegalArgumentException() throws Exception {
         //Arrange
         final String str = "-1,-1,-1,-2";
-        //Assert
-        exception.expect(IllegalArgumentException.class);
         //Act
-        InputParser.parseRegion(str);
+        assertThrows(IllegalArgumentException.class, () -> InputParser.parseRegion(str));
     }
 
 
@@ -290,10 +234,8 @@ public class InputParserTest {
     public void parseRegion_illegalCoordinateCombination_IllegalArgumentException() throws Exception {
         //Arrange
         final String str = "2,-1,1,-1";
-        //Assert
-        exception.expect(IllegalArgumentException.class);
         //Act
-        InputParser.parseRegion(str);
+        assertThrows(IllegalArgumentException.class, () -> InputParser.parseRegion(str));
     }
 
 
@@ -316,14 +258,9 @@ public class InputParserTest {
         //Arrange
         final String value = null;
 
-        try {
-            //Act
-            InputParser.parseEnum(value, LocationId.class, INPUT_NAME);
-            //Assert
-            fail();
-        } catch (IllegalArgumentException ex) {
-            assertTrue(ex.getMessage().contains(INPUT_NAME));
-        }
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> InputParser.parseEnum(value, LocationId.class, INPUT_NAME));
+        assertTrue(ex.getMessage().contains(INPUT_NAME));
     }
 
 

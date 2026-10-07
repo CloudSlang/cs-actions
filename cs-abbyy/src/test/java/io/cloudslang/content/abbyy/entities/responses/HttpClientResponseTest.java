@@ -17,25 +17,20 @@
 package io.cloudslang.content.abbyy.entities.responses;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HttpClientResponseTest {
 
-    @RunWith(PowerMockRunner.class)
-    public static class BuilderTest {
-
-        @Rule
-        public ExpectedException exception = ExpectedException.none();
+    @Nested
+    class BuilderTest {
 
 
         @Test
@@ -65,17 +60,14 @@ public class HttpClientResponseTest {
             final String value2 = "value2";
             final String responseHeaders = String.format("%s:%s\n%s:%s", name1, value1, name2, value2);
 
-            //Assert
-            this.exception.expect(NumberFormatException.class);
-
             //Act
-            new HttpClientResponse.Builder()
+            assertThrows(NumberFormatException.class, () -> new HttpClientResponse.Builder()
                     .returnResult(returnResult)
                     .returnCode(returnCode)
                     .exception(exception)
                     .statusCode(statusCode)
                     .responseHeaders(responseHeaders)
-                    .build();
+                    .build());
         }
 
 

@@ -19,17 +19,18 @@
 package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.ExceptionValues;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Created by victor on 04.09.2016.
  */
 public class BooleanUtilitiesTest {
 
-    @org.junit.Test
+    @Test
     public void isValidTrue() throws Exception {
         assertTrue(BooleanUtilities.isValid("true"));
         assertTrue(BooleanUtilities.isValid("TrUe"));
@@ -39,7 +40,7 @@ public class BooleanUtilitiesTest {
         assertTrue(BooleanUtilities.isValid("false"));
     }
 
-    @org.junit.Test
+    @Test
     public void isValidFalse() throws Exception {
         assertFalse(BooleanUtilities.isValid(""));
         assertFalse(BooleanUtilities.isValid("T"));
@@ -49,7 +50,7 @@ public class BooleanUtilitiesTest {
 
     }
 
-    @org.junit.Test
+    @Test
     public void toBooleanValid() throws Exception {
         assertTrue(BooleanUtilities.toBoolean("true"));
         assertTrue(BooleanUtilities.toBoolean("TRUE"));
@@ -64,18 +65,14 @@ public class BooleanUtilitiesTest {
         assertFalse(BooleanUtilities.toBoolean(null, false));
     }
 
-    @org.junit.Test
+    @Test
     public void toBooleanInvalid() throws Exception {
-        try {
-            BooleanUtilities.toBoolean("a");
-        } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), "a" + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_BOOLEAN_VALUE);
-        }
-        try {
-            BooleanUtilities.toBoolean("b", true);
-        } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), "b" + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_BOOLEAN_VALUE);
-        }
+        assertThatThrownBy(() -> BooleanUtilities.toBoolean("a"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("a" + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_BOOLEAN_VALUE);
+        assertThatThrownBy(() -> BooleanUtilities.toBoolean("b", true))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("b" + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_BOOLEAN_VALUE);
     }
 
 }

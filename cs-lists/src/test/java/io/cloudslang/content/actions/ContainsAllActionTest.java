@@ -18,9 +18,9 @@
 
 package io.cloudslang.content.actions;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.util.Map;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by moldovas on 7/12/2016.

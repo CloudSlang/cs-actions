@@ -16,22 +16,17 @@
 
 package io.cloudslang.content.abbyy.entities.responses;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AbbyyResponseTest {
 
-    @RunWith(PowerMockRunner.class)
-    public static class BuilderTest {
-
-        @Rule
-        public ExpectedException exception = ExpectedException.none();
+    @Nested
+    class BuilderTest {
 
 
         @Test
@@ -104,16 +99,13 @@ public class AbbyyResponseTest {
             final String resultUrl2 = "resultUrl2";
             final long estimatedProcessingTime = 1;
 
-            //Assert
-            this.exception.expect(IllegalArgumentException.class);
-
             //Act
-            new AbbyyResponse.Builder()
+            assertThrows(IllegalArgumentException.class, () -> new AbbyyResponse.Builder()
                     .taskStatus(taskStatus.toString())
                     .resultUrl(resultUrl)
                     .resultUrl2(resultUrl2)
                     .estimatedProcessingTime(String.valueOf(estimatedProcessingTime))
-                    .build();
+                    .build());
         }
 
 
@@ -126,17 +118,14 @@ public class AbbyyResponseTest {
             final String resultUrl2 = "resultUrl2";
             final long estimatedProcessingTime = 1;
 
-            //Assert
-            this.exception.expect(IllegalArgumentException.class);
-
             //Act
-            new AbbyyResponse.Builder()
+            assertThrows(IllegalArgumentException.class, () -> new AbbyyResponse.Builder()
                     .credits(credits)
                     .taskStatus(taskStatus.toString())
                     .resultUrl(resultUrl)
                     .resultUrl2(resultUrl2)
                     .estimatedProcessingTime(String.valueOf(estimatedProcessingTime))
-                    .build();
+                    .build());
         }
 
 
@@ -148,16 +137,13 @@ public class AbbyyResponseTest {
             final String resultUrl2 = "resultUrl2";
             final long estimatedProcessingTime = 1;
 
-            //Assert
-            this.exception.expect(IllegalArgumentException.class);
-
             //Act
-            new AbbyyResponse.Builder()
+            assertThrows(IllegalArgumentException.class, () -> new AbbyyResponse.Builder()
                     .credits(String.valueOf(credits))
                     .resultUrl(resultUrl)
                     .resultUrl2(resultUrl2)
                     .estimatedProcessingTime(String.valueOf(estimatedProcessingTime))
-                    .build();
+                    .build());
         }
     }
 }

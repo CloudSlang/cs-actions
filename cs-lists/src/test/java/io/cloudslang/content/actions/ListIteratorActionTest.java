@@ -19,7 +19,7 @@ package io.cloudslang.content.actions;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ import static io.cloudslang.content.utils.Constants.Descriptions.HAS_MORE;
 import static io.cloudslang.content.utils.Constants.Descriptions.NO_MORE;
 import static io.cloudslang.content.utils.Constants.OutputNames.RESULT_STRING;
 import static io.cloudslang.content.utils.Constants.OutputNames.RESULT_TEXT;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ListIteratorActionTest {
 

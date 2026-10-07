@@ -131,10 +131,9 @@ public class ProcessImageInput extends AbbyyInput {
 
     @Override
     public @NotNull String getUrl() throws URISyntaxException {
-        URIBuilder urlBuilder = new URIBuilder()
-                .setScheme(this.getLocationId().getProtocol())
-                .setHost(String.format(Urls.HOST_TEMPLATE, this.getLocationId().toString(),
-                        Endpoints.PROCESS_IMAGE));
+        URIBuilder urlBuilder = new URIBuilder(String.format("%s://%s",
+                this.getLocationId().getProtocol(),
+                String.format(Urls.HOST_TEMPLATE, this.getLocationId(), Endpoints.PROCESS_IMAGE)));
 
         if (this.getLanguages() != null && !this.getLanguages().isEmpty()) {
             urlBuilder.addParameter(QueryParams.LANGUAGE, StringUtils.join(this.getLanguages(), ','));
