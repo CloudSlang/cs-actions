@@ -33,8 +33,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
