@@ -2,12 +2,14 @@
 
 package io.cloudslang.content.nutanix.prism.utils;
 
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.services.HttpClientService.*;
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.ZERO;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getQueryParams;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;
@@ -78,5 +80,22 @@ public class HttpUtilsTest {
     public void getQueryParamsTestTwoArgs() {
         String queryParams = getQueryParams(INCLUDE_VM_DISK_CONFIG_INFO, INCLUDE_VM_NIC_CONFIG_INFO);
         assertEquals(EXPECTED_QUERY_PARAMS, queryParams);
+    }
+
+    @Test
+    public void setConnectionParametersMapsSocketTimeoutAndPreservesRequestFields() {
+        HttpClientInputs inputs = HttpClientInputs.builder()
+                .url("https://example.test")
+                .method("POST")
+                .headers("Accept:application/json")
+                .responseTimeout("1000")
+                .build();
+
+        HttpClientInputs updatedInputs = HttpUtils.setConnectionParameters(inputs,
+                "2000", "3000", "true", "5", "10", "false");
+
+        assertEquals("3000", updatedInputs.getResponseTimeout());
+        assertEquals("POST", updatedInputs.getMethod());
+        assertEquals("Accept:application/json", updatedInputs.getHeaders());
     }
 }

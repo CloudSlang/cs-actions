@@ -162,36 +162,33 @@ public class DiskImpl {
     @NotNull
     public static Map<String, String> detachDisks(@NotNull final NutanixDetachDisksInputs nutanixDetachDisksInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(detachDisksURL(nutanixDetachDisksInputs));
-        httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setMethod(POST);
-
-        httpClientInputs.setBody(detachDisksBody(nutanixDetachDisksInputs));
-
-        httpClientInputs.setUsername(nutanixDetachDisksInputs.getCommonInputs().getUsername());
-        httpClientInputs.setPassword(nutanixDetachDisksInputs.getCommonInputs().getPassword());
-        httpClientInputs.setContentType(APPLICATION_API_JSON);
-        setCommonHttpInputs(httpClientInputs, nutanixDetachDisksInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        HttpClientInputs httpClientInputs = HttpClientInputs.builder()
+                .url(detachDisksURL(nutanixDetachDisksInputs))
+                .authType(BASIC)
+                .method(POST)
+                .body(detachDisksBody(nutanixDetachDisksInputs))
+                .username(nutanixDetachDisksInputs.getCommonInputs().getUsername())
+                .password(nutanixDetachDisksInputs.getCommonInputs().getPassword())
+                .contentType(APPLICATION_API_JSON)
+                .build();
+        httpClientInputs = setCommonHttpInputs(httpClientInputs, nutanixDetachDisksInputs.getCommonInputs());
+        return HttpClientService.execute(httpClientInputs);
     }
 
     @NotNull
     public static Map<String, String> AttachDisk(@NotNull final NutanixAttachDisksInputs nutanixAttachDisksInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(AttachDisksURL(nutanixAttachDisksInputs));
-
-        httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setMethod(POST);
-
-        httpClientInputs.setBody(AttachDisksBody(nutanixAttachDisksInputs));
-
-        httpClientInputs.setUsername(nutanixAttachDisksInputs.getCommonInputs().getUsername());
-        httpClientInputs.setPassword(nutanixAttachDisksInputs.getCommonInputs().getPassword());
-        httpClientInputs.setContentType(APPLICATION_API_JSON);
-        setCommonHttpInputs(httpClientInputs, nutanixAttachDisksInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        HttpClientInputs httpClientInputs = HttpClientInputs.builder()
+                .url(AttachDisksURL(nutanixAttachDisksInputs))
+                .authType(BASIC)
+                .method(POST)
+                .body(AttachDisksBody(nutanixAttachDisksInputs))
+                .username(nutanixAttachDisksInputs.getCommonInputs().getUsername())
+                .password(nutanixAttachDisksInputs.getCommonInputs().getPassword())
+                .contentType(APPLICATION_API_JSON)
+                .build();
+        httpClientInputs = setCommonHttpInputs(httpClientInputs, nutanixAttachDisksInputs.getCommonInputs());
+        return HttpClientService.execute(httpClientInputs);
     }
 
     @NotNull
