@@ -22,23 +22,20 @@ import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
 import io.cloudslang.content.rft.services.SFTPCopier;
 import io.cloudslang.content.rft.services.SFTPService;
 import io.cloudslang.content.rft.utils.CacheUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CacheUtils.class)
-@PowerMockIgnore("jdk.internal.reflect.*")
+@ExtendWith(MockitoExtension.class)
 public class SFTPTest {
 
     @Mock
@@ -54,7 +51,7 @@ public class SFTPTest {
     private SFTPUploadFile sftpUploadFile;
     private SFTPGetChildren sftpGetChildren;
 
-    @Before
+    @BeforeEach
     public void setUp()  {
         sftpDownloadFile = new SFTPDownloadFile();
         sftpUploadFile = new SFTPUploadFile();
@@ -64,21 +61,22 @@ public class SFTPTest {
     @Test
     public void testGetFromCache(){
         SFTPService sftpService = new SFTPService();
-        mockStatic(CacheUtils.class);
         String sessionId = "sessionId";
 
         when(sftpCommonInputsMock.getGlobalSessionObject()).thenReturn(globalSessionObjectMock);
         when(sftpCommonInputsMock.getSftpCommonInputs()).thenReturn(sftpCommonInputsMock);
         when(globalSessionObjectMock.getResource()).thenReturn(sessionResourceMock);
 
-        when(CacheUtils.getFromCache(sessionResourceMock,sessionId)).thenReturn(sftpCopierMock);
-        SFTPCopier copierFromCache = sftpService.getSftpCopierFromCache(sftpCommonInputsMock,sessionId);
-        assertNotNull(copierFromCache);
-        assertEquals(sftpCopierMock,copierFromCache);
-        copierFromCache = sftpService.getSftpCopierFromCache(sftpCommonInputsMock,"");
-        assertNull(copierFromCache);
-        copierFromCache = sftpService.getSftpCopierFromCache(sftpCommonInputsMock,null);
-        assertNull(copierFromCache);
+        try (MockedStatic<CacheUtils> cacheUtils = mockStatic(CacheUtils.class)) {
+            cacheUtils.when(() -> CacheUtils.getFromCache(sessionResourceMock, sessionId)).thenReturn(sftpCopierMock);
+            SFTPCopier copierFromCache = sftpService.getSftpCopierFromCache(sftpCommonInputsMock, sessionId);
+            assertNotNull(copierFromCache);
+            assertEquals(sftpCopierMock, copierFromCache);
+            copierFromCache = sftpService.getSftpCopierFromCache(sftpCommonInputsMock, "");
+            assertNull(copierFromCache);
+            copierFromCache = sftpService.getSftpCopierFromCache(sftpCommonInputsMock, null);
+            assertNull(copierFromCache);
+        }
     }
 
     @Test

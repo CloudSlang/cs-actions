@@ -2,7 +2,7 @@
 
 package io.cloudslang.content.oracle.oci.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +13,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.ZERO;
 import static io.cloudslang.content.oracle.oci.utils.Outputs.CommonOutputs.DOCUMENT;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpUtilsTest {
 
@@ -51,8 +50,7 @@ public class HttpUtilsTest {
         Map<String, String> results = HttpUtils.getOperationResults(initializeSuccessResult(), returnedResult,
                 returnedResult, returnedResult);
 
-        assertThat(results, is(expectedResult));
-        assertThat(results.size(), is(4));
+        assertThat(results).isEqualTo(expectedResult).hasSize(4);
     }
 
     @Test
@@ -67,8 +65,7 @@ public class HttpUtilsTest {
         Map<String, String> results = HttpUtils.getOperationResults(initializeFailureResult(), returnedResult,
                 returnedResult, returnedResult);
 
-        assertThat(results, is(expectedResult));
-        assertThat(results.size(), is(4));
+        assertThat(results).isEqualTo(expectedResult).hasSize(4);
     }
 
 

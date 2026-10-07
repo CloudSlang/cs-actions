@@ -18,11 +18,11 @@
 package io.cloudslang.content.dca.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.dca.controllers.GetCredentialFromManagerController.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GetCredentialFromManagerControllerTest {
     private static final String INVALID_KEY = "invalid_key";
