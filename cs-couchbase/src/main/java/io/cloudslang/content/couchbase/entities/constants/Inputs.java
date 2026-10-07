@@ -30,6 +30,7 @@ public class Inputs {
     public static class CommonInputs {
         public static final String ENDPOINT = "endpoint";
         public static final String DELIMITER = "delimiter";
+        public static final String SOCKET_TIMEOUT = "socketTimeout";
     }
 
     public static class BucketInputs {

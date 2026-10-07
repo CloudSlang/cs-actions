@@ -38,7 +38,8 @@ import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGrou
 import static io.cloudslang.content.sitescope.constants.Outputs.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.SOCKET_TIMEOUT;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;
@@ -63,9 +64,9 @@ public class DeleteMonitorGroupAction {
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL,
                             responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = HOST, description = HOST_DESC) String host,
+    public Map<String, String> execute(@Param(value = io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.HOST, description = HOST_DESC) String host,
                                        @Param(value = PORT, description = PORT_DESC) String port,
-                                       @Param(value = PROTOCOL, description = PROTOCOL_DESC) String protocol,
+                                       @Param(value = io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.PROTOCOL, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = FULL_PATH_TO_GROUP, description = FULL_PATH_TO_GROUP_DESC) String fullPathToGroup,

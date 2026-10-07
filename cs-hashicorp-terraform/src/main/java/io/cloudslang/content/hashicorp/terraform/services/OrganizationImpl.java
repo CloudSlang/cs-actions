@@ -9,7 +9,7 @@ import io.cloudslang.content.hashicorp.terraform.entities.TerraformOrganizationI
 import io.cloudslang.content.hashicorp.terraform.services.models.organization.CreateOrganizationRequestBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -26,83 +26,83 @@ public class OrganizationImpl {
     @NotNull
     public static Map<String, String> createOrganization(@NotNull final TerraformOrganizationInputs createOrganizationInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(createOrganizationUrl(createOrganizationInputs.getCommonInputs().getOrganizationName()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
+        httpClientInputs.url(createOrganizationUrl(createOrganizationInputs.getCommonInputs().getOrganizationName()));
         setCommonHttpInputs(httpClientInputs, createOrganizationInputs.getCommonInputs());
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(POST);
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         if (createOrganizationInputs.getCommonInputs().getRequestBody().equals(EMPTY)) {
-            httpClientInputs.setBody(createOrganizationBody(createOrganizationInputs, DELIMITER));
+            httpClientInputs.body(createOrganizationBody(createOrganizationInputs, DELIMITER));
         } else {
-            httpClientInputs.setBody(createOrganizationInputs.getCommonInputs().getRequestBody());
+            httpClientInputs.body(createOrganizationInputs.getCommonInputs().getRequestBody());
         }
-        httpClientInputs.setResponseCharacterSet(createOrganizationInputs.getCommonInputs().getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(createOrganizationInputs.getCommonInputs().getAuthToken()));
-        return new HttpClientService().execute(httpClientInputs);
+        httpClientInputs.responseCharacterSet(createOrganizationInputs.getCommonInputs().getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(createOrganizationInputs.getCommonInputs().getAuthToken()));
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> updateOrganization(@NotNull final TerraformOrganizationInputs createOrganizationInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getOrganizationDetailsUrl(createOrganizationInputs.getCommonInputs().getOrganizationName()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
+        httpClientInputs.url(getOrganizationDetailsUrl(createOrganizationInputs.getCommonInputs().getOrganizationName()));
         setCommonHttpInputs(httpClientInputs, createOrganizationInputs.getCommonInputs());
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(PATCH);
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(PATCH);
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         if (createOrganizationInputs.getCommonInputs().getRequestBody().equals(EMPTY)) {
-            httpClientInputs.setBody(createOrganizationBody(createOrganizationInputs, DELIMITER));
+            httpClientInputs.body(createOrganizationBody(createOrganizationInputs, DELIMITER));
         } else {
-            httpClientInputs.setBody(createOrganizationInputs.getCommonInputs().getRequestBody());
+            httpClientInputs.body(createOrganizationInputs.getCommonInputs().getRequestBody());
         }
-        httpClientInputs.setResponseCharacterSet(createOrganizationInputs.getCommonInputs().getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(createOrganizationInputs.getCommonInputs().getAuthToken()));
-        return new HttpClientService().execute(httpClientInputs);
+        httpClientInputs.responseCharacterSet(createOrganizationInputs.getCommonInputs().getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(createOrganizationInputs.getCommonInputs().getAuthToken()));
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
 
     @NotNull
     public static Map<String, String> deleteOrganization(@NotNull final TerraformOrganizationInputs deleteOrganizationInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getOrganizationDetailsUrl(deleteOrganizationInputs.getCommonInputs().getOrganizationName()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
+        httpClientInputs.url(getOrganizationDetailsUrl(deleteOrganizationInputs.getCommonInputs().getOrganizationName()));
         setCommonHttpInputs(httpClientInputs, deleteOrganizationInputs.getCommonInputs());
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(DELETE);
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
-        httpClientInputs.setResponseCharacterSet(deleteOrganizationInputs.getCommonInputs().getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(deleteOrganizationInputs.getCommonInputs().getAuthToken()));
-        return new HttpClientService().execute(httpClientInputs);
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(DELETE);
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.responseCharacterSet(deleteOrganizationInputs.getCommonInputs().getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(deleteOrganizationInputs.getCommonInputs().getAuthToken()));
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> listOrganizations(@NotNull final TerraformCommonInputs listOrganizationsInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(createOrganizationUrl(listOrganizationsInputs.getOrganizationName()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
+        httpClientInputs.url(createOrganizationUrl(listOrganizationsInputs.getOrganizationName()));
         setCommonHttpInputs(httpClientInputs, listOrganizationsInputs);
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
-        httpClientInputs.setQueryParams(getQueryParams(listOrganizationsInputs.getPageNumber(),
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.queryParams(getQueryParams(listOrganizationsInputs.getPageNumber(),
                 listOrganizationsInputs.getPageSize()));
-        httpClientInputs.setResponseCharacterSet(listOrganizationsInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(listOrganizationsInputs.getAuthToken()));
-        return new HttpClientService().execute(httpClientInputs);
+        httpClientInputs.responseCharacterSet(listOrganizationsInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(listOrganizationsInputs.getAuthToken()));
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getOrganizationDetails(@NotNull final TerraformOrganizationInputs
                                                                      getOrganizationDetailsInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getOrganizationDetailsUrl(getOrganizationDetailsInputs.getCommonInputs().getOrganizationName()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setHeaders(getAuthHeaders(getOrganizationDetailsInputs.getCommonInputs().getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
+        httpClientInputs.url(getOrganizationDetailsUrl(getOrganizationDetailsInputs.getCommonInputs().getOrganizationName()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.headers(getAuthHeaders(getOrganizationDetailsInputs.getCommonInputs().getAuthToken()));
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, getOrganizationDetailsInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

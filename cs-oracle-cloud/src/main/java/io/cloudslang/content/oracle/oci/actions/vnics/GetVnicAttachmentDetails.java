@@ -23,7 +23,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.AttachVnicDetailsConstants.VNIC_ATTACHMENT_LIFE_CYCLE_STATE_JSON_PATH;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.GetVnicAttachmentDetailsConstants.GET_VNIC_ATTACHMENT_DETAILS_OPERATION_NAME;

@@ -21,6 +21,8 @@ package io.cloudslang.content.sitescope.constants;
 import io.cloudslang.content.constants.InputNames;
 
 public final class Inputs extends InputNames {
+    public static final String SOCKET_TIMEOUT = "socketTimeout";
+
     public static class CommonInputs {
         public static final String HOST = "host";
         public static final String PORT = "port";
@@ -81,4 +83,3 @@ public final class Inputs extends InputNames {
 
     }
 }
-

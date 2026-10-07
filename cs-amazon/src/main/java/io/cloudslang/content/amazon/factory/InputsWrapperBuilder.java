@@ -54,15 +54,15 @@ public class InputsWrapperBuilder {
 
     @SafeVarargs
     public static <T> InputsWrapper getWrapper(CommonInputs commonInputs, T... builders) {
-        HttpClientInputs httpClientInputs = getHttpClientInputs(commonInputs, builders);
+        HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder = getHttpClientInputsBuilder(commonInputs, builders);
 
-        return buildWrapper(httpClientInputs, commonInputs, builders);
+        return buildWrapper(httpClientInputsBuilder, commonInputs, builders);
     }
 
     @SafeVarargs
-    private static <T> InputsWrapper buildWrapper(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
+    private static <T> InputsWrapper buildWrapper(HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder, CommonInputs commonInputs, T... builders) {
         InputsWrapper wrapper = new InputsWrapper.Builder()
-                .withHttpClientInputs(httpClientInputs)
+                .withHttpClientInputsBuilder(httpClientInputsBuilder)
                 .withCommonInputs(commonInputs)
                 .withApiService(commonInputs.getApiService())
                 .withRequestUri(commonInputs.getRequestUri())
@@ -108,21 +108,20 @@ public class InputsWrapperBuilder {
     }
 
     @SafeVarargs
-    private static <T> HttpClientInputs getHttpClientInputs(CommonInputs commonInputs, T... builders) {
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
+    private static <T> HttpClientInputs.HttpClientInputsBuilder getHttpClientInputsBuilder(CommonInputs commonInputs, T... builders) {
 
         String prefix = getPrefix(builders);
 
-        httpClientInputs.setUrl(getUrlFromApiService(commonInputs.getEndpoint(), commonInputs.getApiService(), prefix));
-        httpClientInputs.setProxyHost(commonInputs.getProxyHost());
-        httpClientInputs.setProxyPort(commonInputs.getProxyPort());
-        httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
-        httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
-        httpClientInputs.setMethod(commonInputs.getHttpClientMethod());
-        httpClientInputs.setAuthType(AUTHORIZATION_TYPE_ANONYMOUS);
-        httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
+        return HttpClientInputs.builder()
+                .url(getUrlFromApiService(commonInputs.getEndpoint(), commonInputs.getApiService(), prefix))
+                .proxyHost(commonInputs.getProxyHost())
+                .proxyPort(commonInputs.getProxyPort())
+                .proxyUsername(commonInputs.getProxyUsername())
+                .proxyPassword(commonInputs.getProxyPassword())
+                .method(commonInputs.getHttpClientMethod())
+                .authType(AUTHORIZATION_TYPE_ANONYMOUS)
+                .queryParamsAreURLEncoded(Boolean.FALSE.toString());
 
-        return httpClientInputs;
     }
 
     private static <T> String getPrefix(T[] builders) {

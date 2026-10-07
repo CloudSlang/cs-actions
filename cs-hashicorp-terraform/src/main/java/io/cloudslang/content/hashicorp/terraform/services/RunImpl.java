@@ -10,7 +10,7 @@ import io.cloudslang.content.hashicorp.terraform.services.models.runs.ApplyRunRe
 import io.cloudslang.content.hashicorp.terraform.services.models.runs.CreateRunBody;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -32,122 +32,122 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class RunImpl {
     @NotNull
     public static Map<String, String> createRunClient(@NotNull final TerraformRunInputs createRunInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final TerraformCommonInputs commonInputs = createRunInputs.getCommonInputs();
-        httpClientInputs.setUrl(createRunClientUrl());
+        httpClientInputs.url(createRunClientUrl());
         if (commonInputs.getRequestBody().isEmpty()) {
             try {
-                httpClientInputs.setBody(createRunBody(createRunInputs));
+                httpClientInputs.body(createRunBody(createRunInputs));
             } catch (JsonProcessingException e) {
                 return getFailureResultsMap(e);
             }
         } else {
-            httpClientInputs.setBody(commonInputs.getRequestBody());
+            httpClientInputs.body(commonInputs.getRequestBody());
         }
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(POST);
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> applyRunClient(@NotNull final TerraformRunInputs applyRunInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final TerraformCommonInputs commonInputs = applyRunInputs.getCommonInputs();
-        httpClientInputs.setUrl(applyRunClientUrl(applyRunInputs.getRunId()));
+        httpClientInputs.url(applyRunClientUrl(applyRunInputs.getRunId()));
         if (commonInputs.getRequestBody().isEmpty()) {
             try {
-                httpClientInputs.setBody(applyRunBody(applyRunInputs));
+                httpClientInputs.body(applyRunBody(applyRunInputs));
             } catch (JsonProcessingException e) {
                 return getFailureResultsMap(e);
             }
         } else {
-            httpClientInputs.setBody(commonInputs.getRequestBody());
+            httpClientInputs.body(commonInputs.getRequestBody());
         }
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(POST);
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> listRunsInWorkspaceClient(@NotNull final TerraformRunInputs listRunsInWorkspaceInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final TerraformCommonInputs commonInputs = listRunsInWorkspaceInputs.getCommonInputs();
-        httpClientInputs.setUrl(listRunsInWorkspaceClientUrl(listRunsInWorkspaceInputs.getWorkspaceId()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.url(listRunsInWorkspaceClientUrl(listRunsInWorkspaceInputs.getWorkspaceId()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
-        httpClientInputs.setQueryParams(getQueryParams(listRunsInWorkspaceInputs.getCommonInputs().getPageNumber(),
+        httpClientInputs.queryParams(getQueryParams(listRunsInWorkspaceInputs.getCommonInputs().getPageNumber(),
                 listRunsInWorkspaceInputs.getCommonInputs().getPageSize()));
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        return new HttpClientService().execute(httpClientInputs);
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getRunDetails(@NotNull final TerraformRunInputs getRunDetailsInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final TerraformCommonInputs commonInputs = getRunDetailsInputs.getCommonInputs();
-        httpClientInputs.setUrl(getRunDetailsUrl(getRunDetailsInputs.getRunId()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.url(getRunDetailsUrl(getRunDetailsInputs.getRunId()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
   @NotNull
     public static Map<String, String> planDetails(@NotNull final TerraformRunInputs planDetailsInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final TerraformCommonInputs commonInputs = planDetailsInputs.getCommonInputs();
-        httpClientInputs.setUrl(planDetailsUrl(planDetailsInputs.getPlanId()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.url(planDetailsUrl(planDetailsInputs.getPlanId()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
   
     public static Map<String, String> cancelRun(@NotNull final TerraformRunInputs cancelRunInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final TerraformCommonInputs commonInputs = cancelRunInputs.getCommonInputs();
-        httpClientInputs.setUrl(cancelRunUrl(cancelRunInputs.getRunId()));
+        httpClientInputs.url(cancelRunUrl(cancelRunInputs.getRunId()));
         if (commonInputs.getRequestBody().isEmpty()) {
             try {
-                httpClientInputs.setBody(applyRunBody(cancelRunInputs));
+                httpClientInputs.body(applyRunBody(cancelRunInputs));
             } catch (JsonProcessingException e) {
                 return getFailureResultsMap(e);
             }
         } else {
-            httpClientInputs.setBody(commonInputs.getRequestBody());
+            httpClientInputs.body(commonInputs.getRequestBody());
         }
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(POST);
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getApplyDetails(@NotNull final TerraformRunInputs getApplyDetailsInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final TerraformCommonInputs commonInputs = getApplyDetailsInputs.getCommonInputs();
-        httpClientInputs.setUrl(getApplyDetailsUrl(getApplyDetailsInputs.getApplyIdId()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        httpClientInputs.url(getApplyDetailsUrl(getApplyDetailsInputs.getApplyIdId()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

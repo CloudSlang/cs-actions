@@ -24,7 +24,7 @@ import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderA
 import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderActions.DELETE_FILE_OR_FOLDER;
 import static io.cloudslang.content.dropbox.factory.folders.FolderPayloadBuilder.getFolderPayload;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
+import static org.apache.hc.client5.http.classic.methods.HttpPost.METHOD_NAME;
 
 /**
  * Created by TusaM
@@ -36,7 +36,7 @@ public class PayloadBuilder {
     }
 
     public static String buildPayload(InputsWrapper wrapper) {
-        if (METHOD_NAME.equalsIgnoreCase(wrapper.getHttpClientInputs().getMethod())) {
+        if (METHOD_NAME.equalsIgnoreCase(wrapper.getHttpMethod())) {
             switch (wrapper.getCommonInputs().getAction()) {
                 case CREATE_FOLDER:
                     return getFolderPayload(wrapper);

@@ -20,6 +20,8 @@
 package io.cloudslang.content.office365.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs.HttpClientInputsBuilder;
+import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +32,7 @@ import static io.cloudslang.content.office365.utils.HttpUtils.setSecurityInputs;
 public class HttpCommons {
 
     @NotNull
-    static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    static void setCommonHttpInputs(@NotNull final HttpClientInputsBuilder httpClientInputs,
                                     @NotNull final Office365CommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),
@@ -50,5 +52,9 @@ public class HttpCommons {
                 commonInputs.getKeepAlive(),
                 commonInputs.getConnectionsMaxPerRoute(),
                 commonInputs.getConnectionsMaxTotal());
+    }
+
+    static java.util.Map<String, String> execute(@NotNull final HttpClientInputsBuilder httpClientInputs) throws Exception {
+        return HttpClientService.execute(httpClientInputs.build());
     }
 }

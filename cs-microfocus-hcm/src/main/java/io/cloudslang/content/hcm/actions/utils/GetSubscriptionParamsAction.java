@@ -39,7 +39,25 @@ import static io.cloudslang.content.hcm.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hcm.utils.Descriptions.GetSubscriptionParams.*;
 import static io.cloudslang.content.hcm.utils.OutputNames.PARAM_LIST;
 import static io.cloudslang.content.hcm.utils.Utilities.setInput;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.AUTH_TYPE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.QUERY_PARAMS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USE_COOKIES;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.URL;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.hcm.utils.Constants.SOCKET_TIMEOUT;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -85,14 +103,14 @@ public class GetSubscriptionParamsAction {
         final String trustAllRoots = defaultIfEmpty(trustAllRootsInp, DEFAULT_TRUST_ALL_ROOTS);
         final String x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifierInp, DEFAULT_X_509_HOSTNAME_VERIFIER);
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
 
         setInput(httpClientInputs, url, authType, username, password, connectTimeout, socketTimeout, useCookies,
                 keepAlive, queryParams, CONTENT_TYPE, TRUE, GET, proxyHost, proxyPort, proxyUsername, proxyPassword,
                 trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword);
 
         try {
-            return createInstance(httpClientInputs);
+            return createInstance(httpClientInputs.build());
         } catch (Exception e) {
             return getFailureResultsMap(e.getMessage());
         }

@@ -19,11 +19,12 @@ package io.cloudslang.content.hcm.utils;
 
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs.HttpClientInputsBuilder;
 import org.jetbrains.annotations.NotNull;
 
 public class Utilities {
 
-    public static void setInput(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setInput(@NotNull final HttpClientInputsBuilder httpClientInputs,
                                 @NotNull final String url,
                                 @NotNull final String authType,
                                 @NotNull final String username,
@@ -46,28 +47,28 @@ public class Utilities {
                                 @NotNull final String trustPassword,
                                 @NotNull final String keystore,
                                 @NotNull final String keystorePassword) {
-        httpClientInputs.setUrl(url);
-        httpClientInputs.setAuthType(authType);
-        httpClientInputs.setUsername(username);
-        httpClientInputs.setPassword(password);
-        httpClientInputs.setConnectTimeout(connectTimeout);
-        httpClientInputs.setSocketTimeout(socketTimeout);
-        httpClientInputs.setUseCookies(useCookies);
-        httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setQueryParams(queryParams);
-        httpClientInputs.setContentType(contentType);
-        httpClientInputs.setFollowRedirects(followRedirects);
-        httpClientInputs.setMethod(method);
-        httpClientInputs.setProxyHost(proxyHost);
-        httpClientInputs.setProxyPort(proxyPort);
-        httpClientInputs.setProxyUsername(proxyUsername);
-        httpClientInputs.setProxyPassword(proxyPassword);
-        httpClientInputs.setTrustAllRoots(trustAllRoots);
-        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
-        httpClientInputs.setKeystore(keystore);
-        httpClientInputs.setKeystorePassword(keystorePassword);
+        httpClientInputs.url(url);
+        httpClientInputs.authType(authType);
+        httpClientInputs.username(username);
+        httpClientInputs.password(password);
+        httpClientInputs.connectTimeout(connectTimeout);
+        httpClientInputs.responseTimeout(socketTimeout);
+        httpClientInputs.useCookies(useCookies);
+        httpClientInputs.keepAlive(keepAlive);
+        httpClientInputs.queryParams(queryParams);
+        httpClientInputs.contentType(contentType);
+        httpClientInputs.followRedirects(followRedirects);
+        httpClientInputs.method(method);
+        httpClientInputs.proxyHost(proxyHost);
+        httpClientInputs.proxyPort(proxyPort);
+        httpClientInputs.proxyUsername(proxyUsername);
+        httpClientInputs.proxyPassword(proxyPassword);
+        httpClientInputs.trustAllRoots(trustAllRoots);
+        httpClientInputs.x509HostnameVerifier(x509HostnameVerifier);
+        httpClientInputs.trustKeystore(trustKeystore);
+        httpClientInputs.trustPassword(trustPassword);
+        httpClientInputs.keystore(keystore);
+        httpClientInputs.keystorePassword(keystorePassword);
     }
 
 }

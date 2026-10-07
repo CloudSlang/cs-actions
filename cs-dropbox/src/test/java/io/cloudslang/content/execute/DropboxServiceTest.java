@@ -26,23 +26,16 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
 
 import static io.cloudslang.content.dropbox.utils.InputsUtil.getHttpClientInputs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * Created by TusaM
@@ -51,21 +44,24 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({HttpClientService.class, DropboxService.class})
 public class DropboxServiceTest {
-    @Mock
-    private HttpClientService csHttpClientMock;
-
     private DropboxService toTest;
+
+    private void verifyHttpClientExecute(org.mockito.verification.VerificationMode mode) throws Exception {
+        org.powermock.api.mockito.PowerMockito.verifyStatic(mode);
+        HttpClientService.execute(any(HttpClientInputs.class));
+    }
 
     @Before
     public void init() throws Exception {
-        whenNew(HttpClientService.class).withNoArguments().thenReturn(csHttpClientMock);
-        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<String, String>());
+        org.powermock.api.mockito.PowerMockito.mockStatic(HttpClientService.class);
+        org.powermock.api.mockito.PowerMockito.when(HttpClientService.execute(any(HttpClientInputs.class)))
+                .thenReturn(new HashMap<String, String>());
         toTest = new DropboxService();
     }
 
     @Test
     public void testCreateFolder() throws Exception {
-        HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
+        HttpClientInputs.HttpClientInputsBuilder httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
                 .withAccessToken("testToken")
@@ -82,19 +78,18 @@ public class DropboxServiceTest {
 
         toTest.execute(httpClientInputs, commonInputs, folderInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        verifyHttpClientExecute(times(1));
 
-        assertEquals("https://api.dropboxapi.com/2/files/create_folder_v2", httpClientInputs.getUrl());
-        assertEquals("Authorization:Bearer testToken", httpClientInputs.getHeaders());
-        assertEquals("application/json", httpClientInputs.getContentType());
-        assertTrue(httpClientInputs.getBody().contains("\"path\":\"/testPath\""));
-        assertTrue(httpClientInputs.getBody().contains("\"autorename\":false"));
+        assertEquals("https://api.dropboxapi.com/2/files/create_folder_v2", httpClientInputs.build().getUrl());
+        assertEquals("Authorization:Bearer testToken", httpClientInputs.build().getHeaders());
+        assertEquals("application/json", httpClientInputs.build().getContentType());
+        assertTrue(httpClientInputs.build().getBody().contains("\"path\":\"/testPath\""));
+        assertTrue(httpClientInputs.build().getBody().contains("\"autorename\":false"));
     }
 
     @Test
     public void testCreateFolderDeprecatedApi() throws Exception {
-        HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
+        HttpClientInputs.HttpClientInputsBuilder httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
                 .withAccessToken("testToken")
@@ -111,19 +106,18 @@ public class DropboxServiceTest {
 
         toTest.execute(httpClientInputs, commonInputs, folderInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        verifyHttpClientExecute(times(1));
 
-        assertEquals("https://api.dropboxapi.com/1/files/create_folder", httpClientInputs.getUrl());
-        assertEquals("Authorization:Bearer testToken", httpClientInputs.getHeaders());
-        assertEquals("application/json", httpClientInputs.getContentType());
-        assertTrue(httpClientInputs.getBody().contains("\"path\":\"/testPath\""));
-        assertTrue(httpClientInputs.getBody().contains("\"autorename\":false"));
+        assertEquals("https://api.dropboxapi.com/1/files/create_folder", httpClientInputs.build().getUrl());
+        assertEquals("Authorization:Bearer testToken", httpClientInputs.build().getHeaders());
+        assertEquals("application/json", httpClientInputs.build().getContentType());
+        assertTrue(httpClientInputs.build().getBody().contains("\"path\":\"/testPath\""));
+        assertTrue(httpClientInputs.build().getBody().contains("\"autorename\":false"));
     }
 
     @Test
     public void testCreateFolderNoApiSpecified() throws Exception {
-        HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
+        HttpClientInputs.HttpClientInputsBuilder httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
                 .withAccessToken("testToken")
@@ -140,19 +134,18 @@ public class DropboxServiceTest {
 
         toTest.execute(httpClientInputs, commonInputs, folderInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        verifyHttpClientExecute(times(1));
 
-        assertEquals("https://api.dropboxapi.com/2/files/create_folder_v2", httpClientInputs.getUrl());
-        assertEquals("Authorization:Bearer testToken", httpClientInputs.getHeaders());
-        assertEquals("application/json", httpClientInputs.getContentType());
-        assertTrue(httpClientInputs.getBody().contains("\"path\":\"/testPath\""));
-        assertTrue(httpClientInputs.getBody().contains("\"autorename\":false"));
+        assertEquals("https://api.dropboxapi.com/2/files/create_folder_v2", httpClientInputs.build().getUrl());
+        assertEquals("Authorization:Bearer testToken", httpClientInputs.build().getHeaders());
+        assertEquals("application/json", httpClientInputs.build().getContentType());
+        assertTrue(httpClientInputs.build().getBody().contains("\"path\":\"/testPath\""));
+        assertTrue(httpClientInputs.build().getBody().contains("\"autorename\":false"));
     }
 
     @Test
     public void testDeleteFileOrFolder() throws Exception {
-        HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
+        HttpClientInputs.HttpClientInputsBuilder httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
                 .withAccessToken("testToken")
@@ -168,18 +161,17 @@ public class DropboxServiceTest {
 
         toTest.execute(httpClientInputs, commonInputs, folderInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        verifyHttpClientExecute(times(1));
 
-        assertEquals("https://api.dropboxapi.com/2/files/delete_v2", httpClientInputs.getUrl());
-        assertEquals("Authorization:Bearer testToken", httpClientInputs.getHeaders());
-        assertEquals("application/json", httpClientInputs.getContentType());
-        assertTrue(httpClientInputs.getBody().contains("\"path\":\"/testPath\""));
+        assertEquals("https://api.dropboxapi.com/2/files/delete_v2", httpClientInputs.build().getUrl());
+        assertEquals("Authorization:Bearer testToken", httpClientInputs.build().getHeaders());
+        assertEquals("application/json", httpClientInputs.build().getContentType());
+        assertTrue(httpClientInputs.build().getBody().contains("\"path\":\"/testPath\""));
     }
 
     @Test
     public void testDeleteFileOrFolderDeprecatedApi() throws Exception {
-        HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
+        HttpClientInputs.HttpClientInputsBuilder httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
                 .withAccessToken("testToken")
@@ -196,18 +188,17 @@ public class DropboxServiceTest {
 
         toTest.execute(httpClientInputs, commonInputs, folderInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        verifyHttpClientExecute(times(1));
 
-        assertEquals("https://api.dropboxapi.com/1/files/delete", httpClientInputs.getUrl());
-        assertEquals("Authorization:Bearer testToken", httpClientInputs.getHeaders());
-        assertEquals("application/json", httpClientInputs.getContentType());
-        assertTrue(httpClientInputs.getBody().contains("\"path\":\"/testPath\""));
+        assertEquals("https://api.dropboxapi.com/1/files/delete", httpClientInputs.build().getUrl());
+        assertEquals("Authorization:Bearer testToken", httpClientInputs.build().getHeaders());
+        assertEquals("application/json", httpClientInputs.build().getContentType());
+        assertTrue(httpClientInputs.build().getBody().contains("\"path\":\"/testPath\""));
     }
 
     @Test
     public void testDeleteFileOrFolderNoApiSpecified() throws Exception {
-        HttpClientInputs httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
+        HttpClientInputs.HttpClientInputsBuilder httpClientInputs = getHttpClientInputs("", "", "", "", "", "", "", "", "", "", "", "", "", "", "POST");
 
         CommonInputs commonInputs = new CommonInputs.Builder()
                 .withAccessToken("testToken")
@@ -224,12 +215,11 @@ public class DropboxServiceTest {
 
         toTest.execute(httpClientInputs, commonInputs, folderInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        verifyHttpClientExecute(times(1));
 
-        assertEquals("https://api.dropboxapi.com/2/files/delete_v2", httpClientInputs.getUrl());
-        assertEquals("Authorization:Bearer testToken", httpClientInputs.getHeaders());
-        assertEquals("application/json", httpClientInputs.getContentType());
-        assertTrue(httpClientInputs.getBody().contains("\"path\":\"/testPath\""));
+        assertEquals("https://api.dropboxapi.com/2/files/delete_v2", httpClientInputs.build().getUrl());
+        assertEquals("Authorization:Bearer testToken", httpClientInputs.build().getHeaders());
+        assertEquals("application/json", httpClientInputs.build().getContentType());
+        assertTrue(httpClientInputs.build().getBody().contains("\"path\":\"/testPath\""));
     }
 }

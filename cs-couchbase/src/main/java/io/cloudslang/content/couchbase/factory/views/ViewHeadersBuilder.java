@@ -19,7 +19,7 @@ package io.cloudslang.content.couchbase.factory.views;
 
 import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 
-import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+import static org.apache.hc.core5.http.ContentType.APPLICATION_JSON;
 
 /**
  * Created by TusaM
@@ -33,7 +33,7 @@ public class ViewHeadersBuilder {
     public static void setViewHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             default:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
+                wrapper.getHttpClientInputsBuilder().contentType(APPLICATION_JSON.getMimeType());
         }
     }
 }

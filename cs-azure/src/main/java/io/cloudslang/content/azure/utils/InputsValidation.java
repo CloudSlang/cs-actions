@@ -18,7 +18,6 @@
 
 package io.cloudslang.content.azure.utils;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +46,7 @@ import static io.cloudslang.content.azure.utils.Inputs.CreateVMInputs.*;
 import static io.cloudslang.content.azure.utils.StorageInputNames.BLOB_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.CONTAINER_NAME;
 import static io.cloudslang.content.azure.utils.StorageInputNames.TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.NumberUtilities.isValidLong;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
@@ -73,7 +72,7 @@ public final class InputsValidation {
                                                   @Nullable final String trust_all_roots) {
 
         final List<String> exceptionMessages = new ArrayList<>();
-        addVerifyProxy(exceptionMessages, proxyPort, HttpClientInputs.PROXY_PORT);
+        addVerifyProxy(exceptionMessages, proxyPort, io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT);
         addVerifyBoolean(exceptionMessages, trust_all_roots, TRUST_ALL_ROOTS);
         return exceptionMessages;
     }

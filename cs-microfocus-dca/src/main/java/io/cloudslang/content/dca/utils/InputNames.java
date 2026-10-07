@@ -50,4 +50,5 @@ public class InputNames {
     public static final String CM_HOST = "cmHost";
     public static final String CM_PORT = "cmPort";
     public static final String CREDENTIAL_UUID = "credentialUuid";
+    public static final String SOCKET_TIMEOUT = "socketTimeout";
 }

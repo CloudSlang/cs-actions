@@ -37,15 +37,15 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.buildUrl;
  */
 public class CouchbaseService {
     @SafeVarargs
-    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders)
+    public final <T> Map<String, String> execute(HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder, CommonInputs commonInputs, T... builders)
             throws Exception {
-        InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
+        InputsWrapper wrapper = buildWrapper(httpClientInputsBuilder, commonInputs, builders);
 
-        httpClientInputs.setUrl(buildUrl(wrapper));
+        httpClientInputsBuilder.url(buildUrl(wrapper));
 
         buildHeaders(wrapper);
         buildPayload(wrapper);
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputsBuilder.build());
     }
 }

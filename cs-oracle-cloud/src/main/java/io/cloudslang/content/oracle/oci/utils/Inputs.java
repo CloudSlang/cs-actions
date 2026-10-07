@@ -16,6 +16,7 @@ public class Inputs extends InputNames {
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
+        public static final String SOCKET_TIMEOUT = "socketTimeout";
         public static final String API_VERSION = "apiVersion";
         public static final String REGION = "region";
         public static final String INSTANCE_ID = "instanceId";

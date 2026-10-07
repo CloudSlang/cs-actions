@@ -27,13 +27,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 import static io.cloudslang.content.office365.utils.Constants.FILE_PATH;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.PASSWORD;
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.USERNAME;
 import static io.cloudslang.content.office365.utils.Inputs.AuthorizationInputs.*;
 import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.PROXY_PORT;
+import static io.cloudslang.content.office365.utils.Inputs.CommonInputs.*;
 import static io.cloudslang.content.office365.utils.Inputs.CreateMessage.*;
 import static io.cloudslang.content.office365.utils.Inputs.CreateUser.*;
 import static io.cloudslang.content.office365.utils.Inputs.EmailInputs.*;
@@ -354,4 +355,3 @@ public final class InputsValidation {
         return new File(filePath).exists();
     }
 }
-

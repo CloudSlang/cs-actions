@@ -23,7 +23,10 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.services.HttpClientService.*;
+import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.office365.utils.Constants.STATUS_CODE;
 import static io.cloudslang.content.office365.utils.Constants.ZERO;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;

@@ -44,22 +44,22 @@ import static io.cloudslang.content.dropbox.entities.constants.Inputs.CommonInpu
 import static io.cloudslang.content.dropbox.entities.constants.Inputs.FolderInputs.AUTO_RENAME;
 import static io.cloudslang.content.dropbox.entities.constants.Inputs.FolderInputs.PATH;
 import static io.cloudslang.content.dropbox.utils.InputsUtil.getHttpClientInputs;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USE_COOKIES;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_USERNAME;
+import static io.cloudslang.content.dropbox.entities.constants.Inputs.CommonInputs.SOCKET_TIMEOUT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USE_COOKIES;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
+import static org.apache.hc.client5.http.classic.methods.HttpPost.METHOD_NAME;
 /**
  * Created by TusaM
  * 5/26/2017.
@@ -167,7 +167,7 @@ public class CreateFolder {
                                        @Param(value = AUTO_RENAME) String autorename,
                                        @Param(value = PATH, required = true) String path) {
         try {
-            final HttpClientInputs httpClientInputs = getHttpClientInputs(proxyHost, proxyPort, proxyUsername, proxyPassword,
+            final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = getHttpClientInputs(proxyHost, proxyPort, proxyUsername, proxyPassword,
                     trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore, keystorePassword, connectTimeout,
                     socketTimeout, useCookies, keepAlive, METHOD_NAME);
 

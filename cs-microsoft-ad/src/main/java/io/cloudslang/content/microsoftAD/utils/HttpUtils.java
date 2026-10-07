@@ -18,9 +18,9 @@ package io.cloudslang.content.microsoftAD.utils;
 
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.http.client.utils.URIBuilder;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs.HttpClientInputsBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
@@ -171,39 +171,39 @@ public class HttpUtils {
         return messagepathString.toString();
     }
 
-    public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@NotNull final HttpClientInputsBuilder httpClientInputs,
                                 @NotNull final String proxyHost,
                                 @NotNull final String proxyPort,
                                 @NotNull final String proxyUsername,
                                 @NotNull final String proxyPassword) {
-        httpClientInputs.setProxyHost(proxyHost);
-        httpClientInputs.setProxyPort(proxyPort);
-        httpClientInputs.setProxyUsername(proxyUsername);
-        httpClientInputs.setProxyPassword(proxyPassword);
+        httpClientInputs.proxyHost(proxyHost);
+        httpClientInputs.proxyPort(proxyPort);
+        httpClientInputs.proxyUsername(proxyUsername);
+        httpClientInputs.proxyPassword(proxyPassword);
     }
 
-    public static void setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setSecurityInputs(@NotNull final HttpClientInputsBuilder httpClientInputs,
                                          @NotNull final String trustAllRoots,
                                          @NotNull final String x509HostnameVerifier,
                                          @NotNull final String trustKeystore,
                                          @NotNull final String trustPassword) {
-        httpClientInputs.setTrustAllRoots(trustAllRoots);
-        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
+        httpClientInputs.trustAllRoots(trustAllRoots);
+        httpClientInputs.x509HostnameVerifier(x509HostnameVerifier);
+        httpClientInputs.trustKeystore(trustKeystore);
+        httpClientInputs.trustPassword(trustPassword);
     }
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+    public static void setConnectionParameters(HttpClientInputsBuilder httpClientInputs,
                                                @NotNull final String connectTimeout,
                                                @NotNull final String socketTimeout,
                                                @NotNull final String keepAlive,
                                                @NotNull final String connectionsMaxPerRoot,
                                                @NotNull final String connectionsMaxTotal) {
-        httpClientInputs.setConnectTimeout(connectTimeout);
-        httpClientInputs.setSocketTimeout(socketTimeout);
-        httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
-        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
+        httpClientInputs.connectTimeout(connectTimeout);
+        httpClientInputs.responseTimeout(socketTimeout);
+        httpClientInputs.keepAlive(keepAlive);
+        httpClientInputs.connectionsMaxPerRoute(connectionsMaxPerRoot);
+        httpClientInputs.connectionsMaxTotal(connectionsMaxTotal);
     }
 
     @NotNull

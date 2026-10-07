@@ -46,6 +46,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -77,9 +78,6 @@ public class QueryApiExecutorTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
-    @Mock
-    private HttpClientService csHttpClientMock;
 
     @Mock
     private AmazonSignatureService amazonSignatureServiceMock;
@@ -685,7 +683,8 @@ public class QueryApiExecutorTest {
 
         verify(amazonSignatureServiceMock, never()).signRequestHeaders(any(InputsWrapper.class),
                 anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
-        verify(csHttpClientMock, never()).execute(any(HttpClientInputs.class));
+        PowerMockito.verifyStatic(never());
+        HttpClientService.execute(any(HttpClientInputs.class));
     }
 
     @Test
@@ -704,16 +703,15 @@ public class QueryApiExecutorTest {
                 .thenReturn(authorizationHeaderMock);
         when(authorizationHeaderMock.getAuthorizationHeader()).thenReturn("");
         when(authorizationHeaderMock.getSignature()).thenReturn("");
-        whenNew(HttpClientService.class).withNoArguments().thenReturn(csHttpClientMock);
-        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);
+        PowerMockito.mockStatic(HttpClientService.class);
+        PowerMockito.when(HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(null);
     }
 
     private void runCommonVerifiersForQueryApi() throws Exception {
         verifyNew(AmazonSignatureService.class).withNoArguments();
-        verifyNew(HttpClientService.class).withNoArguments();
-        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
+        PowerMockito.verifyStatic(times(1));
+        HttpClientService.execute(any(HttpClientInputs.class));
         verifyNoMoreInteractions(amazonSignatureServiceMock);
-        verifyNoMoreInteractions(csHttpClientMock);
     }
 
     private StorageInputs getStorageInputs() {

@@ -5,7 +5,7 @@ package io.cloudslang.content.hashicorp.terraform.utils;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
@@ -39,15 +39,15 @@ public class HttpUtils {
         return new Proxy(HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort));
     }
 
-    public static void setProxy(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@org.jetbrains.annotations.NotNull final HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                 @org.jetbrains.annotations.NotNull final String proxyHost,
                                 @org.jetbrains.annotations.NotNull final String proxyPort,
                                 @org.jetbrains.annotations.NotNull final String proxyUsername,
                                 @org.jetbrains.annotations.NotNull final String proxyPassword) {
-        httpClientInputs.setProxyHost(proxyHost);
-        httpClientInputs.setProxyPort(proxyPort);
-        httpClientInputs.setProxyUsername(proxyUsername);
-        httpClientInputs.setProxyPassword(proxyPassword);
+        httpClientInputs.proxyHost(proxyHost);
+        httpClientInputs.proxyPort(proxyPort);
+        httpClientInputs.proxyUsername(proxyUsername);
+        httpClientInputs.proxyPassword(proxyPassword);
     }
 
     @NotNull
@@ -83,35 +83,35 @@ public class HttpUtils {
         return results;
     }
 
-    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
+    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                          @org.jetbrains.annotations.NotNull final String trustAllRoots,
                                          @org.jetbrains.annotations.NotNull final String x509HostnameVerifier,
                                          @org.jetbrains.annotations.NotNull final String trustKeystore,
                                          @org.jetbrains.annotations.NotNull final String trustPassword) {
-        httpClientInputs.setTrustAllRoots(trustAllRoots);
-        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
+        httpClientInputs.trustAllRoots(trustAllRoots);
+        httpClientInputs.x509HostnameVerifier(x509HostnameVerifier);
+        httpClientInputs.trustKeystore(trustKeystore);
+        httpClientInputs.trustPassword(trustPassword);
     }
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+    public static void setConnectionParameters(HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                                @NotNull final String connectTimeout,
                                                @NotNull final String socketTimeout,
                                                @NotNull final String keepAlive,
                                                @NotNull final String connectionsMaxPerRoot,
                                                @NotNull final String connectionsMaxTotal) {
-        httpClientInputs.setConnectTimeout(connectTimeout);
-        httpClientInputs.setSocketTimeout(socketTimeout);
-        httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
-        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.connectTimeout(connectTimeout);
+        httpClientInputs.responseTimeout(socketTimeout);
+        httpClientInputs.keepAlive(keepAlive);
+        httpClientInputs.connectionsMaxPerRoute(connectionsMaxPerRoot);
+        httpClientInputs.connectionsMaxTotal(connectionsMaxTotal);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
     }
 
-    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
-        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
-        httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+    public static void setTLSParameters(HttpClientInputs.HttpClientInputsBuilder httpClientInputs) {
+        httpClientInputs.tlsVersion(io.cloudslang.content.httpclient.utils.Constants.TLSv12);
+        httpClientInputs.allowedCiphers(ALLOWED_CYPHERS);
 
     }
 

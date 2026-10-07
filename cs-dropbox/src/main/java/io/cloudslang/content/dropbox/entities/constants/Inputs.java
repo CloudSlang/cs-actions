@@ -26,6 +26,7 @@ public class Inputs {
     public static class CommonInputs {
         public static final String ENDPOINT = "endpoint";
         public static final String ACCESS_TOKEN = "accessToken";
+        public static final String SOCKET_TIMEOUT = "socketTimeout";
     }
 
     public static class FolderInputs {

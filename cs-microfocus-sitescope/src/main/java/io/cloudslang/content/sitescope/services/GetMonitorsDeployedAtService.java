@@ -29,7 +29,7 @@ import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
 import io.cloudslang.content.sitescope.utils.RemoteServer;
 import io.cloudslang.content.utils.OutputUtilities;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
+import static io.cloudslang.content.httpclient.utils.Constants.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Constants.GetMonitorsDeployedAt.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FETCH_FULL_CONFIG;
@@ -146,17 +146,17 @@ public class GetMonitorsDeployedAtService {
 
     public Map<String, String> getFullConfigurationSnapshot(GetMonitorsDeployedAtInputs getMonitorsDeployedAtInputs) throws
             Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final SiteScopeCommonInputs commonInputs = getMonitorsDeployedAtInputs.getCommonInputs();
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
-        httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setUsername(commonInputs.getUsername());
-        httpClientInputs.setPassword(commonInputs.getPassword());
-        httpClientInputs.setUrl(getUrl(getMonitorsDeployedAtInputs));
-        httpClientInputs.setQueryParamsAreURLEncoded(String.valueOf(true));
-        httpClientInputs.setMethod(GET);
-        return new HttpClientService().execute(httpClientInputs);
+        httpClientInputs.authType(BASIC);
+        httpClientInputs.username(commonInputs.getUsername());
+        httpClientInputs.password(commonInputs.getPassword());
+        httpClientInputs.url(getUrl(getMonitorsDeployedAtInputs));
+        httpClientInputs.queryParamsAreURLEncoded(String.valueOf(true));
+        httpClientInputs.method(GET);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     private String getUrl(GetMonitorsDeployedAtInputs inputs) throws URISyntaxException {

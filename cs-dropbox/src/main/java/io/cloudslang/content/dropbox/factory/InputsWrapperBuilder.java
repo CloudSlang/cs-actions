@@ -36,9 +36,9 @@ public class InputsWrapperBuilder {
     }
 
     @SafeVarargs
-    public static <T> InputsWrapper buildWrapper(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
+    public static <T> InputsWrapper buildWrapper(HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder, CommonInputs commonInputs, T... builders) {
         InputsWrapper wrapper = new InputsWrapper.Builder()
-                .withHttpClientInputs(httpClientInputs)
+                .withHttpClientInputsBuilder(httpClientInputsBuilder)
                 .withCommonInputs(commonInputs)
                 .build();
 

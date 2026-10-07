@@ -44,8 +44,22 @@ import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.*;
 import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.OutputNames.STATUS;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECTIONS_MAX_PER_ROUTE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECTIONS_MAX_TOTAL;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USE_COOKIES;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
@@ -112,11 +126,11 @@ public class GetDeployment {
             return getFailureResultsMap(validator.getErrors());
         }
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
 
-        httpClientInputs.setUrl(getDcaDeploymentUrl(protocol, host, port, deploymentUuid));
+        httpClientInputs.url(getDcaDeploymentUrl(protocol, host, port, deploymentUuid));
 
-        httpClientInputs.setHeaders(getAuthHeaders(authToken, refreshToken));
+        httpClientInputs.headers(getAuthHeaders(authToken, refreshToken));
 
         setProxy(httpClientInputs, proxyHost, proxyPort, proxyUsername, proxyPassword);
 
@@ -126,13 +140,13 @@ public class GetDeployment {
         setConnectionParameters(httpClientInputs, connectTimeout, socketTimeout, useCookies, keepAlive,
                 connectionsMaxPerRoot, connectionsMaxTotal);
 
-        httpClientInputs.setFollowRedirects(TRUE);
-        httpClientInputs.setMethod(GET);
+        httpClientInputs.followRedirects(TRUE);
+        httpClientInputs.method(GET);
 
         try {
             final ObjectMapper mapper = new ObjectMapper();
 
-            final Map<String, String> httpClientResult = new HttpClientService().execute(httpClientInputs);
+            final Map<String, String> httpClientResult = HttpClientService.execute(httpClientInputs.build());
 
             final JsonNode result = mapper.readTree(httpClientResult.get(RETURN_RESULT));
 
@@ -149,4 +163,3 @@ public class GetDeployment {
     }
 
 }
-

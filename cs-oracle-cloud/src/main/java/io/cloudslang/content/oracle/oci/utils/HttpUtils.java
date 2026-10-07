@@ -4,7 +4,7 @@ package io.cloudslang.content.oracle.oci.utils;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
@@ -40,15 +40,15 @@ public class HttpUtils {
         return new Proxy(HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort));
     }
 
-    public static void setProxy(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@org.jetbrains.annotations.NotNull final HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                 @org.jetbrains.annotations.NotNull final String proxyHost,
                                 @org.jetbrains.annotations.NotNull final String proxyPort,
                                 @org.jetbrains.annotations.NotNull final String proxyUsername,
                                 @org.jetbrains.annotations.NotNull final String proxyPassword) {
-        httpClientInputs.setProxyHost(proxyHost);
-        httpClientInputs.setProxyPort(proxyPort);
-        httpClientInputs.setProxyUsername(proxyUsername);
-        httpClientInputs.setProxyPassword(proxyPassword);
+        httpClientInputs.proxyHost(proxyHost);
+        httpClientInputs.proxyPort(proxyPort);
+        httpClientInputs.proxyUsername(proxyUsername);
+        httpClientInputs.proxyPassword(proxyPassword);
     }
 
     @NotNull
@@ -69,9 +69,9 @@ public class HttpUtils {
         return headerBuilder.toString().trim();
     }
 
-    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
-        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
-        httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+    public static void setTLSParameters(HttpClientInputs.HttpClientInputsBuilder httpClientInputs) {
+        httpClientInputs.tlsVersion(io.cloudslang.content.httpclient.utils.Constants.TLSv12);
+        httpClientInputs.allowedCiphers(ALLOWED_CYPHERS);
 
     }
 
@@ -93,21 +93,21 @@ public class HttpUtils {
         return results;
     }
 
-    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs) {
+    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs.HttpClientInputsBuilder httpClientInputs) {
 
     }
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+    public static void setConnectionParameters(HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                                @NotNull final String connectTimeout,
                                                @NotNull final String socketTimeout,
                                                @NotNull final String keepAlive,
                                                @NotNull final String connectionsMaxPerRoot,
                                                @NotNull final String connectionsMaxTotal) {
-        httpClientInputs.setConnectTimeout(connectTimeout);
-        httpClientInputs.setSocketTimeout(socketTimeout);
-        httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
-        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
+        httpClientInputs.connectTimeout(connectTimeout);
+        httpClientInputs.responseTimeout(socketTimeout);
+        httpClientInputs.keepAlive(keepAlive);
+        httpClientInputs.connectionsMaxPerRoute(connectionsMaxPerRoot);
+        httpClientInputs.connectionsMaxTotal(connectionsMaxTotal);
     }
 
     @NotNull

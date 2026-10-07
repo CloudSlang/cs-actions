@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.AttachVolumeConstants.ATTACH_VOLUME_OPERATION_NAME;
 import static io.cloudslang.content.oracle.oci.utils.Constants.AttachVolumeConstants.VOLUME_ATTACHMENT_ID_JSON_PATH;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;

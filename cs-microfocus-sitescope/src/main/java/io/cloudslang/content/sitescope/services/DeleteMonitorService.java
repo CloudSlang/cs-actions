@@ -24,13 +24,13 @@ import io.cloudslang.content.sitescope.entities.DeleteMonitorInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
+import static io.cloudslang.content.httpclient.utils.Constants.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
@@ -39,18 +39,18 @@ public class DeleteMonitorService {
 
     public @NotNull
     Map<String, String> execute(@NotNull DeleteMonitorInputs deleteMonitorInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final SiteScopeCommonInputs commonInputs = deleteMonitorInputs.getCommonInputs();
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
-        httpClientInputs.setUrl(getUrl(deleteMonitorInputs));
-        httpClientInputs.setQueryParamsAreURLEncoded(String.valueOf(true));
-        httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setUsername(commonInputs.getUsername());
-        httpClientInputs.setPassword(commonInputs.getPassword());
-        httpClientInputs.setMethod(DELETE);
+        httpClientInputs.url(getUrl(deleteMonitorInputs));
+        httpClientInputs.queryParamsAreURLEncoded(String.valueOf(true));
+        httpClientInputs.authType(BASIC);
+        httpClientInputs.username(commonInputs.getUsername());
+        httpClientInputs.password(commonInputs.getPassword());
+        httpClientInputs.method(DELETE);
 
-        Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
+        Map<String, String> httpClientOutputs = HttpClientService.execute(httpClientInputs.build());
 
         return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, SuccessMsgs.DELETE_MONITOR);
     }
@@ -69,5 +69,4 @@ public class DeleteMonitorService {
         return urlBuilder.build().toString();
     }
 }
-
 

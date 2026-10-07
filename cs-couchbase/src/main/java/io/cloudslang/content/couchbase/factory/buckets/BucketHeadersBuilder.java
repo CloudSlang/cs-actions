@@ -23,7 +23,7 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Bucke
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_ALL_BUCKETS;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.GET_BUCKET_STATISTICS;
-import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+import static org.apache.hc.core5.http.ContentType.APPLICATION_JSON;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALL_TYPE_HEADER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1;
@@ -40,17 +40,17 @@ public class BucketHeadersBuilder {
     public static void setBucketHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             case CREATE_OR_EDIT_BUCKET:
-                wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
-                wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
+                wrapper.getHttpClientInputsBuilder().headers(ALL_TYPE_HEADER);
+                wrapper.getHttpClientInputsBuilder().contentType(FORM_URL_ENCODED);
                 break;
             case GET_ALL_BUCKETS:
             case GET_BUCKET:
             case GET_BUCKET_STATISTICS:
-                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
+                wrapper.getHttpClientInputsBuilder().headers(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
+                wrapper.getHttpClientInputsBuilder().contentType(APPLICATION_JSON.getMimeType());
                 break;
             default:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
+                wrapper.getHttpClientInputsBuilder().contentType(APPLICATION_JSON.getMimeType());
         }
     }
 }

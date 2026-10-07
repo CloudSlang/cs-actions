@@ -26,6 +26,7 @@ public final class Inputs extends InputNames {
         public static final String PROXY_PORT = "proxyPort";
         public static final String PROXY_USERNAME = "proxyUsername";
         public static final String PROXY_PASSWORD = "proxyPassword";
+        public static final String SOCKET_TIMEOUT = "socketTimeout";
     }
 
     public static class AuthorizationInputs {
@@ -113,4 +114,3 @@ public final class Inputs extends InputNames {
         public static final String ATTACHMENT_ID = "attachmentId";
     }
 }
-

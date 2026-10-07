@@ -16,20 +16,14 @@
 
 package io.cloudslang.content.utilities.actions;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
+import org.junit.jupiter.api.Test;
+
 import java.util.Map;
 
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
-import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-import static org.junit.Assert.assertEquals;
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({CounterActionsTest.class})
 public class CounterActionsTest {
 
     @Test

@@ -23,13 +23,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs.HttpClientInputsBuilder;
 import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.utils.PopulateMessageBody;
 import io.cloudslang.content.office365.utils.PopulateMoveMessageBody;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -54,69 +54,69 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> getMessage(@NotNull final GetMessageInputs getMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final Office365CommonInputs commonInputs = getMessageInputs.getCommonInputs();
-        httpClientInputs.setUrl(getMessageUrl(commonInputs.getUserPrincipalName(),
+        httpClientInputs.url(getMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
                 getMessageInputs.getMessageId(),
                 getMessageInputs.getFolderId()));
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
 
         if (!isEmpty(getMessageInputs.getSelectQuery()) || !isEmpty(getMessageInputs.getoDataQuery())) {
-            httpClientInputs.setQueryParams(getQueryParams(getMessageInputs.getSelectQuery(), getMessageInputs.getoDataQuery()));
+            httpClientInputs.queryParams(getQueryParams(getMessageInputs.getSelectQuery(), getMessageInputs.getoDataQuery()));
         }
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpCommons.execute(httpClientInputs);
     }
 
     @NotNull
     public static Map<String, String> sendMessage(@NotNull final SendMessageInputs postMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
 
         final Office365CommonInputs commonInputs = postMessageInputs.getCommonInputs();
-        httpClientInputs.setUrl(sendMessageUrl(commonInputs.getUserPrincipalName(),
+        httpClientInputs.url(sendMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
                 postMessageInputs.getMessageId()));
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setBody(postMessageInputs.getBody());
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()) + HEADERS_DELIMITER + CONTENT_LENGTH);
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(POST);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.body(postMessageInputs.getBody());
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()) + HEADERS_DELIMITER + CONTENT_LENGTH);
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpCommons.execute(httpClientInputs);
     }
 
     @NotNull
     public static Map<String, String> listMessages(@NotNull final ListMessagesInputs listMessagesInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final Office365CommonInputs commonInputs = listMessagesInputs.getCommonInputs();
-        httpClientInputs.setUrl(listMessagesUrl(commonInputs.getUserPrincipalName(),
+        httpClientInputs.url(listMessagesUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
                 listMessagesInputs.getFolderId()));
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setQueryParams(getQueryParams(listMessagesInputs.getTopQuery(), listMessagesInputs.getSelectQuery(), listMessagesInputs.getoDataQuery()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.queryParams(getQueryParams(listMessagesInputs.getTopQuery(), listMessagesInputs.getSelectQuery(), listMessagesInputs.getoDataQuery()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpCommons.execute(httpClientInputs);
     }
 
     @NotNull
@@ -180,25 +180,25 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> createMessage(@NotNull final CreateMessageInputs createMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final Office365CommonInputs commonInputs = createMessageInputs.getCommonInputs();
-        httpClientInputs.setUrl(createMessageUrl(commonInputs.getUserPrincipalName(),
+        httpClientInputs.url(createMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
                 createMessageInputs.getFolderId()));
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setContentType(APPLICATION_JSON);
-        httpClientInputs.setBody(PopulateMessageBody.populateMessageBody(commonInputs, createMessageInputs, DELIMITER));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(POST);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.contentType(APPLICATION_JSON);
+        httpClientInputs.body(PopulateMessageBody.populateMessageBody(commonInputs, createMessageInputs, DELIMITER));
 
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpCommons.execute(httpClientInputs);
     }
 
     @NotNull
@@ -225,69 +225,69 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> deleteMessage(@NotNull final DeleteMessageInputs deleteMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final Office365CommonInputs commonInputs = deleteMessageInputs.getCommonInputs();
-        httpClientInputs.setUrl(getMessageUrl(commonInputs.getUserPrincipalName(),
+        httpClientInputs.url(getMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
                 deleteMessageInputs.getMessageId(),
                 deleteMessageInputs.getFolderId()));
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(DELETE);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(DELETE);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpCommons.execute(httpClientInputs);
     }
 
     @NotNull
     public static Map<String, String> moveMessage(@NotNull final MoveMessageInputs moveMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final Office365CommonInputs commonInputs = moveMessageInputs.getCommonInputs();
-        httpClientInputs.setUrl(moveMessageUrl(commonInputs.getUserPrincipalName(),
+        httpClientInputs.url(moveMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
                 moveMessageInputs.getMessageId()));
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setContentType(APPLICATION_JSON);
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setBody(PopulateMoveMessageBody.populateMoveMessageBody(moveMessageInputs.getDestinationId()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(POST);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.contentType(APPLICATION_JSON);
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.body(PopulateMoveMessageBody.populateMoveMessageBody(moveMessageInputs.getDestinationId()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpCommons.execute(httpClientInputs);
     }
 
     @NotNull
     public static Map<String, String> addAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final Office365CommonInputs commonInputs = addAttachmentInputs.getCommonInputs();
-        httpClientInputs.setUrl(addAttachmentUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(),
+        httpClientInputs.url(addAttachmentUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(),
                 addAttachmentInputs.getMessageId()));
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setContentType(APPLICATION_JSON);
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
-        httpClientInputs.setBody(populateAddAttachmentBody(
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(POST);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.contentType(APPLICATION_JSON);
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.body(populateAddAttachmentBody(
                 addAttachmentInputs.getFilePath(),
                 addAttachmentInputs.getContentName(),
                 addAttachmentInputs.getContentBytes()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpCommons.execute(httpClientInputs);
     }
 
     public static String addBigAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
@@ -296,23 +296,23 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> getAttachments(@NotNull final GetAttachmentsInputs getAttachmentsInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final Office365CommonInputs commonInputs = getAttachmentsInputs.getCommonInputs();
-        httpClientInputs.setUrl(getAttachmentsUrl(commonInputs.getUserPrincipalName(),
+        httpClientInputs.url(getAttachmentsUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
                 getAttachmentsInputs.getMessageId(),
                 getAttachmentsInputs.getAttachmentId()));
 
         HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpCommons.execute(httpClientInputs);
     }
 
     private static void downloadAttachment(String filePath, String contentBytes, String contentName) throws IOException {
@@ -357,22 +357,22 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> listAttachment(@NotNull final ListAttachmentsInputs getListAttachmentInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final Office365CommonInputs commonInputs = getListAttachmentInputs.getCommonInputs();
-        httpClientInputs.setUrl(listAttachmentsUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getListAttachmentInputs.getMessageId()));
+        httpClientInputs.url(listAttachmentsUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getListAttachmentInputs.getMessageId()));
 
         HttpCommons.setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setContentType(APPLICATION_JSON);
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.contentType(APPLICATION_JSON);
 
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpCommons.execute(httpClientInputs);
     }
 
     @NotNull

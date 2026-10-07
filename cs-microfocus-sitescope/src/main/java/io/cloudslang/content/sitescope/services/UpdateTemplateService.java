@@ -22,13 +22,13 @@ import io.cloudslang.content.sitescope.constants.SuccessMsgs;
 import io.cloudslang.content.sitescope.entities.UpdateTemplateInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
+import static io.cloudslang.content.httpclient.utils.Constants.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.EXCEPTION_INVALID_PARAM;
 import static io.cloudslang.content.sitescope.constants.Inputs.UpdateTemplate.FULL_PATH_TO_TEMPLATE;
@@ -38,24 +38,24 @@ public class UpdateTemplateService {
 
     public @NotNull
     Map<String, String> execute(@NotNull UpdateTemplateInputs updateTemplateInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
         final SiteScopeCommonInputs commonInputs = updateTemplateInputs.getCommonInputs();
 
-        httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
+        httpClientInputs.url(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
                 SITESCOPE_TEMPLATES_API + UPDATE_TEMPLATE_ENDPOINT);
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setUsername(commonInputs.getUsername());
-        httpClientInputs.setPassword(commonInputs.getPassword());
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setContentType(X_WWW_FORM);
-        httpClientInputs.setFormParams(populateUpdateTemplateFormParams(updateTemplateInputs));
-        httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(true));
-        httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
+        httpClientInputs.authType(BASIC);
+        httpClientInputs.username(commonInputs.getUsername());
+        httpClientInputs.password(commonInputs.getPassword());
+        httpClientInputs.method(POST);
+        httpClientInputs.contentType(X_WWW_FORM);
+        httpClientInputs.formParams(populateUpdateTemplateFormParams(updateTemplateInputs));
+        httpClientInputs.formParamsAreURLEncoded(String.valueOf(true));
+        httpClientInputs.responseCharacterSet(commonInputs.getResponseCharacterSet());
 
-        Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
+        Map<String, String> httpClientOutputs = HttpClientService.execute(httpClientInputs.build());
 
         return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, SuccessMsgs.UPDATE_TEMPLATE);
     }

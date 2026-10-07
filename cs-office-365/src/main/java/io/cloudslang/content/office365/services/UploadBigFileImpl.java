@@ -27,11 +27,10 @@ import com.microsoft.graph.requests.GraphServiceClient;
 import com.microsoft.graph.tasks.LargeFileUploadResult;
 import com.microsoft.graph.tasks.LargeFileUploadTask;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs.HttpClientInputsBuilder;
 import io.cloudslang.content.office365.entities.AddAttachmentInputs;
 import okhttp3.*;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.SSLContext;
@@ -58,27 +57,27 @@ public class UploadBigFileImpl {
 
     public static String createUploadSession(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
 
-        httpClientInputs.setUrl(addBigAttachmentUrl(addAttachmentInputs.getMessageId()));
+        httpClientInputs.url(addBigAttachmentUrl(addAttachmentInputs.getMessageId()));
 
         setCommonHttpInputs(httpClientInputs, addAttachmentInputs.getCommonInputs());
 
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
-        httpClientInputs.setContentType(APPLICATION_JSON);
-        httpClientInputs.setResponseCharacterSet(addAttachmentInputs.getCommonInputs().getResponseCharacterSet());
-        httpClientInputs.setHeaders(getAuthHeaders(addAttachmentInputs.getCommonInputs().getAuthToken()));
-        httpClientInputs.setBody(populateCreateUploadSessionBody(
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(POST);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
+        httpClientInputs.contentType(APPLICATION_JSON);
+        httpClientInputs.responseCharacterSet(addAttachmentInputs.getCommonInputs().getResponseCharacterSet());
+        httpClientInputs.headers(getAuthHeaders(addAttachmentInputs.getCommonInputs().getAuthToken()));
+        httpClientInputs.body(populateCreateUploadSessionBody(
                 addAttachmentInputs.getFilePath(),
                 addAttachmentInputs.getContentName(),
                 addAttachmentInputs.getContentBytes(),
                 Files.size(Paths.get(addAttachmentInputs.getFilePath()))));
 
         UploadSession uploadSession = new UploadSession();
-        uploadSession.uploadUrl = getUploadUrl(new HttpClientService().execute(httpClientInputs));
+        uploadSession.uploadUrl = getUploadUrl(HttpCommons.execute(httpClientInputs));
         return uploadFileChunk(addAttachmentInputs, uploadSession);
     }
 
@@ -136,7 +135,7 @@ public class UploadBigFileImpl {
         // Create a ssl socket factory with our all-trusting manager
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
                 .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0])
-                .hostnameVerifier(new NoopHostnameVerifier());
+                .hostnameVerifier((hostname, session) -> true);
 
         if (!addAttachmentInputs.getCommonInputs().getProxyHost().isEmpty())
             httpClientBuilder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(addAttachmentInputs.getCommonInputs().getProxyHost(), Integer.parseInt(addAttachmentInputs.getCommonInputs().getProxyPort()))));

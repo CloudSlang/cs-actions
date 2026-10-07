@@ -29,7 +29,7 @@ import io.cloudslang.content.azure.entities.models.streamanalytics.StartStreamin
 import io.cloudslang.content.azure.utils.HttpUtils;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -59,86 +59,82 @@ public class StreamingJobImpl {
     @NotNull
     public static Map<String, String> createStreamingJob(@NotNull final CreateStreamingJobInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
-                inputs.getAzureCommonInputs().getJobName()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(PUT);
-        httpClientInputs.setContentType(CONTENT_TYPE);
-        httpClientInputs.setHeaders(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
+                        inputs.getAzureCommonInputs().getJobName()))
+                .authType(ANONYMOUS)
+                .method(PUT)
+                .contentType(CONTENT_TYPE)
+                .headers(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
-        httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
-        httpClientInputs.setBody(createStreamingJobRequestBody(inputs));
-        return new HttpClientService().execute(httpClientInputs);
+        httpClientInputs.queryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
+        httpClientInputs.body(createStreamingJobRequestBody(inputs));
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> startStreamingJob(@NotNull final StartStreamingJobInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getStartStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
-                inputs.getAzureCommonInputs().getJobName()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setContentType(CONTENT_TYPE);
-        httpClientInputs.setHeaders(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(getStartStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
+                        inputs.getAzureCommonInputs().getJobName()))
+                .authType(ANONYMOUS)
+                .method(POST)
+                .contentType(CONTENT_TYPE)
+                .headers(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
-        httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
-        httpClientInputs.setBody(StartStreamingJobRequestBody(inputs));
-        return new HttpClientService().execute(httpClientInputs);
+        httpClientInputs.queryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
+        httpClientInputs.body(StartStreamingJobRequestBody(inputs));
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> stopStreamingJob(@NotNull final AzureCommonInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getStopStreamingJobUrl(inputs.getSubscriptionId(), inputs.getResourceGroupName(),
-                inputs.getJobName()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setContentType(CONTENT_TYPE);
-        httpClientInputs.setHeaders(getAuthHeaders(inputs.getAuthToken()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(getStopStreamingJobUrl(inputs.getSubscriptionId(), inputs.getResourceGroupName(),
+                        inputs.getJobName()))
+                .authType(ANONYMOUS)
+                .method(POST)
+                .contentType(CONTENT_TYPE)
+                .headers(getAuthHeaders(inputs.getAuthToken()));
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs);
-        httpClientInputs.setBody(EMPTY_JSON);
-        httpClientInputs.setQueryParams(setAPIVersion(inputs.getApiVersion()));
+        httpClientInputs.body(EMPTY_JSON);
+        httpClientInputs.queryParams(setAPIVersion(inputs.getApiVersion()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getStreamingJob(@NotNull final GetStreamingJobInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
-                inputs.getAzureCommonInputs().getJobName()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setContentType(CONTENT_TYPE);
-        httpClientInputs.setHeaders(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
+                        inputs.getAzureCommonInputs().getJobName()))
+                .authType(ANONYMOUS)
+                .method(GET)
+                .contentType(CONTENT_TYPE)
+                .headers(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
         if (!isEmpty(inputs.getExpand())) {
-            httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion(), inputs.getExpand()));
+            httpClientInputs.queryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion(), inputs.getExpand()));
         } else {
-            httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
+            httpClientInputs.queryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
         }
 
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     private static String getCreateStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
         final URIBuilder uriBuilder = new URIBuilder(getStreamURLPath(subscriptionId, resourceGroupName, jobName).toString());
-        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
-       // uriBuilder.setPath(getStreamURLPath(subscriptionId, resourceGroupName, jobName).toString());
         return uriBuilder.build().toURL().toString();
     }
 
     @NotNull
     private static String getStartStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
         final URIBuilder uriBuilder = new URIBuilder(startStreamingJobPath(subscriptionId, resourceGroupName, jobName));
-        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
-       // uriBuilder.setPath(startStreamingJobPath(subscriptionId, resourceGroupName, jobName));
         return uriBuilder.build().toURL().toString();
     }
 
@@ -146,8 +142,6 @@ public class StreamingJobImpl {
     @NotNull
     private static String getStopStreamingJobUrl(String subscriptionId, String resourceGroupName, String jobName) throws Exception {
         final URIBuilder uriBuilder = new URIBuilder(stopStreamingJobPath(subscriptionId, resourceGroupName, jobName));
-        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
-       // uriBuilder.setPath(stopStreamingJobPath(subscriptionId, resourceGroupName, jobName));
         return uriBuilder.build().toURL().toString();
     }
 

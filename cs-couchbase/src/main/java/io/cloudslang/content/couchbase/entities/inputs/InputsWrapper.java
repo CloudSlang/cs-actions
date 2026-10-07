@@ -25,7 +25,8 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
  * 4/9/2017.
  */
 public class InputsWrapper {
-    private final HttpClientInputs httpClientInputs;
+    private final HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder;
+    private final String httpMethod;
     private final CommonInputs commonInputs;
 
     private BucketInputs bucketInputs;
@@ -33,12 +34,17 @@ public class InputsWrapper {
     private NodeInputs nodeInputs;
 
     private InputsWrapper(Builder builder) {
-        this.httpClientInputs = builder.httpClientInputs;
+        this.httpClientInputsBuilder = builder.httpClientInputsBuilder;
+        this.httpMethod = httpClientInputsBuilder.build().getMethod();
         this.commonInputs = builder.commonInputs;
     }
 
-    public HttpClientInputs getHttpClientInputs() {
-        return httpClientInputs;
+    public HttpClientInputs.HttpClientInputsBuilder getHttpClientInputsBuilder() {
+        return httpClientInputsBuilder;
+    }
+
+    public String getHttpMethod() {
+        return httpMethod;
     }
 
     public CommonInputs getCommonInputs() {
@@ -70,15 +76,15 @@ public class InputsWrapper {
     }
 
     public static class Builder {
-        private HttpClientInputs httpClientInputs;
+        private HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder;
         private CommonInputs commonInputs;
 
         public InputsWrapper build() {
             return new InputsWrapper(this);
         }
 
-        public Builder withHttpClientInputs(HttpClientInputs httpClientInputs) {
-            this.httpClientInputs = httpClientInputs;
+        public Builder withHttpClientInputsBuilder(HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder) {
+            this.httpClientInputsBuilder = httpClientInputsBuilder;
             return this;
         }
 

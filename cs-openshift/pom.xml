@@ -66,7 +66,8 @@
             <!--Dependencies versions-->
             <score-content-sdk.version>1.10.11</score-content-sdk.version>
             <cs-commons.version>0.0.9</cs-commons.version>
-            <cs-http-client.version>0.1.96</cs-http-client.version>
+            <cs-httpclient-commons.version>0.0.28</cs-httpclient-commons.version>
+            <common-codec.version>1.15</common-codec.version>
             <!--Misc properties-->
             <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
             <maven.compiler.source>17</maven.compiler.source>
@@ -84,7 +85,7 @@
             <dependency>
                 <groupId>io.cloudslang.content</groupId>
                 <artifactId>cs-httpclient-commons</artifactId>
-                <version>0.0.6</version>
+                <version>${cs-httpclient-commons.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -113,6 +114,11 @@
                 <groupId>net.minidev</groupId>
                 <artifactId>json-smart</artifactId>
                 <version>2.4.10</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${common-codec.version}</version>
             </dependency>
 
         </dependencies>

@@ -38,12 +38,12 @@ public class FolderHeadersBuilder {
     public static void setFolderHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             case CREATE_FOLDER:
-                wrapper.getHttpClientInputs().setHeaders(AUTHORIZATION_HEADER_PREFIX + BLANK_CHAR + wrapper.getCommonInputs().getAccessToken());
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+                wrapper.getHttpClientInputsBuilder().headers(AUTHORIZATION_HEADER_PREFIX + BLANK_CHAR + wrapper.getCommonInputs().getAccessToken());
+                wrapper.getHttpClientInputsBuilder().contentType(APPLICATION_JSON);
                 break;
             case DELETE_FILE_OR_FOLDER:
-                wrapper.getHttpClientInputs().setHeaders(AUTHORIZATION_HEADER_PREFIX + BLANK_CHAR + wrapper.getCommonInputs().getAccessToken());
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON);
+                wrapper.getHttpClientInputsBuilder().headers(AUTHORIZATION_HEADER_PREFIX + BLANK_CHAR + wrapper.getCommonInputs().getAccessToken());
+                wrapper.getHttpClientInputsBuilder().contentType(APPLICATION_JSON);
                 break;
             default:
                 break;

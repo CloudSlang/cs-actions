@@ -26,7 +26,6 @@ import io.cloudslang.content.utils.StringUtilities;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
@@ -66,7 +65,7 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setCommonHttpInputs(@NotNull final HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                            @NotNull final AzureCommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),
@@ -82,15 +81,15 @@ public class HttpUtils {
         setTLSParameters(httpClientInputs);
     }
 
-    public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@NotNull final HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                 @NotNull final String proxyHost,
                                 @NotNull final String proxyPort,
                                 @NotNull final String proxyUsername,
                                 @NotNull final String proxyPassword) {
-        httpClientInputs.setProxyHost(proxyHost);
-        httpClientInputs.setProxyPort(proxyPort);
-        httpClientInputs.setProxyUsername(proxyUsername);
-        httpClientInputs.setProxyPassword(proxyPassword);
+        httpClientInputs.proxyHost(proxyHost);
+        httpClientInputs.proxyPort(proxyPort);
+        httpClientInputs.proxyUsername(proxyUsername);
+        httpClientInputs.proxyPassword(proxyPassword);
     }
 
 
@@ -119,23 +118,23 @@ public class HttpUtils {
         return results;
     }
 
-    public static void setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setSecurityInputs(@NotNull final HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                          @NotNull final String trustAllRoots,
                                          @NotNull final String x509HostnameVerifier,
                                          @NotNull final String trustKeystore,
                                          @NotNull final String trustPassword) {
-        httpClientInputs.setTrustAllRoots(trustAllRoots);
-        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
-        httpClientInputs.setKeystore(DEFAULT_JAVA_KEYSTORE);
-        httpClientInputs.setKeystorePassword(CHANGEIT);
+        httpClientInputs.trustAllRoots(trustAllRoots);
+        httpClientInputs.x509HostnameVerifier(x509HostnameVerifier);
+        httpClientInputs.trustKeystore(trustKeystore);
+        httpClientInputs.trustPassword(trustPassword);
+        httpClientInputs.keystore(DEFAULT_JAVA_KEYSTORE);
+        httpClientInputs.keystorePassword(CHANGEIT);
     }
 
 
-    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
-        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
-        httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+    public static void setTLSParameters(HttpClientInputs.HttpClientInputsBuilder httpClientInputs) {
+        httpClientInputs.tlsVersion(io.cloudslang.content.httpclient.utils.Constants.TLSv12);
+        httpClientInputs.allowedCiphers(ALLOWED_CYPHERS);
 
     }
 

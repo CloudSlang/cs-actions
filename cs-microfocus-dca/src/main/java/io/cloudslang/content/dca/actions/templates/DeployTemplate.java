@@ -52,8 +52,22 @@ import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.OutputNames.DEPLOYMENT_JSON;
 import static io.cloudslang.content.dca.utils.OutputNames.STATUS;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECTIONS_MAX_PER_ROUTE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECTIONS_MAX_TOTAL;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USE_COOKIES;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.BooleanUtilities.toBoolean;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
@@ -139,11 +153,11 @@ public class DeployTemplate {
             return getFailureResultsMap(validator.getErrors());
         }
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
 
-        httpClientInputs.setUrl(getDcaDeployUrl(protocol, host, port));
+        httpClientInputs.url(getDcaDeployUrl(protocol, host, port));
 
-        httpClientInputs.setHeaders(getAuthHeaders(authToken, refreshToken));
+        httpClientInputs.headers(getAuthHeaders(authToken, refreshToken));
 
         setProxy(httpClientInputs, proxyHost, proxyPort, proxyUsername, proxyPassword);
 
@@ -153,9 +167,9 @@ public class DeployTemplate {
         setConnectionParameters(httpClientInputs, connectTimeout, socketTimeout, useCookies, keepAlive,
                 connectionsMaxPerRoot, connectionsMaxTotal);
 
-        httpClientInputs.setContentType(APPLICATION_JSON);
-        httpClientInputs.setFollowRedirects(BooleanValues.TRUE);
-        httpClientInputs.setMethod(POST);
+        httpClientInputs.contentType(APPLICATION_JSON);
+        httpClientInputs.followRedirects(BooleanValues.TRUE);
+        httpClientInputs.method(POST);
 
         try {
             final ObjectMapper mapper = new ObjectMapper();
@@ -164,9 +178,9 @@ public class DeployTemplate {
 
             final DcaDeploymentModel dcaDeploymentModel =
                     new DcaDeploymentModel(deploymentName, deploymentDesc, deploymentTemplateId, resources);
-            httpClientInputs.setBody(dcaDeploymentModel.toJson());
+            httpClientInputs.body(dcaDeploymentModel.toJson());
 
-            final Map<String, String> httpClientResult = new HttpClientService().execute(httpClientInputs);
+            final Map<String, String> httpClientResult = HttpClientService.execute(httpClientInputs.build());
 
             final JsonNode result = mapper.readTree(httpClientResult.get(RETURN_RESULT));
 

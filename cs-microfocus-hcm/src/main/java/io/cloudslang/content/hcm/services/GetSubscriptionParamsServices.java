@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.hcm.utils.Constants.*;
-import static io.cloudslang.content.httpclient.services.HttpClientService.RETURN_RESULT;
-import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
@@ -39,7 +39,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 public class GetSubscriptionParamsServices {
 
     public static Map<String, String> createInstance(HttpClientInputs httpClientInputs) throws Exception {
-        final Map<String, String> httpResponse = new HttpClientService().execute(httpClientInputs);
+        final Map<String, String> httpResponse = HttpClientService.execute(httpClientInputs);
 
         if (parseInt(httpResponse.get(STATUS_CODE)) == HTTP_OK) {
             final CustomInput customInput = new CustomInput();

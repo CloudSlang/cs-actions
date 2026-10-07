@@ -59,7 +59,7 @@ public class QueryApiExecutor {
         setQueryApiParams(inputs, queryParamsMap);
         setQueryApiHeaders(inputs, headersMap, queryParamsMap);
 
-        Map<String, String> awsResponse = new HttpClientService().execute(inputs.getHttpClientInputs());
+        Map<String, String> awsResponse = HttpClientService.execute(inputs.getHttpClientInputsBuilder().build());
 
         return getValidResponse(awsResponse);
     }

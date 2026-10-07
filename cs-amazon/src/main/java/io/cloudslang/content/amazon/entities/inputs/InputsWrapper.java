@@ -44,7 +44,7 @@ import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInpu
  * 8/10/2016.
  */
 public class InputsWrapper {
-    private final HttpClientInputs httpClientInputs;
+    private final HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder;
     private final CommonInputs commonInputs;
     private CustomInputs customInputs;
     private EbsInputs ebsInputs;
@@ -70,7 +70,7 @@ public class InputsWrapper {
     private final String queryParams;
 
     private InputsWrapper(Builder builder) {
-        this.httpClientInputs = builder.httpClientInputs;
+        this.httpClientInputsBuilder = builder.httpClientInputsBuilder;
         this.commonInputs = builder.commonInputs;
 
         this.apiService = builder.apiService;
@@ -83,8 +83,8 @@ public class InputsWrapper {
         this.queryParams = builder.queryParams;
     }
 
-    public HttpClientInputs getHttpClientInputs() {
-        return httpClientInputs;
+    public HttpClientInputs.HttpClientInputsBuilder getHttpClientInputsBuilder() {
+        return httpClientInputsBuilder;
     }
 
     public CommonInputs getCommonInputs() {
@@ -228,7 +228,7 @@ public class InputsWrapper {
     }
 
     public static class Builder {
-        private HttpClientInputs httpClientInputs;
+        private HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder;
         private CommonInputs commonInputs;
 
         private String apiService;
@@ -244,8 +244,8 @@ public class InputsWrapper {
             return new InputsWrapper(this);
         }
 
-        public Builder withHttpClientInputs(HttpClientInputs inputs) {
-            httpClientInputs = inputs;
+        public Builder withHttpClientInputsBuilder(HttpClientInputs.HttpClientInputsBuilder inputsBuilder) {
+            httpClientInputsBuilder = inputsBuilder;
             return this;
         }
 

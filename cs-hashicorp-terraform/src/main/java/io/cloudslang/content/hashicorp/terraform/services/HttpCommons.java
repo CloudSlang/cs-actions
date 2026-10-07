@@ -14,7 +14,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setTLSPa
 public class HttpCommons {
 
     @NotNull
-    static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    static void setCommonHttpInputs(@NotNull final HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                     @NotNull final TerraformCommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),

@@ -13,7 +13,7 @@ import static io.cloudslang.content.oracle.oci.utils.HttpUtils.setTLSParameters;
 public class HttpCommons {
 
     @NotNull
-    public static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setCommonHttpInputs(@NotNull final HttpClientInputs.HttpClientInputsBuilder httpClientInputs,
                                            @NotNull final OCICommonInputs commonInputs) {
         HttpUtils.setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),

@@ -18,10 +18,10 @@
 
 package io.cloudslang.content.utilities.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.utilities.util.CommandOutputParser.extractValue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CommandOutputParserTest {
 

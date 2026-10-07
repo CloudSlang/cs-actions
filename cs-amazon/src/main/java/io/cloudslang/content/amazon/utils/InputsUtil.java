@@ -85,16 +85,16 @@ public final class InputsUtil {
     public static void setQueryApiHeaders(InputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)
             throws SignatureException, MalformedURLException {
         AuthorizationHeader signedHeaders = new AmazonSignatureService().signRequestHeaders(inputs, headersMap, queryParamsMap);
-        inputs.getHttpClientInputs().setHeaders(signedHeaders.getAuthorizationHeader());
+        inputs.getHttpClientInputsBuilder().headers(signedHeaders.getAuthorizationHeader());
         if (S3_API.equalsIgnoreCase(inputs.getCommonInputs().getApiService())) {
-            inputs.getHttpClientInputs().setHeaders(CANONICAL_HEADER_CONTENT_SHA + COLON + signedHeaders.getSignature());
+            inputs.getHttpClientInputsBuilder().headers(CANONICAL_HEADER_CONTENT_SHA + COLON + signedHeaders.getSignature());
         }
     }
 
     public static void setQueryApiParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
         String queryParamsString = getHeadersOrParamsString(queryParamsMap, EQUAL, AMPERSAND, true);
         if (isNotBlank(queryParamsString)) {
-            inputs.getHttpClientInputs().setQueryParams(queryParamsString);
+            inputs.getHttpClientInputsBuilder().queryParams(queryParamsString);
         }
     }
 

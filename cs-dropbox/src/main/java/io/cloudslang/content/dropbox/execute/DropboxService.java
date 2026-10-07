@@ -37,13 +37,13 @@ import static io.cloudslang.content.dropbox.utils.InputsUtil.buildUrl;
  */
 public class DropboxService {
     @SafeVarargs
-    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) throws Exception {
-        InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
+    public final <T> Map<String, String> execute(HttpClientInputs.HttpClientInputsBuilder httpClientInputsBuilder, CommonInputs commonInputs, T... builders) throws Exception {
+        InputsWrapper wrapper = buildWrapper(httpClientInputsBuilder, commonInputs, builders);
 
-        httpClientInputs.setUrl(buildUrl(wrapper));
-        httpClientInputs.setBody(buildPayload(wrapper));
+        httpClientInputsBuilder.url(buildUrl(wrapper));
+        httpClientInputsBuilder.body(buildPayload(wrapper));
         buildHeaders(wrapper);
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputsBuilder.build());
     }
 }

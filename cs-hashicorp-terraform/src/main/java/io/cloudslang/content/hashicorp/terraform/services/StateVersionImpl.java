@@ -5,7 +5,7 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformStateVersionInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -22,14 +22,14 @@ public class StateVersionImpl {
     @NotNull
     public static Map<String, String> getCurrentStateVersion(@NotNull final TerraformStateVersionInputs
                                                                      getCurrentStateVersionInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getCurrentStateVersionUrl(getCurrentStateVersionInputs.getWorkspaceId()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        httpClientInputs.setHeaders(getAuthHeaders(getCurrentStateVersionInputs.getCommonInputs().getAuthToken()));
-        httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
+        httpClientInputs.url(getCurrentStateVersionUrl(getCurrentStateVersionInputs.getWorkspaceId()));
+        httpClientInputs.authType(ANONYMOUS);
+        httpClientInputs.method(GET);
+        httpClientInputs.headers(getAuthHeaders(getCurrentStateVersionInputs.getCommonInputs().getAuthToken()));
+        httpClientInputs.contentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, getCurrentStateVersionInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

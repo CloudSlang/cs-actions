@@ -20,6 +20,7 @@ package io.cloudslang.content.hcm.utils;
 public class Constants {
 
     public static final String GET = "GET";
+    public static final String SOCKET_TIMEOUT = "socketTimeout";
     public static final String XML_DOCUMENT_SOURCE = "";
     public static final String X_PATH_QUERY_PROPERTY_NAME = "//options/property/*[name()=\"name\"]/text()";
     public static final String QUERY_TYPE = "nodelist";

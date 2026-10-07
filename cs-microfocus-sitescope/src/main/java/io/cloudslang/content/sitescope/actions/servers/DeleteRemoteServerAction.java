@@ -35,7 +35,8 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.*;
+import static io.cloudslang.content.sitescope.constants.Inputs.SOCKET_TIMEOUT;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.DeleteRemoteServer.*;
@@ -61,9 +62,9 @@ public class DeleteRemoteServerAction {
                     @Response(text = SUCCESS, field = RETURN_CODE, value = ReturnCodes.SUCCESS, matchType = COMPARE_EQUAL, responseType = RESOLVED, description = SUCCESS_DESC),
                     @Response(text = FAILURE, field = RETURN_CODE, value = ReturnCodes.FAILURE, matchType = COMPARE_EQUAL, responseType = ERROR, description = FAILURE_DESC)
             })
-    public Map<String, String> execute(@Param(value = HOST, required = true, description = HOST_DESC) String host,
+    public Map<String, String> execute(@Param(value = io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.HOST, required = true, description = HOST_DESC) String host,
                                        @Param(value = PORT, required = true, description = PORT_DESC) String port,
-                                       @Param(value = PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
+                                       @Param(value = io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.PROTOCOL, required = true, description = PROTOCOL_DESC) String protocol,
                                        @Param(value = USERNAME, description = USERNAME_DESC) String username,
                                        @Param(value = PASSWORD, encrypted = true, description = PASSWORD_DESC) String password,
                                        @Param(value = PLATFORM, description = PLATFORM_DESC) String platform,

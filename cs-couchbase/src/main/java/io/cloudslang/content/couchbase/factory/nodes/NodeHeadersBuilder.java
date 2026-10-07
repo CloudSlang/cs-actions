@@ -36,8 +36,8 @@ public class NodeHeadersBuilder {
     public static void setNodeHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             default:
-                wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
-                wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
+                wrapper.getHttpClientInputsBuilder().headers(ALL_TYPE_HEADER);
+                wrapper.getHttpClientInputsBuilder().contentType(FORM_URL_ENCODED);
         }
     }
 }

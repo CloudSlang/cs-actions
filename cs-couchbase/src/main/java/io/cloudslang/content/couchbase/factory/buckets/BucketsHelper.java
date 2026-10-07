@@ -30,8 +30,8 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Misce
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.*;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.setOptionalMapEntry;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getPayloadString;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.AUTH_TYPE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.AUTH_TYPE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 

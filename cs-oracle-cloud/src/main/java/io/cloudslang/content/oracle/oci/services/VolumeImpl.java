@@ -9,7 +9,7 @@ import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCIVolumeInputs;
 import io.cloudslang.content.oracle.oci.services.models.volumes.AttachVolumeRequestBody;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
@@ -35,47 +35,44 @@ public class VolumeImpl {
     public static Map<String, String> attachVolume(@NotNull final OCIAttachVolumeInputs ociAttachVolumeInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(attachVolumeUrl(ociAttachVolumeInputs.getCommonInputs().getRegion()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setBody(attachVolumeRequestBody(ociAttachVolumeInputs));
-        URI uri = URI.create(httpClientInputs.getUrl());
-        Map<String, String> headers = getRequestSigner(ociAttachVolumeInputs.getCommonInputs()).signRequest(uri, POST, httpClientInputs.getBody());
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        final String url = attachVolumeUrl(ociAttachVolumeInputs.getCommonInputs().getRegion());
+        final String body = attachVolumeRequestBody(ociAttachVolumeInputs);
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(url).authType(ANONYMOUS).method(POST).body(body);
+        URI uri = URI.create(url);
+        Map<String, String> headers = getRequestSigner(ociAttachVolumeInputs.getCommonInputs()).signRequest(uri, POST, body);
+        httpClientInputs.headers(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociAttachVolumeInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getVolumeAttachmentDetails(@NotNull final OCIVolumeInputs ociVolumeInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getVolumeAttachmentDetailsUrl(ociVolumeInputs.getCommonInputs().getRegion(),
-                ociVolumeInputs.getVolumeAttachmentId()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        URI uri = URI.create(httpClientInputs.getUrl());
+        final String url = getVolumeAttachmentDetailsUrl(ociVolumeInputs.getCommonInputs().getRegion(),
+                ociVolumeInputs.getVolumeAttachmentId());
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(url).authType(ANONYMOUS).method(GET);
+        URI uri = URI.create(url);
         Map<String, String> headers = getRequestSigner(ociVolumeInputs.getCommonInputs())
                 .signRequest(uri, GET, EMPTY);
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        httpClientInputs.headers(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociVolumeInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> detachVolume(@NotNull final OCIVolumeInputs ociVolumeInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(detachVolumeUrl(ociVolumeInputs.getCommonInputs().getRegion(),
-                ociVolumeInputs.getVolumeAttachmentId()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(DELETE);
-        URI uri = URI.create(httpClientInputs.getUrl());
+        final String url = detachVolumeUrl(ociVolumeInputs.getCommonInputs().getRegion(),
+                ociVolumeInputs.getVolumeAttachmentId());
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(url).authType(ANONYMOUS).method(DELETE);
+        URI uri = URI.create(url);
         Map<String, String> headers = getRequestSigner(ociVolumeInputs.getCommonInputs())
                 .signRequest(uri, DELETE, EMPTY);
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        httpClientInputs.headers(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociVolumeInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 

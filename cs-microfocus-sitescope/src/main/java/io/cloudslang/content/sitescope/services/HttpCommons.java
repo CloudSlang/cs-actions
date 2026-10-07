@@ -19,7 +19,7 @@
 package io.cloudslang.content.sitescope.services;
 
 import org.jetbrains.annotations.NotNull;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs.HttpClientInputsBuilder;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 
 import static io.cloudslang.content.sitescope.utils.HttpUtils.*;
@@ -27,7 +27,7 @@ import static io.cloudslang.content.sitescope.utils.HttpUtils.*;
 public class HttpCommons {
 
     @NotNull
-    static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    static void setCommonHttpInputs(@NotNull final HttpClientInputsBuilder httpClientInputs,
                                     @NotNull final SiteScopeCommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),

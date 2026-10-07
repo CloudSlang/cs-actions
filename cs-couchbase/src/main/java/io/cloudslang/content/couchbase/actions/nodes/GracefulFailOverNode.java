@@ -42,24 +42,24 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.NodeA
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.NodeInputs.INTERNAL_NODE_IP_ADDRESS;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USERNAME;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USE_COOKIES;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_USERNAME;
+import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.SOCKET_TIMEOUT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USE_COOKIES;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
+import static org.apache.hc.client5.http.classic.methods.HttpPost.METHOD_NAME;
 
 /**
  * Created by TusaM
@@ -164,7 +164,7 @@ public class GracefulFailOverNode {
                                        @Param(value = KEEP_ALIVE) String keepAlive,
                                        @Param(value = INTERNAL_NODE_IP_ADDRESS) String internalNodeIpAddress) {
         try {
-            final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
+            final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
                     keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
 

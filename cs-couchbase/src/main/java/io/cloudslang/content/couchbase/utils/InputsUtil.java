@@ -58,7 +58,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
-import static org.apache.http.client.config.AuthSchemes.BASIC;
+import static org.apache.hc.client5.http.auth.StandardAuthScheme.BASIC;
 
 /**
  * Created by Mihai Tusa
@@ -70,52 +70,52 @@ public class InputsUtil {
         // prevent instantiation
     }
 
-    public static HttpClientInputs getHttpClientInputs(String username, String password, String proxyHost, String proxyPort,
+    public static HttpClientInputs.HttpClientInputsBuilder getHttpClientInputs(String username, String password, String proxyHost, String proxyPort,
                                                        String proxyUsername, String proxyPassword, String trustAllRoots,
                                                        String x509HostnameVerifier, String trustKeystore, String trustPassword,
                                                        String keystore, String keystorePassword, String connectTimeout,
                                                        String socketTimeout, String useCookies, String keepAlive, String method) {
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setMethod(method);
-        httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setQueryParamsAreURLEncoded(valueOf(FALSE));
-        httpClientInputs.setUsername(username);
-        httpClientInputs.setPassword(password);
+        HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .method(method)
+                .authType(BASIC)
+                .queryParamsAreURLEncoded(valueOf(FALSE))
+                .username(username)
+                .password(password);
 
-        httpClientInputs.setTrustAllRoots(valueOf(getEnforcedBooleanCondition(trustAllRoots, FALSE)));
-        httpClientInputs.setKeepAlive(valueOf(getEnforcedBooleanCondition(keepAlive, TRUE)));
-        httpClientInputs.setUseCookies(valueOf(getEnforcedBooleanCondition(useCookies, TRUE)));
+        httpClientInputs.trustAllRoots(valueOf(getEnforcedBooleanCondition(trustAllRoots, FALSE)));
+        httpClientInputs.keepAlive(valueOf(getEnforcedBooleanCondition(keepAlive, TRUE)));
+        httpClientInputs.useCookies(valueOf(getEnforcedBooleanCondition(useCookies, TRUE)));
 
         if (areBothValuesPresent(proxyHost, proxyPort)) {
-            httpClientInputs.setProxyHost(proxyHost);
-            httpClientInputs.setProxyPort(proxyPort);
+            httpClientInputs.proxyHost(proxyHost);
+            httpClientInputs.proxyPort(proxyPort);
         }
 
         if (isNotBlank(proxyUsername)) {
-            httpClientInputs.setProxyUsername(proxyUsername);
+            httpClientInputs.proxyUsername(proxyUsername);
         }
 
         if (areBothValuesPresent(proxyUsername, proxyPassword)) {
-            httpClientInputs.setProxyPassword(proxyPassword);
+            httpClientInputs.proxyPassword(proxyPassword);
         }
 
         if (areBothValuesPresent(trustKeystore, trustPassword)) {
-            httpClientInputs.setTrustKeystore(trustKeystore);
-            httpClientInputs.setTrustPassword(trustPassword);
+            httpClientInputs.trustKeystore(trustKeystore);
+            httpClientInputs.trustPassword(trustPassword);
         }
 
         if (areBothValuesPresent(keystore, keystorePassword)) {
-            httpClientInputs.setKeystore(keystore);
-            httpClientInputs.setKeystorePassword(keystorePassword);
+            httpClientInputs.keystore(keystore);
+            httpClientInputs.keystorePassword(keystorePassword);
         }
 
-        httpClientInputs.setConnectTimeout(defaultIfBlank(connectTimeout, valueOf(INIT_INDEX)));
-        httpClientInputs.setSocketTimeout(defaultIfBlank(socketTimeout, valueOf(INIT_INDEX)));
+        httpClientInputs.connectTimeout(defaultIfBlank(connectTimeout, valueOf(INIT_INDEX)));
+        httpClientInputs.responseTimeout(defaultIfBlank(socketTimeout, valueOf(INIT_INDEX)));
 
         if (isBlank(x509HostnameVerifier) || !asList(ALLOW_ALL, BROWSER_COMPATIBLE, STRICT).contains(x509HostnameVerifier)) {
-            httpClientInputs.setX509HostnameVerifier(ALLOW_ALL);
+            httpClientInputs.x509HostnameVerifier(ALLOW_ALL);
         } else {
-            httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
+            httpClientInputs.x509HostnameVerifier(x509HostnameVerifier);
         }
 
         return httpClientInputs;

@@ -10,7 +10,7 @@ import io.cloudslang.content.oracle.oci.entities.inputs.*;
 import io.cloudslang.content.oracle.oci.services.models.instances.CreateInstanceRequestBody;
 import io.cloudslang.content.oracle.oci.services.models.instances.UpdateInstanceRequestBody;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -164,32 +164,30 @@ public class InstanceImpl {
     public static Map<String, String> createInstance(@NotNull final OCICreateInstanceInputs createInstancesInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(listInstancesUrl(createInstancesInputs.getCommonInputs().getRegion()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        httpClientInputs.setBody(createInstanceRequestBody(createInstancesInputs));
-        URI uri = URI.create(httpClientInputs.getUrl());
-        Map<String, String> headers = getRequestSigner(createInstancesInputs.getCommonInputs()).signRequest(uri, POST, httpClientInputs.getBody());
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        final String url = listInstancesUrl(createInstancesInputs.getCommonInputs().getRegion());
+        final String body = createInstanceRequestBody(createInstancesInputs);
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(url).authType(ANONYMOUS).method(POST).body(body);
+        URI uri = URI.create(url);
+        Map<String, String> headers = getRequestSigner(createInstancesInputs.getCommonInputs()).signRequest(uri, POST, body);
+        httpClientInputs.headers(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, createInstancesInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
     @NotNull
     public static Map<String, String> updateInstance(@NotNull final OCIUpdateInstanceInputs ociUpdateInstanceInputs) throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getInstanceDetailsUrl(ociUpdateInstanceInputs.getCommonInputs().getRegion(), ociUpdateInstanceInputs.getCommonInputs().getInstanceId()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(PUT);
-        httpClientInputs.setBody(updateInstanceRequestBody(ociUpdateInstanceInputs));
-        URI uri = URI.create(httpClientInputs.getUrl());
-        Map<String, String> headers = getRequestSigner(ociUpdateInstanceInputs.getCommonInputs()).signRequest(uri, PUT, httpClientInputs.getBody());
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        final String url = getInstanceDetailsUrl(ociUpdateInstanceInputs.getCommonInputs().getRegion(), ociUpdateInstanceInputs.getCommonInputs().getInstanceId());
+        final String body = updateInstanceRequestBody(ociUpdateInstanceInputs);
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(url).authType(ANONYMOUS).method(PUT).body(body);
+        URI uri = URI.create(url);
+        Map<String, String> headers = getRequestSigner(ociUpdateInstanceInputs.getCommonInputs()).signRequest(uri, PUT, body);
+        httpClientInputs.headers(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociUpdateInstanceInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
@@ -198,48 +196,45 @@ public class InstanceImpl {
     public static Map<String, String> listInstances(@NotNull final OCIListInstanceInputs ociListInstanceInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(listInstancesUrl(ociListInstanceInputs.getCommonInputs().getRegion()));
-        httpClientInputs.setQueryParams(getQueryParams(ociListInstanceInputs.getCommonInputs().getAvailabilityDomain(), ociListInstanceInputs.getCommonInputs().getCompartmentOcid(), ociListInstanceInputs.getDisplayName(), ociListInstanceInputs.getCommonInputs().getLimit(), ociListInstanceInputs.getCommonInputs().getPage(), ociListInstanceInputs.getSortBy(), ociListInstanceInputs.getSortOrder(), ociListInstanceInputs.getLifecycleState()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        URI uri = URI.create(httpClientInputs.getUrl() + QUERY + httpClientInputs.getQueryParams());
+        final String url = listInstancesUrl(ociListInstanceInputs.getCommonInputs().getRegion());
+        final String queryParams = getQueryParams(ociListInstanceInputs.getCommonInputs().getAvailabilityDomain(), ociListInstanceInputs.getCommonInputs().getCompartmentOcid(), ociListInstanceInputs.getDisplayName(), ociListInstanceInputs.getCommonInputs().getLimit(), ociListInstanceInputs.getCommonInputs().getPage(), ociListInstanceInputs.getSortBy(), ociListInstanceInputs.getSortOrder(), ociListInstanceInputs.getLifecycleState());
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(url).queryParams(queryParams).authType(ANONYMOUS).method(GET);
+        URI uri = URI.create(url + QUERY + queryParams);
         Map<String, String> headers = getRequestSigner(ociListInstanceInputs.getCommonInputs()).signRequest(uri, GET, EMPTY);
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        httpClientInputs.headers(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociListInstanceInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
     @NotNull
     public static Map<String, String> terminateInstance(@NotNull final OCITerminateInstanceInputs ociTerminateInstanceInputs) throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getInstanceDetailsUrl(ociTerminateInstanceInputs.getCommonInputs().getRegion(), ociTerminateInstanceInputs.getCommonInputs().getInstanceId()));
-        httpClientInputs.setQueryParams(getQueryParamForTerminateInstance(ociTerminateInstanceInputs.getPreserveBootVolume()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(DELETE);
-        URI uri = URI.create(httpClientInputs.getUrl() + QUERY + httpClientInputs.getQueryParams());
+        final String url = getInstanceDetailsUrl(ociTerminateInstanceInputs.getCommonInputs().getRegion(), ociTerminateInstanceInputs.getCommonInputs().getInstanceId());
+        final String queryParams = getQueryParamForTerminateInstance(ociTerminateInstanceInputs.getPreserveBootVolume());
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(url).queryParams(queryParams).authType(ANONYMOUS).method(DELETE);
+        URI uri = URI.create(url + QUERY + queryParams);
         Map<String, String> headers = getRequestSigner(ociTerminateInstanceInputs.getCommonInputs()).signRequest(uri, DELETE, EMPTY);
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        httpClientInputs.headers(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociTerminateInstanceInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
     @NotNull
     public static Map<String, String> instanceAction(@NotNull final OCIInstanceActionInputs ociInstanceActionInputs) throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getInstanceDetailsUrl(ociInstanceActionInputs.getCommonInputs().getRegion(), ociInstanceActionInputs.getCommonInputs().getInstanceId()));
-        httpClientInputs.setQueryParams(getQueryParamForInstanceAction(ociInstanceActionInputs.getActionName()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(POST);
-        URI uri = URI.create(httpClientInputs.getUrl() + QUERY + httpClientInputs.getQueryParams());
+        final String url = getInstanceDetailsUrl(ociInstanceActionInputs.getCommonInputs().getRegion(), ociInstanceActionInputs.getCommonInputs().getInstanceId());
+        final String queryParams = getQueryParamForInstanceAction(ociInstanceActionInputs.getActionName());
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(url).queryParams(queryParams).authType(ANONYMOUS).method(POST);
+        URI uri = URI.create(url + QUERY + queryParams);
         Map<String, String> headers = getRequestSigner(ociInstanceActionInputs.getCommonInputs()).signRequest(uri, POST, EMPTY);
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        httpClientInputs.headers(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociInstanceActionInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
@@ -247,29 +242,28 @@ public class InstanceImpl {
     public static Map<String, String> getInstanceDetails(@NotNull final OCICommonInputs ociCommonInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getInstanceDetailsUrl(ociCommonInputs.getRegion(), ociCommonInputs.getInstanceId()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(getInstanceDetailsUrl(ociCommonInputs.getRegion(), ociCommonInputs.getInstanceId()));
         return getStringStringMap(ociCommonInputs, httpClientInputs);
 
     }
 
     @NotNull
-    private static Map<String, String> getStringStringMap(@NotNull OCICommonInputs ociCommonInputs, HttpClientInputs httpClientInputs) throws Exception {
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(GET);
-        URI uri = URI.create(httpClientInputs.getUrl());
+    private static Map<String, String> getStringStringMap(@NotNull OCICommonInputs ociCommonInputs, HttpClientInputs.HttpClientInputsBuilder httpClientInputs) throws Exception {
+        HttpClientInputs unsignedInputs = httpClientInputs.authType(ANONYMOUS).method(GET).build();
+        URI uri = URI.create(unsignedInputs.getUrl());
         Map<String, String> headers = getRequestSigner(ociCommonInputs).signRequest(uri, GET, EMPTY);
-        httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
+        httpClientInputs.headers(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociCommonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getInstanceDefaultCredentials(@NotNull final OCICommonInputs ociCommonInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getInstanceDefaultCredentialsUrl(ociCommonInputs.getRegion(), ociCommonInputs.getInstanceId()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(getInstanceDefaultCredentialsUrl(ociCommonInputs.getRegion(), ociCommonInputs.getInstanceId()));
         return getStringStringMap(ociCommonInputs, httpClientInputs);
 
     }

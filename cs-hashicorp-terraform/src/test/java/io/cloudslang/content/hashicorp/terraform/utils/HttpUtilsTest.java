@@ -7,11 +7,14 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
+import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.STATUS_CODE;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.ZERO;
+import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CounterConstants.EXCEPTION;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getQueryParams;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CommonOutputs.DOCUMENT;
-import static io.cloudslang.content.httpclient.services.HttpClientService.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;

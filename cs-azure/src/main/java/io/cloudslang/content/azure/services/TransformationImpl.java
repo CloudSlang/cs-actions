@@ -24,7 +24,7 @@ import io.cloudslang.content.azure.entities.models.streamanalytics.CreateTransfo
 import io.cloudslang.content.azure.utils.HttpUtils;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -46,24 +46,22 @@ public class TransformationImpl {
     @NotNull
     public static Map<String, String> createTransformation(@NotNull final CreateTransformationInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setUrl(getCreateTransformationUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
-                inputs.getAzureCommonInputs().getJobName(), inputs.getTransformationName()));
-        httpClientInputs.setAuthType(ANONYMOUS);
-        httpClientInputs.setMethod(PUT);
-        httpClientInputs.setContentType(CONTENT_TYPE);
-        httpClientInputs.setHeaders(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder()
+                .url(getCreateTransformationUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
+                        inputs.getAzureCommonInputs().getJobName(), inputs.getTransformationName()))
+                .authType(ANONYMOUS)
+                .method(PUT)
+                .contentType(CONTENT_TYPE)
+                .headers(getAuthHeaders(inputs.getAzureCommonInputs().getAuthToken()));
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
-        httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
-        httpClientInputs.setBody(createTransformationRequestBody(inputs));
-        return new HttpClientService().execute(httpClientInputs);
+        httpClientInputs.queryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
+        httpClientInputs.body(createTransformationRequestBody(inputs));
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     private static String getCreateTransformationUrl(String subscriptionId, String resourceGroupName, String jobName, String transformationName) throws Exception {
         final URIBuilder uriBuilder = new URIBuilder(getTransformationURLPath(subscriptionId, resourceGroupName, jobName, transformationName).toString());
-        //from httpclient 4.5.13 the setPath method is adding one extra / at the start of the URI instead it can be given directly to the constructor
-        //uriBuilder.setPath(getTransformationURLPath(subscriptionId, resourceGroupName, jobName, transformationName).toString());
         return uriBuilder.build().toURL().toString();
     }
 

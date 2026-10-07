@@ -45,9 +45,24 @@ import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.OutputNames.AUTH_TOKEN;
 import static io.cloudslang.content.dca.utils.OutputNames.REFRESH_TOKEN;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECT_TIMEOUT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECTIONS_MAX_PER_ROUTE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.CONNECTIONS_MAX_TOTAL;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEEP_ALIVE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PREEMPTIVE_AUTH;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.USE_COOKIES;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.httpclient.utils.Constants.BASIC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
@@ -130,9 +145,9 @@ public class GetAuthenticationToken {
         }
 
         // SETUP HTTP INPUTS
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HttpClientInputs.HttpClientInputsBuilder httpClientInputs = HttpClientInputs.builder();
 
-        httpClientInputs.setUrl(getIdmUrl(protocolInp, idmHostInp, idmPortStr));
+        httpClientInputs.url(getIdmUrl(protocolInp, idmHostInp, idmPortStr));
 
         setIdmAuthentication(httpClientInputs, BASIC, idmUsername, idmPassword, preemptiveAuth);
 
@@ -146,14 +161,14 @@ public class GetAuthenticationToken {
         setConnectionParameters(httpClientInputs, connectTimeout, socketTimeout, useCookies, keepAlive,
                 connectionsMaxPerRoot, connectionsMaxTotal);
 
-        httpClientInputs.setContentType(APPLICATION_JSON);
-        httpClientInputs.setResponseCharacterSet(UTF_8.toString());
-        httpClientInputs.setRequestCharacterSet(UTF_8.toString());
-        httpClientInputs.setFollowRedirects(TRUE);
-        httpClientInputs.setMethod(POST);
+        httpClientInputs.contentType(APPLICATION_JSON);
+        httpClientInputs.responseCharacterSet(UTF_8.toString());
+        httpClientInputs.requestCharacterSet(UTF_8.toString());
+        httpClientInputs.followRedirects(TRUE);
+        httpClientInputs.method(POST);
 
         try {
-            final Map<String, String> httpClientResultMap = new HttpClientService().execute(httpClientInputs);
+            final Map<String, String> httpClientResultMap = HttpClientService.execute(httpClientInputs.build());
             final ObjectMapper mapper = new ObjectMapper();
             final Map responseMap = mapper.readValue(httpClientResultMap.get(RETURN_RESULT), Map.class);
 
