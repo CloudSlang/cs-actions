@@ -155,20 +155,6 @@
             <version>${cs-httpclient-commons.version}</version>
         </dependency>
 
-        <!--Apache HTTP Client 5-->
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>5.6.4</version>
-        </dependency>
-
-        <!--Apache HTTP Core 5-->
-        <dependency>
-            <groupId>org.apache.httpcomponents.core5</groupId>
-            <artifactId>httpcore5</artifactId>
-            <version>5.4.4</version>
-        </dependency>
-
         <!-- Testing dependencies -->
         <dependency>
             <groupId>junit</groupId>

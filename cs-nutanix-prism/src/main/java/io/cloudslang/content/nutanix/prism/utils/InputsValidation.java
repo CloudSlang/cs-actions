@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -95,4 +96,3 @@ public final class InputsValidation {
         return exceptions;
     }
 }
-
