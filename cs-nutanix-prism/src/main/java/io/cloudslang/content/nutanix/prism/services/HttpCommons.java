@@ -1,5 +1,3 @@
-
-
 package io.cloudslang.content.nutanix.prism.services;
 
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
@@ -13,15 +11,15 @@ import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.*;
 public class HttpCommons {
 
     @NotNull
-    static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
-                                    @NotNull final NutanixCommonInputs commonInputs) {
-        setProxy(httpClientInputs,
+    static HttpClientInputs setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+                                                 @NotNull final NutanixCommonInputs commonInputs) {
+        HttpClientInputs result = setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),
                 commonInputs.getProxyPort(),
                 commonInputs.getProxyUsername(),
                 commonInputs.getProxyPassword());
 
-        setSecurityInputs(httpClientInputs,
+        result = setSecurityInputs(result,
                 commonInputs.getTrustAllRoots(),
                 commonInputs.getX509HostnameVerifier(),
                 commonInputs.getTrustKeystore(),
@@ -29,13 +27,16 @@ public class HttpCommons {
                 DEFAULT_JAVA_KEYSTORE,
                 CHANGEIT);
 
-        setConnectionParameters(httpClientInputs,
+        result = setConnectionParameters(result,
                 commonInputs.getConnectTimeout(),
                 commonInputs.getSocketTimeout(),
                 commonInputs.getKeepAlive(),
                 commonInputs.getConnectionsMaxPerRoot(),
                 commonInputs.getConnectionsMaxTotal(),
                 commonInputs.getPreemptiveAuth());
-        setTLSParameters(httpClientInputs);
+        
+        result = setTLSParameters(result);
+        
+        return result;
     }
 }

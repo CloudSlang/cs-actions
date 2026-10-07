@@ -6,7 +6,7 @@ import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
@@ -47,15 +47,42 @@ public class HttpUtils {
         return new Proxy(HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort));
     }
 
-    public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
-                                @NotNull final String proxyHost,
-                                @NotNull final String proxyPort,
-                                @NotNull final String proxyUsername,
-                                @NotNull final String proxyPassword) {
-        httpClientInputs.setProxyHost(proxyHost);
-        httpClientInputs.setProxyPort(proxyPort);
-        httpClientInputs.setProxyUsername(proxyUsername);
-        httpClientInputs.setProxyPassword(proxyPassword);
+    public static HttpClientInputs setProxy(@NotNull final HttpClientInputs httpClientInputs,
+                                             @NotNull final String proxyHost,
+                                             @NotNull final String proxyPort,
+                                             @NotNull final String proxyUsername,
+                                             @NotNull final String proxyPassword) {
+        if (StringUtilities.isBlank(proxyHost)) {
+            return httpClientInputs;
+        }
+        return HttpClientInputs.builder()
+                .url(httpClientInputs.getUrl())
+                .proxyHost(proxyHost)
+                .proxyPort(proxyPort)
+                .proxyUsername(proxyUsername)
+                .proxyPassword(proxyPassword)
+                .authType(httpClientInputs.getAuthType())
+                .username(httpClientInputs.getUsername())
+                .password(httpClientInputs.getPassword())
+                .contentType(httpClientInputs.getContentType())
+                .queryParams(httpClientInputs.getQueryParams())
+                .method(httpClientInputs.getMethod())
+                .trustAllRoots(httpClientInputs.getTrustAllRoots())
+                .x509HostnameVerifier(httpClientInputs.getX509HostnameVerifier())
+                .trustKeystore(httpClientInputs.getTrustKeystore())
+                .trustPassword(httpClientInputs.getTrustPassword())
+                .keystore(httpClientInputs.getKeystore())
+                .keystorePassword(httpClientInputs.getKeystorePassword())
+                .connectTimeout(httpClientInputs.getConnectTimeout())
+                .socketTimeout(httpClientInputs.getSocketTimeout())
+                .keepAlive(httpClientInputs.getKeepAlive())
+                .connectionsMaxPerRoute(httpClientInputs.getConnectionsMaxPerRoute())
+                .connectionsMaxTotal(httpClientInputs.getConnectionsMaxTotal())
+                .preemptiveAuth(httpClientInputs.getPreemptiveAuth())
+                .tlsVersion(httpClientInputs.getTlsVersion())
+                .allowedCyphers(httpClientInputs.getAllowedCyphers())
+                .body(httpClientInputs.getBody())
+                .build();
     }
 
     @NotNull
@@ -91,39 +118,109 @@ public class HttpUtils {
         return results;
     }
 
-    public static void setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
-                                         @NotNull final String trustAllRoots,
-                                         @NotNull final String x509HostnameVerifier,
-                                         @NotNull final String trustKeystore,
-                                         @NotNull final String trustPassword,
-                                         @NotNull final String keystore,
-                                         @NotNull final String keystorePassword) {
-        httpClientInputs.setTrustAllRoots(trustAllRoots);
-        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
-        httpClientInputs.setKeystore(keystore);
-        httpClientInputs.setKeystorePassword(keystorePassword);
+    public static HttpClientInputs setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
+                                                     @NotNull final String trustAllRoots,
+                                                     @NotNull final String x509HostnameVerifier,
+                                                     @NotNull final String trustKeystore,
+                                                     @NotNull final String trustPassword,
+                                                     @NotNull final String keystore,
+                                                     @NotNull final String keystorePassword) {
+        return HttpClientInputs.builder()
+                .url(httpClientInputs.getUrl())
+                .trustAllRoots(trustAllRoots)
+                .x509HostnameVerifier(x509HostnameVerifier)
+                .trustKeystore(trustKeystore)
+                .trustPassword(trustPassword)
+                .keystore(keystore)
+                .keystorePassword(keystorePassword)
+                .authType(httpClientInputs.getAuthType())
+                .username(httpClientInputs.getUsername())
+                .password(httpClientInputs.getPassword())
+                .contentType(httpClientInputs.getContentType())
+                .queryParams(httpClientInputs.getQueryParams())
+                .method(httpClientInputs.getMethod())
+                .proxyHost(httpClientInputs.getProxyHost())
+                .proxyPort(httpClientInputs.getProxyPort())
+                .proxyUsername(httpClientInputs.getProxyUsername())
+                .proxyPassword(httpClientInputs.getProxyPassword())
+                .connectTimeout(httpClientInputs.getConnectTimeout())
+                .socketTimeout(httpClientInputs.getSocketTimeout())
+                .keepAlive(httpClientInputs.getKeepAlive())
+                .connectionsMaxPerRoute(httpClientInputs.getConnectionsMaxPerRoute())
+                .connectionsMaxTotal(httpClientInputs.getConnectionsMaxTotal())
+                .preemptiveAuth(httpClientInputs.getPreemptiveAuth())
+                .tlsVersion(httpClientInputs.getTlsVersion())
+                .allowedCyphers(httpClientInputs.getAllowedCyphers())
+                .body(httpClientInputs.getBody())
+                .build();
     }
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
-                                               @NotNull final String connectTimeout,
-                                               @NotNull final String socketTimeout,
-                                               @NotNull final String keepAlive,
-                                               @NotNull final String connectionsMaxPerRoot,
-                                               @NotNull final String connectionsMaxTotal,
-                                               @NotNull final String preemptiveAuth) {
-        httpClientInputs.setConnectTimeout(connectTimeout);
-        httpClientInputs.setSocketTimeout(socketTimeout);
-        httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
-        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
-        httpClientInputs.setPreemptiveAuth(String.valueOf(true));
+    public static HttpClientInputs setConnectionParameters(HttpClientInputs httpClientInputs,
+                                                          @NotNull final String connectTimeout,
+                                                          @NotNull final String socketTimeout,
+                                                          @NotNull final String keepAlive,
+                                                          @NotNull final String connectionsMaxPerRoot,
+                                                          @NotNull final String connectionsMaxTotal,
+                                                          @NotNull final String preemptiveAuth) {
+        return HttpClientInputs.builder()
+                .url(httpClientInputs.getUrl())
+                .connectTimeout(connectTimeout)
+                .socketTimeout(socketTimeout)
+                .keepAlive(keepAlive)
+                .connectionsMaxPerRoute(connectionsMaxPerRoot)
+                .connectionsMaxTotal(connectionsMaxTotal)
+                .preemptiveAuth(String.valueOf(true))
+                .authType(httpClientInputs.getAuthType())
+                .username(httpClientInputs.getUsername())
+                .password(httpClientInputs.getPassword())
+                .contentType(httpClientInputs.getContentType())
+                .queryParams(httpClientInputs.getQueryParams())
+                .method(httpClientInputs.getMethod())
+                .trustAllRoots(httpClientInputs.getTrustAllRoots())
+                .x509HostnameVerifier(httpClientInputs.getX509HostnameVerifier())
+                .trustKeystore(httpClientInputs.getTrustKeystore())
+                .trustPassword(httpClientInputs.getTrustPassword())
+                .keystore(httpClientInputs.getKeystore())
+                .keystorePassword(httpClientInputs.getKeystorePassword())
+                .proxyHost(httpClientInputs.getProxyHost())
+                .proxyPort(httpClientInputs.getProxyPort())
+                .proxyUsername(httpClientInputs.getProxyUsername())
+                .proxyPassword(httpClientInputs.getProxyPassword())
+                .tlsVersion(httpClientInputs.getTlsVersion())
+                .allowedCyphers(httpClientInputs.getAllowedCyphers())
+                .body(httpClientInputs.getBody())
+                .build();
     }
 
-    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
-        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
-        httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+    public static HttpClientInputs setTLSParameters(HttpClientInputs httpClientInputs) {
+        return HttpClientInputs.builder()
+                .url(httpClientInputs.getUrl())
+                .tlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12)
+                .allowedCyphers(ALLOWED_CYPHERS)
+                .authType(httpClientInputs.getAuthType())
+                .username(httpClientInputs.getUsername())
+                .password(httpClientInputs.getPassword())
+                .contentType(httpClientInputs.getContentType())
+                .queryParams(httpClientInputs.getQueryParams())
+                .method(httpClientInputs.getMethod())
+                .trustAllRoots(httpClientInputs.getTrustAllRoots())
+                .x509HostnameVerifier(httpClientInputs.getX509HostnameVerifier())
+                .trustKeystore(httpClientInputs.getTrustKeystore())
+                .trustPassword(httpClientInputs.getTrustPassword())
+                .keystore(httpClientInputs.getKeystore())
+                .keystorePassword(httpClientInputs.getKeystorePassword())
+                .proxyHost(httpClientInputs.getProxyHost())
+                .proxyPort(httpClientInputs.getProxyPort())
+                .proxyUsername(httpClientInputs.getProxyUsername())
+                .proxyPassword(httpClientInputs.getProxyPassword())
+                .connectTimeout(httpClientInputs.getConnectTimeout())
+                .socketTimeout(httpClientInputs.getSocketTimeout())
+                .keepAlive(httpClientInputs.getKeepAlive())
+                .connectionsMaxPerRoute(httpClientInputs.getConnectionsMaxPerRoute())
+                .connectionsMaxTotal(httpClientInputs.getConnectionsMaxTotal())
+                .preemptiveAuth(httpClientInputs.getPreemptiveAuth())
+                .body(httpClientInputs.getBody())
+                .build();
     }
 
     @NotNull

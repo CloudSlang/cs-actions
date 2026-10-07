@@ -46,6 +46,17 @@ public class Constants {
                 "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384," +
                 "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256," +
                 "TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256";
+        public static final String TRUST_ALL_ROOTS = "trustAllRoots";
+        public static final String X509_HOSTNAME_VERIFIER = "x509HostnameVerifier";
+        public static final String TRUST_KEYSTORE = "trustKeystore";
+        public static final String TRUST_PASSWORD = "trustPassword";
+        public static final String KEYSTORE = "keystore";
+        public static final String KEYSTORE_PASSWORD = "keystorePassword";
+        public static final String CONNECT_TIMEOUT = "connectTimeout";
+        public static final String SOCKET_TIMEOUT = "socketTimeout";
+        public static final String KEEP_ALIVE = "keepAlive";
+        public static final String CONNECTIONS_MAX_PER_ROUTE = "connectionsMaxPerRoute";
+        public static final String CONNECTIONS_MAX_TOTAL = "connectionsMaxTotal";
     }
 
     public static class CounterConstants {
