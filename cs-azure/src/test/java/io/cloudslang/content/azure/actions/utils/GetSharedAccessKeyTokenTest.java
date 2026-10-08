@@ -19,17 +19,17 @@
 
 package io.cloudslang.content.azure.actions.utils;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by victor on 29.09.2016.
@@ -38,12 +38,12 @@ public class GetSharedAccessKeyTokenTest {
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private GetSharedAccessKeyToken authorizationToken;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         authorizationToken = new GetSharedAccessKeyToken();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         authorizationToken = null;
     }

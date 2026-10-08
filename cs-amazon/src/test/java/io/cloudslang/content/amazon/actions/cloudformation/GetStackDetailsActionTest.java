@@ -32,9 +32,9 @@ package io.cloudslang.content.amazon.actions.cloudformation;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import org.json.JSONException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.comparator.ArraySizeComparator;
@@ -43,7 +43,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GetStackDetailsActionTest {
     public static final String US_EAST_1 = "us-east-1";
@@ -62,7 +62,7 @@ public class GetStackDetailsActionTest {
     public static String proxyPort = null;
 
 
-    //@Before
+    //@BeforeEach
     public void setUp() throws Exception {
         try {
             String proxy = System.getenv().get("HTTP_PROXY");
@@ -73,7 +73,7 @@ public class GetStackDetailsActionTest {
         }
     }
 
-   // @After
+   // @AfterEach
     public void tearDown() throws Exception {
     }
 

@@ -20,13 +20,13 @@
 package io.cloudslang.content.google.utils.service
 
 import com.google.api.client.json.jackson2.JacksonFactory
-import org.junit.Test
-import org.specs2.matcher.JUnitShouldMatchers
+import org.junit.jupiter.api.Test
+import org.specs2.matcher.ShouldMatchers
 
 /**
   * Created by victor on 2/25/17.
   */
-class JsonFactoryUtilsTest extends JUnitShouldMatchers {
+class JsonFactoryUtilsTest extends ShouldMatchers {
 
   @Test
   def defaultJacksonFactoryDefault(): Unit = {

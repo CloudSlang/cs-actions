@@ -32,11 +32,12 @@
 
 package io.cloudslang.content.amazon.entities.aws;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by sandorr
@@ -64,8 +65,8 @@ public class VolumeStatusTest {
         assertEquals(NOT_RELEVANT, VolumeStatus.getValue(EMPTY));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void volumeStatusTestException() {
-        VolumeStatus.getValue(RANDOM_STRING);
+        assertThrows(RuntimeException.class, () -> VolumeStatus.getValue(RANDOM_STRING));
     }
 }

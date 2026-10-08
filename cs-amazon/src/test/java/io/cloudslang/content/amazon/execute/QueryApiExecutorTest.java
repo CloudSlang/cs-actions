@@ -35,69 +35,72 @@ import io.cloudslang.content.amazon.entities.inputs.StorageInputs;
 import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
 import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.amazon.utils.MockingHelper;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.processTagFilter;
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.anyMap;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
 
 /**
  * Created by Mihai Tusa.
  * 9/7/2016.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClientService.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class, InputsUtil.class})
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
     private static final String ALL_RESOURCE_TYPES = "customer-gateway,dhcp-options,image,instance,internet-gateway,network-acl,network-interface,reserved-instances,route-table,security-group,snapshot,spot-instances-request,subnet,volume,vpc,vpn-connection,vpn-gateway";
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Mock
     private AmazonSignatureService amazonSignatureServiceMock;
 
     @Mock
     private AuthorizationHeader authorizationHeaderMock;
 
-    @Mock
-    private InputsUtil inputsUtilMock;
-
     private QueryApiExecutor toTest;
+    private MockedConstruction<AmazonSignatureService> signatureServiceConstruction;
+    private MockedStatic<HttpClientService> httpClientServiceMock;
 
-    @Before
+    @BeforeEach
     public void init() throws Exception {
         toTest = new QueryApiExecutor();
+        signatureServiceConstruction = mockConstruction(AmazonSignatureService.class, (mock, context) -> {
+            amazonSignatureServiceMock = mock;
+            when(mock.signRequestHeaders(any(InputsWrapper.class), anyMap(), anyMap()))
+                    .thenReturn(authorizationHeaderMock);
+        });
+        httpClientServiceMock = mockStatic(HttpClientService.class);
         addCommonMocksForQueryApi();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
+        httpClientServiceMock.close();
+        signatureServiceConstruction.close();
         toTest = null;
     }
 
@@ -334,24 +337,25 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeInstanceWithFailureAffinity() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.");
         InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withFilterNamesString("affinity")
                 .withFilterValuesString("WRONG_VALUE")
                 .build();
-        toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.",
+                () -> toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs));
     }
 
     @Test
     public void testDescribeInstanceWithFailureArchitecture() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.");
-
         InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withFilterNamesString("architecture")
                 .withFilterValuesString("i386|WRONG_VALUE|x86_64")
                 .build();
 
-        toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.",
+                () -> toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs));
     }
 
     @Test
@@ -385,8 +389,6 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeNetworkInterfacesWithWrongStatus() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized networkInterfaceAttachmentStatus value: [WRONG]. Valid values are: attaching, attached, detaching, detached.");
-
         NetworkInputs networkInputs = new NetworkInputs.Builder()
                 .build();
 
@@ -395,7 +397,9 @@ public class QueryApiExecutorTest {
                 .withNewFilter("attachment.status", "WRONG")
                 .build();
 
-        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), networkInputs, filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Unrecognized networkInterfaceAttachmentStatus value: [WRONG]. Valid values are: attaching, attached, detaching, detached.",
+                () -> toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), networkInputs, filterInputs));
     }
 
     @Test
@@ -428,69 +432,67 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testDescribeTagsWithWrongResourceType() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized resource type value: [WRONG]. Valid values are: customer-gateway, dhcp-options, image, instance, internet-gateway, network-acl, network-interface, reserved-instances, route-table, security-group, snapshot, spot-instances-request, subnet, volume, vpc, vpn-connection, vpn-gateway");
-
         final FilterInputs filterInputs = new FilterInputs.Builder()
                 .withDelimiter(",")
                 .withNewFilter("resource-type", "WRONG")
                 .build();
 
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Unrecognized resource type value: [WRONG]. Valid values are: customer-gateway, dhcp-options, image, instance, internet-gateway, network-acl, network-interface, reserved-instances, route-table, security-group, snapshot, spot-instances-request, subnet, volume, vpc, vpn-connection, vpn-gateway",
+                () -> toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs));
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsLessThanAccepted() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 4 input. The value doesn't meet conditions for general purpose usage.");
-
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("4")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Incorrect provided value: 4 input. The value doesn't meet conditions for general purpose usage.", () -> {
+                    final FilterInputs filterInputs = new FilterInputs.Builder()
+                            .withMaxResults("4")
+                            .build();
+                    toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+                });
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsGreaterThanAccepted() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 1001 input. The value doesn't meet conditions for general purpose usage.");
-
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("1001")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Incorrect provided value: 1001 input. The value doesn't meet conditions for general purpose usage.", () -> {
+                    final FilterInputs filterInputs = new FilterInputs.Builder()
+                            .withMaxResults("1001")
+                            .build();
+                    toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+                });
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsNegative() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 0 input. The value doesn't meet conditions for general purpose usage.");
-
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("0")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Incorrect provided value: 0 input. The value doesn't meet conditions for general purpose usage.", () -> {
+                    final FilterInputs filterInputs = new FilterInputs.Builder()
+                            .withMaxResults("0")
+                            .build();
+                    toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+                });
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsDouble() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: 6.7 input must be integer.");
-
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("6.7")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, "The provided value: 6.7 input must be integer.", () -> {
+            final FilterInputs filterInputs = new FilterInputs.Builder()
+                    .withMaxResults("6.7")
+                    .build();
+            toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        });
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsString() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: WRONG input must be integer.");
-
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("WRONG")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, "The provided value: WRONG input must be integer.", () -> {
+            final FilterInputs filterInputs = new FilterInputs.Builder()
+                    .withMaxResults("WRONG")
+                    .build();
+            toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        });
     }
 
     @Test
@@ -677,14 +679,11 @@ public class QueryApiExecutorTest {
 
     @Test
     public void testExecuteWithException() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unsupported Query API.");
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, "Unsupported Query API.",
+                () -> toTest.execute(getCommonInputs("", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(false)));
 
-        toTest.execute(getCommonInputs("", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(false));
-
-        verify(amazonSignatureServiceMock, never()).signRequestHeaders(any(InputsWrapper.class),
-                anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
-        PowerMockito.verifyStatic(never());
-        HttpClientService.execute(any(HttpClientInputs.class));
+        assertEquals(0, signatureServiceConstruction.constructed().size());
+        httpClientServiceMock.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), never());
     }
 
     @Test
@@ -697,20 +696,14 @@ public class QueryApiExecutorTest {
     }
 
     private void addCommonMocksForQueryApi() throws Exception {
-        whenNew(AmazonSignatureService.class).withNoArguments().thenReturn(amazonSignatureServiceMock);
-        when(amazonSignatureServiceMock
-                .signRequestHeaders(any(InputsWrapper.class), anyMapOf(String.class, String.class), anyMapOf(String.class, String.class)))
-                .thenReturn(authorizationHeaderMock);
         when(authorizationHeaderMock.getAuthorizationHeader()).thenReturn("");
         when(authorizationHeaderMock.getSignature()).thenReturn("");
-        PowerMockito.mockStatic(HttpClientService.class);
-        PowerMockito.when(HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(null);
+        httpClientServiceMock.when(() -> HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(null);
     }
 
-    private void runCommonVerifiersForQueryApi() throws Exception {
-        verifyNew(AmazonSignatureService.class).withNoArguments();
-        PowerMockito.verifyStatic(times(1));
-        HttpClientService.execute(any(HttpClientInputs.class));
+    private void runCommonVerifiersForQueryApi() {
+        assertEquals(1, signatureServiceConstruction.constructed().size());
+        httpClientServiceMock.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), times(1));
         verifyNoMoreInteractions(amazonSignatureServiceMock);
     }
 

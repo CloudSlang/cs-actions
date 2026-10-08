@@ -18,8 +18,8 @@
 package io.cloudslang.content.xml.actions;
 
 import io.cloudslang.content.constants.ReturnCodes;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -31,7 +31,7 @@ import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.NAMESPACES_PREFIXES;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.NAMESPACES_URIS;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by ursan on 8/4/2016.
@@ -143,7 +143,7 @@ public class ConvertXmlToJsonTest {
             "}";
     private ConvertXmlToJson convertXmlToJson;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         convertXmlToJson = new ConvertXmlToJson();
     }

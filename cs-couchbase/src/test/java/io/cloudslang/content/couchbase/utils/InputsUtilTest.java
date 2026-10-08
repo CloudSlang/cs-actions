@@ -22,9 +22,7 @@ import io.cloudslang.content.couchbase.entities.couchbase.AuthType;
 import io.cloudslang.content.couchbase.entities.couchbase.BucketType;
 import io.cloudslang.content.couchbase.entities.couchbase.ConflictResolutionType;
 import io.cloudslang.content.couchbase.entities.couchbase.EvictionPolicy;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
@@ -32,18 +30,15 @@ import static io.cloudslang.content.couchbase.utils.InputsUtil.getEnumValidValue
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getPayloadString;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getValidIntValue;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getValidPort;
-import static io.cloudslang.content.couchbase.utils.TestUtils.setExpectedExceptions;
+import static io.cloudslang.content.couchbase.utils.TestUtils.assertThrowsWithMessage;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by TusaM
  * 4/24/2017.
  */
 public class InputsUtilTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test
     public void testGetEnumValidAuthTypeValuesString() {
         String toTest = getEnumValidValuesString(AuthType.class);
@@ -74,18 +69,14 @@ public class InputsUtilTest {
 
     @Test
     public void testGetValidIntValueExceedMaxValue() {
-        setExpectedExceptions(RuntimeException.class, exception, "The provided value: 65536 is not within valid range. " +
-                "See operation inputs description section for details.");
-
-        getValidIntValue("65536", 0, 65535, 80);
+        assertThrowsWithMessage(RuntimeException.class, () -> getValidIntValue("65536", 0, 65535, 80),
+                "The provided value: 65536 is not within valid range. See operation inputs description section for details.");
     }
 
     @Test
     public void testGetValidIntValueBellowMinValue() {
-        setExpectedExceptions(RuntimeException.class, exception, "The provided value: -1 is not within valid range. " +
-                "See operation inputs description section for details.");
-
-        getValidIntValue("-1", 0, 65535, 80);
+        assertThrowsWithMessage(RuntimeException.class, () -> getValidIntValue("-1", 0, 65535, 80),
+                "The provided value: -1 is not within valid range. See operation inputs description section for details.");
     }
 
     @Test
@@ -114,10 +105,8 @@ public class InputsUtilTest {
 
     @Test
     public void testGetValidPortWrongValue() {
-        setExpectedExceptions(IllegalArgumentException.class, exception, "Incorrect provided value: not integer input. " +
-                "The value doesn't meet conditions for general purpose usage. See operation inputs description section for details.");
-
-        getValidPort("not integer");
+        assertThrowsWithMessage(IllegalArgumentException.class, () -> getValidPort("not integer"),
+                "Incorrect provided value: not integer input. The value doesn't meet conditions for general purpose usage. See operation inputs description section for details.");
     }
 
     @Test
@@ -127,17 +116,14 @@ public class InputsUtilTest {
 
     @Test
     public void testGetIntegerWrongInputValue() {
-        setExpectedExceptions(RuntimeException.class, exception, "The provided input value: blah blah is not integer.");
-
-        getValidIntValue("blah blah", 0, null, 3);
+        assertThrowsWithMessage(RuntimeException.class, () -> getValidIntValue("blah blah", 0, null, 3),
+                "The provided input value: blah blah is not integer.");
     }
 
     @Test
     public void testGetIntegerBellowAllowedMinimum() {
-        setExpectedExceptions(RuntimeException.class, exception, "The provided value: -10 is bellow minimum allowed. " +
-                "See operation inputs description section for details.");
-
-        getValidIntValue("-10", 0, null, 3);
+        assertThrowsWithMessage(RuntimeException.class, () -> getValidIntValue("-10", 0, null, 3),
+                "The provided value: -10 is bellow minimum allowed. See operation inputs description section for details.");
     }
 
     @Test

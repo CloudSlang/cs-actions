@@ -21,9 +21,9 @@ package io.cloudslang.content.datetime.actions;
 import io.cloudslang.content.datetime.utils.DateTimeUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,9 +32,9 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by stcu on 29.04.2016.
@@ -43,13 +43,13 @@ public class ParseDateTest {
     private ParseDate parseDate;
     private Map<String, String> result;
 
-    @Before
+    @BeforeEach
     public void init() {
         parseDate = new ParseDate();
         result = new HashMap<>();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         parseDate = null;
         result = null;

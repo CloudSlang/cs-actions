@@ -24,22 +24,20 @@ import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
 import io.cloudslang.content.couchbase.entities.inputs.NodeInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
 
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
-import static io.cloudslang.content.couchbase.utils.TestUtils.setExpectedExceptions;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static io.cloudslang.content.couchbase.utils.TestUtils.assertThrowsWithMessage;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
@@ -48,21 +46,22 @@ import static org.mockito.Mockito.times;
  * 4/11/2017.
  */
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClientService.class, CouchbaseService.class})
 public class CouchbaseServiceTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     private CouchbaseService toTest;
     private HttpClientInputs.HttpClientInputsBuilder httpClientInputs;
+    private MockedStatic<HttpClientService> httpClientService;
 
-    @Before
+    @BeforeEach
     public void init() throws Exception {
-        org.powermock.api.mockito.PowerMockito.mockStatic(HttpClientService.class);
-        org.powermock.api.mockito.PowerMockito.when(HttpClientService.execute(any(HttpClientInputs.class)))
-                .thenReturn(new HashMap<String, String>());
+        httpClientService = mockStatic(HttpClientService.class);
+        httpClientService.when(() -> HttpClientService.execute(any(HttpClientInputs.class)))
+                .thenReturn(new HashMap<>());
         toTest = new CouchbaseService();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        httpClientService.close();
     }
 
     @Test
@@ -109,9 +108,6 @@ public class CouchbaseServiceTest {
 
     @Test
     public void testCreateOrEditBucketWithoutSaslPassword() throws Exception {
-        setExpectedExceptions(RuntimeException.class, exception, "The combination of values supplied for inputs: " +
-                "authType, proxyPort and/or saslPassword doesn't meet conditions for general purpose usage.");
-
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
                 "", "", "", "", "", "", "POST");
@@ -131,7 +127,9 @@ public class CouchbaseServiceTest {
                 .withThreadsNumber("")
                 .build();
         CommonInputs commonInputs = getCommonInputs("CreateOrEditBucket", "buckets", "http://subdomain.couchbase.com:8091");
-        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
+        assertThrowsWithMessage(RuntimeException.class,
+                () -> toTest.execute(httpClientInputs, commonInputs, bucketInputs),
+                "The combination of values supplied for inputs: authType, proxyPort and/or saslPassword doesn't meet conditions for general purpose usage.");
 
         verifyHttpClientExecute(never());
     }
@@ -364,54 +362,54 @@ public class CouchbaseServiceTest {
 
     @Test
     public void testFailOverNodeNoIPv4Address() throws Exception {
-        setExpectedExceptions(RuntimeException.class, exception, "The value of: [ blah blah blah ] input as part " +
-                "of: [ns_2@ blah blah blah ] input must be a valid IPv4 address.");
-
         CommonInputs commonInputs = getCommonInputs("FailOverNode", "nodes", "http://whatever.couchbase.com:8091");
-        NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress("ns_2@ blah blah blah ").build();
-        toTest.execute(httpClientInputs, commonInputs, nodeInputs);
+        assertThrowsWithMessage(RuntimeException.class, () -> {
+                    NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress("ns_2@ blah blah blah ").build();
+                    toTest.execute(httpClientInputs, commonInputs, nodeInputs);
+                },
+                "The value of: [ blah blah blah ] input as part of: [ns_2@ blah blah blah ] input must be a valid IPv4 address.");
 
         verifyHttpClientExecute(never());
     }
 
     @Test
     public void testFailOverNodeInvalidInternalNodeIpAddress() throws Exception {
-        setExpectedExceptions(RuntimeException.class, exception, "The provided value for: " +
-                "\" anything here but not [at] symbol \" input must be a valid Couchbase internal node format.");
-
         CommonInputs commonInputs = getCommonInputs("FailOverNode", "nodes", "http://whatever.couchbase.com:8091");
-        NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress(" anything here but not [at] symbol ").build();
-        toTest.execute(httpClientInputs, commonInputs, nodeInputs);
+        assertThrowsWithMessage(RuntimeException.class, () -> {
+                    NodeInputs nodeInputs = new NodeInputs.Builder()
+                            .withInternalNodeIpAddress(" anything here but not [at] symbol ")
+                            .build();
+                    toTest.execute(httpClientInputs, commonInputs, nodeInputs);
+                },
+                "The provided value for: \" anything here but not [at] symbol \" input must be a valid Couchbase internal node format.");
 
         verifyHttpClientExecute(never());
     }
 
     @Test
     public void testUnknownApi() throws Exception {
-        setExpectedExceptions(RuntimeException.class, exception, "Unsupported Couchbase API.");
-
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "", "",
                 "", "", "", "", "", "",
                 "", "", "", "", "", "", "GET");
         CommonInputs commonInputs = getCommonInputs("GetDesignDocsInfo", "The Wizard of Oz", "http://whatever.couchbase.com:8091");
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("anyBucket").build();
 
-        toTest.execute(httpClientInputs, commonInputs, bucketInputs);
+        assertThrowsWithMessage(RuntimeException.class, () -> toTest.execute(httpClientInputs, commonInputs, bucketInputs),
+                "Unsupported Couchbase API.");
 
         verifyHttpClientExecute(never());
     }
 
     @Test
     public void testUnknownBuilderType() throws Exception {
-        setExpectedExceptions(RuntimeException.class, exception, "Unknown builder type.");
-
         httpClientInputs = getHttpClientInputs("someUser", "credentials", "proxy.example.com", "8080",
                 "some", "any", "", "strict", "C:\\temp\\keystore.jks", "changeit",
                 "C:\\temp\\keystore.jks", "changeit", "15", "10", "", "", "GET");
         CommonInputs commonInputs = getCommonInputs("GetDesignDocsInfo", "views", "http://whatever.couchbase.com:8091");
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("anyBucket").build();
 
-        toTest.execute(httpClientInputs, commonInputs, bucketInputs, null);
+        assertThrowsWithMessage(RuntimeException.class, () -> toTest.execute(httpClientInputs, commonInputs, bucketInputs, null),
+                "Unknown builder type.");
 
         verifyHttpClientExecute(never());
     }
@@ -440,8 +438,7 @@ public class CouchbaseServiceTest {
     }
 
     private void verifyHttpClientExecute(org.mockito.verification.VerificationMode mode) throws Exception {
-        org.powermock.api.mockito.PowerMockito.verifyStatic(mode);
-        HttpClientService.execute(any(HttpClientInputs.class));
+        httpClientService.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), mode);
     }
 
     private CommonInputs getCommonInputsWithDelimiter(String action, String api, String endpoint, String delimiter) {

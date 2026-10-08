@@ -31,8 +31,8 @@
 
 package io.cloudslang.content.amazon.services.helpers;
 
-import org.junit.Test;
-import static junit.framework.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AwsSignatureHelperTest {
 

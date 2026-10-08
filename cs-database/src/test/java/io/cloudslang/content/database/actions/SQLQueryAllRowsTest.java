@@ -18,15 +18,20 @@
 
 package io.cloudslang.content.database.actions;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import io.cloudslang.content.database.services.SQLQueryAllRowsService;
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+
+
 
 import java.util.Map;
 
@@ -38,16 +43,15 @@ import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by victor on 13.02.2017.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SQLQueryAllRows.class, SQLQueryAllRowsService.class})
+@ExtendWith(MockitoExtension.class)
 public class SQLQueryAllRowsTest {
 
     @Spy
@@ -70,16 +74,14 @@ public class SQLQueryAllRowsTest {
     public void executeSuccess() throws Exception {
         final String res = "result";
 
-        PowerMockito.mockStatic(SQLQueryAllRowsService.class);
-
-        when(SQLQueryAllRowsService.execQueryAllRows(any(SQLInputs.class))).thenReturn(res);
-
-        final Map<String, String> resultMap = sqlQueryAllRows.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
-
-        verifyStatic();
-        assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));
-        assertThat(resultMap.get(RETURN_RESULT), is(res));
+        try (MockedStatic<SQLQueryAllRowsService> service = mockStatic(SQLQueryAllRowsService.class)) {
+            service.when(() -> SQLQueryAllRowsService.execQueryAllRows(any(SQLInputs.class))).thenReturn(res);
+            final Map<String, String> resultMap = sqlQueryAllRows.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
+                    AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY,
+                    CONCUR_READ_ONLY);
+            assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));
+            assertThat(resultMap.get(RETURN_RESULT), is(res));
+        }
     }
 
 }

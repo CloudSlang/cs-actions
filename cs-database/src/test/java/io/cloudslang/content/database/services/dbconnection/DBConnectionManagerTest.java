@@ -21,17 +21,17 @@ package io.cloudslang.content.database.services.dbconnection;
 import com.mchange.v2.c3p0.PooledDataSource;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 import io.cloudslang.content.database.utils.TripleDES;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.Test;
+
+
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+
+
+
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -39,17 +39,14 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
  * Created by victor on 10.01.2017.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(TripleDES.class)
-@PowerMockIgnore({"javax.management.*", "org.apache.commons.logging.*"})
 public class DBConnectionManagerTest {
 
     private static final String DHARMA_PASSWORD = "dharma_password";
@@ -59,15 +56,13 @@ public class DBConnectionManagerTest {
     private static final String FALSE = "false";
     private static final String TRUE = "true";
     private static final String ENCRYPTED_PASS = "encryptedPass";
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     private DBConnectionManager dbcManager;
     private DBType aDbType;
 
     /**
      * Will execute before each test.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         aDbType = null;
     }
@@ -75,7 +70,7 @@ public class DBConnectionManagerTest {
     /**
      * Will execute after each test.
      */
-    @After
+    @AfterEach
     public void tearDown() {
         aDbType = null;
         dbcManager = null;
@@ -145,9 +140,9 @@ public class DBConnectionManagerTest {
     public void testGetConnectionWithNullDbUrl() throws SQLException {
         DBConnectionManager dbcManagerSpy = getDBConnectionManagerSpyWithPooling();
 
-        exception.expect(SQLException.class);
-        exception.expectMessage("Failed to check out connection dbUrl is empty");
-        dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, EMPTY_STRING, DHARMA_USER, DHARMA_PASSWORD, null);
+        SQLException exception = org.junit.jupiter.api.Assertions.assertThrows(SQLException.class,
+                () -> dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, EMPTY_STRING, DHARMA_USER, DHARMA_PASSWORD, null));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("Failed to check out connection dbUrl is empty"));
     }
 
     /**
@@ -159,9 +154,9 @@ public class DBConnectionManagerTest {
     public void testGetConnectionWithNullUsername() throws SQLException {
         DBConnectionManager dbcManagerSpy = getDBConnectionManagerSpyWithPooling();
 
-        exception.expect(SQLException.class);
-        exception.expectMessage("Failed to check out connection,username is empty. dburl = " + DB_URL);
-        dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, DB_URL, EMPTY_STRING, DHARMA_PASSWORD, null);
+        SQLException exception = org.junit.jupiter.api.Assertions.assertThrows(SQLException.class,
+                () -> dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, DB_URL, EMPTY_STRING, DHARMA_PASSWORD, null));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("Failed to check out connection,username is empty. dburl = " + DB_URL));
     }
 
     /**
@@ -173,10 +168,10 @@ public class DBConnectionManagerTest {
     public void testGetConnectionWithNullPassword() throws SQLException {
         DBConnectionManager dbcManagerSpy = getDBConnectionManagerSpyWithPooling();
 
-        exception.expect(SQLException.class);
-        exception.expectMessage("Failed to check out connection, password is empty. username = "
-                + DHARMA_USER + " dbUrl = " + DB_URL);
-        dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, DB_URL, DHARMA_USER, EMPTY_STRING, null);
+        SQLException exception = org.junit.jupiter.api.Assertions.assertThrows(SQLException.class,
+                () -> dbcManagerSpy.getConnection(aDbType, EMPTY_STRING, DB_URL, DHARMA_USER, EMPTY_STRING, null));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("Failed to check out connection, password is empty. username = "
+                + DHARMA_USER + " dbUrl = " + DB_URL));
     }
 
     /**
@@ -188,9 +183,9 @@ public class DBConnectionManagerTest {
     public void testGetConnectionWithNullDbType() throws SQLException {
         DBConnectionManager dbcManagerSpy = getDBConnectionManagerSpyWithPooling();
 
-        exception.expect(SQLException.class);
-        exception.expectMessage("Failed to check out connection db type is null");
-        dbcManagerSpy.getConnection(null, EMPTY_STRING, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties());
+        SQLException exception = org.junit.jupiter.api.Assertions.assertThrows(SQLException.class,
+                () -> dbcManagerSpy.getConnection(null, EMPTY_STRING, DB_URL, DHARMA_USER, DHARMA_PASSWORD, getPoolingProperties()));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("Failed to check out connection db type is null"));
     }
 
     /**
@@ -334,11 +329,11 @@ public class DBConnectionManagerTest {
         doReturn(connMock).when(dataSourceMock).getConnection();
         dbcManagerSpy.dbmsPoolTable = getHashTableObject2(dataSourceMock, connMock);
 
-        PowerMockito.mockStatic(TripleDES.class);
-        Mockito.when(TripleDES.encryptPassword(any(String.class))).thenReturn(ENCRYPTED_PASS);
-
-        assertEquals(connMock, dbcManagerSpy.getPooledConnection(DBType.MYSQL, DB_URL, DHARMA_USER, DHARMA_PASSWORD));
-        verify(dataSourceMock, times(1)).getConnection();
+        try (MockedStatic<TripleDES> tripleDES = Mockito.mockStatic(TripleDES.class)) {
+            tripleDES.when(() -> TripleDES.encryptPassword(any(String.class))).thenReturn(ENCRYPTED_PASS);
+            assertEquals(connMock, dbcManagerSpy.getPooledConnection(DBType.MYSQL, DB_URL, DHARMA_USER, DHARMA_PASSWORD));
+            verify(dataSourceMock, times(1)).getConnection();
+        }
     }
 
     /**
@@ -353,12 +348,12 @@ public class DBConnectionManagerTest {
         Connection connMock = mock(Connection.class);
         Hashtable<String, Hashtable<String, DataSource>> dbmsPoolTable = getHashTableObject2(dataSourceMock, connMock);
         dbcManagerSpy.dbmsPoolTable = dbmsPoolTable;
-        PowerMockito.mockStatic(TripleDES.class);
-        Mockito.when(TripleDES.encryptPassword(any(String.class))).thenThrow(new Exception("encryption failed"));
-
-        exception.expect(Exception.class);
-        exception.expectMessage("Failed to encrypt password for key = ");
-        dbcManagerSpy.getPooledConnection(DBType.MYSQL, DB_URL, DHARMA_USER, DHARMA_PASSWORD);
+        try (MockedStatic<TripleDES> tripleDES = Mockito.mockStatic(TripleDES.class)) {
+            tripleDES.when(() -> TripleDES.encryptPassword(any(String.class))).thenThrow(new Exception("encryption failed"));
+            Exception exception = org.junit.jupiter.api.Assertions.assertThrows(Exception.class,
+                    () -> dbcManagerSpy.getPooledConnection(DBType.MYSQL, DB_URL, DHARMA_USER, DHARMA_PASSWORD));
+            org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("Failed to encrypt password for key = "));
+        }
     }
 
     /**
@@ -373,16 +368,13 @@ public class DBConnectionManagerTest {
         Connection connMock = mock(Connection.class);
         doReturn(connMock).when(dataSourceMock).getConnection();
         dbcManagerSpy.dbmsPoolTable = getHashTableObject2(dataSourceMock, connMock);
-        doReturn(dataSourceMock).when(dbcManagerSpy).createDataSource(any(DBType.class)
-                , anyString(), anyString(), anyString(), any(Hashtable.class));
 
-        PowerMockito.mockStatic(TripleDES.class);
-        Mockito.when(TripleDES.encryptPassword(any(String.class))).thenReturn(ENCRYPTED_PASS);
-
-        assertEquals(connMock, dbcManagerSpy.getPooledConnection(DBType.MYSQL, DB_URL, DHARMA_USER, DHARMA_PASSWORD));
-        verify(dataSourceMock, times(1)).getConnection();
-        verify(dbcManagerSpy.createDataSource(any(DBType.class)
-                , anyString(), anyString(), anyString(), any(Hashtable.class)), times(1));
+        try (MockedStatic<TripleDES> tripleDES = Mockito.mockStatic(TripleDES.class)) {
+            tripleDES.when(() -> TripleDES.encryptPassword(any(String.class))).thenReturn(ENCRYPTED_PASS);
+            assertEquals(connMock, dbcManagerSpy.getPooledConnection(DBType.MYSQL, DB_URL, DHARMA_USER, DHARMA_PASSWORD));
+            verify(dataSourceMock, times(1)).getConnection();
+            verify(dbcManagerSpy, never()).createDataSource(any(DBType.class), anyString(), anyString(), anyString(), any(Hashtable.class));
+        }
     }
 
     /**

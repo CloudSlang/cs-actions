@@ -19,15 +19,14 @@
 
 package io.cloudslang.content.google.utils.service
 
-import org.junit.Test
-import org.specs2.matcher.JUnitShouldMatchers
-import org.specs2.mock.Mockito
+import org.junit.jupiter.api.Test
+import org.specs2.matcher.ShouldMatchers
 
 /**
   * Created by victor on 2/26/17.
   */
 
-class GoogleAuthTest extends JUnitShouldMatchers with Mockito {
+class GoogleAuthTest extends ShouldMatchers {
   @Test
   def fromJsonWithScopesDefault(): Unit = {
 //    val httpTransportMock = mock[HttpTransport]

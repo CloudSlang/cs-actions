@@ -71,7 +71,7 @@ public class MSSqlDatabase implements SqlDatabase {
         return dbUrlBuilder.toString();
     }
 
-    private static void loadWindowsAuthentication(String sqlJdbcAuthFilePath) {
+    void loadWindowsAuthentication(String sqlJdbcAuthFilePath) {
         validateLibraryPath(sqlJdbcAuthFilePath);
         setJavaLibraryPath(sqlJdbcAuthFilePath);
     }

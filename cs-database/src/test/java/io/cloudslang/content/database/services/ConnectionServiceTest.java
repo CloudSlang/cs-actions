@@ -18,23 +18,27 @@
 
 package io.cloudslang.content.database.services;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import io.cloudslang.content.database.services.databases.CustomDatabase;
 import io.cloudslang.content.database.services.databases.MSSqlDatabase;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+
+import org.junit.jupiter.api.Test;
+
+
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+
+
+
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,18 +46,16 @@ import java.util.List;
 import java.util.Properties;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.*;
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by vranau on 12/10/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({DBConnectionManager.class, Properties.class, ConnectionService.class, CustomDatabase.class, MSSqlDatabase.class})
-@PowerMockIgnore({"javax.management.*", "org.apache.commons.logging.*"})
+@ExtendWith(MockitoExtension.class)
 public class ConnectionServiceTest {
 
     public static final String CUSTOM_CLASS_DRIVER = "org.h2.Driver";
@@ -68,9 +70,7 @@ public class ConnectionServiceTest {
 
     @Mock
     private Connection connectionMock;
-
-    @Rule
-    private ExpectedException expectedEx = ExpectedException.none();
+    private MockedStatic<DBConnectionManager> dbConnectionManager;
 
     private void assertConnection(SQLInputs sqlInputs, int noUrls, String resultedUrl, String url) throws SQLException, ClassNotFoundException {
         final List<String> sqlConnections = connectionServiceSpy.getConnectionUrls(sqlInputs);
@@ -83,20 +83,19 @@ public class ConnectionServiceTest {
         assertEquals(connectionMock, connection);
     }
 
-    @Before
+    @BeforeEach
     public void beforeTest() throws Exception {
         sqlInputs = SQLInputs.builder().build();
         InputsProcessor.init(sqlInputs);
-        mockStatic(DBConnectionManager.class);
+        dbConnectionManager = mockStatic(DBConnectionManager.class);
+        dbConnectionManager.when(DBConnectionManager::getInstance).thenReturn(dbConnectionManagerMock);
+        lenient().when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(), any(), any(), any(), any()))
+                .thenReturn(connectionMock);
+    }
 
-        PowerMockito.mockStatic(MSSqlDatabase.class);
-
-        doCallRealMethod().when(MSSqlDatabase.class, "addSslEncryptionToConnection", anyBoolean(), anyString(), anyString(), anyString());
-
-        doNothing().when(MSSqlDatabase.class, "loadWindowsAuthentication", anyString());
-
-        when(DBConnectionManager.getInstance()).thenReturn(dbConnectionManagerMock);
-        when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
+    @AfterEach
+    public void tearDown() {
+        dbConnectionManager.close();
     }
 
     @Test
@@ -114,11 +113,11 @@ public class ConnectionServiceTest {
         sqlInputs.setDbType(MSSQL_DB_TYPE);
         sqlInputs.setDbPort(1433);
         sqlInputs.setDbServer("dbServer");
-        sqlInputs.setAuthenticationType(Constants.AUTH_WINDOWS);
+        sqlInputs.setAuthenticationType(Constants.AUTH_SQL);
         sqlInputs.setDbName("dbName");
         sqlInputs.setInstance("instance");
         sqlInputs.setTrustAllRoots(true);
-        assertConnection(sqlInputs, 1, "jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;integratedSecurity=true;encrypt=true;trustServerCertificate=true", null);
+        assertConnection(sqlInputs, 1, "jdbc:sqlserver://dbServer:1433;DatabaseName=dbName;instance=instance;encrypt=true;trustServerCertificate=true", null);
     }
 
     @Test
@@ -150,12 +149,12 @@ public class ConnectionServiceTest {
 
     @Test
     public void testSetUpConnectionNetcool() throws Exception {
-        expectedEx.expect(RuntimeException.class);
         sqlInputs.setDbPort(30);
-        expectedEx.expectMessage("Could not locate either jconn2.jar or jconn3.jar file in the classpath!");
         sqlInputs.setDbType(NETCOOL_DB_TYPE);
         sqlInputs.setDbName("");
-        connectionServiceSpy.setUpConnection(sqlInputs);
+        RuntimeException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                RuntimeException.class, () -> connectionServiceSpy.setUpConnection(sqlInputs));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("Could not locate either jconn2.jar or jconn3.jar file in the classpath!"));
     }
 
     @Test

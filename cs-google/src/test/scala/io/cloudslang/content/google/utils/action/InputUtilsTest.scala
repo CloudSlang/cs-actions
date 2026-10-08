@@ -21,13 +21,13 @@ package io.cloudslang.content.google.utils.action
 
 import io.cloudslang.content.google.utils.action.InputUtils.verifyEmpty
 import org.apache.commons.lang3.StringUtils.EMPTY
-import org.junit.Test
-import org.specs2.matcher.JUnitMustMatchers
+import org.junit.jupiter.api.Test
+import org.specs2.matcher.MustMatchers
 
 /**
   * Created by victor on 2/25/17.
   */
-class InputUtilsTest extends JUnitMustMatchers {
+class InputUtilsTest extends MustMatchers {
 
   val NON_EMPTY_STRING = "a"
 

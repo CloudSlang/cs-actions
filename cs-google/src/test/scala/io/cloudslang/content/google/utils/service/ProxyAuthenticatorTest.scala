@@ -20,13 +20,13 @@
 package io.cloudslang.content.google.utils.service
 
 import io.cloudslang.content.google.utils.service.HttpTransportUtils.ProxyAuthenticator
-import org.junit.Test
-import org.specs2.matcher.JUnitMustMatchers
+import org.junit.jupiter.api.Test
+import org.specs2.matcher.MustMatchers
 
 /**
   * Created by victor on 2/25/17.
   */
-class ProxyAuthenticatorTest extends JUnitMustMatchers {
+class ProxyAuthenticatorTest extends MustMatchers {
 
   @Test
   def proxyAuthenticatorNewInstance(): Unit = {
