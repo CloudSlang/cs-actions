@@ -4,20 +4,16 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.getWorkspaceVariablePath;
+import static io.cloudslang.content.hashicorp.terraform.services.HttpClientTestSupport.assertHttpClientException;
 
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(io.cloudslang.content.hashicorp.terraform.services.WorkspaceVariableImpl.class)
 public class WorkspaceVariableImplTest {
     private final String EXPECTED_CREATE_WORKSPACE_VARIABLE_BODY = "{\"data\":{\"attributes\":{\"key\":\"test\",\"value\":\"test-123\",\"category\":\"env\",\"hcl\":\"false\",\"sensitive\":\"false\"},\"type\":\"vars\"}}";
     private static final String EXPECTED_DELETE_WORKSPACE_VAR_PATH = "/api/v2/workspaces/test1/vars";
@@ -92,14 +88,16 @@ public class WorkspaceVariableImplTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void createWorkspaceVariable() throws Exception {
-        WorkspaceVariableImpl.createWorkspaceVariable(getTerraformWorkspaceVariableInputs);
+        assertHttpClientException(
+                () -> WorkspaceVariableImpl.createWorkspaceVariable(getTerraformWorkspaceVariableInputs));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void listWorkspaceVariables()throws Exception{
-        WorkspaceVariableImpl.listWorkspaceVariables(getTerraformWorkspaceVariableInputs);
+        assertHttpClientException(
+                () -> WorkspaceVariableImpl.listWorkspaceVariables(getTerraformWorkspaceVariableInputs));
     }
     @Test
     public void createWorkspaceVariables() throws  Exception{
@@ -107,10 +105,10 @@ public class WorkspaceVariableImplTest {
         assertEquals(0,createWorkspaceVariablesResult.size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void updateWorkspaceVariables() throws  Exception{
-        Map<String,Map<String,String>> updateWorkspaceVariablesResult= WorkspaceVariableImpl.updateWorkspaceVariables(getTerraformWorkspaceVariableInputs);
-        assertEquals(0,updateWorkspaceVariablesResult.size());
+        assertHttpClientException(
+                () -> WorkspaceVariableImpl.updateWorkspaceVariables(getTerraformWorkspaceVariableInputs));
     }
 
     @Test
@@ -121,4 +119,3 @@ public class WorkspaceVariableImplTest {
 
 
 }
-

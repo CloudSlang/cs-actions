@@ -17,26 +17,23 @@
 package io.cloudslang.content.mail.entities;
 
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SendMailInput.class, SendMailInput.Builder.class, System.class})
+@ExtendWith(MockitoExtension.class)
 public class SendMailInputTest {
 
     private static final String HEADERS_WITH_DIFFERENT_DELIMITERS = "Sensitivity;Company-Confidential|" +
@@ -66,18 +63,16 @@ public class SendMailInputTest {
     private static final String HEADERS_WITH_MISSING_VALUES = "'headers' input is missing one of the header values";
     private static final String HEADERS_INPUT_HAS_NO_DELIMITER = "'headers' input has no column delimiter";
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     private SendMailInput.Builder inputBuilder;
     @Spy
     private SendMailInput.Builder inputBuilderSpy = new SendMailInput.Builder();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         inputBuilder = new SendMailInput.Builder();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         inputBuilder = null;
     }
@@ -113,10 +108,9 @@ public class SendMailInputTest {
      */
     @Test
     public void testExtractHeaderNamesAndValueForInvalidValues() throws Exception {
-        exception.expect(Exception.class);
-        inputBuilder.extractHeaderNamesAndValues(HEADERS_WITH_MISSING_COLUMNDELIMITER,
-                DEFAULT_ROW_DELIMITER, DEFAULT_COLUMN_DELIMITER);
-        verify(inputBuilderSpy).validateRow(Matchers.<String>any(), Matchers.<String>any(), Matchers.anyInt());
+        assertThrows(Exception.class, () -> inputBuilderSpy.extractHeaderNamesAndValues(HEADERS_WITH_MISSING_COLUMNDELIMITER,
+                DEFAULT_ROW_DELIMITER, DEFAULT_COLUMN_DELIMITER));
+        verify(inputBuilderSpy).validateRow(any(), any(), anyInt());
     }
 
     @Test
@@ -126,16 +120,16 @@ public class SendMailInputTest {
 
     @Test
     public void testValidateDelimitersWhenRowDelimiterIsASubstringOfColumnDelimiter() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.INVALID_ROW_DELIMITER);
-        inputBuilder.validateDelimiters(COLUMN_DELIMITER.substring(0, COLUMN_DELIMITER.length() - 1), COLUMN_DELIMITER);
+        Exception exception = assertThrows(Exception.class, () ->
+                inputBuilder.validateDelimiters(COLUMN_DELIMITER.substring(0, COLUMN_DELIMITER.length() - 1), COLUMN_DELIMITER));
+        assertEquals(ExceptionMsgs.INVALID_ROW_DELIMITER, exception.getMessage());
     }
 
     @Test
     public void testValidateDelimitersWhenTheyAreEqual() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.INVALID_DELIMITERS);
-        inputBuilder.validateDelimiters(DEFAULT_ROW_DELIMITER, DEFAULT_ROW_DELIMITER);
+        Exception exception = assertThrows(Exception.class, () ->
+                inputBuilder.validateDelimiters(DEFAULT_ROW_DELIMITER, DEFAULT_ROW_DELIMITER));
+        assertEquals(ExceptionMsgs.INVALID_DELIMITERS, exception.getMessage());
     }
 
     /**
@@ -155,10 +149,9 @@ public class SendMailInputTest {
      */
     @Test
     public void testValidateRowWithEmptyValues() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(EMPTY_HEADERS);
-
-        inputBuilder.validateRow(EMPTY_ROW, DEFAULT_COLUMN_DELIMITER, 0);
+        Exception exception = assertThrows(Exception.class, () ->
+                inputBuilder.validateRow(EMPTY_ROW, DEFAULT_COLUMN_DELIMITER, 0));
+        assertTrue(exception.getMessage().contains(EMPTY_HEADERS));
     }
 
     /**
@@ -168,10 +161,9 @@ public class SendMailInputTest {
      */
     @Test
     public void testValidateRowWithMoreThanOneColumnDelimiter() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(HEADERS_WITH_MULTIPLE_DELIMITERS);
-
-        inputBuilder.validateRow(ROW_WITH_MORE_THAN_ONE_DELIMITER, DEFAULT_COLUMN_DELIMITER, 0);
+        Exception exception = assertThrows(Exception.class, () ->
+                inputBuilder.validateRow(ROW_WITH_MORE_THAN_ONE_DELIMITER, DEFAULT_COLUMN_DELIMITER, 0));
+        assertTrue(exception.getMessage().contains(HEADERS_WITH_MULTIPLE_DELIMITERS));
     }
 
     /**
@@ -181,10 +173,9 @@ public class SendMailInputTest {
      */
     @Test
     public void testValidateRowWithOneOfTheHeaderValuesMissing() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(HEADERS_WITH_MISSING_VALUES);
-
-        inputBuilder.validateRow(ROW_MISSING_HEADERNAME, DEFAULT_COLUMN_DELIMITER, 0);
+        Exception exception = assertThrows(Exception.class, () ->
+                inputBuilder.validateRow(ROW_MISSING_HEADERNAME, DEFAULT_COLUMN_DELIMITER, 0));
+        assertTrue(exception.getMessage().contains(HEADERS_WITH_MISSING_VALUES));
     }
 
     /**
@@ -194,10 +185,9 @@ public class SendMailInputTest {
      */
     @Test
     public void testValidateRowWithMissingDelimiter() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(HEADERS_INPUT_HAS_NO_DELIMITER);
-
-        inputBuilder.validateRow(ROW_WITH_NO_DELIMITER, DEFAULT_COLUMN_DELIMITER, 0);
+        Exception exception = assertThrows(Exception.class, () ->
+                inputBuilder.validateRow(ROW_WITH_NO_DELIMITER, DEFAULT_COLUMN_DELIMITER, 0));
+        assertTrue(exception.getMessage().contains(HEADERS_INPUT_HAS_NO_DELIMITER));
     }
 
 }

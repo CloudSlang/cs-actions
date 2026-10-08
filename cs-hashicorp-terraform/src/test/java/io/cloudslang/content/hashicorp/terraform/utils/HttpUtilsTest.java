@@ -2,7 +2,7 @@
 
 package io.cloudslang.content.hashicorp.terraform.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +15,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.CounterC
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getAuthHeaders;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.getQueryParams;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CommonOutputs.DOCUMENT;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpUtilsTest {
 
@@ -59,8 +58,7 @@ public class HttpUtilsTest {
         Map<String, String> results = HttpUtils.getOperationResults(initializeSuccessResult(), returnedResult,
                 returnedResult, returnedResult);
 
-        assertThat(results, is(expectedResult));
-        assertThat(results.size(), is(4));
+        assertThat(results).isEqualTo(expectedResult).hasSize(4);
     }
 
     @Test
@@ -75,8 +73,7 @@ public class HttpUtilsTest {
         Map<String, String> results = HttpUtils.getOperationResults(initializeFailureResult(), returnedResult,
                 returnedResult, returnedResult);
 
-        assertThat(results, is(expectedResult));
-        assertThat(results.size(), is(4));
+        assertThat(results).isEqualTo(expectedResult).hasSize(4);
     }
 
     @Test

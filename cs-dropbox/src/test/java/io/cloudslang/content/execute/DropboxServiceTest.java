@@ -23,40 +23,47 @@ import io.cloudslang.content.dropbox.entities.inputs.FolderInputs;
 import io.cloudslang.content.dropbox.execute.DropboxService;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.verification.VerificationMode;
 
 import java.util.HashMap;
 
 import static io.cloudslang.content.dropbox.utils.InputsUtil.getHttpClientInputs;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
 /**
  * Created by TusaM
  * 5/31/2017.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClientService.class, DropboxService.class})
+@ExtendWith(MockitoExtension.class)
 public class DropboxServiceTest {
     private DropboxService toTest;
+    private MockedStatic<HttpClientService> httpClientService;
 
-    private void verifyHttpClientExecute(org.mockito.verification.VerificationMode mode) throws Exception {
-        org.powermock.api.mockito.PowerMockito.verifyStatic(mode);
-        HttpClientService.execute(any(HttpClientInputs.class));
+    private void verifyHttpClientExecute(VerificationMode mode) {
+        httpClientService.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), mode);
     }
 
-    @Before
+    @BeforeEach
     public void init() throws Exception {
-        org.powermock.api.mockito.PowerMockito.mockStatic(HttpClientService.class);
-        org.powermock.api.mockito.PowerMockito.when(HttpClientService.execute(any(HttpClientInputs.class)))
+        httpClientService = Mockito.mockStatic(HttpClientService.class);
+        httpClientService.when(() -> HttpClientService.execute(any(HttpClientInputs.class)))
                 .thenReturn(new HashMap<String, String>());
         toTest = new DropboxService();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        httpClientService.close();
     }
 
     @Test

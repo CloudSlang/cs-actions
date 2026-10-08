@@ -5,16 +5,12 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformRunInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.hashicorp.terraform.services.RunImpl.*;
-import static org.junit.Assert.assertEquals;
+import static io.cloudslang.content.hashicorp.terraform.services.HttpClientTestSupport.assertHttpClientException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(RunImplTest.class)
 public class RunImplTest {
 
     private final String EXPECTED_APPLY_RUN_REQUEST_BODY = "{\"comment\":\"test apply run comment\"}";
@@ -126,15 +122,15 @@ public class RunImplTest {
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void applyRunInputThrows() throws Exception {
-        RunImpl.applyRunClient(getApplyRun);
+        assertHttpClientException(() -> RunImpl.applyRunClient(getApplyRun));
     }
 
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getRunInputsThrows() throws Exception {
-        RunImpl.createRunClient(invalidCreateRunInputs);
+        assertHttpClientException(() -> RunImpl.createRunClient(invalidCreateRunInputs));
     }
 
     @Test
@@ -161,9 +157,9 @@ public class RunImplTest {
         assertEquals(EXPECTED_GET_APPLY_DETAILS_PATH, path);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void listRunsInWorkspaceInputsThrows() throws Exception {
-        RunImpl.listRunsInWorkspaceClient(listRunsInWorkspaceInputs);
+        assertHttpClientException(() -> RunImpl.listRunsInWorkspaceClient(listRunsInWorkspaceInputs));
     }
 
     @Test

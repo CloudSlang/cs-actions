@@ -20,28 +20,21 @@ import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
 import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import jakarta.mail.*;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SSLUtils.class})
+@ExtendWith(MockitoExtension.class)
 public class GetMailAttachmentServiceTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     @Spy
     private GetMailAttachmentService serviceSpy = new GetMailAttachmentService();
     @Mock
@@ -50,7 +43,7 @@ public class GetMailAttachmentServiceTest {
     private Folder folderMock;
     private GetMailAttachmentInput.Builder inputBuilder;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         inputBuilder = new GetMailAttachmentInput.Builder();
         inputBuilder.hostname("host");
@@ -64,19 +57,14 @@ public class GetMailAttachmentServiceTest {
 
     @Test
     public void executeMessageNumberGreaterThanFolderMessageCountThrowsException() throws Exception {
-        PowerMockito.mockStatic(SSLUtils.class);
-        doReturn(folderMock).when(storeMock).getFolder(Matchers.anyString());
+        try (MockedStatic<SSLUtils> sslUtils = Mockito.mockStatic(SSLUtils.class)) {
+        doReturn(folderMock).when(storeMock).getFolder(anyString());
         doReturn(1).when(folderMock).getMessageCount();
         doReturn(true).when(folderMock).exists();
         when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
         inputBuilder.messageNumber("2");
 
-        try {
-            serviceSpy.execute(inputBuilder.build());
-        } catch (Exception ex) {
-            if (!(ex instanceof IndexOutOfBoundsException)) {
-                fail();
-            }
+            assertThrows(IndexOutOfBoundsException.class, () -> serviceSpy.execute(inputBuilder.build()));
         }
     }
 }
