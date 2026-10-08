@@ -19,26 +19,20 @@
 package io.cloudslang.content.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by giloan on 5/9/2016.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(XMLUtils.class)
 public class XMLUtilsTest {
 
     private static final String xml = "<s:Envelope xml:lang=\"en-US\"\n" +
@@ -79,9 +73,6 @@ public class XMLUtilsTest {
     private static final String RECEIVE_RESPONSE_ACTION = "http://schemas.microsoft.com/wbem/wsman/1/windows/shell/ReceiveResponse";
     private static final String RESPONSE_IS_NOT_WELL_FORMED = "The http response document is not a Well-formed XML: ";
 
-    @Rule
-    private ExpectedException thrownException = ExpectedException.none();
-
     @Test
     public void testParseXml() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
         assertTrue(StringUtils.contains(XMLUtils.parseXml(xml, HEADER_XPATH), RECEIVE_RESPONSE_ACTION));
@@ -92,9 +83,9 @@ public class XMLUtilsTest {
 
     @Test
     public void testParseXmlThrowsException() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
-        thrownException.expectMessage(RESPONSE_IS_NOT_WELL_FORMED);
-        XMLUtils.parseXml("<note>\n" +
+        Exception exception = assertThrows(Exception.class, () -> XMLUtils.parseXml("<note>\n" +
                 "<to>Tove</to>\n" +
-                "<from>Jani</from>", HEADER_XPATH);
+                "<from>Jani</from>", HEADER_XPATH));
+        assertTrue(exception.getMessage().contains(RESPONSE_IS_NOT_WELL_FORMED));
     }
 }
