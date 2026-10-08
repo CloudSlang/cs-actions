@@ -6,19 +6,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAddNicInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDeleteNICInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.nutanix.prism.services.NicImpl.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(NicImpl.class)
 public class NICImplTest {
 
-    private static final String EXPECTED_DELETE_NIC_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/myvm/nics/4e:5b:7f:aa:bb";
+    private static final String EXPECTED_DELETE_NIC_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/myvm/nics/4e%3A5b%3A7f%3Aaa%3Abb";
     private static final String EXPECTED_ADD_NIC_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/0b5d5c1c-40c8-4591-9f02-72e2ce/nics";
     private static final String EXPECTED_ADD_NIC_REQUEST_BODY = "{\"spec_list\":[{\"is_connected\":false,\"vlan_id\":\"\",\"network_uuid\":\"\"}]}";
 

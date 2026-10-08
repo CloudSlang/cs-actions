@@ -253,8 +253,9 @@ public class DeployOvfTemplateService {
                 }
             }
         } else if (isOvf(Paths.get(templatePath))) {
-            final InputStream inputStream = new FileInputStream(templatePath);
-            return IOUtils.toString(inputStream, UTF_8);
+            try (final InputStream inputStream = new FileInputStream(templatePath)) {
+                return IOUtils.toString(inputStream, UTF_8);
+            }
         }
         throw new RuntimeException(FILE_COULD_NOT_BE_READ);
     }

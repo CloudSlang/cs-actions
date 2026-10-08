@@ -20,15 +20,15 @@
 package io.cloudslang.content.httpclient.consume;
 
 import org.apache.http.Header;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * User: Adina Tusa
@@ -38,7 +38,7 @@ public class HeadersConsumerTest {
     private static final String RESPONSE_HEADERS = "responseHeaders";
     private HeadersConsumer headersConsumer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         headersConsumer = new HeadersConsumer();
     }

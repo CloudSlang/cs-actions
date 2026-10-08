@@ -30,28 +30,26 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 /**
  * User: bancl
  * Date: 10/16/2015
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClientService.class})
+@ExtendWith(MockitoExtension.class)
 public class HttpClientServiceTest {
 
     private HttpClientService httpClientService;
@@ -67,9 +65,7 @@ public class HttpClientServiceTest {
     private HttpClientContext httpClientContext;
     @Mock
     private CloseableHttpResponse httpResponse;
-    @Mock
     private String responseCharacterSet;
-    @Mock
     private String destinationFile;
     @Mock
     private URI uri;
@@ -82,32 +78,45 @@ public class HttpClientServiceTest {
     @Mock
     private PoolingHttpClientConnectionManager connManager;
 
-    @Before
-    public void setUp() throws Exception {
-        httpClientService = PowerMockito.spy(new HttpClientService());
+    @BeforeEach
+    public void setUp() {
+        httpClientService = new HttpClientService() {
+            @Override
+            public HttpComponents buildHttpComponents(HttpClientInputs inputs) {
+                return httpComponents;
+            }
 
-        PowerMockito.doNothing().when(httpClientService, "initSessionsObjects", httpClientInputs);
-        PowerMockito.doReturn(httpComponents).when(httpClientService, "buildHttpComponents", httpClientInputs);
-        PowerMockito.doReturn(httpResponse).when(httpClientService, "execute", closeableHttpClient, httpRequestBase, httpClientContext);
-        PowerMockito.doReturn(result).when(httpClientService, "parseResponse", httpResponse, responseCharacterSet, destinationFile,
-                uri, httpClientContext, cookieStore, serializableSessionObject);
+            @Override
+            public CloseableHttpResponse execute(CloseableHttpClient client, HttpRequestBase request,
+                                                HttpClientContext context) {
+                return httpResponse;
+            }
 
-        PowerMockito.when(httpComponents.getHttpRequestBase()).thenReturn(httpRequestBase);
-        PowerMockito.when(httpComponents.getCloseableHttpClient()).thenReturn(closeableHttpClient);
-        PowerMockito.when(httpComponents.getHttpClientContext()).thenReturn(httpClientContext);
-        PowerMockito.when(httpComponents.getUri()).thenReturn(uri);
-        PowerMockito.when(httpComponents.getCookieStore()).thenReturn(cookieStore);
-        PowerMockito.when(httpComponents.getConnManager()).thenReturn(connManager);
+            @Override
+            public Map<String, String> parseResponse(CloseableHttpResponse response, String characterSet,
+                                                    String file, URI responseUri, HttpClientContext context,
+                                                    CookieStore responseCookieStore,
+                                                    SerializableSessionObject sessionObject) {
+                return result;
+            }
+        };
 
-        PowerMockito.when(httpClientInputs.getExecutionTimeout()).thenReturn("0");
-        PowerMockito.when(httpClientInputs.getResponseCharacterSet()).thenReturn(responseCharacterSet);
-        PowerMockito.when(httpClientInputs.getDestinationFile()).thenReturn(destinationFile);
-        PowerMockito.when(httpClientInputs.getCookieStoreSessionObject()).thenReturn(serializableSessionObject);
+        when(httpComponents.getHttpRequestBase()).thenReturn(httpRequestBase);
+        when(httpComponents.getCloseableHttpClient()).thenReturn(closeableHttpClient);
+        when(httpComponents.getHttpClientContext()).thenReturn(httpClientContext);
+        when(httpComponents.getUri()).thenReturn(uri);
+        when(httpComponents.getCookieStore()).thenReturn(cookieStore);
+        when(httpComponents.getConnManager()).thenReturn(connManager);
+
+        when(httpClientInputs.getExecutionTimeout()).thenReturn("0");
+        when(httpClientInputs.getResponseCharacterSet()).thenReturn(responseCharacterSet);
+        when(httpClientInputs.getDestinationFile()).thenReturn(destinationFile);
+        when(httpClientInputs.getCookieStoreSessionObject()).thenReturn(serializableSessionObject);
     }
 
     @Test
     public void executeKeepAliveTrue() throws Exception {
-        PowerMockito.when(httpClientInputs.getKeepAlive()).thenReturn("true");
+        when(httpClientInputs.getKeepAlive()).thenReturn("true");
         Map<String, String> result1 = httpClientService.execute(httpClientInputs);
         assertEquals(result, result1);
         Mockito.verify(httpRequestBase, times(1)).releaseConnection();
@@ -115,7 +124,7 @@ public class HttpClientServiceTest {
 
     @Test
     public void executeKeepAliveFalse() throws Exception {
-        PowerMockito.when(httpClientInputs.getKeepAlive()).thenReturn("false");
+        when(httpClientInputs.getKeepAlive()).thenReturn("false");
         Map<String, String> result1 = httpClientService.execute(httpClientInputs);
         assertEquals(result, result1);
         Mockito.verify(httpResponse, times(1)).close();

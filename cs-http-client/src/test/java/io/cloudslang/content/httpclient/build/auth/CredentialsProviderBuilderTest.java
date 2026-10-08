@@ -25,13 +25,12 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.AuthSchemes;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,21 +39,18 @@ import static org.junit.Assert.assertThat;
  */
 public class CredentialsProviderBuilderTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test
     public void createNtlmCredentialsProvider() {
         CredentialsProvider credentialsProvider = getCredentialsProvider(AuthSchemes.NTLM);
         Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80));
 
-        assertThat(credentials, instanceOf(NTCredentials.class));
+        assertThat(credentials).isInstanceOf(NTCredentials.class);
         NTCredentials ntCredentials = (NTCredentials) credentials;
         assertEquals("DOMAIN", ntCredentials.getDomain());
         assertEquals("HOST", ntCredentials.getWorkstation());
         assertEquals("pass", ntCredentials.getPassword());
         Credentials proxyCredentials = credentialsProvider.getCredentials(new AuthScope("proxy", 8080));
-        assertThat(proxyCredentials, instanceOf(UsernamePasswordCredentials.class));
+        assertThat(proxyCredentials).isInstanceOf(UsernamePasswordCredentials.class);
         UsernamePasswordCredentials userCredentials = (UsernamePasswordCredentials) proxyCredentials;
         assertEquals("proxyUsername", userCredentials.getUserName());
     }
@@ -64,7 +60,7 @@ public class CredentialsProviderBuilderTest {
         CredentialsProvider credentialsProvider = getCredentialsProvider(AuthSchemes.KERBEROS);
         Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80));
 
-        assertThat(credentials, instanceOf(Credentials.class));
+        assertThat(credentials).isInstanceOf(Credentials.class);
     }
 
     @Test
@@ -72,7 +68,7 @@ public class CredentialsProviderBuilderTest {
         CredentialsProvider credentialsProvider = getCredentialsProvider("");
         Credentials credentials = credentialsProvider.getCredentials(new AuthScope("host", 80));
 
-        assertThat(credentials, instanceOf(UsernamePasswordCredentials.class));
+        assertThat(credentials).isInstanceOf(UsernamePasswordCredentials.class);
         UsernamePasswordCredentials userCredentials = (UsernamePasswordCredentials) credentials;
         assertEquals("pass", userCredentials.getPassword());
     }
@@ -88,9 +84,8 @@ public class CredentialsProviderBuilderTest {
                 .setProxyPort(invalidProxyPort)
                 .setProxyUsername("proxyUsername");
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage(expectedExceptionMessage);
-        builder.buildCredentialsProvider();
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, builder::buildCredentialsProvider);
+        assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
     @Test
@@ -104,9 +99,8 @@ public class CredentialsProviderBuilderTest {
                 .setProxyPort(invalidProxyPort)
                 .setProxyUsername("proxyUsername");
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage(expectedExceptionMessage);
-        builder.buildCredentialsProvider();
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, builder::buildCredentialsProvider);
+        assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
     private CredentialsProvider getCredentialsProvider(String authType) {

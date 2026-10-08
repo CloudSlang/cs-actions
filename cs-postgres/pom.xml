@@ -76,7 +76,6 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <cs-commons.version>0.0.9</cs-commons.version>
-        <junit.version>4.13.2</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>

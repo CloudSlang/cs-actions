@@ -2,13 +2,13 @@
 
 package io.cloudslang.content.nutanix.prism.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InputsValidationUtilsTest {
 

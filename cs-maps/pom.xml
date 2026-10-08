@@ -76,7 +76,6 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <cs-commons.version>0.0.9</cs-commons.version>
-        <junit.version>4.13.2</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
@@ -95,36 +94,6 @@
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-commons</artifactId>
             <version>${cs-commons.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-core</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

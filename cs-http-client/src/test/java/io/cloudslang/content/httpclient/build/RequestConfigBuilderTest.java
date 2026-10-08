@@ -27,15 +27,12 @@ package io.cloudslang.content.httpclient.build;
 
 import org.apache.http.HttpException;
 import org.apache.http.client.config.RequestConfig;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URISyntaxException;
 
-import static junit.framework.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,17 +43,9 @@ public class RequestConfigBuilderTest {
 
     private RequestConfigBuilder requestConfigBuilder;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() {
         requestConfigBuilder = new RequestConfigBuilder();
-    }
-
-    @After
-    public void tearDown() {
-        requestConfigBuilder = null;
     }
 
     @Test
@@ -94,11 +83,11 @@ public class RequestConfigBuilderTest {
         final String invalidProxyPort = "invalidProxyPortText";
         final String expectedExceptionMessage = "Invalid value '" + invalidProxyPort + "' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage(expectedExceptionMessage);
-        requestConfigBuilder.setProxyHost("myproxy.com")
-                .setProxyPort(invalidProxyPort)
-                .buildRequestConfig();
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                requestConfigBuilder.setProxyHost("myproxy.com")
+                        .setProxyPort(invalidProxyPort)
+                        .buildRequestConfig());
+        assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
     /*
@@ -110,11 +99,11 @@ public class RequestConfigBuilderTest {
         final String invalidProxyPort = "-2";
         final String expectedExceptionMessage = "Invalid value '" + invalidProxyPort + "' for input 'proxyPort'. Valid Values: -1 and integer values greater than 0";
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage(expectedExceptionMessage);
-        requestConfigBuilder.setProxyHost("myproxy.com")
-                .setProxyPort(invalidProxyPort)
-                .buildRequestConfig();
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                requestConfigBuilder.setProxyHost("myproxy.com")
+                        .setProxyPort(invalidProxyPort)
+                        .buildRequestConfig());
+        assertTrue(exception.getMessage().contains(expectedExceptionMessage));
     }
 
     /*
@@ -135,4 +124,3 @@ public class RequestConfigBuilderTest {
         assertEquals("myproxy.com", reqConfig.getProxy().getHostName());
     }
 }
-

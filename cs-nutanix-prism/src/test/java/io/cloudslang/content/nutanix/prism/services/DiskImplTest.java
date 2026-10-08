@@ -5,17 +5,13 @@ package io.cloudslang.content.nutanix.prism.services;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAttachDisksInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDetachDisksInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.nutanix.prism.services.DiskImpl.AttachDisksURL;
 import static io.cloudslang.content.nutanix.prism.services.DiskImpl.detachDisksURL;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(VMImpl.class)
+
 public class DiskImplTest {
     private static final String EXPECTED_DETACH_DISKS_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/myvm/disks/detach";
     private static final String EXPECTED_ATTACH_DISKS_PATH = "https://myhost:9440/api/nutanix/v2.0/vms/myvm/disks/attach";

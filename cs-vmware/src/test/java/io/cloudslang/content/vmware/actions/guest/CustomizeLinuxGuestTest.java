@@ -20,42 +20,41 @@ import io.cloudslang.content.vmware.entities.GuestInputs;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.GuestService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedConstruction;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mockConstruction;
 
 /**
  * Created by Mihai Tusa.
  * 3/30/2016.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CustomizeLinuxGuest.class)
+@ExtendWith(MockitoExtension.class)
 public class CustomizeLinuxGuestTest {
     private CustomizeLinuxGuest linuxGuest;
 
-    @Before
+    @BeforeEach
     public void init() {
         linuxGuest = new CustomizeLinuxGuest();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         linuxGuest = null;
     }
@@ -65,15 +64,14 @@ public class CustomizeLinuxGuestTest {
 
     @Test
     public void customizeLinuxGuestSuccess() throws Exception {
-        Map<String, String> resultMap = new HashMap<>();
-        whenNew(GuestService.class).withNoArguments().thenReturn(guestServiceMock);
-        when(guestServiceMock.customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean())).thenReturn(resultMap);
-
-        resultMap = linuxGuest.customizeLinuxGuest("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
-
-        verify(guestServiceMock, times(1)).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
-
-        assertNotNull(resultMap);
+        Map<String, String> expectedResultMap = new HashMap<>();
+        try (MockedConstruction<GuestService> construction = mockConstruction(GuestService.class,
+                (mock, context) -> when(mock.customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean())).thenReturn(expectedResultMap))) {
+            Map<String, String> resultMap = linuxGuest.customizeLinuxGuest("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
+            assertEquals(1, construction.constructed().size());
+            verify(construction.constructed().get(0), times(1)).customizeVM(any(HttpInputs.class), any(VmInputs.class), any(GuestInputs.class), anyBoolean());
+            assertEquals(expectedResultMap, resultMap);
+        }
     }
 
     @Test

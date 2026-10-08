@@ -20,41 +20,40 @@ import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.ClusterComputeResourceService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedConstruction;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.vmware.constants.ErrorMessages.NOT_ZERO_OR_POSITIVE_NUMBER;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.mockConstruction;
 
 /**
  * Created by pinteae on 10/12/2016.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(DeleteClusterRule.class)
+@ExtendWith(MockitoExtension.class)
 public class DeleteClusterRuleTest {
     private DeleteClusterRule deleteClusterRule;
 
-    @Before
+    @BeforeEach
     public void init() {
         deleteClusterRule = new DeleteClusterRule();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         deleteClusterRule = null;
     }
@@ -66,15 +65,13 @@ public class DeleteClusterRuleTest {
     public void testDeleteClusterRule() throws Exception {
         Map<String, String> expectedResultMap = new HashMap<>();
 
-        whenNew(ClusterComputeResourceService.class).withNoArguments().thenReturn(clusterComputeResourceServiceMock);
-        when(clusterComputeResourceServiceMock.deleteClusterRule(any(HttpInputs.class), any(VmInputs.class))).thenReturn(expectedResultMap);
-
-        Map<String, String> actualResultMap = deleteClusterRule.deleteClusterRule("", "", "", "", "", "", "", "", "", null);
-
-        verify(clusterComputeResourceServiceMock, times(1)).deleteClusterRule(any(HttpInputs.class), any(VmInputs.class));
-
-        assertNotNull(actualResultMap);
-        assertEquals(expectedResultMap, actualResultMap);
+        try (MockedConstruction<ClusterComputeResourceService> construction = mockConstruction(ClusterComputeResourceService.class,
+                (mock, context) -> when(mock.deleteClusterRule(any(HttpInputs.class), any(VmInputs.class))).thenReturn(expectedResultMap))) {
+            Map<String, String> actualResultMap = deleteClusterRule.deleteClusterRule("", "", "", "", "", "", "", "", "", null);
+            assertEquals(1, construction.constructed().size());
+            verify(construction.constructed().get(0), times(1)).deleteClusterRule(any(HttpInputs.class), any(VmInputs.class));
+            assertEquals(expectedResultMap, actualResultMap);
+        }
     }
 
     @Test

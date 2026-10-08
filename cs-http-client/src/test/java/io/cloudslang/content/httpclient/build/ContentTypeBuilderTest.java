@@ -21,10 +21,10 @@ package io.cloudslang.content.httpclient.build;
 
 import org.apache.http.Consts;
 import org.apache.http.entity.ContentType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Created with IntelliJ IDEA.

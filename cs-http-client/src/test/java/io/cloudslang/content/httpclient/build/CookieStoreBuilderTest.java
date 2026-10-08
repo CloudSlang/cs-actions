@@ -22,14 +22,14 @@ package io.cloudslang.content.httpclient.build;
 import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * User: Adina Tusa
@@ -39,7 +39,7 @@ public class CookieStoreBuilderTest {
 
     private CookieStoreBuilder cookieStoreBuilder;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         cookieStoreBuilder = new CookieStoreBuilder();
     }

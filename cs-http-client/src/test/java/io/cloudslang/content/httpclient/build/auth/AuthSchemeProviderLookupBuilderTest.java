@@ -27,13 +27,12 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.auth.BasicSchemeFactory;
 import org.apache.http.impl.auth.DigestSchemeFactory;
 import org.apache.http.impl.auth.KerberosSchemeFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,7 +44,7 @@ public class AuthSchemeProviderLookupBuilderTest {
     @Test
     public void buildLookupWithBasicAuth() {
         AuthSchemeProvider provider = getAuthSchemeProvider(AuthSchemes.BASIC);
-        assertThat(provider, instanceOf(BasicSchemeFactory.class));
+        assertThat(provider).isInstanceOf(BasicSchemeFactory.class);
         BasicScheme basicSchema = ((BasicScheme) provider.create(null));
         assertEquals("UTF-8", basicSchema.getCredentialsCharset().toString());
     }
@@ -53,7 +52,7 @@ public class AuthSchemeProviderLookupBuilderTest {
     @Test
     public void buildLookupWithDigestAuth() {
         AuthSchemeProvider provider = getAuthSchemeProvider(AuthSchemes.DIGEST);
-        assertThat(provider, instanceOf(DigestSchemeFactory.class));
+        assertThat(provider).isInstanceOf(DigestSchemeFactory.class);
     }
 
     @Test
@@ -62,13 +61,13 @@ public class AuthSchemeProviderLookupBuilderTest {
         AuthSchemeProvider provider = new AuthSchemeProviderLookupBuilder()
                 .setAuthTypes(authTypes)
                 .setHost("myweb.contoso.com").buildAuthSchemeProviderLookup().lookup(AuthSchemes.KERBEROS);
-        assertThat(provider, instanceOf(KerberosSchemeFactory.class));
+        assertThat(provider).isInstanceOf(KerberosSchemeFactory.class);
     }
 
     @Test
     public void buildLookupWithNtlmAuth() {
         AuthSchemeProvider provider = getAuthSchemeProvider(AuthSchemes.NTLM);
-        assertThat(provider, instanceOf(AuthSchemeProvider.class));
+        assertThat(provider).isInstanceOf(AuthSchemeProvider.class);
     }
 
 

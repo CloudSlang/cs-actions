@@ -20,11 +20,12 @@
 package io.cloudslang.content.httpclient.build;
 
 import org.apache.http.NameValuePair;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by ioanvranauhp
@@ -87,9 +88,9 @@ public class UtilsTest {
         assertEquals(portNumber, Utils.validatePortNumber(portStringValue));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testValidatePortNumberInvalidValue() {
         String portStringValue = "0";
-        Utils.validatePortNumber(portStringValue);
+        assertThrows(IllegalArgumentException.class, () -> Utils.validatePortNumber(portStringValue));
     }
 }

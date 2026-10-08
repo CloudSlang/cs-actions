@@ -88,7 +88,6 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <cs-commons.version>0.0.9</cs-commons.version>
-        <junit.version>4.13.2</junit.version>
         <cs-httpclient-commons.version>0.0.28</cs-httpclient-commons.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -138,46 +137,10 @@
             <version>2.5.2</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-core</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.17.0</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit</groupId>
-            <artifactId>junit-bom</artifactId>
-            <version>5.11.0</version>
-            <type>pom</type>
         </dependency>
     </dependencies>
 
