@@ -23,13 +23,13 @@ import io.cloudslang.content.google.utils.Constants.NEW_LINE
 import io.cloudslang.content.google.utils.action.InputNames.PROXY_PORT
 import io.cloudslang.content.google.utils.action.InputValidator._
 import org.apache.commons.lang3.StringUtils.EMPTY
-import org.junit.Test
-import org.specs2.matcher.JUnitMustMatchers
+import org.junit.jupiter.api.Test
+import org.specs2.matcher.MustMatchers
 
 /**
   * Created by victor on 2/25/17.
   */
-class InputValidatorTest extends JUnitMustMatchers {
+class InputValidatorTest extends MustMatchers {
 
   val TEST_NAME = "inputName"
   val TEST_NAME2 = "inputName2"

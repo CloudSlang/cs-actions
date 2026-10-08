@@ -18,11 +18,13 @@
 
 package io.cloudslang.content.database.utils;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
+import org.junit.jupiter.api.Test;
+
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -31,7 +33,7 @@ import java.util.Map;
 import static io.cloudslang.content.database.utils.SQLUtils.getStrColumns;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by victor on 10.01.2017.
@@ -42,8 +44,6 @@ public class SQLUtilsTest {
     //    public static final String MSSQL_URL = "jdbc:jtds:sqlserver://";
     public static final String DB_SERVER_IPV6_LITERAL = "2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net";
     public static String CUSTOM_URL = "jdbc:h2:tcp://localhost/~/test";
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void testProcessNullTerminatedString() {
@@ -74,16 +74,17 @@ public class SQLUtilsTest {
 
     @Test
     public void testGetIPv4OrIPv6WithSquareBracketsHostInvalid() {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("host [2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net  not valid");
-        SQLUtils.getIPv4OrIPv6WithSquareBracketsHost("[" + DB_SERVER_IPV6_LITERAL);
+        IllegalArgumentException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> SQLUtils.getIPv4OrIPv6WithSquareBracketsHost("[" + DB_SERVER_IPV6_LITERAL));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("host [2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net  not valid"));
     }
 
     @Test
     public void testGetIPv4OrIPv6WithSquareBracketsHostNull() {
-        expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("host   not valid");
-        SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(null);
+        Exception exception = org.junit.jupiter.api.Assertions.assertThrows(
+                Exception.class, () -> SQLUtils.getIPv4OrIPv6WithSquareBracketsHost(null));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("host   not valid"));
     }
 
     @Test
@@ -114,22 +115,20 @@ public class SQLUtilsTest {
 
     @Test
     public void testProcessDumpExceptionNoState() throws SQLException {
-        expectedEx.expect(SQLException.class);
-        expectedEx.expectMessage("test");
-        SQLUtils.processDumpException(new SQLException("test"));
+        SQLException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                SQLException.class, () -> SQLUtils.processDumpException(new SQLException("test")));
+        assertEquals("test", exception.getMessage());
     }
 
     @Test
     public void testProcessDumpExceptionNoMessage() throws SQLException {
-        expectedEx.expect(SQLException.class);
-
         SQLException sqlException = new SQLException() {
             @Override
             public String getSQLState() {
                 return SQL_STATE;
             }
         };
-        SQLUtils.processDumpException(sqlException);
+        org.junit.jupiter.api.Assertions.assertThrows(SQLException.class, () -> SQLUtils.processDumpException(sqlException));
     }
 
     @Test
@@ -148,22 +147,20 @@ public class SQLUtilsTest {
 
     @Test
     public void testProcessLoadExceptionNoState() throws SQLException {
-        expectedEx.expect(SQLException.class);
-        expectedEx.expectMessage("test");
-        SQLUtils.processLoadException(new SQLException("test"));
+        SQLException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                SQLException.class, () -> SQLUtils.processLoadException(new SQLException("test")));
+        assertEquals("test", exception.getMessage());
     }
 
     @Test
     public void testProcessLoadExceptionNoMessage() throws SQLException {
-        expectedEx.expect(SQLException.class);
-
         SQLException sqlException = new SQLException() {
             @Override
             public String getSQLState() {
                 return SQL_STATE;
             }
         };
-        SQLUtils.processLoadException(sqlException);
+        org.junit.jupiter.api.Assertions.assertThrows(SQLException.class, () -> SQLUtils.processLoadException(sqlException));
     }
 
     @Test

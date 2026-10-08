@@ -18,14 +18,17 @@
 
 package io.cloudslang.content.database.utils;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.services.databases.*;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+
+
 
 import java.sql.ResultSet;
 import java.util.*;
@@ -36,16 +39,13 @@ import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.mockito.Mockito.mockStatic;
 
 /**
  * Created by victor on 02.02.2017.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(SQLUtils.class)
 public class SQLInputsUtilsTest {
 
 
@@ -81,7 +81,7 @@ public class SQLInputsUtilsTest {
     //GlobalSessionObject was implemented
     //In CloudSlang the object is instantiated by default and cannot be null
     @Test
-    @Ignore
+    @Disabled
     public void getOrDefaultGlobalSessionObjNull() throws Exception {
         final GlobalSessionObject<Map<String, Object>> globalSessionObj = getOrDefaultGlobalSessionObj(null);
         assertThat(globalSessionObj, instanceOf(GlobalSessionObject.class));
@@ -157,11 +157,10 @@ public class SQLInputsUtilsTest {
     public void getSqlCommandsScriptFile() throws Exception {
         final List<String> commandsScript = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         final String scriptName = "someFile";
-        mockStatic(SQLUtils.class);
-
-        given(SQLUtils.readFromFile(scriptName)).willReturn(commandsScript);
-        assertThat(commandsScript, is(getSqlCommands(EMPTY, scriptName, ",")));
-        verifyStatic();
+        try (MockedStatic<SQLUtils> sqlUtils = mockStatic(SQLUtils.class)) {
+            sqlUtils.when(() -> SQLUtils.readFromFile(scriptName)).thenReturn(commandsScript);
+            assertThat(commandsScript, is(getSqlCommands(EMPTY, scriptName, ",")));
+        }
     }
 
     @Test
@@ -196,18 +195,6 @@ public class SQLInputsUtilsTest {
         final Properties dbProperties = getOrDefaultDBPoolingProperties(EMPTY, "Truth = Beauty");
         assertThat("Beauty", is(dbProperties.getProperty("Truth")));
         assertThat(1, is(dbProperties.size()));
-    }
-
-    //    @Test(expected = RuntimeException.class)
-    @Test
-    public void getOrDefaultDBPoolingPropertiesException() throws Exception {
-//todo
-//        final Properties databasePoolingProperties = mock(Properties.class);
-//
-//        whenNew(Properties.class).withNoArguments().thenReturn(databasePoolingProperties);
-////        doReturn(databasePoolingProperties).when(Properties.class).newInstance();
-//        doThrow(IllegalArgumentException.class).when(databasePoolingProperties).load(any(Reader.class));
-//        getOrDefaultDBPoolingProperties(EMPTY, "this should fail");
     }
 
     @Test
@@ -317,9 +304,9 @@ public class SQLInputsUtilsTest {
         assertThat(getDbClassForType(CUSTOM_DB_TYPE), instanceOf(CustomDatabase.class));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getDbClassForTypeFailure() throws Exception {
-        getDbClassForType("NoType");
+        org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> getDbClassForType("NoType"));
     }
 
     @Test
@@ -335,9 +322,9 @@ public class SQLInputsUtilsTest {
     }
 
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getDbEnumForTypeFailure() throws Exception {
-        getDbEnumForType("NoType");
+        org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> getDbEnumForType("NoType"));
     }
 
     @NotNull

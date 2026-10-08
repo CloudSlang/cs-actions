@@ -20,9 +20,9 @@ package io.cloudslang.content.datetime.actions;
 
 import io.cloudslang.content.datetime.utils.Constants;
 import org.joda.time.DateTime;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +30,9 @@ import java.util.Map;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Created by stcu on 25.04.2016.
@@ -41,13 +41,13 @@ public class GetCurrentDateTimeTest {
     private GetCurrentDateTime getCurrentDateTime;
     private Map<String, String> result;
 
-    @Before
+    @BeforeEach
     public void init() {
         getCurrentDateTime = new GetCurrentDateTime();
         result = new HashMap<>();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         getCurrentDateTime = null;
         result = null;

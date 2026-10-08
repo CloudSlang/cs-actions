@@ -60,7 +60,7 @@ public class DBOtherValues {
     public static final String SYBASE_JTDS_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
     public static final String NETCOOL_DRIVER = "com.sybase.jdbc3.jdbc.SybDriver";
     public static final String DB2_DRIVER = "com.ibm.db2.jcc.DB2Driver";
-    public static final String MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    public static final String MYSQL_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     public static final String POSTGRESQL_DRIVER = "org.postgresql.Driver";
     public static final String MSSQL_FILE_DRIVER = "sqljdbc_auth.dll";
     public static final String JAVA_IO_TMPDIR = "java.io.tmpdir";

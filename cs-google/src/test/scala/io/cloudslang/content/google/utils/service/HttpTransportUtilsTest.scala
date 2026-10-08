@@ -22,16 +22,15 @@ package io.cloudslang.content.google.utils.service
 import java.net.{InetSocketAddress, Proxy}
 
 import com.google.api.client.http.javanet.NetHttpTransport
-import org.junit.Test
-import org.specs2.matcher.JUnitShouldMatchers
-import org.specs2.mock.MockitoMocker
+import org.junit.jupiter.api.Test
+import org.specs2.matcher.ShouldMatchers
 
 
 /**
   * Created by victor on 2/25/17.
   */
 
-class HttpTransportUtilsTest extends JUnitShouldMatchers with MockitoMocker {
+class HttpTransportUtilsTest extends ShouldMatchers {
 
   @Test
   def netHttpTransportValid(): Unit = {

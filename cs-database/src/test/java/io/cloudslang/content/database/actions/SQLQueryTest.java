@@ -18,16 +18,22 @@
 
 package io.cloudslang.content.database.actions;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.constants.DBResponseNames;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLInputsUtils;
 import io.cloudslang.content.database.utils.SQLSessionResource;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
 import org.mockito.Spy;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,15 +47,14 @@ import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBReturnCodes.NO_MORE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by victor on 13.02.2017.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SQLQuery.class, SQLInputsUtils.class})
+@ExtendWith(MockitoExtension.class)
 public class SQLQueryTest {
 
     @Spy
@@ -71,17 +76,17 @@ public class SQLQueryTest {
         stringMap.put(aKey, aKey);
         globalSessionObject.setResource(new SQLSessionResource(stringMap));
 
-        mockStatic(SQLInputsUtils.class);
-        when(SQLInputsUtils.getSqlKey(any(SQLInputs.class))).thenReturn(aKey);
+        try (MockedStatic<SQLInputsUtils> utilities = mockStatic(SQLInputsUtils.class)) {
+            utilities.when(() -> SQLInputsUtils.getSqlKey(any(SQLInputs.class))).thenReturn(aKey);
+            utilities.when(() -> SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class)))
+                    .thenReturn(globalSessionObject);
+            final Map<String, String> resultMap = sqlQuery.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
+                    AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY,
+                    CONCUR_READ_ONLY, FALSE, globalSessionObject);
 
-
-        when(SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class))).thenReturn(globalSessionObject);
-        final Map<String, String> resultMap = sqlQuery.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, FALSE, globalSessionObject);
-
-        verifyStatic();
-        assertThat(resultMap.get(RETURN_CODE), is(NO_MORE));
-        assertThat(resultMap.get(RETURN_RESULT), is(DBResponseNames.NO_MORE));
+            assertThat(resultMap.get(RETURN_CODE), is(NO_MORE));
+            assertThat(resultMap.get(RETURN_RESULT), is(DBResponseNames.NO_MORE));
+        }
     }
 
 }

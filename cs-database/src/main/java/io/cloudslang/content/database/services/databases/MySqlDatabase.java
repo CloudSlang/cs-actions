@@ -35,7 +35,7 @@ public class MySqlDatabase implements SqlDatabase {
 
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        loadClassForName("com.mysql.jdbc.Driver");
+        loadClassForName("com.mysql.cj.jdbc.Driver");
 
         final String connectionString = getConnectionString(sqlInputs);
 

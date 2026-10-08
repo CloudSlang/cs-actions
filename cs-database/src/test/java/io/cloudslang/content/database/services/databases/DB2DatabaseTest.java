@@ -19,16 +19,16 @@
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.Test;
+
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
@@ -39,9 +39,6 @@ public class DB2DatabaseTest {
     public static final String DB_NAME = "dbName";
     public static final String DB_SERVER = "dbServer";
     public static final int DB_PORT = 30;
-
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void testSetUpNoDbName() throws ClassNotFoundException, SQLException {
@@ -58,8 +55,6 @@ public class DB2DatabaseTest {
 
     @Test
     public void testSetUpNoServerName() throws ClassNotFoundException, SQLException {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("host   not valid");
         DB2Database db2Database = new DB2Database();
 
         final SQLInputs sqlInputs = SQLInputs.builder().build();
@@ -68,7 +63,9 @@ public class DB2DatabaseTest {
         sqlInputs.setDbPort(DB_PORT);
 
 
-        db2Database.setUp(sqlInputs);
+        IllegalArgumentException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                IllegalArgumentException.class, () -> db2Database.setUp(sqlInputs));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("host   not valid"));
     }
 
     @Test

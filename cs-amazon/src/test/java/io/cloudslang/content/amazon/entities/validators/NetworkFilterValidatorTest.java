@@ -33,10 +33,11 @@
 package io.cloudslang.content.amazon.entities.validators;
 
 import io.cloudslang.content.amazon.entities.aws.NetworkFilter;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by Tirla Alin
@@ -55,7 +56,7 @@ public class NetworkFilterValidatorTest {
 
     private NetworkFilterValidator validator;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         validator = new NetworkFilterValidator();
     }
@@ -71,8 +72,8 @@ public class NetworkFilterValidatorTest {
         assertEquals(DETACHING, validator.getFilterValue(NetworkFilter.ATTACHMENT_STATUS, DETACHING));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testBadValues() {
-        validator.getFilterValue(NetworkFilter.ATTACHMENT_STATUS, WRONG_VALUE);
+        assertThrows(RuntimeException.class, () -> validator.getFilterValue(NetworkFilter.ATTACHMENT_STATUS, WRONG_VALUE));
     }
 }

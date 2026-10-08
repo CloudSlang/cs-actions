@@ -18,6 +18,11 @@
 
 package io.cloudslang.content.database.actions;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.constants.DBResponseNames;
 import io.cloudslang.content.database.constants.DBReturnCodes;
@@ -25,12 +30,13 @@ import io.cloudslang.content.database.services.SQLQueryLobService;
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.SQLInputsUtils;
 import io.cloudslang.content.database.utils.SQLSessionResource;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
 import org.mockito.Spy;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,15 +52,14 @@ import static io.cloudslang.content.database.constants.DBOtherValues.*;
 import static io.cloudslang.content.database.constants.DBReturnCodes.NO_MORE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by victor on 13.02.2017.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SQLQueryLOB.class, SQLInputsUtils.class, SQLQueryLobService.class})
+@ExtendWith(MockitoExtension.class)
 public class SQLQueryLOBTest {
 
     @Spy
@@ -76,17 +81,17 @@ public class SQLQueryLOBTest {
         stringMap.put(aKey, aKey);
         globalSessionObject.setResource(new SQLSessionResource(stringMap));
 
-        mockStatic(SQLInputsUtils.class);
-        when(SQLInputsUtils.getSqlKey(any(SQLInputs.class))).thenReturn(aKey);
+        try (MockedStatic<SQLInputsUtils> utilities = mockStatic(SQLInputsUtils.class)) {
+            utilities.when(() -> SQLInputsUtils.getSqlKey(any(SQLInputs.class))).thenReturn(aKey);
+            utilities.when(() -> SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class)))
+                    .thenReturn(globalSessionObject);
+            final Map<String, String> resultMap = sqlQueryLOB.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
+                    AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY,
+                    CONCUR_READ_ONLY, globalSessionObject);
 
-
-        when(SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class))).thenReturn(globalSessionObject);
-        final Map<String, String> resultMap = sqlQueryLOB.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, globalSessionObject);
-
-        verifyStatic();
-        assertThat(resultMap.get(RETURN_CODE), is(NO_MORE));
-        assertThat(resultMap.get(RETURN_RESULT), is(DBResponseNames.NO_MORE));
+            assertThat(resultMap.get(RETURN_CODE), is(NO_MORE));
+            assertThat(resultMap.get(RETURN_RESULT), is(DBResponseNames.NO_MORE));
+        }
     }
 
     @Test
@@ -99,33 +104,31 @@ public class SQLQueryLOBTest {
         stringMap.put(aKey, aList);
         globalSessionObject.setResource(new SQLSessionResource(stringMap));
 
-        mockStatic(SQLInputsUtils.class);
-        when(SQLInputsUtils.getSqlKey(any(SQLInputs.class))).thenReturn(aKey);
+        try (MockedStatic<SQLInputsUtils> utilities = mockStatic(SQLInputsUtils.class)) {
+            utilities.when(() -> SQLInputsUtils.getSqlKey(any(SQLInputs.class))).thenReturn(aKey);
+            utilities.when(() -> SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class)))
+                    .thenReturn(globalSessionObject);
+            final Map<String, String> resultMap = sqlQueryLOB.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
+                    AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY,
+                    CONCUR_READ_ONLY, globalSessionObject);
 
-
-        when(SQLInputsUtils.getOrDefaultGlobalSessionObj(any(GlobalSessionObject.class))).thenReturn(globalSessionObject);
-        final Map<String, String> resultMap = sqlQueryLOB.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, globalSessionObject);
-
-        verifyStatic();
-        assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));
-        assertThat(resultMap.get(RETURN_RESULT), is("a"));
+            assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));
+            assertThat(resultMap.get(RETURN_RESULT), is("a"));
+        }
     }
 
     //GlobalSessionObject was implemented
     //In CloudSlang the object is instantiated by default and cannot be null
     @Test
-    @Ignore
+    @Disabled
     public void executeSuccessNoGlobalSessionFailure() throws Exception {
-        mockStatic(SQLQueryLobService.class);
-
-        when(SQLQueryLobService.executeSqlQueryLob(any(SQLInputs.class))).thenReturn(true);
-
-        final Map<String, String> resultMap = sqlQueryLOB.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
-                AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY, null);
-
-        verifyStatic();
-        assertThat(resultMap.get(RETURN_CODE), is(DBReturnCodes.NO_MORE));
+        try (MockedStatic<SQLQueryLobService> service = mockStatic(SQLQueryLobService.class)) {
+            service.when(() -> SQLQueryLobService.executeSqlQueryLob(any(SQLInputs.class))).thenReturn(true);
+            final Map<String, String> resultMap = sqlQueryLOB.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
+                    AUTH_SQL, EMPTY, EMPTY, "something", "true", EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY,
+                    CONCUR_READ_ONLY, null);
+            assertThat(resultMap.get(RETURN_CODE), is(DBReturnCodes.NO_MORE));
+        }
     }
 
 }

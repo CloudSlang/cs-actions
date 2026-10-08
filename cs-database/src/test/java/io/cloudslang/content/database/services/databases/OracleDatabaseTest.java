@@ -19,36 +19,31 @@
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.Test;
+
+
+
+
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by vranau on 12/10/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({OracleDatabase.class})
-@PowerMockIgnore({"javax.management.*", "org.apache.commons.logging.*"})
 public class OracleDatabaseTest {
     public static final String ORACLE_URL = "jdbc:oracle:thin:@";
     public static final String DB_SERVER = "localhost";
     public static final int DB_PORT = 30;
     public static final String DB_NAME = "testDB";
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
     private OracleDatabase oracleDatabase = null;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         oracleDatabase = new OracleDatabase();
     }

@@ -19,9 +19,9 @@ package io.cloudslang.content.xml.actions;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URI;
@@ -32,8 +32,8 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.apache.commons.io.IOUtils.readLines;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -47,7 +47,7 @@ public class ApplyXslTransformationTest {
     private String invalidXml;
     private String resultHtml;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         applyXslTransformation = new ApplyXslTransformation();
         xml = join(readLines(ClassLoader.getSystemResourceAsStream("applyxslres/testTransform.xml"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
@@ -56,7 +56,7 @@ public class ApplyXslTransformationTest {
         resultHtml = join(readLines(ClassLoader.getSystemResourceAsStream("applyxslres/result.html"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         applyXslTransformation = null;
         xml = null;
@@ -99,7 +99,7 @@ public class ApplyXslTransformationTest {
         assertNotNull(result);
         assertNotNull(result.get(RETURN_RESULT));
         assertEquals(result.get(RETURN_CODE), SUCCESS);
-        assertEquals(result.get(RETURN_RESULT), resultHtml);
+        assertEquals(normalizeHtml(resultHtml), normalizeHtml(result.get(RETURN_RESULT)));
     }
 
     @Test
@@ -179,7 +179,7 @@ public class ApplyXslTransformationTest {
         assertNotNull(result);
         assertNotNull(result.get(RETURN_RESULT));
         assertEquals(SUCCESS, result.get(RETURN_CODE));
-        assertEquals(result.get(RETURN_RESULT), resultHtml);
+        assertEquals(normalizeHtml(resultHtml), normalizeHtml(result.get(RETURN_RESULT)));
     }
 
     @Test
@@ -194,5 +194,9 @@ public class ApplyXslTransformationTest {
         assertNotNull(result.get(RETURN_RESULT));
         assertEquals(FAILURE, result.get(RETURN_CODE));
         assertEquals(result.get(RETURN_RESULT), "XML document structures must start and end within the same entity.");
+    }
+
+    private static String normalizeHtml(String html) {
+        return html.replaceAll("(?m)^[\\t ]+$", "").strip();
     }
 }

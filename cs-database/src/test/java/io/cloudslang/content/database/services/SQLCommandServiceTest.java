@@ -18,35 +18,37 @@
 
 package io.cloudslang.content.database.services;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.OracleDbmsOutput;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
+
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedConstruction;
+
+
 
 import java.sql.*;
 
 
 import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by vranau on 12/11/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ConnectionService.class, SQLCommandService.class})
+@ExtendWith(MockitoExtension.class)
 public class SQLCommandServiceTest {
 
     private static final int QUYERY_TIMEOUT = 10;
@@ -62,32 +64,36 @@ public class SQLCommandServiceTest {
     private SQLInputs sqlInputs;
 
     @Mock
-    private ConnectionService connectionServiceMock;
-    @Mock
     private Connection connectionMock;
     @Mock
     private PreparedStatement preparedStatementMock;
     @Mock
-    private OracleDbmsOutput oracleDbmsOutputMock;
-    @Mock
     private Statement statementMock;
-    @Rule
-    private ExpectedException expectedEx = ExpectedException.none();
 
     @Mock
     private ResultSet resultSetMock;
     @Mock
     private ResultSetMetaData resultSetMetadataMock;
+    private MockedConstruction<ConnectionService> connectionServices;
+    private MockedConstruction<OracleDbmsOutput> dbmsOutputs;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         sqlInputs = SQLInputs.builder().build();
         InputsProcessor.init(sqlInputs);
-        PowerMockito.whenNew(ConnectionService.class).withNoArguments().thenReturn(connectionServiceMock);
-        when(connectionServiceMock.setUpConnection(sqlInputs)).thenReturn(connectionMock);
-        when(connectionMock.createStatement(anyInt(), anyInt())).thenReturn(statementMock);
-        when(statementMock.getResultSet()).thenReturn(resultSetMock);
-        when(resultSetMock.getMetaData()).thenReturn(resultSetMetadataMock);
+        connectionServices = Mockito.mockConstruction(ConnectionService.class,
+                (mock, context) -> Mockito.lenient().when(mock.setUpConnection(sqlInputs)).thenReturn(connectionMock));
+        dbmsOutputs = Mockito.mockConstruction(OracleDbmsOutput.class,
+                (mock, context) -> Mockito.lenient().when(mock.getOutput()).thenReturn("Command completed successfully"));
+        Mockito.lenient().when(connectionMock.createStatement(anyInt(), anyInt())).thenReturn(statementMock);
+        Mockito.lenient().when(statementMock.getResultSet()).thenReturn(resultSetMock);
+        Mockito.lenient().when(resultSetMock.getMetaData()).thenReturn(resultSetMetadataMock);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        dbmsOutputs.close();
+        connectionServices.close();
     }
 
     @Test
@@ -110,10 +116,8 @@ public class SQLCommandServiceTest {
 
     @Test
     public void testExecuteSqlCommandDBMS_OUTPUT() throws Exception {
-        PowerMockito.whenNew(OracleDbmsOutput.class).withArguments(connectionMock).thenReturn(oracleDbmsOutputMock);
-        when(connectionMock.prepareStatement(Matchers.any(String.class))).thenReturn(preparedStatementMock);
+        when(connectionMock.prepareStatement(ArgumentMatchers.any(String.class))).thenReturn(preparedStatementMock);
         when(preparedStatementMock.getUpdateCount()).thenReturn(1);
-        when(oracleDbmsOutputMock.getOutput()).thenReturn("Command completed successfully");
 
         sqlInputs.setDbType(ORACLE_DB_TYPE);
 
@@ -130,8 +134,8 @@ public class SQLCommandServiceTest {
         verify(preparedStatementMock, Mockito.times(1)).close();
         verify(preparedStatementMock, Mockito.times(1)).setQueryTimeout(QUYERY_TIMEOUT);
         verify(preparedStatementMock, Mockito.times(1)).executeQuery();
-        verify(oracleDbmsOutputMock, Mockito.times(1)).getOutput();
-        verify(oracleDbmsOutputMock, Mockito.times(1)).close();
+        verify(dbmsOutputs.constructed().get(0), Mockito.times(1)).getOutput();
+        verify(dbmsOutputs.constructed().get(0), Mockito.times(1)).close();
     }
 
 }

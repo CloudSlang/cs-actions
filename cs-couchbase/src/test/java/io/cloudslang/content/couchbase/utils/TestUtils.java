@@ -18,7 +18,10 @@
 
 package io.cloudslang.content.couchbase.utils;
 
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.function.Executable;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by TusaM
@@ -29,9 +32,10 @@ public class TestUtils {
         // prevent instantiation
     }
 
-    @SuppressWarnings("unchecked")
-    public static void setExpectedExceptions(Class<?> type, ExpectedException exception, String message) {
-        exception.expect((Class<? extends Throwable>) type);
-        exception.expectMessage(message);
+    public static <T extends Throwable> T assertThrowsWithMessage(Class<T> type, Executable executable, String message) {
+        T exception = assertThrows(type, executable);
+        assertTrue(exception.getMessage().contains(message),
+                () -> "Expected exception message to contain: " + message + " but was: " + exception.getMessage());
+        return exception;
     }
 }
