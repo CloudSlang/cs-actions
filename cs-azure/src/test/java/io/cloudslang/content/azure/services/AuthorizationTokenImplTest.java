@@ -20,12 +20,12 @@
 package io.cloudslang.content.azure.services;
 
 import io.cloudslang.content.azure.utils.DateUtilities;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
 import static io.cloudslang.content.azure.services.AuthorizationTokenImpl.getToken;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by victor on 29.09.2016.
