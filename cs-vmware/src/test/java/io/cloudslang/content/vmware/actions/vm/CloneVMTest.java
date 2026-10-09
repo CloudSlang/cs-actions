@@ -19,42 +19,41 @@ package io.cloudslang.content.vmware.actions.vm;
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.VmService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedConstruction;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.mockConstruction;
 
 /**
  * Created by Mihai Tusa.
  * 3/8/2016.
  */
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CloneVM.class)
+@ExtendWith(MockitoExtension.class)
 public class CloneVMTest {
     private CloneVM cloneVM;
 
-    @Before
+    @BeforeEach
     public void init() {
         cloneVM = new CloneVM();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         cloneVM = null;
     }
@@ -64,15 +63,14 @@ public class CloneVMTest {
 
     @Test
     public void testCloneVM() throws Exception {
-        Map<String, String> resultMap = new HashMap<>();
-        whenNew(VmService.class).withNoArguments().thenReturn(vmServiceMock);
-        when(vmServiceMock.createVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(resultMap);
-
-        resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
-
-        verify(vmServiceMock, times(1)).cloneVM(any(HttpInputs.class), any(VmInputs.class));
-
-        assertNotNull(resultMap);
+        Map<String, String> expectedResultMap = new HashMap<>();
+        try (MockedConstruction<VmService> construction = mockConstruction(VmService.class,
+                (mock, context) -> when(mock.cloneVM(any(HttpInputs.class), any(VmInputs.class))).thenReturn(expectedResultMap))) {
+            Map<String, String> resultMap = cloneVM.cloneVM("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", null);
+            assertEquals(1, construction.constructed().size());
+            verify(construction.constructed().get(0), times(1)).cloneVM(any(HttpInputs.class), any(VmInputs.class));
+            assertEquals(expectedResultMap, resultMap);
+        }
     }
 
     @Test
