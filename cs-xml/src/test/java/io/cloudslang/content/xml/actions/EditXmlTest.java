@@ -20,10 +20,8 @@ package io.cloudslang.content.xml.actions;
 import org.apache.commons.io.IOUtils;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -38,7 +36,7 @@ import java.util.Map;
 
 import static org.apache.commons.io.IOUtils.readLines;
 import static org.apache.commons.lang3.StringUtils.join;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by moldovas on 6/22/2016.
@@ -67,13 +65,11 @@ public class EditXmlTest {
     private static String STRING_XML = "";
     private static String insertTextResponse = "";
     private static String appendTextResponse = "";
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     private EditXml editXml;
     private Map<String, String> result;
     private String fullPath;
 
-    @Before
+    @BeforeEach
     public void beforeTest() throws Exception {
         editXml = new EditXml();
         STRING_XML = join(readLines(ClassLoader.getSystemResourceAsStream("editxmlres/xmlString.xml"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);

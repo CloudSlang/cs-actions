@@ -21,9 +21,9 @@ import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ import static io.cloudslang.content.xml.utils.Constants.SuccessMessages.SELECT_S
 import static org.apache.commons.io.IOUtils.readLines;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.join;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by markowis on 22/02/2016.
@@ -57,13 +57,13 @@ public class XpathQueryTest {
     private String xml;
     private XpathQuery select;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         select = new XpathQuery();
         xml = join(readLines(ClassLoader.getSystemResourceAsStream("xml/test.xml"), Charset.forName("UTF-8")), IOUtils.LINE_SEPARATOR);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         select = null;
         xml = null;
