@@ -20,21 +20,13 @@ package io.cloudslang.content.abbyy.utils;
 import io.cloudslang.content.abbyy.entities.others.LocationId;
 import io.cloudslang.content.abbyy.entities.others.Region;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(PowerMockRunner.class)
 public class InputParserTest {
 
     private static final String INPUT_NAME = "dummy";
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     @Test
@@ -247,9 +239,7 @@ public class InputParserTest {
         //Arrange
         final String str = null;
         //Assert
-        exception.expect(IllegalArgumentException.class);
-        //Act
-        InputParser.parseRegion(str);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseRegion(str));
     }
 
 
@@ -258,9 +248,7 @@ public class InputParserTest {
         //Arrange
         final String str = "-1,-1,-1";
         //Assert
-        exception.expect(IllegalArgumentException.class);
-        //Act
-        InputParser.parseRegion(str);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseRegion(str));
     }
 
 
@@ -269,9 +257,7 @@ public class InputParserTest {
         //Arrange
         final String str = "-1,-1,-1,asd";
         //Assert
-        exception.expect(NumberFormatException.class);
-        //Act
-        InputParser.parseRegion(str);
+        org.junit.jupiter.api.Assertions.assertThrows(NumberFormatException.class, () -> InputParser.parseRegion(str));
     }
 
 
@@ -280,9 +266,7 @@ public class InputParserTest {
         //Arrange
         final String str = "-1,-1,-1,-2";
         //Assert
-        exception.expect(IllegalArgumentException.class);
-        //Act
-        InputParser.parseRegion(str);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseRegion(str));
     }
 
 
@@ -291,9 +275,7 @@ public class InputParserTest {
         //Arrange
         final String str = "2,-1,1,-1";
         //Assert
-        exception.expect(IllegalArgumentException.class);
-        //Act
-        InputParser.parseRegion(str);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> InputParser.parseRegion(str));
     }
 
 

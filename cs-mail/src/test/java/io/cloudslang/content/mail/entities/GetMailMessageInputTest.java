@@ -19,32 +19,25 @@ package io.cloudslang.content.mail.entities;
 import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({GetMailMessageInput.class, GetMailMessageInput.Builder.class, System.class})
 public class GetMailMessageInputTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     private GetMailMessageInput.Builder inputsBuilder;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         inputsBuilder = getPopulatedInputsBuilder();
     }
 
 
-    @After
+    @AfterEach
     public void tearDown() {
         inputsBuilder = null;
     }
@@ -52,41 +45,37 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputHostNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.HOST_NOT_SPECIFIED);
         inputsBuilder.hostname(null);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.HOST_NOT_SPECIFIED, exception.getMessage());
     }
 
 
     @Test
     public void testProcessInputHostEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.HOST_NOT_SPECIFIED);
         inputsBuilder.hostname(StringUtils.EMPTY);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.HOST_NOT_SPECIFIED, exception.getMessage());
     }
 
 
-    @Test(expected = Exception.class)
+    @Test
     public void testProcessInputUsernameNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.USERNAME_NOT_SPECIFIED);
         inputsBuilder.username(null);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.USERNAME_NOT_SPECIFIED, exception.getMessage());
     }
 
 
-    @Test(expected = Exception.class)
+    @Test
     public void testProcessInputUsernameEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.USERNAME_NOT_SPECIFIED);
         inputsBuilder.username(StringUtils.EMPTY);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.USERNAME_NOT_SPECIFIED, exception.getMessage());
     }
 
 
@@ -108,91 +97,82 @@ public class GetMailMessageInputTest {
 
     @Test
     public void testProcessInputMessageNumberEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.MESSAGE_NUMBER_NOT_SPECIFIED);
         inputsBuilder.messageNumber(StringUtils.EMPTY);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.MESSAGE_NUMBER_NOT_SPECIFIED, exception.getMessage());
     }
 
 
     @Test
     public void testProcessInputMessageNumberNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.MESSAGE_NUMBER_NOT_SPECIFIED);
         inputsBuilder.messageNumber(null);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.MESSAGE_NUMBER_NOT_SPECIFIED, exception.getMessage());
     }
 
 
     @Test
     public void testProcessInputMessageNumberZero() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.MESSAGES_ARE_NUMBERED_STARTING_AT_1);
         inputsBuilder.messageNumber("0");
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.MESSAGES_ARE_NUMBERED_STARTING_AT_1, exception.getMessage());
     }
 
     @Test
     public void testProcessInputProtocolNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.SPECIFY_PROTOCOL_FOR_GIVEN_PORT);
         inputsBuilder.protocol(null);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.SPECIFY_PROTOCOL_FOR_GIVEN_PORT, exception.getMessage());
     }
 
 
     @Test
     public void testProcessInputProtocolEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.SPECIFY_PROTOCOL_FOR_GIVEN_PORT);
         inputsBuilder.protocol(StringUtils.EMPTY);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.SPECIFY_PROTOCOL_FOR_GIVEN_PORT, exception.getMessage());
     }
 
 
     @Test
     public void testProcessInputPortEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.SPECIFY_PORT_FOR_PROTOCOL);
         inputsBuilder.port(StringUtils.EMPTY);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.SPECIFY_PORT_FOR_PROTOCOL, exception.getMessage());
     }
 
 
     @Test
     public void testProcessInputPortNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.SPECIFY_PORT_FOR_PROTOCOL);
         inputsBuilder.port(null);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.SPECIFY_PORT_FOR_PROTOCOL, exception.getMessage());
     }
 
     @Test
     public void testProcessInputPortProtocolNull() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.SPECIFY_PORT_OR_PROTOCOL_OR_BOTH);
         inputsBuilder.port(null)
                 .protocol(null);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.SPECIFY_PORT_OR_PROTOCOL_OR_BOTH, exception.getMessage());
     }
 
 
     @Test
     public void testProcessInputPortProtocolEmpty() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.SPECIFY_PORT_OR_PROTOCOL_OR_BOTH);
         inputsBuilder.port(StringUtils.EMPTY)
                 .protocol(StringUtils.EMPTY);
 
-        inputsBuilder.build();
+        Exception exception = assertThrows(Exception.class, () -> inputsBuilder.build());
+        org.junit.jupiter.api.Assertions.assertEquals(ExceptionMsgs.SPECIFY_PORT_OR_PROTOCOL_OR_BOTH, exception.getMessage());
     }
 
 

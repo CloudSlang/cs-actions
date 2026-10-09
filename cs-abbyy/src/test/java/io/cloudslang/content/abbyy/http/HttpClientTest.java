@@ -25,15 +25,11 @@ import io.cloudslang.content.abbyy.exceptions.HttpClientException;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.actions.HttpClientAction;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedConstruction;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -41,12 +37,12 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClient.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class HttpClientTest {
 
     private static final String url = "url";
@@ -98,17 +94,26 @@ public class HttpClientTest {
     private static final String method = "method";
     private static final SerializableSessionObject httpClientCookieSession = null;
     private static final GlobalSessionObject httpClientPoolingConnectionManager = null;
-
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     @Mock
     private HttpClientRequest httpRequestMock;
+    private MockedConstruction<HttpClientAction> actionConstruction;
+    private MockedConstruction<HttpClientResponse.Builder> builderConstruction;
+    private Map<String, String> rawResponse;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockHttpClientRequest();
+        actionConstruction = mockConstruction(HttpClientAction.class, withSettings().defaultAnswer(invocation ->
+                "execute".equals(invocation.getMethod().getName()) ? rawResponse : RETURNS_DEFAULTS.answer(invocation)));
+        builderConstruction = mockConstruction(HttpClientResponse.Builder.class, withSettings().defaultAnswer(invocation ->
+                "build".equals(invocation.getMethod().getName()) ? null : invocation.getMock()));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        builderConstruction.close();
+        actionConstruction.close();
     }
 
 
@@ -127,25 +132,14 @@ public class HttpClientTest {
         rawResponse.put(HttpClientOutputNames.STATUS_CODE, statusCode);
         rawResponse.put(HttpClientOutputNames.RESPONSE_HEADERS, responseHeaders);
         rawResponse.put(HttpClientOutputNames.RETURN_CODE, returnCode);
-        HttpClientAction httpClientActionMock = PowerMockito.mock(HttpClientAction.class);
-        PowerMockito.whenNew(HttpClientAction.class).withAnyArguments().thenReturn(httpClientActionMock);
-        when(httpClientActionMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(),any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
-
-        HttpClientResponse.Builder httpClientResponseBuilderSpy = new HttpClientResponse.Builder();
-        httpClientResponseBuilderSpy = PowerMockito.spy(httpClientResponseBuilderSpy);
-        when(httpClientResponseBuilderSpy.build()).thenReturn(null);
-        PowerMockito.whenNew(HttpClientResponse.Builder.class).withAnyArguments().thenReturn(httpClientResponseBuilderSpy);
+        this.rawResponse = rawResponse;
 
         //Act
         HttpClient.execute(httpRequestMock);
 
         //Assert
+        HttpClientAction httpClientActionMock = actionConstruction.constructed().get(0);
+        HttpClientResponse.Builder httpClientResponseBuilderSpy = builderConstruction.constructed().get(0);
         verify(httpClientActionMock).execute(eq(url), eq(tlsVersion), eq(allowedCyphers), eq(authType), eq(preemptiveAuth.toString()),
                 eq(username), eq(password), eq(kerberosConfigFile), eq(kerberosLoginConfFile), eq(kerberosSkipPortForLookup),
                 eq(proxyHost), eq(proxyPort.toString()), eq(proxyUsername), eq(proxyPassword), eq(trustAllRoots.toString()), eq(x509HostnameVerifier),
@@ -182,26 +176,10 @@ public class HttpClientTest {
         rawResponse.put(HttpClientOutputNames.STATUS_CODE, statusCode);
         rawResponse.put(HttpClientOutputNames.RESPONSE_HEADERS, responseHeaders);
         rawResponse.put(HttpClientOutputNames.RETURN_CODE, returnCode);
-        HttpClientAction httpClientActionMock = PowerMockito.mock(HttpClientAction.class);
-        PowerMockito.whenNew(HttpClientAction.class).withAnyArguments().thenReturn(httpClientActionMock);
-        when(httpClientActionMock.execute(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(),
-                anyString(),any(SerializableSessionObject.class), any(GlobalSessionObject.class))).thenReturn(rawResponse);
-
-        HttpClientResponse.Builder httpClientResponseBuilderSpy = new HttpClientResponse.Builder();
-        httpClientResponseBuilderSpy = PowerMockito.spy(httpClientResponseBuilderSpy);
-        when(httpClientResponseBuilderSpy.build()).thenReturn(null);
-        PowerMockito.whenNew(HttpClientResponse.Builder.class).withAnyArguments().thenReturn(httpClientResponseBuilderSpy);
+        this.rawResponse = rawResponse;
 
         //Assert
-        this.exception.expect(HttpClientException.class);
-
-        //Act
-        HttpClient.execute(httpRequestMock);
+        org.junit.jupiter.api.Assertions.assertThrows(HttpClientException.class, () -> HttpClient.execute(httpRequestMock));
     }
 
 

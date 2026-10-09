@@ -43,6 +43,7 @@ import jakarta.activation.DataHandler;
 import jakarta.activation.FileDataSource;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
+import jakarta.mail.Part;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.*;
@@ -112,24 +113,35 @@ public class SendMailService {
             }
 
             // Construct the message
-            MimeMultipart multipart = new MimeMultipart();
-
-            MimeBodyPart mimeBodyPart = new MimeBodyPart();
-            if (input.isHtmlEmail()) {
-                processHTMLBodyWithBASE64Images(multipart);
-                mimeBodyPart.setContent(input.getBody(), MimeTypes.TEXT_HTML + ";charset=" + input.getCharacterSet());
-            } else {
-                mimeBodyPart.setContent(input.getBody(), MimeTypes.TEXT_PLAIN + ";charset=" + input.getCharacterSet());
-            }
+            MimeMultipart multipart = new MimeMultipart(MimeTypes.MULTIPART_MIXED);
             String encoding = Encodings.BASE64;
             if (StringUtils.isNotBlank(input.getContentTransferEncoding()) &&
                     !Encodings.QUOTED_PRINTABLE.equalsIgnoreCase(input.getContentTransferEncoding())) {
                 encoding = input.getContentTransferEncoding();
             }
-            mimeBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, encoding);
-            mimeBodyPart = encryptMimeBodyPart(mimeBodyPart);
 
-            multipart.addBodyPart(mimeBodyPart);
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            if (input.isHtmlEmail()) {
+                MimeMultipart relatedMultipart = new MimeMultipart(MimeTypes.MULTIPART_RELATED);
+                boolean hasInlineImages = processHTMLBodyWithBASE64Images(relatedMultipart);
+                mimeBodyPart.setContent(input.getBody(), MimeTypes.TEXT_HTML + ";charset=" + input.getCharacterSet());
+                mimeBodyPart.setDisposition(Part.INLINE);
+                mimeBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, encoding);
+                mimeBodyPart = encryptMimeBodyPart(mimeBodyPart);
+                if (hasInlineImages) {
+                    relatedMultipart.addBodyPart(mimeBodyPart);
+                    MimeBodyPart relatedBodyPart = new MimeBodyPart();
+                    relatedBodyPart.setContent(relatedMultipart);
+                    multipart.addBodyPart(relatedBodyPart);
+                } else {
+                    multipart.addBodyPart(mimeBodyPart);
+                }
+            } else {
+                mimeBodyPart.setContent(input.getBody(), MimeTypes.TEXT_PLAIN + ";charset=" + input.getCharacterSet());
+                mimeBodyPart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, encoding);
+                mimeBodyPart = encryptMimeBodyPart(mimeBodyPart);
+                multipart.addBodyPart(mimeBodyPart);
+            }
 
             if (null != input.getAttachments() && input.getAttachments().length() > 0) {
                 for (String attachment : input.getAttachments().split(Pattern.quote(input.getDelimiter()))) {
@@ -247,7 +259,7 @@ public class SendMailService {
         return result;
     }
 
-    private void processHTMLBodyWithBASE64Images(MimeMultipart multipart) throws
+    private boolean processHTMLBodyWithBASE64Images(MimeMultipart multipart) throws
             MessagingException, NoSuchAlgorithmException, SMIMEException, java.security.NoSuchProviderException, CMSException {
         if (null != input.getBody() && input.getBody().contains(Encodings.BASE64)) {
             boolean isFullDocument = StringUtils.containsIgnoreCase(input.getBody(), "<html");
@@ -258,7 +270,9 @@ public class SendMailService {
             input.setBody(isFullDocument ? document.html() : document.body().html());
 
             addAllBase64ImagesToMimeMultipart(multipart, htmlImageNodeVisitor.getBase64Images());
+            return !htmlImageNodeVisitor.getBase64Images().isEmpty();
         }
+        return false;
     }
 
     private void addAllBase64ImagesToMimeMultipart(MimeMultipart multipart, Map<String, String> base64ImagesMap)
@@ -275,6 +289,7 @@ public class SendMailService {
         MimeBodyPart imagePart = new MimeBodyPart();
         imagePart.setContentID(contentId);
         imagePart.setHeader(Encodings.CONTENT_TRANSFER_ENCODING, Encodings.BASE64);
+        imagePart.setDisposition(Part.INLINE);
         imagePart.setDataHandler(new DataHandler(Base64.decode(base64ImagesMap.get(contentId)), MimeTypes.IMAGE_PNG));
         return imagePart;
     }

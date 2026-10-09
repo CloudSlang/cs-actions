@@ -3,17 +3,12 @@
 package io.cloudslang.content.nutanix.prism.services;
 
 import io.cloudslang.content.nutanix.prism.entities.*;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.nutanix.prism.services.VMImpl.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(VMImpl.class)
 public class VMImplTest {
 
     private static final String DELIMITER = ",";

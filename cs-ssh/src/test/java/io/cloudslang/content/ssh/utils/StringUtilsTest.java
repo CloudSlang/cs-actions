@@ -19,13 +19,14 @@
 
 package io.cloudslang.content.ssh.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StringUtilsTest {
 
@@ -62,10 +63,9 @@ public class StringUtilsTest {
         assertEquals(result, 11);
     }
 
-    @Test(expected = NumberFormatException.class)
+    @Test
     public void testToIntException() {
-        int result = StringUtils.toInt("1kuhasd", 11);
-        assertEquals(result, 10);
+        assertThrows(NumberFormatException.class, () -> StringUtils.toInt("1kuhasd", 11));
     }
 
     @Test
@@ -80,10 +80,9 @@ public class StringUtilsTest {
         assertEquals(result, "default");
     }
 
-    @Test(expected = java.lang.RuntimeException.class)
+    @Test
     public void testToNewlineException() throws Exception {
-        String result = StringUtils.toNewline("test");
-        assertEquals(result, "");
+        assertThrows(RuntimeException.class, () -> StringUtils.toNewline("test"));
     }
 
     @Test

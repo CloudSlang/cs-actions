@@ -20,15 +20,11 @@ package io.cloudslang.content.utilities.services.localping;
 
 import io.cloudslang.content.utilities.entities.LocalPingInputs;
 import io.cloudslang.content.utilities.util.CommandExecutor;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
 import org.mockito.Spy;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.util.Map;
@@ -45,14 +41,14 @@ import static io.cloudslang.content.utilities.entities.constants.LocalPingConsta
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.WINDOWS;
 import static io.cloudslang.content.utilities.util.CommandExecutor.executeCommand;
 import static java.lang.String.format;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({LocalPingService.class, CommandExecutor.class})
+@ExtendWith(MockitoExtension.class)
 public class LocalPingServiceTest {
 
     private static final String DUMMY_IP = "10.0.0.1";
@@ -75,26 +71,13 @@ public class LocalPingServiceTest {
     @Spy
     private LocalPingService localPingServiceSpy = new LocalPingService();
 
-    @Rule
-    private ExpectedException expectedException = ExpectedException.none();
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
     public void testLocalPingServiceSuccess() throws IOException {
         LocalPingInputs localPingInputs = new LocalPingInputs.LocalPingInputsBuilder()
                 .targetHost(DUMMY_IP)
                 .build();
 
-        mockStatic(CommandExecutor.class);
-
-        when(executeCommand(anyString())).thenReturn(COMMAND_OUTPUT);
-        doReturn(WINDOWS).when(localPingServiceSpy).detectLocalOsFamily();
-
-        Map<String, String> resultsMap = localPingServiceSpy.executePingCommand(localPingInputs);
+        Map<String, String> resultsMap = executePingCommand(localPingInputs, WINDOWS, COMMAND_OUTPUT);
 
         assertEquals(COMMAND_OUTPUT, resultsMap.get(RETURN_RESULT));
     }
@@ -105,12 +88,7 @@ public class LocalPingServiceTest {
                 .targetHost(INVALID_IP)
                 .build();
 
-        mockStatic(CommandExecutor.class);
-
-        when(executeCommand(anyString())).thenReturn(INVALID_COMMAND_OUTPUT);
-        doReturn(WINDOWS).when(localPingServiceSpy).detectLocalOsFamily();
-
-        Map<String, String> resultsMap = localPingServiceSpy.executePingCommand(localPingInputs);
+        Map<String, String> resultsMap = executePingCommand(localPingInputs, WINDOWS, INVALID_COMMAND_OUTPUT);
 
         assertEquals(INVALID_COMMAND_OUTPUT, resultsMap.get(RETURN_RESULT));
         assertEquals(EMPTY_STRING, resultsMap.get(PACKETS_SENT));
@@ -127,15 +105,9 @@ public class LocalPingServiceTest {
                 .targetHost(DUMMY_IP)
                 .build();
 
-        mockStatic(CommandExecutor.class);
-
-        when(executeCommand(anyString())).thenReturn(COMMAND_OUTPUT);
-        doReturn(OTHER).when(localPingServiceSpy).detectLocalOsFamily();
-
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage(UNABLE_TO_DETECT_LOCAL_OPERATING_SYSTEM);
-
-        localPingServiceSpy.executePingCommand(localPingInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> executePingCommand(localPingInputs, OTHER, COMMAND_OUTPUT));
+        assertTrue(exception.getMessage().contains(UNABLE_TO_DETECT_LOCAL_OPERATING_SYSTEM));
     }
 
     @Test
@@ -144,14 +116,17 @@ public class LocalPingServiceTest {
                 .targetHost(DUMMY_IP)
                 .build();
 
-        mockStatic(CommandExecutor.class);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> executePingCommand(localPingInputs, MAC_OS, COMMAND_OUTPUT));
+        assertTrue(exception.getMessage().contains(format(UNSUPPORTED_OPERATING_SYSTEM_S, MAC_OS)));
+    }
 
-        when(executeCommand(anyString())).thenReturn(COMMAND_OUTPUT);
-        doReturn(MAC_OS).when(localPingServiceSpy).detectLocalOsFamily();
-
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage(format(UNSUPPORTED_OPERATING_SYSTEM_S, MAC_OS));
-
-        localPingServiceSpy.executePingCommand(localPingInputs);
+    private Map<String, String> executePingCommand(LocalPingInputs localPingInputs, String osFamily, String commandOutput)
+            throws IOException {
+        try (MockedStatic<CommandExecutor> commandExecutor = mockStatic(CommandExecutor.class)) {
+            commandExecutor.when(() -> executeCommand(anyString())).thenReturn(commandOutput);
+            doReturn(osFamily).when(localPingServiceSpy).detectLocalOsFamily();
+            return localPingServiceSpy.executePingCommand(localPingInputs);
+        }
     }
 }

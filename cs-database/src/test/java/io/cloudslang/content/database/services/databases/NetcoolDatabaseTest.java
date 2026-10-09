@@ -17,39 +17,32 @@
 
 
 package io.cloudslang.content.database.services.databases;
+import static org.mockito.Mockito.*;
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Spy;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by vranau on 12/10/2014.
  */
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Class.class)
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class NetcoolDatabaseTest {
 
     @Spy
     private NetcoolDatabase netcoolDatabase = new NetcoolDatabase();
-
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
-
     @Test
     public void testSetUpInvalid() throws Exception {
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Could not locate either jconn2.jar or jconn3.jar file in the classpath");
         final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName("dbName");
         sqlInputs.setDbServer(null);
         sqlInputs.setDbPort(30);
-        netcoolDatabase.setUp(sqlInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> netcoolDatabase.setUp(sqlInputs));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("Could not locate either jconn2.jar or jconn3.jar file in the classpath"));
     }
 
     @Test
@@ -63,11 +56,9 @@ public class NetcoolDatabaseTest {
 //
 //        Class cls = any(Class.class);
 //
-//        mockStatic(Class.class);
 //        given(Class.forName("com.sybase.jdbc3.jdbc.SybDriver")).willReturn(cls);
 //
 //        netcoolDatabase.setUp(sqlInputs);
-//        verifyStatic();
 
     }
 }

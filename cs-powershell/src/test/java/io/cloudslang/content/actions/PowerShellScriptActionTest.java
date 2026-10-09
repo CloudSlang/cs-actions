@@ -20,36 +20,18 @@ package io.cloudslang.content.actions;
 
 import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.services.PowerShellScriptService;
-import io.cloudslang.content.services.WSManRemoteShellService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
-import java.net.URISyntaxException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doThrow;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Created by giloan on 5/6/2016.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(PowerShellScriptAction.class)
 public class PowerShellScriptActionTest {
 
     private static final String LOCALHOST = "localhost";
@@ -82,97 +64,81 @@ public class PowerShellScriptActionTest {
 
     private PowerShellScriptAction powerShellScriptAction;
 
-    @Mock
-    private PowerShellScriptService serviceMock;
-    @Mock
-    private Map<String, String> resultMock;
-    @Mock
-    private WSManRequestInputs wsManRequestInputsMock;
-    @Mock
-    private WSManRequestInputs.WSManRequestInputsBuilder wsManRequestInputsBuilderMock;
+    private final Map<String, String> resultMock = mock(Map.class);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         powerShellScriptAction = new PowerShellScriptAction();
     }
 
-    @After
-    public void tearDown() {
-        powerShellScriptAction = null;
-        serviceMock = null;
-        resultMock = null;
-        wsManRequestInputsMock = null;
-        wsManRequestInputsBuilderMock = null;
-    }
-
     @Test
     public void testExecute() throws Exception {
-        configureMocksForSuccessTests();
+        try (MockedConstruction<PowerShellScriptService> construction = mockConstruction(PowerShellScriptService.class,
+                (service, context) -> configureSuccess(service))) {
 
-        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, PORT, HTTPS, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                MAX_ENVELOPE_SIZE, SCRIPT, EMPTY_STRING, MODULES, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
+            Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, PORT, HTTPS, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
+                    PROXY_USER, PASS, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
+                    MAX_ENVELOPE_SIZE, SCRIPT, EMPTY_STRING, MODULES, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
 
-        verifyNew(PowerShellScriptService.class).withNoArguments();
-        verifyMockInteractions();
-        assertEquals(resultMock, result);
+            verify(construction.constructed().get(0)).execute(any(WSManRequestInputs.class));
+            verify(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
+            verify(resultMock).get(SCRIPT_EXIT_CODE);
+            assertEquals(resultMock, result);
+        }
     }
 
     @Test
     public void testExecuteWithInputDefaultValues() throws Exception {
-        configureMocksForSuccessTests();
+        try (MockedConstruction<PowerShellScriptService> construction = mockConstruction(PowerShellScriptService.class,
+                (service, context) -> configureSuccess(service))) {
 
-        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
+            Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
+                    PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
+                    EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
-        verifyNew(PowerShellScriptService.class).withNoArguments();
-        verifyMockInteractions();
-        assertEquals(resultMock, result);
+            verify(construction.constructed().get(0)).execute(any(WSManRequestInputs.class));
+            verify(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
+            verify(resultMock).get(SCRIPT_EXIT_CODE);
+            assertEquals(resultMock, result);
+        }
     }
 
     @Test
     public void testExecuteThrowsException() throws Exception {
-        whenNew(PowerShellScriptService.class).withNoArguments().thenReturn(serviceMock);
-        doThrow(new RuntimeException(EXCEPTION_MESSAGE)).when(serviceMock).execute(any(WSManRequestInputs.class));
+        try (MockedConstruction<PowerShellScriptService> construction = mockConstruction(PowerShellScriptService.class,
+                (service, context) -> doThrow(new RuntimeException(EXCEPTION_MESSAGE)).when(service).execute(any(WSManRequestInputs.class)))) {
 
-        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, BASIC_AUTH_TYPE, PASS, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
+            Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, BASIC_AUTH_TYPE, PASS, PROXY_HOST, PROXY_PORT,
+                    PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
+                    EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
-        assertTrue(result.get(EXCEPTION).contains(EXCEPTION_MESSAGE));
-        assertEquals(RETURN_CODE_FAILURE, result.get(RETURN_CODE));
+            assertTrue(result.get(EXCEPTION).contains(EXCEPTION_MESSAGE));
+            assertEquals(RETURN_CODE_FAILURE, result.get(RETURN_CODE));
+            assertEquals(1, construction.constructed().size());
+        }
     }
 
     @Test
     public void testExecuteWithFailureScriptExitCode() throws Exception {
-        whenNew(PowerShellScriptService.class).withNoArguments().thenReturn(serviceMock);
-        doReturn(resultMock).when(serviceMock).execute(any(WSManRequestInputs.class));
-        doReturn(null).when(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
-        doReturn(RETURN_CODE_FAILURE).when(resultMock).get(SCRIPT_EXIT_CODE);
+        when(resultMock.get(SCRIPT_EXIT_CODE)).thenReturn(RETURN_CODE_FAILURE);
+        try (MockedConstruction<PowerShellScriptService> construction = mockConstruction(PowerShellScriptService.class,
+                (service, context) -> when(service.execute(any(WSManRequestInputs.class))).thenReturn(resultMock))) {
 
-        Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
-                PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
-                EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
+            Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
+                    PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
+                    EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
-        verifyNew(PowerShellScriptService.class).withNoArguments();
-        verify(serviceMock, times(1)).execute(any(WSManRequestInputs.class));
-        verify(resultMock, times(1)).put(RETURN_CODE, RETURN_CODE_FAILURE);
-        verify(resultMock, times(1)).get(SCRIPT_EXIT_CODE);
-        assertEquals(resultMock, result);
+            verify(construction.constructed().get(0)).execute(any(WSManRequestInputs.class));
+            verify(resultMock).put(RETURN_CODE, RETURN_CODE_FAILURE);
+            verify(resultMock).get(SCRIPT_EXIT_CODE);
+            assertEquals(resultMock, result);
+        }
     }
 
-    private void configureMocksForSuccessTests() throws Exception {
-        whenNew(PowerShellScriptService.class).withNoArguments().thenReturn(serviceMock);
-        doReturn(resultMock).when(serviceMock).execute(any(WSManRequestInputs.class));
-        doReturn(null).when(resultMock).put(RETURN_CODE, RETURN_CODE_SUCCESS);
-        doReturn(RETURN_CODE_SUCCESS).when(resultMock).get(SCRIPT_EXIT_CODE);
-    }
-
-    private void verifyMockInteractions() throws Exception {
-        verify(serviceMock, times(1)).execute(any(WSManRequestInputs.class));
-        verify(resultMock, times(1)).put(RETURN_CODE, RETURN_CODE_SUCCESS);
-        verify(resultMock, times(1)).get(SCRIPT_EXIT_CODE);
+    private void configureSuccess(PowerShellScriptService service) throws Exception {
+        when(service.execute(any(WSManRequestInputs.class))).thenReturn(resultMock);
+        when(resultMock.put(RETURN_CODE, RETURN_CODE_SUCCESS)).thenReturn(null);
+        when(resultMock.get(SCRIPT_EXIT_CODE)).thenReturn(RETURN_CODE_SUCCESS);
     }
 
 

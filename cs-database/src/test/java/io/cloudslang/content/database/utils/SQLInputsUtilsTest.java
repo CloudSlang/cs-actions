@@ -14,38 +14,87 @@
  */
 
 
-
-
 package io.cloudslang.content.database.utils;
 
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.database.services.databases.*;
+import io.cloudslang.content.database.services.databases.CustomDatabase;
+import io.cloudslang.content.database.services.databases.DB2Database;
+import io.cloudslang.content.database.services.databases.MSSqlDatabase;
+import io.cloudslang.content.database.services.databases.MySqlDatabase;
+import io.cloudslang.content.database.services.databases.NetcoolDatabase;
+import io.cloudslang.content.database.services.databases.OracleDatabase;
+import io.cloudslang.content.database.services.databases.PostgreSqlDatabase;
+import io.cloudslang.content.database.services.databases.SybaseDatabase;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
-import static io.cloudslang.content.database.constants.DBOtherValues.*;
-import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.*;
-import static io.cloudslang.content.database.utils.SQLInputsUtils.*;
+import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_READ_ONLY;
+import static io.cloudslang.content.database.constants.DBOtherValues.CONCUR_UPDATABLE;
+import static io.cloudslang.content.database.constants.DBOtherValues.CUSTOM_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.DB2_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.DEFAULT_PORT_DB2;
+import static io.cloudslang.content.database.constants.DBOtherValues.DEFAULT_PORT_MSSQL;
+import static io.cloudslang.content.database.constants.DBOtherValues.DEFAULT_PORT_MYSQL;
+import static io.cloudslang.content.database.constants.DBOtherValues.DEFAULT_PORT_NETCOOL;
+import static io.cloudslang.content.database.constants.DBOtherValues.DEFAULT_PORT_ORACLE;
+import static io.cloudslang.content.database.constants.DBOtherValues.DEFAULT_PORT_PSQL;
+import static io.cloudslang.content.database.constants.DBOtherValues.DEFAULT_PORT_SYBASE;
+import static io.cloudslang.content.database.constants.DBOtherValues.MSSQL_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.MYSQL_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.NETCOOL_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_JDBC_DRIVER;
+import static io.cloudslang.content.database.constants.DBOtherValues.POSTGRES_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
+import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_SCROLL_INSENSITIVE;
+import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_SCROLL_SENSITIVE;
+import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.CUSTOM;
+import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.DB2;
+import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.MSSQL;
+import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.MYSQL;
+import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.NETCOOL;
+import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.ORACLE;
+import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.POSTGRESQL;
+import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.SYBASE;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.checkIsNetcool;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbClassForType;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbEnumForType;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbType;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrDefaultDBClass;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrDefaultDBPoolingProperties;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrDefaultDBPort;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrDefaultGlobalSessionObj;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrLower;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getResultSetConcurrency;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getResultSetType;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getResultSetTypeForDbType;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getSqlCommands;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getSqlKey;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.inCollectionIgnoreCase;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.notInCollectionIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.given;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by victor on 02.02.2017.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(SQLUtils.class)
 public class SQLInputsUtilsTest {
 
 
@@ -75,13 +124,13 @@ public class SQLInputsUtilsTest {
 
     @Test
     public void getOrDefaultDBClassDefault() throws Exception {
-       assertThat(getOrDefaultDBClass("a", ORACLE_DB_TYPE), is("a"));
+        assertThat(getOrDefaultDBClass("a", ORACLE_DB_TYPE), is("a"));
     }
 
     //GlobalSessionObject was implemented
     //In CloudSlang the object is instantiated by default and cannot be null
     @Test
-    @Ignore
+    @Disabled
     public void getOrDefaultGlobalSessionObjNull() throws Exception {
         final GlobalSessionObject<Map<String, Object>> globalSessionObj = getOrDefaultGlobalSessionObj(null);
         assertThat(globalSessionObj, instanceOf(GlobalSessionObject.class));
@@ -157,11 +206,11 @@ public class SQLInputsUtilsTest {
     public void getSqlCommandsScriptFile() throws Exception {
         final List<String> commandsScript = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
         final String scriptName = "someFile";
-        mockStatic(SQLUtils.class);
-
-        given(SQLUtils.readFromFile(scriptName)).willReturn(commandsScript);
-        assertThat(commandsScript, is(getSqlCommands(EMPTY, scriptName, ",")));
-        verifyStatic();
+        try (org.mockito.MockedStatic<SQLUtils> sqlUtils = org.mockito.Mockito.mockStatic(SQLUtils.class)) {
+            sqlUtils.when(() -> SQLUtils.readFromFile(scriptName)).thenReturn(commandsScript);
+            assertThat(commandsScript, is(getSqlCommands(EMPTY, scriptName, ",")));
+            sqlUtils.verify(() -> SQLUtils.readFromFile(scriptName));
+        }
     }
 
     @Test
@@ -198,13 +247,11 @@ public class SQLInputsUtilsTest {
         assertThat(1, is(dbProperties.size()));
     }
 
-    //    @Test(expected = RuntimeException.class)
     @Test
     public void getOrDefaultDBPoolingPropertiesException() throws Exception {
 //todo
 //        final Properties databasePoolingProperties = mock(Properties.class);
 //
-//        whenNew(Properties.class).withNoArguments().thenReturn(databasePoolingProperties);
 ////        doReturn(databasePoolingProperties).when(Properties.class).newInstance();
 //        doThrow(IllegalArgumentException.class).when(databasePoolingProperties).load(any(Reader.class));
 //        getOrDefaultDBPoolingProperties(EMPTY, "this should fail");
@@ -317,9 +364,9 @@ public class SQLInputsUtilsTest {
         assertThat(getDbClassForType(CUSTOM_DB_TYPE), instanceOf(CustomDatabase.class));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getDbClassForTypeFailure() throws Exception {
-        getDbClassForType("NoType");
+        assertThrows(RuntimeException.class, () -> getDbClassForType("NoType"));
     }
 
     @Test
@@ -335,9 +382,9 @@ public class SQLInputsUtilsTest {
     }
 
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void getDbEnumForTypeFailure() throws Exception {
-        getDbEnumForType("NoType");
+        assertThrows(RuntimeException.class, () -> getDbEnumForType("NoType"));
     }
 
     @NotNull

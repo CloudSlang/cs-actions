@@ -18,7 +18,8 @@
 
 package io.cloudslang.content.database.utils;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,7 +33,9 @@ import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
 import static io.cloudslang.content.database.utils.SQLInputsValidator.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by victor on 1/28/17.

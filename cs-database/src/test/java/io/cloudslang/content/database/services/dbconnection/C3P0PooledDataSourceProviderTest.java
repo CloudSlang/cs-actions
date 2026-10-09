@@ -17,26 +17,21 @@
 
 
 package io.cloudslang.content.database.services.dbconnection;
+import static org.mockito.Mockito.*;
 
 import com.mchange.v2.c3p0.DataSources;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import javax.sql.DataSource;
 import java.util.Properties;
 
 import static io.cloudslang.content.database.constants.DBInputNames.USERNAME;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(DataSources.class)
 public class C3P0PooledDataSourceProviderTest {
 
     private C3P0PooledDataSourceProvider provider;
@@ -44,7 +39,7 @@ public class C3P0PooledDataSourceProviderTest {
     /**
      * Will execute before each test.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         Properties propsMock = mock(Properties.class);
         provider = new C3P0PooledDataSourceProvider(propsMock);
@@ -53,7 +48,7 @@ public class C3P0PooledDataSourceProviderTest {
     /**
      * Will execute after each test.
      */
-    @After
+    @AfterEach
     public void tearDown() {
         provider = null;
     }
@@ -65,21 +60,16 @@ public class C3P0PooledDataSourceProviderTest {
      */
     @Test
     public void testOpenPooledDataSource() throws Exception {
-        PowerMockito.mockStatic(DataSources.class);
         DataSource unPooledDSMock = mock(DataSource.class);
         DataSource retPooledDSMock = mock(DataSource.class);
-        PowerMockito.doReturn(unPooledDSMock).when(DataSources.class, "unpooledDataSource"
-                , anyString(), anyString(), anyString());
+        try (org.mockito.MockedStatic<DataSources> dataSources = org.mockito.Mockito.mockStatic(DataSources.class)) {
+        dataSources.when(() -> DataSources.unpooledDataSource(anyString(), anyString(), anyString())).thenReturn(unPooledDSMock);
+        dataSources.when(() -> DataSources.pooledDataSource(any(DataSource.class), anyMap())).thenReturn(retPooledDSMock);
 
-        PowerMockito.doReturn(retPooledDSMock).when(DataSources.class, "pooledDataSource"
-                , any(DataSource.class), anyMap());
-
-        assertEquals(retPooledDSMock, provider.openPooledDataSource(DBConnectionManager.DBType.MYSQL
+        assertSame(retPooledDSMock, provider.openPooledDataSource(DBConnectionManager.DBType.MYSQL
                 , "url", USERNAME, "password"));
-        //Call PowerMockito.verifyStatic() to start verifying behavior
-        PowerMockito.verifyStatic();
-        //Use EasyMock-like semantic to verify behavior:
-        DataSources.unpooledDataSource(anyString(), anyString(), anyString());
-        DataSources.pooledDataSource(any(DataSource.class), anyMap());
+        dataSources.verify(() -> DataSources.unpooledDataSource(anyString(), anyString(), anyString()));
+        dataSources.verify(() -> DataSources.pooledDataSource(any(DataSource.class), anyMap()));
+        }
     }
 }

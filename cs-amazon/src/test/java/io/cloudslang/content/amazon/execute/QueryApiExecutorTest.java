@@ -33,73 +33,67 @@ import io.cloudslang.content.amazon.entities.inputs.LoadBalancerInputs;
 import io.cloudslang.content.amazon.entities.inputs.NetworkInputs;
 import io.cloudslang.content.amazon.entities.inputs.StorageInputs;
 import io.cloudslang.content.amazon.entities.inputs.VolumeInputs;
-import io.cloudslang.content.amazon.factory.ParamsMapBuilder;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
-import io.cloudslang.content.amazon.utils.InputsUtil;
 import io.cloudslang.content.amazon.utils.MockingHelper;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.amazon.factory.helpers.FilterUtils.processTagFilter;
 import static io.cloudslang.content.constants.OtherValues.COMMA_DELIMITER;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyMapOf;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mockConstruction;
 
 /**
  * Created by Mihai Tusa.
  * 9/7/2016.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClientService.class, AmazonSignatureService.class, QueryApiExecutor.class, ParamsMapBuilder.class, InputsUtil.class})
+@org.junit.jupiter.api.extension.ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class QueryApiExecutorTest {
     private static final String HEADERS = "Accept:text/plain\r\n Content-Type:application/json";
     private static final String ALL_RESOURCE_TYPES = "customer-gateway,dhcp-options,image,instance,internet-gateway,network-acl,network-interface,reserved-instances,route-table,security-group,snapshot,spot-instances-request,subnet,volume,vpc,vpn-connection,vpn-gateway";
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    @Mock
-    private HttpClientService csHttpClientMock;
-
-    @Mock
-    private AmazonSignatureService amazonSignatureServiceMock;
-
     @Mock
     private AuthorizationHeader authorizationHeaderMock;
 
-    @Mock
-    private InputsUtil inputsUtilMock;
-
     private QueryApiExecutor toTest;
+    private MockedConstruction<AmazonSignatureService> amazonSignatureConstruction;
+    private MockedConstruction<HttpClientService> httpClientConstruction;
 
-    @Before
+    @BeforeEach
     public void init() throws Exception {
+        amazonSignatureConstruction = mockConstruction(AmazonSignatureService.class, (mock, context) ->
+                when(mock.signRequestHeaders(any(InputsWrapper.class), anyMap(), anyMap()))
+                        .thenReturn(authorizationHeaderMock));
+        httpClientConstruction = mockConstruction(HttpClientService.class, (mock, context) ->
+                when(mock.execute(any(HttpClientInputs.class))).thenReturn(null));
         toTest = new QueryApiExecutor();
         addCommonMocksForQueryApi();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
+        httpClientConstruction.close();
+        amazonSignatureConstruction.close();
         toTest = null;
     }
 
@@ -107,7 +101,7 @@ public class QueryApiExecutorTest {
     public void testAddLaunchPermissionsToImage() throws Exception {
         toTest.execute(getCommonInputs("ModifyImageAttribute", HEADERS), getAddLaunchPermissionsToImageInputs(), getAddLaunchPermissionsToImageCustomInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ModifyImageAttribute")));
         runCommonVerifiersForQueryApi();
     }
@@ -117,7 +111,7 @@ public class QueryApiExecutorTest {
         toTest.execute(getCommonInputs("AllocateAddress", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(true));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AllocateAddress")));
         runCommonVerifiersForQueryApi();
     }
@@ -127,7 +121,7 @@ public class QueryApiExecutorTest {
         toTest.execute(getCommonInputs("AssociateAddress", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(true));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AssociateAddress")));
         runCommonVerifiersForQueryApi();
     }
@@ -136,7 +130,7 @@ public class QueryApiExecutorTest {
     public void testAttachNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("DeleteNetworkInterface", HEADERS), getCustomInputs(), getNetworkInputs(true));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteNetworkInterface")));
         runCommonVerifiersForQueryApi();
     }
@@ -145,7 +139,7 @@ public class QueryApiExecutorTest {
     public void testAttachVolume() throws Exception {
         toTest.execute(getCommonInputs("AttachVolume", HEADERS), getVolumeCustomInputs(), getVolumeInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachVolume")));
         runCommonVerifiersForQueryApi();
     }
@@ -155,7 +149,7 @@ public class QueryApiExecutorTest {
         toTest.execute(getCommonInputsForLoadBalancers("CreateLoadBalancer", HEADERS), getCustomInputs(), getIamInputs(),
                 getLoadBalancerInputs(), getNetworkInputsForLoadBalancers());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateLoadBalancer")));
         runCommonVerifiersForQueryApi();
     }
@@ -164,7 +158,7 @@ public class QueryApiExecutorTest {
     public void testDeleteLoadBalancers() throws Exception {
         toTest.execute(getCommonInputsForLoadBalancers("DeleteLoadBalancer", HEADERS), getLoadBalancerInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteLoadBalancer")));
         runCommonVerifiersForQueryApi();
     }
@@ -173,7 +167,7 @@ public class QueryApiExecutorTest {
     public void testDescribeLoadBalancer() throws Exception {
         toTest.execute(getCommonInputsForLoadBalancers("DescribeLoadBalancers", HEADERS), getLoadBalancerInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeLoadBalancers")));
         runCommonVerifiersForQueryApi();
     }
@@ -183,7 +177,7 @@ public class QueryApiExecutorTest {
         toTest.execute(getCommonInputs("CreateNetworkInterface", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getIamInputs(), getNetworkInputs(false));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateNetworkInterface")));
         runCommonVerifiersForQueryApi();
     }
@@ -192,7 +186,7 @@ public class QueryApiExecutorTest {
     public void testCreateImage() throws Exception {
         toTest.execute(getCommonInputs("CreateImage", HEADERS), getCreateImageInputs(), getCreateImageCustomInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateImage")));
         runCommonVerifiersForQueryApi();
     }
@@ -201,7 +195,7 @@ public class QueryApiExecutorTest {
     public void testCreateSnapshot() throws Exception {
         toTest.execute(getCommonInputs("CreateSnapshot", HEADERS), getVolumeCustomInputs(), getVolumeInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateSnapshot")));
         runCommonVerifiersForQueryApi();
     }
@@ -210,7 +204,7 @@ public class QueryApiExecutorTest {
     public void testCreateSubnet() throws Exception {
         toTest.execute(getCommonInputs("CreateSubnet", HEADERS), getCustomInputs(), getNetworkInputs(false));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateSubnet")));
         runCommonVerifiersForQueryApi();
     }
@@ -219,7 +213,7 @@ public class QueryApiExecutorTest {
     public void testCreateTags() throws Exception {
         toTest.execute(getCommonInputs("CreateTags", HEADERS), getCustomInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateTags")));
         runCommonVerifiersForQueryApi();
     }
@@ -229,7 +223,7 @@ public class QueryApiExecutorTest {
         toTest.execute(getCommonInputs("CreateVolume", HEADERS), getCustomInputs(), getVolumeInputs(),
                 getNetworkInputs(false));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateVolume")));
         runCommonVerifiersForQueryApi();
     }
@@ -238,7 +232,7 @@ public class QueryApiExecutorTest {
     public void testCreateVpc() throws Exception {
         toTest.execute(getCommonInputs("CreateVpc", HEADERS), getDescribeInstancesInputs(), getNetworkInputs(false));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("CreateVpc")));
         runCommonVerifiersForQueryApi();
     }
@@ -247,7 +241,7 @@ public class QueryApiExecutorTest {
     public void testDeleteNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("AttachNetworkInterface", HEADERS), getCustomInputs(), getNetworkInputs(true));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("AttachNetworkInterface")));
         runCommonVerifiersForQueryApi();
     }
@@ -256,7 +250,7 @@ public class QueryApiExecutorTest {
     public void testDeleteSnapshot() throws Exception {
         toTest.execute(getCommonInputs("DeleteSnapshot", HEADERS), getVolumeInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteSnapshot")));
         runCommonVerifiersForQueryApi();
     }
@@ -265,7 +259,7 @@ public class QueryApiExecutorTest {
     public void testDeleteSubnet() throws Exception {
         toTest.execute(getCommonInputs("DeleteSubnet", HEADERS), getCustomInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteSubnet")));
         runCommonVerifiersForQueryApi();
     }
@@ -274,7 +268,7 @@ public class QueryApiExecutorTest {
     public void testDeleteVolume() throws Exception {
         toTest.execute(getCommonInputs("DeleteVolume", HEADERS), getVolumeCustomInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteVolume")));
         runCommonVerifiersForQueryApi();
     }
@@ -283,7 +277,7 @@ public class QueryApiExecutorTest {
     public void testDeleteVpc() throws Exception {
         toTest.execute(getCommonInputs("DeleteVpc", HEADERS), getCustomInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeleteVpc")));
         runCommonVerifiersForQueryApi();
     }
@@ -292,7 +286,7 @@ public class QueryApiExecutorTest {
     public void testDeregisterImage() throws Exception {
         toTest.execute(getCommonInputs("DeregisterImage", HEADERS), getImageCustomInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DeregisterImage")));
         runCommonVerifiersForQueryApi();
     }
@@ -301,7 +295,7 @@ public class QueryApiExecutorTest {
     public void testDescribeAvailabilityZones() throws Exception {
         toTest.execute(getCommonInputs("DescribeAvailabilityZones", HEADERS), getCustomInputsForDescribeAvailabilityZones());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeAvailabilityZones")));
         runCommonVerifiersForQueryApi();
     }
@@ -320,7 +314,7 @@ public class QueryApiExecutorTest {
         processTagFilter("TEST=testTag", COMMA_DELIMITER, filterInputsBuilder);
         toTest.execute(getCommonInputs("DescribeVolumes", HEADERS), volumeInputs, filterInputsBuilder.build());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeVolumes")));
         runCommonVerifiersForQueryApi();
     }
@@ -329,31 +323,33 @@ public class QueryApiExecutorTest {
     public void testDescribeInstances() throws Exception {
         toTest.execute(getCommonInputs("DescribeInstances", HEADERS), getDescribeInstancesInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeInstances")));
         runCommonVerifiersForQueryApi();
     }
 
     @Test
     public void testDescribeInstanceWithFailureAffinity() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.");
+        String message = "Invalid affinity value: [WRONG_VALUE]. Valid values: default, host.";
         InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withFilterNamesString("affinity")
                 .withFilterValuesString("WRONG_VALUE")
                 .build();
-        toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, message,
+                () -> toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs));
     }
 
     @Test
     public void testDescribeInstanceWithFailureArchitecture() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.");
+        String message = "Invalid architecture value: [WRONG_VALUE]. Valid values: i386, x86_64.";
 
         InstanceInputs instanceInputs = new InstanceInputs.Builder()
                 .withFilterNamesString("architecture")
                 .withFilterValuesString("i386|WRONG_VALUE|x86_64")
                 .build();
 
-        toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, message,
+                () -> toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs));
     }
 
     @Test
@@ -364,7 +360,7 @@ public class QueryApiExecutorTest {
                 .withMaxResults("5")
                 .build();
         toTest.execute(getCommonInputs("DescribeInstances", HEADERS), instanceInputs);
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeInstancesSuccess")));
     }
 
@@ -381,13 +377,13 @@ public class QueryApiExecutorTest {
                 .build();
 
         toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), networkInputs, filterInputs);
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeNetworkInterfacesSuccess")));
     }
 
     @Test
     public void testDescribeNetworkInterfacesWithWrongStatus() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized networkInterfaceAttachmentStatus value: [WRONG]. Valid values are: attaching, attached, detaching, detached.");
+        String message = "Unrecognized networkInterfaceAttachmentStatus value: [WRONG]. Valid values are: attaching, attached, detaching, detached.";
 
         NetworkInputs networkInputs = new NetworkInputs.Builder()
                 .build();
@@ -397,14 +393,15 @@ public class QueryApiExecutorTest {
                 .withNewFilter("attachment.status", "WRONG")
                 .build();
 
-        toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), networkInputs, filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, message,
+                () -> toTest.execute(getCommonInputs("DescribeNetworkInterfaces", HEADERS), networkInputs, filterInputs));
     }
 
     @Test
     public void testDescribeRegions() throws Exception {
         toTest.execute(getCommonInputs("DescribeRegions", HEADERS), getCustomInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeRegions")));
         runCommonVerifiersForQueryApi();
     }
@@ -423,83 +420,89 @@ public class QueryApiExecutorTest {
 
         toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeTagsSuccess")));
         runCommonVerifiersForQueryApi();
     }
 
     @Test
     public void testDescribeTagsWithWrongResourceType() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unrecognized resource type value: [WRONG]. Valid values are: customer-gateway, dhcp-options, image, instance, internet-gateway, network-acl, network-interface, reserved-instances, route-table, security-group, snapshot, spot-instances-request, subnet, volume, vpc, vpn-connection, vpn-gateway");
+        String message = "Unrecognized resource type value: [WRONG]. Valid values are: customer-gateway, dhcp-options, image, instance, internet-gateway, network-acl, network-interface, reserved-instances, route-table, security-group, snapshot, spot-instances-request, subnet, volume, vpc, vpn-connection, vpn-gateway";
 
         final FilterInputs filterInputs = new FilterInputs.Builder()
                 .withDelimiter(",")
                 .withNewFilter("resource-type", "WRONG")
                 .build();
 
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, message,
+                () -> toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs));
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsLessThanAccepted() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 4 input. The value doesn't meet conditions for general purpose usage.");
+        String message = "Incorrect provided value: 4 input. The value doesn't meet conditions for general purpose usage.";
 
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("4")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, message, () -> {
+            final FilterInputs filterInputs = new FilterInputs.Builder()
+                    .withMaxResults("4")
+                    .build();
+            toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        });
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsGreaterThanAccepted() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 1001 input. The value doesn't meet conditions for general purpose usage.");
+        String message = "Incorrect provided value: 1001 input. The value doesn't meet conditions for general purpose usage.";
 
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("1001")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, message, () -> {
+            final FilterInputs filterInputs = new FilterInputs.Builder()
+                    .withMaxResults("1001")
+                    .build();
+            toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        });
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsNegative() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Incorrect provided value: 0 input. The value doesn't meet conditions for general purpose usage.");
+        String message = "Incorrect provided value: 0 input. The value doesn't meet conditions for general purpose usage.";
 
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("0")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, message, () -> {
+            final FilterInputs filterInputs = new FilterInputs.Builder()
+                    .withMaxResults("0")
+                    .build();
+            toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        });
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsDouble() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: 6.7 input must be integer.");
+        String message = "The provided value: 6.7 input must be integer.";
 
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("6.7")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, message, () -> {
+            final FilterInputs filterInputs = new FilterInputs.Builder()
+                    .withMaxResults("6.7")
+                    .build();
+            toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        });
     }
 
     @Test
     public void testDescribeTagsWithMaxResultsString() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: WRONG input must be integer.");
+        String message = "The provided value: WRONG input must be integer.";
 
-        final FilterInputs filterInputs = new FilterInputs.Builder()
-                .withMaxResults("WRONG")
-                .build();
-
-        toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, message, () -> {
+            final FilterInputs filterInputs = new FilterInputs.Builder()
+                    .withMaxResults("WRONG")
+                    .build();
+            toTest.execute(getCommonInputs("DescribeTags", HEADERS), getCustomInputs(), filterInputs);
+        });
     }
 
     @Test
     public void testDetachNetworkInterface() throws Exception {
         toTest.execute(getCommonInputs("DetachNetworkInterface", HEADERS), getCustomInputs(), getNetworkInputs(false));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DetachNetworkInterface")));
         runCommonVerifiersForQueryApi();
     }
@@ -508,7 +511,7 @@ public class QueryApiExecutorTest {
     public void testDetachVolume() throws Exception {
         toTest.execute(getCommonInputs("DetachVolume", HEADERS), getVolumeCustomInputs(), getVolumeInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DetachVolume")));
         runCommonVerifiersForQueryApi();
     }
@@ -518,7 +521,7 @@ public class QueryApiExecutorTest {
         toTest.execute(getCommonInputs("DisassociateAddress", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(false));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DisassociateAddress")));
         runCommonVerifiersForQueryApi();
     }
@@ -528,7 +531,7 @@ public class QueryApiExecutorTest {
         toTest.execute(getCommonInputs("ModifyInstanceAttribute", HEADERS), getCustomInputs(),
                 getModifyInstanceAttributeEbsinputs(), getModifyInstanceAttributeIamInputs(), getModifyInstanceAttributeInstanceInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ModifyInstanceAttribute")));
         runCommonVerifiersForQueryApi();
     }
@@ -538,7 +541,7 @@ public class QueryApiExecutorTest {
         toTest.execute(getCommonInputs("ReleaseAddress", HEADERS), getCustomInputs(), getElasticIpInputs(),
                 getNetworkInputs(false));
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ReleaseAddress")));
         runCommonVerifiersForQueryApi();
     }
@@ -547,7 +550,7 @@ public class QueryApiExecutorTest {
     public void testStartInstances() throws Exception {
         toTest.execute(getCommonInputs("StartInstances", HEADERS), getRebootStartStopTerminateInstancesInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StartInstances")));
         runCommonVerifiersForQueryApi();
     }
@@ -556,7 +559,7 @@ public class QueryApiExecutorTest {
     public void testStopInstances() throws Exception {
         toTest.execute(getCommonInputs("StopInstances", HEADERS), getRebootStartStopTerminateInstancesInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("StopInstances")));
         runCommonVerifiersForQueryApi();
     }
@@ -565,7 +568,7 @@ public class QueryApiExecutorTest {
     public void testRebootInstances() throws Exception {
         toTest.execute(getCommonInputs("RebootInstances", HEADERS), getRebootStartStopTerminateInstancesInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("RebootInstances")));
         runCommonVerifiersForQueryApi();
     }
@@ -576,7 +579,7 @@ public class QueryApiExecutorTest {
                 getRunInstancesEbsInputs(), getRunInstancesElasticIpInputs(), getRunInstancesIamInputs(),
                 getRunInstancesInstanceInputs(), getRunInstancesNetworkInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("RunInstances")));
         runCommonVerifiersForQueryApi();
     }
@@ -654,7 +657,7 @@ public class QueryApiExecutorTest {
     public void testResetLaunchPermissionOnImage() throws Exception {
         toTest.execute(getCommonInputs("ResetImageAttribute", HEADERS), getResetLaunchPermissionOnImageInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("ResetImageAttribute")));
         runCommonVerifiersForQueryApi();
     }
@@ -663,7 +666,7 @@ public class QueryApiExecutorTest {
     public void testGetLaunchPermissionForImage() throws Exception {
         toTest.execute(getCommonInputs("DescribeImageAttribute", HEADERS), getLaunchPermissionForImageInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("DescribeImageAttribute")));
         runCommonVerifiersForQueryApi();
     }
@@ -672,48 +675,40 @@ public class QueryApiExecutorTest {
     public void testTerminateInstances() throws Exception {
         toTest.execute(getCommonInputs("TerminateInstances", HEADERS), getRebootStartStopTerminateInstancesInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getHeadersMap()),
                 eq(getQueryParamsMap("TerminateInstances")));
         runCommonVerifiersForQueryApi();
     }
 
     @Test
     public void testExecuteWithException() throws Exception {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "Unsupported Query API.");
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, "Unsupported Query API.",
+                () -> toTest.execute(getCommonInputs("", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(false)));
 
-        toTest.execute(getCommonInputs("", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(false));
-
-        verify(amazonSignatureServiceMock, never()).signRequestHeaders(any(InputsWrapper.class),
-                anyMapOf(String.class, String.class), anyMapOf(String.class, String.class));
-        verify(csHttpClientMock, never()).execute(any(HttpClientInputs.class));
+        assertEquals(0, amazonSignatureConstruction.constructed().size());
+        assertEquals(0, httpClientConstruction.constructed().size());
     }
 
     @Test
     public void testGetBucket() throws Exception {
         toTest.execute(getStorageCommonInputs(), getStorageInputs());
 
-        verify(amazonSignatureServiceMock, times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getS3HeadersMap()),
+        verify(amazonSignatureConstruction.constructed().get(0), times(1)).signRequestHeaders(any(InputsWrapper.class), eq(getS3HeadersMap()),
                 eq(getS3QueryParamsmap("GET Bucket")));
         runCommonVerifiersForQueryApi();
     }
 
     private void addCommonMocksForQueryApi() throws Exception {
-        whenNew(AmazonSignatureService.class).withNoArguments().thenReturn(amazonSignatureServiceMock);
-        when(amazonSignatureServiceMock
-                .signRequestHeaders(any(InputsWrapper.class), anyMapOf(String.class, String.class), anyMapOf(String.class, String.class)))
-                .thenReturn(authorizationHeaderMock);
         when(authorizationHeaderMock.getAuthorizationHeader()).thenReturn("");
         when(authorizationHeaderMock.getSignature()).thenReturn("");
-        whenNew(HttpClientService.class).withNoArguments().thenReturn(csHttpClientMock);
-        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(null);
     }
 
     private void runCommonVerifiersForQueryApi() throws Exception {
-        verifyNew(AmazonSignatureService.class).withNoArguments();
-        verifyNew(HttpClientService.class).withNoArguments();
-        verify(csHttpClientMock, times(1)).execute(any(HttpClientInputs.class));
-        verifyNoMoreInteractions(amazonSignatureServiceMock);
-        verifyNoMoreInteractions(csHttpClientMock);
+        assertEquals(1, amazonSignatureConstruction.constructed().size());
+        assertEquals(1, httpClientConstruction.constructed().size());
+        verify(httpClientConstruction.constructed().get(0), times(1)).execute(any(HttpClientInputs.class));
+        verifyNoMoreInteractions(amazonSignatureConstruction.constructed().get(0));
+        verifyNoMoreInteractions(httpClientConstruction.constructed().get(0));
     }
 
     private StorageInputs getStorageInputs() {

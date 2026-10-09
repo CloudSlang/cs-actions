@@ -23,39 +23,32 @@ import io.cloudslang.content.rft.entities.KeyFile;
 import io.cloudslang.content.rft.entities.KnownHostsFile;
 import io.cloudslang.content.rft.entities.RemoteSecureCopyInputs;
 import io.cloudslang.content.rft.utils.StringUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.*;
 
 /**
  * Date: 8/17/2015
  *
  * @author lesant
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({File.class, SCPCopier.class})
-@PowerMockIgnore("jdk.internal.reflect.*")
+@ExtendWith(MockitoExtension.class)
 public class SCPCopierTest {
 
     private static final Path KNOWN_HOSTS_PATH = Paths.get(System.getProperty("user.home"), ".ssh", "known_hosts");
@@ -93,21 +86,15 @@ public class SCPCopierTest {
     private OutputStream outputStreamMock;
 
     @Mock
-    private FileInputStream fileInputStreamMock;
-
-    @Mock
     private Path pathMock;
 
     @Mock
     private KnownHostsFile knownHostsFileMock;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     private SCPCopier scpCopier;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         RemoteSecureCopyInputs remoteSecureCopyInputs = getRemoteSecureCopyInputs();
         scpCopier = new SCPCopier(remoteSecureCopyInputs) {
@@ -117,84 +104,86 @@ public class SCPCopierTest {
             protected void establishPrivateKeyFile(KeyFile keyFile, JSch jsch, Session session, boolean usesSrcPrivateKeyFile) {
             }
         };
-        PowerMockito.whenNew(JSch.class).withNoArguments().thenReturn(jSchMock);
-        PowerMockito.when(jSchMock.getSession(anyString(), anyString(), anyInt())).thenReturn(sessionMock);
-        PowerMockito.when(sessionMock.openChannel(EXEC)).thenReturn(channelExecMock);
-        Mockito.doNothing().when(channelExecMock).connect(CONNECT_TIMEOUT);
-
-        PowerMockito.when(channelExecMock.getInputStream()).thenReturn(inputStreamMock);
-        PowerMockito.when(channelExecMock.getOutputStream()).thenReturn(outputStreamMock);
-        PowerMockito.whenNew(FileInputStream.class).withAnyArguments().thenReturn(fileInputStreamMock);
-
     }
 
     @Test
     public void copyFromLocalToRemoteWithJSchException() throws Exception {
-        PowerMockito.when(jSchMock.getSession(anyString(), anyString(), anyInt())).thenThrow(JSchException.class);
-        exception.expect(RuntimeException.class);
-        scpCopier.copyFromLocalToRemote();
-
-        verifyNew(JSch.class).withNoArguments();
+        try (MockedConstruction<JSch> jschConstruction = mockJSchThrowing(new JSchException("connection failure"))) {
+            assertThrows(RuntimeException.class, () -> scpCopier.copyFromLocalToRemote());
+            verifyJSchWasConstructed(jschConstruction);
+        }
     }
 
     @Test
     public void copyFromLocalToRemoteWithIOException() throws Exception {
-        PowerMockito.when(channelExecMock.getOutputStream()).thenThrow(IOException.class);
-        exception.expect(RuntimeException.class);
-        scpCopier.copyFromLocalToRemote();
-
-        verifyNew(JSch.class).withNoArguments();
-        verify(sessionMock).connect();
+        try (MockedConstruction<JSch> jschConstruction = mockJSch()) {
+            prepareChannel();
+            when(channelExecMock.getOutputStream()).thenThrow(new IOException("stream failure"));
+            assertThrows(RuntimeException.class, () -> scpCopier.copyFromLocalToRemote());
+            verifyJSchWasConstructed(jschConstruction);
+            verify(sessionMock).connect(anyInt());
+        }
     }
 
     @Test
     public void copyFromLocalToRemote() throws Exception {
-        boolean isCopied = scpCopier.copyFromLocalToRemote();
-        assertEquals(true, isCopied);
+        try (MockedConstruction<JSch> jschConstruction = mockJSch();
+             MockedConstruction<FileInputStream> fileInputStreams = mockConstruction(FileInputStream.class)) {
+            prepareChannel();
+            prepareInputStream();
+            when(channelExecMock.getOutputStream()).thenReturn(outputStreamMock);
+            boolean isCopied = scpCopier.copyFromLocalToRemote();
+            assertEquals(true, isCopied);
 
-        verifyNew(JSch.class).withNoArguments();
-        verify(jSchMock).getSession(anyString(), anyString(), anyInt());
-        verify(sessionMock).connect(anyInt());
-        verify(sessionMock).openChannel(EXEC);
-        verify(channelExecMock).setCommand(anyString());
-        verify(channelExecMock).connect();
-        verify(channelExecMock).disconnect();
-        verify(sessionMock).disconnect();
+            verifyJSchWasConstructed(jschConstruction);
+            verify(jschConstruction.constructed().get(0)).getSession(nullable(String.class), nullable(String.class), anyInt());
+            assertEquals(1, fileInputStreams.constructed().size());
+            verify(sessionMock).connect(anyInt());
+            verify(sessionMock).openChannel(EXEC);
+            verify(channelExecMock).setCommand(anyString());
+            verify(channelExecMock).connect();
+            verify(channelExecMock).disconnect();
+            verify(sessionMock).disconnect();
+        }
     }
 
     @Test
     public void copyFromRemoteToLocal() throws Exception {
-        boolean isCopied = scpCopier.copyFromRemoteToLocal();
-        assertEquals(true, isCopied);
+        try (MockedConstruction<JSch> jschConstruction = mockJSch()) {
+            prepareChannel();
+            prepareInputStream();
+            when(channelExecMock.getOutputStream()).thenReturn(outputStreamMock);
+            boolean isCopied = scpCopier.copyFromRemoteToLocal();
+            assertEquals(true, isCopied);
 
-        verifyNew(JSch.class).withNoArguments();
-        verify(jSchMock).getSession(anyString(), anyString(), anyInt());
-        verify(sessionMock).connect(anyInt());
-        verify(sessionMock).openChannel(EXEC);
-        verify(channelExecMock).setCommand(anyString());
-        verify(channelExecMock).connect();
-        verify(channelExecMock).disconnect();
-        verify(sessionMock).disconnect();
+            verifyJSchWasConstructed(jschConstruction);
+            verify(jschConstruction.constructed().get(0)).getSession(nullable(String.class), nullable(String.class), anyInt());
+            verify(sessionMock).connect(anyInt());
+            verify(sessionMock).openChannel(EXEC);
+            verify(channelExecMock).setCommand(anyString());
+            verify(channelExecMock).connect();
+            verify(channelExecMock).disconnect();
+            verify(sessionMock).disconnect();
+        }
     }
 
     @Test
     public void copyFromRemoteToLocalWithJSchException() throws Exception {
-        PowerMockito.when(jSchMock.getSession(anyString(), anyString(), anyInt())).thenThrow(JSchException.class);
-        exception.expect(RuntimeException.class);
-        scpCopier.copyFromRemoteToLocal();
-
-        verifyNew(JSch.class).withNoArguments();
-
+        try (MockedConstruction<JSch> jschConstruction = mockJSchThrowing(new JSchException("connection failure"))) {
+            assertThrows(RuntimeException.class, () -> scpCopier.copyFromRemoteToLocal());
+            verifyJSchWasConstructed(jschConstruction);
+        }
     }
 
     @Test
     public void copyFromRemoteToLocalWithIOException() throws Exception {
-        PowerMockito.when(channelExecMock.getOutputStream()).thenThrow(IOException.class);
-        exception.expect(RuntimeException.class);
-        scpCopier.copyFromRemoteToLocal();
-
-        verifyNew(JSch.class).withNoArguments();
-        verify(sessionMock).connect();
+        try (MockedConstruction<JSch> jschConstruction = mockJSch()) {
+            prepareChannel();
+            when(channelExecMock.getOutputStream()).thenThrow(new IOException("stream failure"));
+            assertThrows(RuntimeException.class, () -> scpCopier.copyFromRemoteToLocal());
+            verifyJSchWasConstructed(jschConstruction);
+            verify(sessionMock).connect(anyInt());
+        }
     }
 
     @Test
@@ -216,14 +205,15 @@ public class SCPCopierTest {
             }
         };
 
-        mockStatic(File.class);
-        when(File.createTempFile(anyString(), anyString())).thenReturn(tempFileMock);
-        when(tempFileMock.getCanonicalPath()).thenReturn("C:\\myTestFolder");
+        try (MockedStatic<File> mockedFile = mockStatic(File.class)) {
+            mockedFile.when(() -> File.createTempFile("SCPCopy", ".tmp")).thenReturn(tempFileMock);
+            when(tempFileMock.getCanonicalPath()).thenReturn("C:\\myTestFolder");
 
-        boolean isCopied = scpCopier.copyFromRemoteToRemote();
-        verify(tempFileMock).delete();
+            boolean isCopied = scpCopier.copyFromRemoteToRemote();
+            verify(tempFileMock).delete();
 
-        assertEquals(true, isCopied);
+            assertEquals(true, isCopied);
+        }
     }
 
     @Test
@@ -263,11 +253,9 @@ public class SCPCopierTest {
         when(knownHostsFileMock.getPolicy()).thenReturn(KNOWN_HOSTS_POLICY_ADD);
         when(pathMock.isAbsolute()).thenReturn(false);
 
-        exception.expect(RuntimeException.class);
-        exception.expectMessage(ABSOLUTE_KNOWN_HOSTS_FILE_ERROR_MESSAGE);
-
-        scpCopier.establishKnownHostsConfiguration(knownHostsFileMock, jSchMock, sessionMock);
-        verify(sessionMock).setConfig(STRICT_HOST_KEY_CHECKING, NONSTRICT);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> scpCopier.establishKnownHostsConfiguration(knownHostsFileMock, jSchMock, sessionMock));
+        assertEquals(ABSOLUTE_KNOWN_HOSTS_FILE_ERROR_MESSAGE, exception.getMessage());
     }
 
     @Test
@@ -276,13 +264,10 @@ public class SCPCopierTest {
         scpCopier = new SCPCopier(remoteSecureCopyInputs);
         when(knownHostsFileMock.getPath()).thenReturn(pathMock);
         when(knownHostsFileMock.getPolicy()).thenReturn(StringUtils.EMPTY_STRING);
-        when(pathMock.isAbsolute()).thenReturn(false);
 
-        exception.expect(RuntimeException.class);
-        exception.expectMessage(UNKNOWN_KNOWN_HOSTS_FILE_POLICY);
-
-        scpCopier.establishKnownHostsConfiguration(knownHostsFileMock, jSchMock, sessionMock);
-        verify(sessionMock).setConfig(STRICT_HOST_KEY_CHECKING, NONSTRICT);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> scpCopier.establishKnownHostsConfiguration(knownHostsFileMock, jSchMock, sessionMock));
+        assertEquals(UNKNOWN_KNOWN_HOSTS_FILE_POLICY, exception.getMessage());
 
     }
 
@@ -324,6 +309,28 @@ public class SCPCopierTest {
 
     private RemoteSecureCopyInputs getRemoteSecureCopyInputs() {
         return new RemoteSecureCopyInputs(StringUtils.EMPTY_STRING, StringUtils.EMPTY_STRING, StringUtils.EMPTY_STRING, StringUtils.EMPTY_STRING);
+    }
+
+    private MockedConstruction<JSch> mockJSch() {
+        return mockConstruction(JSch.class,
+                (jsch, context) -> when(jsch.getSession(nullable(String.class), nullable(String.class), anyInt())).thenReturn(sessionMock));
+    }
+
+    private MockedConstruction<JSch> mockJSchThrowing(JSchException exception) {
+        return mockConstruction(JSch.class,
+                (jsch, context) -> when(jsch.getSession(nullable(String.class), nullable(String.class), anyInt())).thenThrow(exception));
+    }
+
+    private void prepareChannel() throws Exception {
+        when(sessionMock.openChannel(EXEC)).thenReturn(channelExecMock);
+    }
+
+    private void prepareInputStream() throws IOException {
+        when(channelExecMock.getInputStream()).thenReturn(inputStreamMock);
+    }
+
+    private void verifyJSchWasConstructed(MockedConstruction<JSch> construction) {
+        assertEquals(1, construction.constructed().size());
     }
 
 }

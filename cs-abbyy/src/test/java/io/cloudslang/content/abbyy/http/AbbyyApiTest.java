@@ -26,40 +26,41 @@ import io.cloudslang.content.abbyy.exceptions.ClientSideException;
 import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.constants.ReturnCodes;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({AbbyyApi.class, HttpClient.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class AbbyyApiTest {
 
     private AbbyyApi sut;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    private MockedStatic<HttpClient> httpClientMock;
     @Mock
     private AbbyyResponseParser responseParserMock;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws ParserConfigurationException {
         this.sut = new AbbyyApi(responseParserMock);
+        this.httpClientMock = mockStatic(HttpClient.class);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        this.httpClientMock.close();
     }
 
 
@@ -72,20 +73,16 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
         when(responseMock.getStatusCode()).thenReturn(Short.parseShort(statusCode));
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         //Assert
-        this.exception.expect(ClientSideException.class);
-
-        //Act
-        this.sut.request(abbyyInput);
+        org.junit.jupiter.api.Assertions.assertThrows(ClientSideException.class, () -> this.sut.request(abbyyInput));
         assertEquals(statusCode, this.sut.getLastStatusCode());
     }
 
@@ -100,14 +97,13 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
         when(responseMock.getStatusCode()).thenReturn(Short.parseShort(statusCode));
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         //Act
         this.sut.request(abbyyInput);
@@ -129,14 +125,13 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
         when(responseMock.getStatusCode()).thenReturn(Short.parseShort(statusCode));
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         //Act
         this.sut.getTaskStatus(abbyyInput, taskId);
@@ -160,20 +155,16 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
         when(responseMock.getStatusCode()).thenReturn((short) 0);
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         //Assert
-        this.exception.expect(AbbyySdkException.class);
-
-        //Act
-        this.sut.getResult(abbyyInput, resultUrl, exportFormat, downloadPath, useSpecificCharSet);
+        org.junit.jupiter.api.Assertions.assertThrows(AbbyySdkException.class, () -> this.sut.getResult(abbyyInput, resultUrl, exportFormat, downloadPath, useSpecificCharSet));
     }
 
 
@@ -193,15 +184,14 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
         when(responseMock.getStatusCode()).thenReturn(Short.parseShort(statusCode));
         when(responseMock.getReturnResult()).thenReturn(expectedReturnResult);
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         //Act
         String returnResult = this.sut.getResult(abbyyInput, resultUrl, exportFormat, downloadPath, useSpecificCharSet);
@@ -225,14 +215,13 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
         when(responseMock.getStatusCode()).thenReturn(Short.parseShort(statusCode));
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         try {
             //Act
@@ -259,7 +248,7 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
@@ -268,8 +257,7 @@ public class AbbyyApiTest {
         when(responseHeaders.getProperty(eq(Headers.CONTENT_LENGTH))).thenReturn(StringUtils.EMPTY);
         when(responseMock.getResponseHeaders()).thenReturn(responseHeaders);
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         try {
             //Act
@@ -297,7 +285,7 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
@@ -306,8 +294,7 @@ public class AbbyyApiTest {
         when(responseHeaders.getProperty(eq(Headers.CONTENT_LENGTH))).thenReturn(expectedSize);
         when(responseMock.getResponseHeaders()).thenReturn(responseHeaders);
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         //Act
         long size = this.sut.getResultSize(abbyyInput, resultUrl, exportFormat);
@@ -327,9 +314,7 @@ public class AbbyyApiTest {
         final int startByteIndex = -1;
         final int endByteIndex = startByteIndex + 1;
         //Assert
-        this.exception.expect(IllegalArgumentException.class);
-        //Act
-        this.sut.getResultChunk(abbyyInput, resultUrl, exportFormat, startByteIndex, endByteIndex);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> this.sut.getResultChunk(abbyyInput, resultUrl, exportFormat, startByteIndex, endByteIndex));
     }
 
 
@@ -342,9 +327,7 @@ public class AbbyyApiTest {
         final int startByteIndex = 0;
         final int endByteIndex = -1;
         //Assert
-        this.exception.expect(IllegalArgumentException.class);
-        //Act
-        this.sut.getResultChunk(abbyyInput, resultUrl, exportFormat, startByteIndex, endByteIndex);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> this.sut.getResultChunk(abbyyInput, resultUrl, exportFormat, startByteIndex, endByteIndex));
     }
 
 
@@ -357,9 +340,7 @@ public class AbbyyApiTest {
         final int startByteIndex = 2;
         final int endByteIndex = startByteIndex - 1;
         //Assert
-        this.exception.expect(IllegalArgumentException.class);
-        //Act
-        this.sut.getResultChunk(abbyyInput, resultUrl, exportFormat, startByteIndex, endByteIndex);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> this.sut.getResultChunk(abbyyInput, resultUrl, exportFormat, startByteIndex, endByteIndex));
     }
 
 
@@ -378,14 +359,13 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
         when(responseMock.getStatusCode()).thenReturn(Short.parseShort(statusCode));
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         try {
             //Act
@@ -415,15 +395,14 @@ public class AbbyyApiTest {
         when(abbyyInput.getSourceFile()).thenReturn(mock(Path.class));
 
         HttpClientRequest.Builder builderSpy = new HttpClientRequest.Builder();
-        PowerMockito.spy(builderSpy);
+        spy(builderSpy);
 
         HttpClientResponse responseMock = mock(HttpClientResponse.class);
         when(responseMock.getReturnCode()).thenReturn(ReturnCodes.SUCCESS);
         when(responseMock.getStatusCode()).thenReturn(Short.parseShort(statusCode));
         when(responseMock.getReturnResult()).thenReturn(expectedReturnResult);
 
-        PowerMockito.mockStatic(HttpClient.class);
-        PowerMockito.when(HttpClient.class, "execute", any(HttpClientRequest.class)).thenReturn(responseMock);
+        httpClientMock.when(() -> HttpClient.execute(any(HttpClientRequest.class))).thenReturn(responseMock);
 
         //Act
         String returnResult = this.sut.getResultChunk(abbyyInput, resultUrl, exportFormat, startByteIndex, endByteIndex);

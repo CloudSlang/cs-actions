@@ -16,8 +16,8 @@
 
 package io.cloudslang.content.vmware.utils;
 
-import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
-import com.sun.org.apache.xerces.internal.dom.TextImpl;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 import com.vmware.vim25.DynamicProperty;
 import com.vmware.vim25.HttpNfcLeaseInfo;
 import com.vmware.vim25.ImportSpec;
@@ -72,7 +72,7 @@ public class OvfUtils {
         final ObjectContent objectContent = GetObjectProperties.getObjectProperty(connectionResources, httpNfcLease, "state");
         final List<DynamicProperty> dynamicProperties = objectContent.getPropSet();
         if (dynamicProperties.size() != 0) {
-            return ((TextImpl) ((ElementNSImpl) dynamicProperties.get(0).getVal()).getFirstChild()).getData();
+            return ((Text) ((Element) dynamicProperties.get(0).getVal()).getFirstChild()).getData();
         }
         throw new Exception(LEASE_STATE_COULD_NOT_BE_OBTAINED);
     }

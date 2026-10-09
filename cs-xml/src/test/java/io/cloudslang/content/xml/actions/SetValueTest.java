@@ -20,9 +20,9 @@ package io.cloudslang.content.xml.actions;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.utils.Constants;
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URI;
@@ -41,7 +41,7 @@ import static io.cloudslang.content.xml.utils.Constants.Outputs.ERROR_MESSAGE;
 import static io.cloudslang.content.xml.utils.Constants.Outputs.RESULT_TEXT;
 import static io.cloudslang.content.xml.utils.Constants.SuccessMessages.SET_VALUE_SUCCESS;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by markowis on 23/02/2016.
@@ -51,14 +51,14 @@ public class SetValueTest {
     private SetValue setValue;
     String xml;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception{
         setValue = new SetValue();
         URI resource = getClass().getResource("/xml/test.xml").toURI();
         xml = FileUtils.readFileToString(new File(resource));
     }
 
-    @After
+    @AfterEach
     public void tearDown(){
         setValue = null;
         xml = null;

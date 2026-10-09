@@ -21,33 +21,34 @@ package io.cloudslang.content.utilities.services.osdetector;
 
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.apache.commons.lang3.SystemUtils.OS_ARCH;
 import static org.apache.commons.lang3.SystemUtils.OS_NAME;
 import static org.apache.commons.lang3.SystemUtils.OS_VERSION;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.doReturn;
 
 /**
  * Created by Tirla Florin-Alin on 08/12/2017.
  **/
-@RunWith(PowerMockRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class LocalOsDetectorServiceTest {
     @Mock
     private OsDetectorHelperService osDetectorHelperService;
 
     private LocalOsDetectorService localOsDetectorService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         localOsDetectorService = new LocalOsDetectorService(osDetectorHelperService);
-        doReturn("fam").when(osDetectorHelperService).resolveOsFamily(anyString());
+        lenient().doReturn("fam").when(osDetectorHelperService).resolveOsFamily(anyString());
     }
 
     @Test

@@ -27,8 +27,8 @@ import com.vmware.vim25.VimService;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.connection.exceptions.ConnectionException;
 import io.cloudslang.content.vmware.entities.ManagedObjectType;
+import jakarta.xml.ws.BindingProvider;
 
-import javax.xml.ws.BindingProvider;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;

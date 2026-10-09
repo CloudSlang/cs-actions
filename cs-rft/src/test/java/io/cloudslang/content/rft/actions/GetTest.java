@@ -19,9 +19,9 @@ package io.cloudslang.content.rft.actions;
 
 import io.cloudslang.content.rft.actions.ftp.Get;
 import io.cloudslang.content.rft.services.FTPService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockftpserver.fake.FakeFtpServer;
 import org.mockftpserver.fake.UserAccount;
 import org.mockftpserver.fake.filesystem.DirectoryEntry;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.rft.utils.Constants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class GetTest {
@@ -42,7 +42,7 @@ public class GetTest {
     FakeFtpServer fakeFtpServer;
     FTPService ftpService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         FileSystem fileSystem = new UnixFakeFileSystem();
@@ -154,7 +154,7 @@ public class GetTest {
 
     }
 
-    @After
+    @AfterEach
     public void teardown() throws Exception  {
         fakeFtpServer.stop();
     }

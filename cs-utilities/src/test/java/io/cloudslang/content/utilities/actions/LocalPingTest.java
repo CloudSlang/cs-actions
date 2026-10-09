@@ -14,34 +14,23 @@
  */
 
 
-
-
 package io.cloudslang.content.utilities.actions;
 
 import io.cloudslang.content.utilities.entities.LocalPingInputs;
 import io.cloudslang.content.utilities.services.localping.LocalPingService;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 
-import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.PACKETS_SENT;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockConstruction;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({LocalPing.class, InetAddress.class})
 public class LocalPingTest {
 
     private static final String LOCALHOST = "localhost";
@@ -54,18 +43,6 @@ public class LocalPingTest {
             "    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),\n" +
             "Approximate round trip times in milli-seconds:\n" +
             "    Minimum = 190ms, Maximum = 191ms, Average = 190ms";
-    private static final String INVALID_HOST = "invalidHost";
-
-    @Mock
-    private LocalPingService localPingServiceMock;
-
-    @Rule
-    private ExpectedException expectedException = ExpectedException.none();
-
-    @Before
-    public void setUp() throws Exception {
-        whenNew(LocalPingService.class).withAnyArguments().thenReturn(localPingServiceMock);
-    }
 
     @Test
     public void executePingCommandWithRequiredInputs() throws Exception {
@@ -73,11 +50,13 @@ public class LocalPingTest {
         expectedMap.put(RETURN_RESULT, COMMAND_OUTPUT);
         expectedMap.put(PACKETS_SENT, "4");
 
-        doReturn(expectedMap).when(localPingServiceMock).executePingCommand(any(LocalPingInputs.class));
+        try (MockedConstruction<LocalPingService> mockedService = mockConstruction(
+                LocalPingService.class,
+                (mock, context) -> doReturn(expectedMap).when(mock).executePingCommand(any(LocalPingInputs.class)))) {
+            Map<String, String> actualMap = new LocalPing().execute(LOCALHOST, "4", "", "", "");
 
-        Map<String, String> actualMap = new LocalPing().execute(LOCALHOST, "4", "", "", "");
-
-        assertEquals(expectedMap.get(RETURN_RESULT), actualMap.get(RETURN_RESULT));
-        assertEquals(expectedMap.get(PACKETS_SENT), actualMap.get(PACKETS_SENT));
+            assertEquals(expectedMap.get(RETURN_RESULT), actualMap.get(RETURN_RESULT));
+            assertEquals(expectedMap.get(PACKETS_SENT), actualMap.get(PACKETS_SENT));
+        }
     }
 }

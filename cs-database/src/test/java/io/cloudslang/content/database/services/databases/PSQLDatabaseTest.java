@@ -19,17 +19,16 @@
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PSQLDatabaseTest {
 
@@ -37,10 +36,6 @@ public class PSQLDatabaseTest {
     private static final String DB_SERVER = "dbServer";
     private static final int DB_PORT = 5432;
     private static final String DB_SERVER_IPV6_LITERAL = "2001-0db8-85a3-0042-1000-8a2e-0370-7334.ipv6-literal.net";
-
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
-
     @Test
     public void testSetUpNoDbName() throws ClassNotFoundException, SQLException {
         PostgreSqlDatabase pSqlDatabase = new PostgreSqlDatabase();
@@ -57,15 +52,14 @@ public class PSQLDatabaseTest {
 
     @Test
     public void testSetUpNoServerName() throws ClassNotFoundException, SQLException {
-        expectedEx.expect(IllegalArgumentException.class);
-        expectedEx.expectMessage("host   not valid");
         PostgreSqlDatabase pSqlDatabase = new PostgreSqlDatabase();
         final SQLInputs sqlInputs = SQLInputs.builder().build();
         sqlInputs.setDbName(DB_NAME);
         sqlInputs.setDbServer(null);
         sqlInputs.setDbPort(DB_PORT);
 //        sqlInputs.setDbUrls(new ArrayList<String>());
-        pSqlDatabase.setUp(sqlInputs);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> pSqlDatabase.setUp(sqlInputs));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("host   not valid"));
     }
 
     @Test

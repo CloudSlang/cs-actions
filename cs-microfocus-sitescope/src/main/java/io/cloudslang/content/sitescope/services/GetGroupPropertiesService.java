@@ -32,7 +32,6 @@ import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.SuccessMsgs.GET_GROUP_PROPERTIES;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
 
 
 public class GetGroupPropertiesService {

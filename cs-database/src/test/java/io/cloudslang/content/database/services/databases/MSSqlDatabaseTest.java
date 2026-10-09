@@ -23,16 +23,9 @@ import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
@@ -41,20 +34,12 @@ import static io.cloudslang.content.database.constants.DBDefaultValues.AUTH_SQL;
 import static io.cloudslang.content.database.constants.DBOtherValues.BACK_SLASH;
 import static io.cloudslang.content.database.constants.DBOtherValues.SQLSERVER_JDBC_DRIVER;
 import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-import static org.powermock.api.mockito.PowerMockito.*;
-import static org.powermock.api.mockito.PowerMockito.when;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Created by vranau on 12/10/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({MSSqlDatabase.class})
-@PowerMockIgnore({"javax.management.*", "org.apache.commons.logging.*"})
 public class MSSqlDatabaseTest {
 
     public static final String DB_NAME = "dbName";
@@ -66,28 +51,29 @@ public class MSSqlDatabaseTest {
     public static final String AUTH_TYPE = "authType";
     public static final String INVALID_AUTH_TYPE = "invalidAuthType";
 
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
-
-    @Before
-    public void beforeTest() throws Exception {
-        PowerMockito.mockStatic(MSSqlDatabase.class);
-
-        doCallRealMethod().when(MSSqlDatabase.class, "addSslEncryptionToConnection", anyBoolean(), anyString(), anyString(), anyString());
-        doNothing().when(MSSqlDatabase.class, "loadWindowsAuthentication", anyString());
+    @BeforeEach
+    public void skipNativeDllLoad() throws Exception {
+        setDllLoaded(true);
     }
 
+    @AfterEach
+    public void resetNativeDllState() throws Exception {
+        setDllLoaded(false);
+    }
+
+    private void setDllLoaded(boolean loaded) throws Exception {
+        java.lang.reflect.Field field = MSSqlDatabase.class.getDeclaredField("dllLoaded");
+        field.setAccessible(true);
+        field.setBoolean(null, loaded);
+    }
     @Test
     public void testSetUpInvalidAuthType() throws ClassNotFoundException, SQLException {
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("Invalid authentication type for MS SQL : " + INVALID_AUTH_TYPE);
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
 
         final SQLInputs sqlInputs = getSqlInputsForMSSql(DB_NAME, DB_SERVER, INVALID_AUTH_TYPE, INSTANCE);
 
-
-        final List<String> dbUrls = mSSqlDatabase.setUp(sqlInputs);
-        assertEquals(1, dbUrls.size());
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> mSSqlDatabase.setUp(sqlInputs));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("Invalid authentication type for MS SQL : " + INVALID_AUTH_TYPE));
     }
 
     @Test
@@ -104,13 +90,12 @@ public class MSSqlDatabaseTest {
 
     @Test
     public void testSetUpNoServerName() throws ClassNotFoundException, SQLException {
-        expectedEx.expect(RuntimeException.class);
-        expectedEx.expectMessage("host   not valid");
         MSSqlDatabase mSSqlDatabase = new MSSqlDatabase();
 
         final SQLInputs sqlInputs = getSqlInputsForMSSql(DB_NAME, EMPTY, AUTH_TYPE, INSTANCE);
 
-        mSSqlDatabase.setUp(sqlInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> mSSqlDatabase.setUp(sqlInputs));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("host   not valid"));
     }
 
     @Test
@@ -178,6 +163,7 @@ public class MSSqlDatabaseTest {
         sqlInputs.setDbPort(DB_PORT);
 //        sqlInputs.setDbUrls(new ArrayList<String>());
         sqlInputs.setAuthenticationType(authWindows);
+        sqlInputs.setAuthLibraryPath(System.getProperty("user.dir"));
         sqlInputs.setInstance(instance);
         sqlInputs.setDbClass(SQLSERVER_JDBC_DRIVER);
         sqlInputs.setTrustAllRoots(true);

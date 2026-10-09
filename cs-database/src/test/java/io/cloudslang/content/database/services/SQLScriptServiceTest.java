@@ -17,22 +17,17 @@
 
 
 package io.cloudslang.content.database.services;
+import static org.mockito.Mockito.*;
 
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
+import org.mockito.MockedConstruction;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -42,13 +37,13 @@ import java.util.ArrayList;
 
 import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
-
+import static org.mockito.Mockito.mockConstruction;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Created by vranau on 12/11/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ConnectionService.class, SQLScriptService.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class SQLScriptServiceTest {
 
     private static final int QUYERY_TIMEOUT = 10;
@@ -62,27 +57,33 @@ public class SQLScriptServiceTest {
 
     @Mock
     private Statement statementMock;
-    @Rule
-    private ExpectedException expectedEx = ExpectedException.none();
-
-    @Mock
+@Mock
     private ResultSet resultSetMock;
     @Mock
     private ResultSetMetaData resultSetMetadataMock;
+    private MockedConstruction<ConnectionService> connectionServiceConstruction;
     private ArrayList<String> lines;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         sqlInputs = SQLInputs.builder().build();
         lines = new ArrayList<>();
         lines.add(SQL_COMMAND);
         InputsProcessor.init(sqlInputs);
-        PowerMockito.whenNew(ConnectionService.class).withNoArguments().thenReturn(connectionServiceMock);
+        connectionServiceConstruction = mockConstruction(ConnectionService.class, (mock, context) -> {
+            connectionServiceMock = mock;
+            when(mock.setUpConnection(sqlInputs)).thenReturn(connectionMock);
+        });
         when(connectionServiceMock.setUpConnection(sqlInputs)).thenReturn(connectionMock);
-        when(connectionMock.createStatement(Matchers.any(Integer.class), Matchers.any(Integer.class))).thenReturn(statementMock);
+        when(connectionMock.createStatement(ArgumentMatchers.any(Integer.class), ArgumentMatchers.any(Integer.class))).thenReturn(statementMock);
         when(connectionMock.getAutoCommit()).thenReturn(true);
         when(statementMock.executeQuery(SQL_COMMAND)).thenReturn(resultSetMock);
         when(statementMock.executeBatch()).thenReturn(new int[]{1,2});
+    }
+
+    @org.junit.jupiter.api.AfterEach
+    public void closeConstruction() {
+        connectionServiceConstruction.close();
     }
 
     @Test
@@ -126,15 +127,13 @@ public class SQLScriptServiceTest {
 
     @Test
     public void testExecuteSqlScriptNullLines() throws Exception {
-        expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("No SQL command to be executed.");
-        SQLScriptService.executeSqlScript(null, sqlInputs);
+        Exception exception = assertThrows(Exception.class, () -> SQLScriptService.executeSqlScript(null, sqlInputs));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("No SQL command to be executed."));
     }
 
     @Test
     public void testExecuteSqlScriptEmptyLines() throws Exception {
-        expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("No SQL command to be executed.");
-        SQLScriptService.executeSqlScript(new ArrayList<String>(), sqlInputs);
+        Exception exception = assertThrows(Exception.class, () -> SQLScriptService.executeSqlScript(new ArrayList<String>(), sqlInputs));
+        org.junit.jupiter.api.Assertions.assertTrue(exception.getMessage().contains("No SQL command to be executed."));
     }
 }

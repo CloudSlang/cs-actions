@@ -19,11 +19,12 @@
 package io.cloudslang.content.utils;
 
 import io.cloudslang.content.constants.ExceptionValues;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Created by victor on 04.09.2016.
@@ -57,22 +58,16 @@ public class NumberUtilitiesTest {
     }
 
     private void testInvalidBoundsInt(String value, int lowerBound, int upperBound) {
-        try {
-            NumberUtilities.isValidInt(value, lowerBound, upperBound);
-            assertFalse(true);
-        } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), ExceptionValues.INVALID_BOUNDS);
-        }
+        assertThatThrownBy(() -> NumberUtilities.isValidInt(value, lowerBound, upperBound))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ExceptionValues.INVALID_BOUNDS);
     }
 
 
     private void testInvalidInteger(String value) {
-        try {
-            NumberUtilities.toInteger(value);
-            assertFalse(true);
-        } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), value + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_INTEGER_VALUE);
-        }
+        assertThatThrownBy(() -> NumberUtilities.toInteger(value))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(value + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_INTEGER_VALUE);
     }
 
     @Test
@@ -96,12 +91,9 @@ public class NumberUtilitiesTest {
 
 
     private void testInvalidBoundsDouble(String value, double lowerBound, double upperBound) {
-        try {
-            NumberUtilities.isValidDouble(value, lowerBound, upperBound);
-            assertFalse(true);
-        } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), ExceptionValues.INVALID_BOUNDS);
-        }
+        assertThatThrownBy(() -> NumberUtilities.isValidDouble(value, lowerBound, upperBound))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ExceptionValues.INVALID_BOUNDS);
     }
 
     @Test
@@ -127,12 +119,9 @@ public class NumberUtilitiesTest {
     }
 
     private void testInvalidDouble(String value) {
-        try {
-            NumberUtilities.toDouble(value);
-            assertFalse(true);
-        } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), value + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_DOUBLE_VALUE);
-        }
+        assertThatThrownBy(() -> NumberUtilities.toDouble(value))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(value + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_DOUBLE_VALUE);
     }
 
     @Test
@@ -154,12 +143,9 @@ public class NumberUtilitiesTest {
 
 
     private void testInvalidBoundsLong(String value, long lowerBound, long upperBound) {
-        try {
-            NumberUtilities.isValidLong(value, lowerBound, upperBound);
-            assertFalse(true);
-        } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), ExceptionValues.INVALID_BOUNDS);
-        }
+        assertThatThrownBy(() -> NumberUtilities.isValidLong(value, lowerBound, upperBound))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ExceptionValues.INVALID_BOUNDS);
     }
 
     @Test
@@ -181,12 +167,9 @@ public class NumberUtilitiesTest {
     }
 
     private void testInvalidLong(String value) {
-        try {
-            NumberUtilities.toLong(value);
-            assertFalse(true);
-        } catch (IllegalArgumentException iae) {
-            assertEquals(iae.getMessage(), value + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_LONG_VALUE);
-        }
+        assertThatThrownBy(() -> NumberUtilities.toLong(value))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(value + ExceptionValues.EXCEPTION_DELIMITER + ExceptionValues.INVALID_LONG_VALUE);
     }
 
     @Test

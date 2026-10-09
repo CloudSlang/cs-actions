@@ -23,24 +23,24 @@ import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.actions.ScoreSSHShellCommand;
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMapOf;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 
 /**
  * Created by Tirla Florin-Alin on 08/12/2017.
  **/
-@RunWith(PowerMockRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SshOsDetectorServiceTest {
     @Mock
     private OsDetectorHelperService osDetectorHelperService;
@@ -50,7 +50,7 @@ public class SshOsDetectorServiceTest {
 
     private SshOsDetectorService sshOsDetectorService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         sshOsDetectorService = new SshOsDetectorService(osDetectorHelperService, scoreSSHShellCommand);
     }
@@ -63,7 +63,7 @@ public class SshOsDetectorServiceTest {
         toBeReturnedOsDetails.setFamily("b os fam");
         toBeReturnedOsDetails.setName("b os");
         toBeReturnedOsDetails.setVersion("ultimate");
-        doReturn(toBeReturnedOsDetails).when(osDetectorHelperService).processOutput(any(OperatingSystemDetails.class), anyMapOf(String.class, String.class), anyString());
+        doReturn(toBeReturnedOsDetails).when(osDetectorHelperService).processOutput(any(OperatingSystemDetails.class), anyMap(), anyString());
 
         OperatingSystemDetails actualOsDetails = sshOsDetectorService.detectOs(new OsDetectorInputs.Builder().build());
 

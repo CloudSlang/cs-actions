@@ -23,29 +23,25 @@ import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
 import io.cloudslang.content.vmware.services.DeployOvfTemplateService;
 import io.cloudslang.content.vmware.utils.OvfUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.anyString;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({DeployOvfTemplateAction.class, OvfUtils.class})
+@ExtendWith(MockitoExtension.class)
 public class DeployOvfTemplateActionTest {
 
     private static final String OVF_NETWORK_JS_VALUES = "[\"Network 1\",\"Network 2\"]";
@@ -55,63 +51,45 @@ public class DeployOvfTemplateActionTest {
     private static final String SUCCESSFULLY_DEPLOYED = "Template was deployed successfully!";
     private static final String OPERATION_FAILED = "Operation failed!";
 
-    private DeployOvfTemplateAction action;
-
-    @Mock
-    private DeployOvfTemplateService service;
-
-    @Before
-    public void setUp() {
-        action = new DeployOvfTemplateAction();
-    }
-
-    @After
-    public void tearDown() {
-        action = null;
-        service = null;
-    }
-
     @Test
     public void testSuccessDeployTemplate() throws Exception {
-        prepareForTests();
-        Mockito.doNothing().when(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
-
-        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "", null);
-
-        Mockito.verify(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
-        assertEquals(ReturnCodes.SUCCESS, result.get(Outputs.RETURN_CODE));
-        assertEquals(SUCCESSFULLY_DEPLOYED, result.get(Outputs.RETURN_RESULT));
-        verifyStatic();
-        OvfUtils.getOvfMappings(OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES);
-        OvfUtils.getOvfMappings(OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES);
-        PowerMockito.verifyNew(DeployOvfTemplateService.class);
+        try (MockedStatic<OvfUtils> ovfUtils = mockStatic(OvfUtils.class);
+             MockedConstruction<DeployOvfTemplateService> construction = mockConstruction(DeployOvfTemplateService.class)) {
+            stubMappings(ovfUtils);
+            Map<String, String> result = new DeployOvfTemplateAction().deployTemplate("", "", "", "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "", null);
+            DeployOvfTemplateService service = construction.constructed().get(0);
+            org.mockito.Mockito.verify(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
+            assertEquals(ReturnCodes.SUCCESS, result.get(Outputs.RETURN_CODE));
+            assertEquals(SUCCESSFULLY_DEPLOYED, result.get(Outputs.RETURN_RESULT));
+            assertEquals(1, construction.constructed().size());
+            ovfUtils.verify(() -> OvfUtils.getOvfMappings(OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES));
+            ovfUtils.verify(() -> OvfUtils.getOvfMappings(OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES));
+        }
     }
 
     @Test
     public void testFailureDeployTemplate() throws Exception {
-        prepareForTests();
-        Mockito.doThrow(new Exception(OPERATION_FAILED)).when(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
-
-        Map<String, String> result = action.deployTemplate("", "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "", null);
-
-        Mockito.verify(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
-        assertEquals(ReturnCodes.FAILURE, result.get(Outputs.RETURN_CODE));
-        assertEquals(OPERATION_FAILED, result.get(Outputs.RETURN_RESULT));
-        assertTrue(StringUtilities.contains(result.get(Outputs.RETURN_RESULT), OPERATION_FAILED));
-        verifyStatic();
-        OvfUtils.getOvfMappings(OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES);
-        OvfUtils.getOvfMappings(OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES);
-        PowerMockito.verifyNew(DeployOvfTemplateService.class);
+        try (MockedStatic<OvfUtils> ovfUtils = mockStatic(OvfUtils.class);
+             MockedConstruction<DeployOvfTemplateService> construction = mockConstruction(DeployOvfTemplateService.class,
+                     (mock, context) -> doThrow(new Exception(OPERATION_FAILED)).when(mock)
+                             .deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap()))) {
+            stubMappings(ovfUtils);
+            Map<String, String> result = new DeployOvfTemplateAction().deployTemplate("", "", "", "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES, OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES, "", null);
+            DeployOvfTemplateService service = construction.constructed().get(0);
+            org.mockito.Mockito.verify(service).deployOvfTemplate(any(HttpInputs.class), any(VmInputs.class), anyString(), anyMap(), anyMap());
+            assertEquals(ReturnCodes.FAILURE, result.get(Outputs.RETURN_CODE));
+            assertEquals(OPERATION_FAILED, result.get(Outputs.RETURN_RESULT));
+            assertTrue(StringUtilities.contains(result.get(Outputs.RETURN_RESULT), OPERATION_FAILED));
+            assertEquals(1, construction.constructed().size());
+            ovfUtils.verify(() -> OvfUtils.getOvfMappings(OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES));
+            ovfUtils.verify(() -> OvfUtils.getOvfMappings(OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES));
+        }
     }
 
-    private void prepareForTests() throws Exception {
-        PowerMockito.mockStatic(OvfUtils.class);
-        PowerMockito.doReturn(new HashMap<>()).when(OvfUtils.class);
-        OvfUtils.getOvfMappings(OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES);
-        PowerMockito.doReturn(new HashMap<>()).when(OvfUtils.class);
-        OvfUtils.getOvfMappings(OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES);
-        whenNew(DeployOvfTemplateService.class).withArguments(true).thenReturn(service);
+    private void stubMappings(MockedStatic<OvfUtils> ovfUtils) throws Exception {
+        ovfUtils.when(() -> OvfUtils.getOvfMappings(OVF_NETWORK_JS_VALUES, NET_PORT_GROUP_JS_VALUES)).thenReturn(new HashMap<>());
+        ovfUtils.when(() -> OvfUtils.getOvfMappings(OVF_PROP_KEY_JS_VALUES, OVF_PROP_VALUE_JS_VALUES)).thenReturn(new HashMap<>());
     }
 }

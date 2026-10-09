@@ -32,11 +32,11 @@
 
 package io.cloudslang.content.amazon.entities.aws;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.NOT_RELEVANT;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by sandorr
@@ -60,8 +60,9 @@ public class BlockDeviceMappingStatusTest {
         assertEquals(NOT_RELEVANT, BlockDeviceMappingStatus.getValue(EMPTY));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void blockDeviceMappingStatusTestException() {
-        VolumeAttachmentStatus.getValue(WRONG_VALUE);
+        org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class,
+                () -> VolumeAttachmentStatus.getValue(WRONG_VALUE));
     }
 }

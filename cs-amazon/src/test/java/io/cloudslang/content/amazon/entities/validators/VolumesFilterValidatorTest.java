@@ -33,13 +33,13 @@
 package io.cloudslang.content.amazon.entities.validators;
 
 import io.cloudslang.content.amazon.entities.aws.VolumeFilter;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.amazon.entities.aws.VolumeAttachmentStatus.ATTACHED;
 import static io.cloudslang.content.amazon.entities.aws.VolumeStatus.AVAILABLE;
 import static io.cloudslang.content.amazon.entities.aws.VolumeType.STANDARD;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by sandorr
@@ -54,7 +54,7 @@ public class VolumesFilterValidatorTest {
     private static final String STANDARD_VALUE = "standard";
     private VolumesFilterValidator validator;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         validator = new VolumesFilterValidator();
     }
@@ -68,8 +68,9 @@ public class VolumesFilterValidatorTest {
 
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testBadValues() {
-        validator.getFilterValue(VolumeFilter.ATTACHMENT_STATUS, NOT_GOOD_VALUE);
+        org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class,
+                () -> validator.getFilterValue(VolumeFilter.ATTACHMENT_STATUS, NOT_GOOD_VALUE));
     }
 }

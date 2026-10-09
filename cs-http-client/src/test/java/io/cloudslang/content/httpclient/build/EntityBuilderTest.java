@@ -23,34 +23,24 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * User: Adina Tusa
  * Date: 8/19/14
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({EntityBuilder.class})
 public class EntityBuilderTest {
     private static final String CONTENT_TYPE = "text/plain";
     private EntityBuilder entityBuilder;
-    @Mock
-    private java.io.File fileMock;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         entityBuilder = new EntityBuilder();
     }
@@ -60,7 +50,7 @@ public class EntityBuilderTest {
         HttpEntity httpEntity = entityBuilder
                 .setBody("testBody")
                 .buildEntity();
-        assertThat(httpEntity, instanceOf(StringEntity.class));
+        assertThat(httpEntity).isInstanceOf(StringEntity.class);
         StringEntity stringEntity = (StringEntity) httpEntity;
         assertNull(stringEntity.getContentType());
     }
@@ -72,7 +62,7 @@ public class EntityBuilderTest {
                 .setBody("testBody")
                 .setContentType(parsedContentType)
                 .buildEntity();
-        assertThat(httpEntity, instanceOf(StringEntity.class));
+        assertThat(httpEntity).isInstanceOf(StringEntity.class);
         StringEntity stringEntity = (StringEntity) httpEntity;
         assertEquals(CONTENT_TYPE, stringEntity.getContentType().getValue());
     }
@@ -80,15 +70,13 @@ public class EntityBuilderTest {
     @Test
     public void buildEntityWithFile() throws Exception {
         ContentType parsedContentType = ContentType.parse(CONTENT_TYPE);
-        final String fileName = "testFile.txt";
-        PowerMockito.whenNew(File.class).withArguments(fileName).thenReturn(fileMock);
-        PowerMockito.when(fileMock.exists()).thenReturn(true);
+        final String fileName = "pom.xml";
 
         HttpEntity httpEntity = entityBuilder
                 .setFilePath(fileName)
                 .setContentType(parsedContentType)
                 .buildEntity();
-        assertThat(httpEntity, instanceOf(FileEntity.class));
+        assertThat(httpEntity).isInstanceOf(FileEntity.class);
         FileEntity fileEntity = (FileEntity) httpEntity;
         assertEquals(CONTENT_TYPE, fileEntity.getContentType().getValue());
     }

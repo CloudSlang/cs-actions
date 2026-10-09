@@ -19,23 +19,15 @@ package io.cloudslang.content.abbyy.utils;
 import io.cloudslang.content.abbyy.constants.OutputNames;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.constants.ReturnCodes;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(PowerMockRunner.class)
 public class ResultUtilsTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
     @Test

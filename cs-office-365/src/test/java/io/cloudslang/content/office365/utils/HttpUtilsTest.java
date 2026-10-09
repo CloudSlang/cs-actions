@@ -18,7 +18,7 @@
 
 package io.cloudslang.content.office365.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +28,7 @@ import static io.cloudslang.content.office365.utils.Constants.ZERO;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpUtilsTest {
 
@@ -85,8 +83,8 @@ public class HttpUtilsTest {
         Map<String, String> results = HttpUtils.getOperationResults(initializeSuccessResult(), returnedResult,
                 returnedResult, returnedResult);
 
-        assertThat(results, is(expectedResult));
-        assertThat(results.size(), is(4));
+        assertEquals(expectedResult, results);
+        assertEquals(4, results.size());
     }
 
     @Test
@@ -101,8 +99,8 @@ public class HttpUtilsTest {
         Map<String, String> results = HttpUtils.getOperationResults(initializeFailureResult(), returnedResult,
                 returnedResult, returnedResult);
 
-        assertThat(results, is(expectedResult));
-        assertThat(results.size(), is(4));
+        assertEquals(expectedResult, results);
+        assertEquals(4, results.size());
     }
 
     @Test

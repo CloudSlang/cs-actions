@@ -14,9 +14,6 @@
  */
 
 
-
-
-
 package io.cloudslang.content.utilities.actions;
 
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
@@ -24,64 +21,58 @@ import io.cloudslang.content.utilities.entities.OsDetectorInputs;
 import io.cloudslang.content.utilities.services.osdetector.NmapOsDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.OperatingSystemDetectorService;
 import io.cloudslang.content.utilities.services.osdetector.OsDetectorHelperService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Tirla Florin-Alin on 27/11/2017.
  **/
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({OsDetector.class})
 public class OsDetectorTest {
     private static final String HOST = "my-host.much.wow";
-    @Mock
-    private OperatingSystemDetectorService operatingSystemDetectorService;
-
-    @Mock
-    private OsDetectorHelperService osDetectorHelperService;
-
-    @Mock
-    private NmapOsDetectorService nmapOsDetectorService;
-
+    private OperatingSystemDetails detectionResult = new OperatingSystemDetails();
+    private boolean operatingSystemFound;
+    private MockedConstruction<OperatingSystemDetectorService> detectorConstruction;
+    private MockedConstruction<OsDetectorHelperService> helperConstruction;
     private OsDetector osDetector = new OsDetector();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
-        whenNew(OsDetectorHelperService.class).withNoArguments().thenReturn(osDetectorHelperService);
-        whenNew(NmapOsDetectorService.class).withAnyArguments().thenReturn(nmapOsDetectorService);
-        whenNew(OperatingSystemDetectorService.class).withAnyArguments().thenReturn(operatingSystemDetectorService);
+        helperConstruction = mockConstruction(OsDetectorHelperService.class, (mock, context) -> {
+            doCallRealMethod().when(mock).formatOsCommandsOutput(any());
+            doCallRealMethod().when(mock).validateNmapInputs(any(OsDetectorInputs.class), any(NmapOsDetectorService.class));
+            when(mock.foundOperatingSystem(any(OperatingSystemDetails.class))).thenAnswer(invocation -> operatingSystemFound);
+        });
+        detectorConstruction = mockConstruction(OperatingSystemDetectorService.class, (mock, context) ->
+                when(mock.detectOs(any(OsDetectorInputs.class))).thenAnswer(invocation -> detectionResult));
+    }
 
-        doCallRealMethod().when(osDetectorHelperService).formatOsCommandsOutput(Matchers.<Map<String, List<String>>>any());
-        doCallRealMethod().when(osDetectorHelperService).validateNmapInputs(any(OsDetectorInputs.class), any(NmapOsDetectorService.class));
+    @AfterEach
+    public void tearDown() {
+        detectorConstruction.close();
+        helperConstruction.close();
     }
 
     @Test
     public void testDefaultValues() throws Exception {
-        doReturn(new OperatingSystemDetails()).when(operatingSystemDetectorService).detectOs(any(OsDetectorInputs.class));
         osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", "", "", "", "");
 
-        verify(operatingSystemDetectorService).detectOs(getInputsWithDefault());
+        verify(detectorConstruction.constructed().get(0)).detectOs(getInputsWithDefault());
     }
 
     @Test
@@ -130,7 +121,7 @@ public class OsDetectorTest {
         returnedOsDetails.setVersion("ignored");
         returnedOsDetails.addCommandOutput("some detector", singletonList("some output"));
 
-        doReturn(returnedOsDetails).when(operatingSystemDetectorService).detectOs(any(OsDetectorInputs.class));
+        detectionResult = returnedOsDetails;
 
         Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
@@ -141,9 +132,9 @@ public class OsDetectorTest {
         assertNull(actualResult.get("osName"));
         assertNull(actualResult.get("osArchitecture"));
         assertNull(actualResult.get("osVersion"));
-        assertThat(actualResult.get("osCommands"), containsString("some detector detection"));
-        assertThat(actualResult.get("osCommands"), containsString("some output"));
-        assertThat(actualResult.get("exception"), containsString("Unable to detect the operating system."));
+        assertThat(actualResult.get("osCommands")).contains("some detector detection");
+        assertThat(actualResult.get("osCommands")).contains("some output");
+        assertThat(actualResult.get("exception")).contains("Unable to detect the operating system.");
     }
 
     @Test
@@ -155,8 +146,8 @@ public class OsDetectorTest {
         returnedOsDetails.setArchitecture("xYZ");
         returnedOsDetails.addCommandOutput("some detector", singletonList("some output"));
 
-        doReturn(returnedOsDetails).when(operatingSystemDetectorService).detectOs(any(OsDetectorInputs.class));
-        doReturn(true).when(osDetectorHelperService).foundOperatingSystem(any(OperatingSystemDetails.class));
+        detectionResult = returnedOsDetails;
+        operatingSystemFound = true;
 
         Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
@@ -167,8 +158,8 @@ public class OsDetectorTest {
         assertEquals("b os", actualResult.get("osName"));
         assertEquals("xYZ", actualResult.get("osArchitecture"));
         assertEquals("ultimate", actualResult.get("osVersion"));
-        assertThat(actualResult.get("osCommands"), containsString("some detector detection"));
-        assertThat(actualResult.get("osCommands"), containsString("some output"));
+        assertThat(actualResult.get("osCommands")).contains("some detector detection");
+        assertThat(actualResult.get("osCommands")).contains("some output");
         assertNull(actualResult.get("exception"));
     }
 
@@ -180,7 +171,7 @@ public class OsDetectorTest {
         assertNull(actualResult.get("osArchitecture"));
         assertNull(actualResult.get("osVersion"));
         assertNull(actualResult.get("osCommands"));
-        assertThat(actualResult.get("exception"), containsString(expectedMessage));
+        assertThat(actualResult.get("exception").contains(expectedMessage));
     }
 
     private OsDetectorInputs getInputsWithDefault() {

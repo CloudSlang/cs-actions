@@ -18,28 +18,21 @@ package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
 public abstract class AbbyyResponseValidatorTest {
 
     AbbyyResponseValidator sut;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.sut = newSutInstance();
     }

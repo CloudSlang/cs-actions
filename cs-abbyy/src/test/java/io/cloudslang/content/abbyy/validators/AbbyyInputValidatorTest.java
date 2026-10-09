@@ -18,38 +18,38 @@ package io.cloudslang.content.abbyy.validators;
 
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
 public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
 
     AbbyyInputValidator<R> sut;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    protected MockedStatic<Files> filesMock;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.sut = newSutInstance();
-        PowerMockito.mockStatic(Files.class);
+        this.filesMock = mockStatic(Files.class);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        this.filesMock.close();
     }
 
 
@@ -179,7 +179,7 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         R abbyyRequestMock = mockAbbyyRequest();
 
         Path destinationFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(destinationFileMock)).thenReturn(true);
+        filesMock.when(() -> Files.exists(destinationFileMock)).thenReturn(true);
         when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFileMock);
 
         //Act
@@ -196,10 +196,10 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         R abbyyRequestMock = mockAbbyyRequest();
 
         Path destinationFolderMock = mock(Path.class);
-        PowerMockito.when(Files.exists(destinationFolderMock)).thenReturn(false);
+        filesMock.when(() -> Files.exists(destinationFolderMock)).thenReturn(false);
 
         Path destinationFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(destinationFileMock)).thenReturn(true);
+        filesMock.when(() -> Files.exists(destinationFileMock)).thenReturn(true);
         when(destinationFileMock.getParent()).thenReturn(destinationFolderMock);
 
         when(abbyyRequestMock.getDestinationFile()).thenReturn(destinationFileMock);
@@ -232,7 +232,7 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         R abbyyRequestMock = mockAbbyyRequest();
 
         Path sourceFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(false);
+        filesMock.when(() -> Files.exists(sourceFileMock)).thenReturn(false);
         when(abbyyRequestMock.getSourceFile()).thenReturn(sourceFileMock);
 
         //Act
@@ -249,8 +249,8 @@ public abstract class AbbyyInputValidatorTest<R extends AbbyyInput> {
         R abbyyRequestMock = mockAbbyyRequest();
 
         Path sourceFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
-        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(false);
+        filesMock.when(() -> Files.exists(sourceFileMock)).thenReturn(true);
+        filesMock.when(() -> Files.isRegularFile(sourceFileMock)).thenReturn(false);
         when(abbyyRequestMock.getSourceFile()).thenReturn(sourceFileMock);
 
         //Act

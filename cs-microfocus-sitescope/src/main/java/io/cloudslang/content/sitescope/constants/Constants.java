@@ -37,6 +37,7 @@ public final class Constants {
     public static final String SITE_SCOPE_DELIMITER = "_sis_path_delimiter_";
     public static final String POST = "POST";
     public static final String DELETE = "DELETE";
+    public static final String GET = "GET";
     public static final String X_WWW_FORM = "application/x-www-form-urlencoded";
 
     public static final String SITESCOPE_MONITORS_API = "/SiteScope/api/monitors";

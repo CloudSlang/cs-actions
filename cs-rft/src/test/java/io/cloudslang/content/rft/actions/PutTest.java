@@ -18,10 +18,9 @@ package io.cloudslang.content.rft.actions;
 
 import io.cloudslang.content.rft.actions.ftp.Put;
 import io.cloudslang.content.rft.services.FTPService;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockftpserver.fake.FakeFtpServer;
 import org.mockftpserver.fake.UserAccount;
 import org.mockftpserver.fake.filesystem.DirectoryEntry;
@@ -29,17 +28,19 @@ import org.mockftpserver.fake.filesystem.FileSystem;
 import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 
 import static io.cloudslang.content.rft.utils.Constants.EXCEPTION_INVALID_LOCAL_FILE;
 import static io.cloudslang.content.rft.utils.Constants.SUCCESS_RESULT;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PutTest {
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    Path temporaryFolder;
 
     Put putOperation;
     FakeFtpServer fakeFtpServer;
@@ -47,7 +48,7 @@ public class PutTest {
     File localFile;
     FileSystem fileSystem;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         fileSystem = new UnixFakeFileSystem();
@@ -61,7 +62,10 @@ public class PutTest {
 
         putOperation = new Put();
         ftpService = new FTPService();
-        localFile = temporaryFolder.newFile("localfile.txt");
+        localFile = temporaryFolder.resolve("localfile.txt").toFile();
+        if (!localFile.createNewFile()) {
+            throw new IOException("Could not create temporary local test file");
+        }
 
     }
 

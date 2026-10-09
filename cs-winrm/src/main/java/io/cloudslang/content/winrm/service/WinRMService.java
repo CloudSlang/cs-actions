@@ -72,7 +72,6 @@ public class WinRMService {
                             bw.close();
                     }
                 }
-                sun.security.krb5.Config.refresh();
             }
 //            if (!winRMInputs.getKerberosLoginConfFile().isEmpty()) {
 //                if (new File(winRMInputs.getKerberosLoginConfFile()).exists()) {

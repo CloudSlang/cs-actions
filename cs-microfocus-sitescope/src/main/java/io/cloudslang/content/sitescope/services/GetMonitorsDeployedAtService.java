@@ -43,7 +43,6 @@ import static io.cloudslang.content.sitescope.constants.Constants.GetMonitorsDep
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FETCH_FULL_CONFIG;
 import static io.cloudslang.content.sitescope.constants.SuccessMsgs.*;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
-import static jdk.nashorn.internal.runtime.PropertyDescriptor.GET;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 

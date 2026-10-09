@@ -21,35 +21,27 @@ import io.cloudslang.content.abbyy.entities.responses.HttpClientResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.validators.AbbyyResponseValidator;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({AbbyyResponseParser.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class AbbyyResponseParserTest {
 
     private AbbyyResponseParser sut;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     @Mock
     private AbbyyResponseValidator validatorMock;
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws ParserConfigurationException {
         this.sut = new AbbyyResponseParser(validatorMock);
     }
@@ -61,9 +53,7 @@ public class AbbyyResponseParserTest {
         final HttpClientResponse response = mock(HttpClientResponse.class);
         when(response.getStatusCode()).thenReturn(null);
         //Assert
-        this.exception.expect(IllegalArgumentException.class);
-        //Act
-        this.sut.parseResponse(response);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> this.sut.parseResponse(response));
     }
 
 
@@ -74,9 +64,7 @@ public class AbbyyResponseParserTest {
         when(response.getStatusCode()).thenReturn((short) 200);
         when(response.getReturnResult()).thenReturn(null);
         //Assert
-        this.exception.expect(IllegalArgumentException.class);
-        //Act
-        this.sut.parseResponse(response);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> this.sut.parseResponse(response));
     }
 
 
@@ -87,9 +75,7 @@ public class AbbyyResponseParserTest {
         when(response.getStatusCode()).thenReturn((short) 200);
         when(response.getReturnResult()).thenReturn("<invalid");
         //Assert
-        this.exception.expect(Exception.class);
-        //Act
-        this.sut.parseResponse(response);
+        org.junit.jupiter.api.Assertions.assertThrows(Exception.class, () -> this.sut.parseResponse(response));
     }
 
     @Test
@@ -99,9 +85,7 @@ public class AbbyyResponseParserTest {
         when(response.getStatusCode()).thenReturn((short) 0);
         when(response.getReturnResult()).thenReturn("<error>\n</error>");
         //Assert
-        this.exception.expect(AbbyySdkException.class);
-        //Act
-        this.sut.parseResponse(response);
+        org.junit.jupiter.api.Assertions.assertThrows(AbbyySdkException.class, () -> this.sut.parseResponse(response));
     }
 
 
@@ -114,9 +98,7 @@ public class AbbyyResponseParserTest {
         when(response.getStatusCode()).thenReturn((short) 0);
         when(response.getReturnResult()).thenReturn(xml);
         //Assert
-        this.exception.expect(AbbyySdkException.class);
-        //Act
-        this.sut.parseResponse(response);
+        org.junit.jupiter.api.Assertions.assertThrows(AbbyySdkException.class, () -> this.sut.parseResponse(response));
     }
 
 
@@ -127,9 +109,7 @@ public class AbbyyResponseParserTest {
         when(response.getStatusCode()).thenReturn((short) 200);
         when(response.getReturnResult()).thenReturn("<response></response>");
         //Assert
-        this.exception.expect(AbbyySdkException.class);
-        //Act
-        this.sut.parseResponse(response);
+        org.junit.jupiter.api.Assertions.assertThrows(AbbyySdkException.class, () -> this.sut.parseResponse(response));
     }
 
 
@@ -138,18 +118,12 @@ public class AbbyyResponseParserTest {
         //Arrange
         final HttpClientResponse response = mock(HttpClientResponse.class);
         when(response.getStatusCode()).thenReturn((short) 200);
-        when(response.getReturnResult()).thenReturn("<response><task/></response>");
-
-        AbbyyResponse.Builder abbyyResponseBuilderMock = mockAbbyyResponseBuilder();
-        PowerMockito.whenNew(AbbyyResponse.Builder.class).withAnyArguments().thenReturn(abbyyResponseBuilderMock);
+        when(response.getReturnResult()).thenReturn("<response><task id=\"task-id\" credits=\"1\" status=\"Completed\" estimatedProcessingTime=\"1\"/></response>");
 
         when(this.validatorMock.validate(any(AbbyyResponse.class))).thenReturn(new ValidationException("asd"));
 
         //Assert
-        this.exception.expect(ValidationException.class);
-
-        //Act
-        this.sut.parseResponse(response);
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> this.sut.parseResponse(response));
     }
 
 
@@ -158,26 +132,9 @@ public class AbbyyResponseParserTest {
         //Arrange
         final HttpClientResponse response = mock(HttpClientResponse.class);
         when(response.getStatusCode()).thenReturn((short) 200);
-        when(response.getReturnResult()).thenReturn("<response><task/></response>");
-
-        AbbyyResponse.Builder abbyyResponseBuilderMock = mockAbbyyResponseBuilder();
-        PowerMockito.whenNew(AbbyyResponse.Builder.class).withAnyArguments().thenReturn(abbyyResponseBuilderMock);
+        when(response.getReturnResult()).thenReturn("<response><task id=\"task-id\" credits=\"1\" status=\"Completed\" estimatedProcessingTime=\"1\"/></response>");
 
         //Act
         this.sut.parseResponse(response);
-    }
-
-    private AbbyyResponse.Builder mockAbbyyResponseBuilder() {
-        AbbyyResponse.Builder abbyyResponseBuilderMock = PowerMockito.mock(AbbyyResponse.Builder.class);
-        when(abbyyResponseBuilderMock.taskId(anyString())).thenReturn(abbyyResponseBuilderMock);
-        when(abbyyResponseBuilderMock.credits(anyString())).thenReturn(abbyyResponseBuilderMock);
-        when(abbyyResponseBuilderMock.taskStatus(anyString())).thenReturn(abbyyResponseBuilderMock);
-        when(abbyyResponseBuilderMock.errorMessage(anyString())).thenReturn(abbyyResponseBuilderMock);
-        when(abbyyResponseBuilderMock.resultUrl(anyString())).thenReturn(abbyyResponseBuilderMock);
-        when(abbyyResponseBuilderMock.resultUrl2(anyString())).thenReturn(abbyyResponseBuilderMock);
-        when(abbyyResponseBuilderMock.resultUrl3(anyString())).thenReturn(abbyyResponseBuilderMock);
-        when(abbyyResponseBuilderMock.estimatedProcessingTime(anyString())).thenReturn(abbyyResponseBuilderMock);
-        when(abbyyResponseBuilderMock.build()).thenReturn(mock(AbbyyResponse.class));
-        return abbyyResponseBuilderMock;
     }
 }

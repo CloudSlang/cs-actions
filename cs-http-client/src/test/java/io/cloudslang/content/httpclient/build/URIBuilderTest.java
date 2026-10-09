@@ -19,15 +19,14 @@
 
 package io.cloudslang.content.httpclient.build;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,9 +35,6 @@ import static junit.framework.Assert.assertEquals;
  */
 public class URIBuilderTest {
     private static final String URL = "http://localhost:8002";
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test
     public void buildURIWithEncoding() throws URISyntaxException {
         String queryParams = "param 1=value1&param 2=value2";
@@ -69,9 +65,9 @@ public class URIBuilderTest {
     @Test
     public void buildURIWithException() throws UnsupportedEncodingException, URISyntaxException {
         String url = "http://[localhost]:8002";
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("the value 'http://[localhost]:8002' is not a valid URL");
-        new URIBuilder().setUrl(url).setQueryParamsAreURLEncoded("true").setQueryParams("").buildURI();
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                new URIBuilder().setUrl(url).setQueryParamsAreURLEncoded("true").setQueryParams("").buildURI());
+        assertEquals("the value 'http://[localhost]:8002' is not a valid URL", exception.getMessage());
     }
 
     @Test
@@ -140,8 +136,9 @@ public class URIBuilderTest {
     @Test
     public void buildURIWithExceptionFormFalse() throws UnsupportedEncodingException, URISyntaxException {
         String url = "http://[localhost]:8002";
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("the value 'http://[localhost]:8002' is not a valid URL");
-        new URIBuilder().setUrl(url).setQueryParamsAreURLEncoded("true").setQueryParams("").setQueryParamsAreFormEncoded("false").buildURI();
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                new URIBuilder().setUrl(url).setQueryParamsAreURLEncoded("true").setQueryParams("")
+                        .setQueryParamsAreFormEncoded("false").buildURI());
+        assertEquals("the value 'http://[localhost]:8002' is not a valid URL", exception.getMessage());
     }
 }

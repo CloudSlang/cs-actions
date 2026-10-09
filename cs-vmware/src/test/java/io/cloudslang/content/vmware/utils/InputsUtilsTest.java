@@ -18,22 +18,18 @@ package io.cloudslang.content.vmware.utils;
 
 import io.cloudslang.content.vmware.entities.VmInputs;
 import io.cloudslang.content.vmware.entities.http.HttpInputs;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by Mihai Tusa.
  * 1/11/2016.
  */
 public class InputsUtilsTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test
     public void getIntInput() {
         int testInt = InputUtils.getIntInput("4096", 1024);
@@ -48,10 +44,9 @@ public class InputsUtilsTest {
 
     @Test
     public void getIntInputException() throws RuntimeException {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be 0 or positive number.");
-
-        InputUtils.getIntInput("Doesn't work in this way", -1);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> InputUtils.getIntInput("Doesn't work in this way", -1));
+        assertEquals("The input value must be 0 or positive number.", exception.getMessage());
     }
 
     @Test
@@ -68,10 +63,9 @@ public class InputsUtilsTest {
 
     @Test
     public void getLongInputException() throws RuntimeException {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be 0 or positive number.");
-
-        InputUtils.getLongInput("Still doesn't work in this way", 0);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> InputUtils.getLongInput("Still doesn't work in this way", 0));
+        assertEquals("The input value must be 0 or positive number.", exception.getMessage());
     }
 
     @Test
@@ -90,17 +84,17 @@ public class InputsUtilsTest {
 
     @Test
     public void getUrlStringException() throws Exception {
-        exception.expect(Exception.class);
-        exception.expectMessage("Unsupported protocol value: [myProtocol]. Valid values are: https, http.");
-
-        HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
-                .withHost("")
-                .withPort("8080")
-                .withProtocol("myProtocol")
-                .withUsername("")
-                .withPassword("")
-                .withTrustEveryone("true").build();
-        InputUtils.getUrlString(httpInputs);
+        Exception exception = assertThrows(Exception.class, () -> {
+            HttpInputs httpInputs = new HttpInputs.HttpInputsBuilder()
+                    .withHost("")
+                    .withPort("8080")
+                    .withProtocol("myProtocol")
+                    .withUsername("")
+                    .withPassword("")
+                    .withTrustEveryone("true").build();
+            InputUtils.getUrlString(httpInputs);
+        });
+        assertEquals("Unsupported protocol value: [myProtocol]. Valid values are: https, http.", exception.getMessage());
     }
 
     @Test
@@ -117,11 +111,9 @@ public class InputsUtilsTest {
 
     @Test
     public void checkValidOperation() throws Exception {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Invalid operation specified for disk device. The disk device can be only added or removed.");
-
         VmInputs vmInputs = new VmInputs.VmInputsBuilder().withDevice("disk").withOperation("update").build();
-        InputUtils.checkValidOperation(vmInputs, "disk");
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> InputUtils.checkValidOperation(vmInputs, "disk"));
+        assertEquals("Invalid operation specified for disk device. The disk device can be only added or removed.", exception.getMessage());
     }
 
     @Test
@@ -142,9 +134,6 @@ public class InputsUtilsTest {
 
     @Test
     public void validateDiskInputsAdd() throws Exception {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The disk size must be positive long.");
-
         VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                 .withVirtualMachineName("testVM")
                 .withOperation("add")
@@ -152,21 +141,20 @@ public class InputsUtilsTest {
                 .withLongVmDiskSize("0")
                 .withDiskMode("persistent")
                 .build();
-        InputUtils.validateDiskInputs(vmInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> InputUtils.validateDiskInputs(vmInputs));
+        assertEquals("The disk size must be positive long.", exception.getMessage());
     }
 
     @Test
     public void validateDiskInputsRemove() throws Exception {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The [] is not a valid disk label.");
-
         VmInputs vmInputs = new VmInputs.VmInputsBuilder()
                 .withVirtualMachineName("testVM")
                 .withOperation("remove")
                 .withDevice("disk")
                 .withUpdateValue("")
                 .build();
-        InputUtils.validateDiskInputs(vmInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> InputUtils.validateDiskInputs(vmInputs));
+        assertEquals("The [] is not a valid disk label.", exception.getMessage());
     }
 
     @Test
@@ -179,11 +167,9 @@ public class InputsUtilsTest {
 
     @Test
     public void getByteInputNotByte() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("The input value must be a positive number between 0 and 127 values range.");
-
         byte test = 0;
-        InputUtils.getByteInput("128", test);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> InputUtils.getByteInput("128", test));
+        assertEquals("The input value must be a positive number between 0 and 127 values range.", exception.getMessage());
     }
 
     @Test

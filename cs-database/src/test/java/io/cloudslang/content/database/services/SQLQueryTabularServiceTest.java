@@ -17,22 +17,17 @@
 
 
 package io.cloudslang.content.database.services;
+import static org.mockito.Mockito.*;
 
 import io.cloudslang.content.database.utils.SQLInputs;
 import io.cloudslang.content.database.utils.Constants;
 import io.cloudslang.content.database.utils.InputsProcessor;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
+import org.mockito.MockedConstruction;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -40,15 +35,14 @@ import java.sql.Statement;
 
 
 import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
-
+import static org.mockito.Mockito.mockConstruction;
 /**
  * Created by vranau on 12/11/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ConnectionService.class, SQLQueryTabularService.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class SQLQueryTabularServiceTest {
 
     public static final String SQL_COMMAND = "select * from dbTable";
@@ -62,23 +56,28 @@ public class SQLQueryTabularServiceTest {
 
     @Mock
     private Statement statementMock;
-    @Rule
-    private ExpectedException expectedEx = ExpectedException.none();
-
-    @Mock
+@Mock
     private ResultSet resultSetMock;
     @Mock
     private ResultSetMetaData resultSetMetadataMock;
+    private MockedConstruction<ConnectionService> connectionServiceConstruction;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         sqlInputs = SQLInputs.builder().build();
         InputsProcessor.init(sqlInputs);
-        PowerMockito.whenNew(ConnectionService.class).withNoArguments().thenReturn(connectionServiceMock);
-        when(connectionServiceMock.setUpConnection(sqlInputs)).thenReturn(connectionMock);
-        when(connectionMock.createStatement(Matchers.any(Integer.class), Matchers.any(Integer.class))).thenReturn(statementMock);
+        connectionServiceConstruction = mockConstruction(ConnectionService.class, (mock, context) -> {
+            connectionServiceMock = mock;
+            when(mock.setUpConnection(sqlInputs)).thenReturn(connectionMock);
+        });
+        when(connectionMock.createStatement(ArgumentMatchers.any(Integer.class), ArgumentMatchers.any(Integer.class))).thenReturn(statementMock);
         when(statementMock.executeQuery(SQL_COMMAND)).thenReturn(resultSetMock);
         when(resultSetMock.getMetaData()).thenReturn(resultSetMetadataMock);
+    }
+
+    @org.junit.jupiter.api.AfterEach
+    public void closeConstruction() {
+        connectionServiceConstruction.close();
     }
 
     @Test

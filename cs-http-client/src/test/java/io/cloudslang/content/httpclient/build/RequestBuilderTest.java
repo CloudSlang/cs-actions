@@ -23,13 +23,14 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,9 +38,10 @@ import static org.junit.Assert.assertEquals;
  * Date: 8/28/14
  */
 public class RequestBuilderTest {
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNoMethod() throws URISyntaxException {
-        new io.cloudslang.content.httpclient.build.RequestBuilder().setUri(new URI("/")).build();
+        assertThrows(IllegalArgumentException.class,
+                () -> new RequestBuilder().setUri(new URI("/")).build());
     }
 
     @Test

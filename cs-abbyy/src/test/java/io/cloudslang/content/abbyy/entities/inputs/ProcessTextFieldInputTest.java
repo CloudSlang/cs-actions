@@ -20,9 +20,9 @@ import io.cloudslang.content.abbyy.entities.others.LocationId;
 import io.cloudslang.content.abbyy.entities.others.MarkingType;
 import io.cloudslang.content.abbyy.entities.others.TextType;
 import io.cloudslang.content.abbyy.entities.others.WritingStyle;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProcessTextFieldInputTest {
     @Test

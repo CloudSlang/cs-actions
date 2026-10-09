@@ -31,16 +31,16 @@ package io.cloudslang.content.amazon.actions.cloudformation;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateStackActionTest {
     public static final String RETURN_RESULT = "returnResult";
@@ -57,7 +57,7 @@ public class CreateStackActionTest {
     public static String proxyPort = null;
     public static String TEST_STACK_NAME = "CloudSlang-Test-Stack";
 
-    //@Before
+    //@BeforeEach
     public void setUp() {
         try {
             String proxy = System.getenv().get("HTTP_PROXY");
@@ -69,7 +69,7 @@ public class CreateStackActionTest {
         TEST_STACK_NAME = TEST_STACK_NAME + "-" + UUID.randomUUID();
     }
 
-   // @After
+   // @AfterEach
     public void tearDown() {
         proxyHost = proxyPort = null;
     }

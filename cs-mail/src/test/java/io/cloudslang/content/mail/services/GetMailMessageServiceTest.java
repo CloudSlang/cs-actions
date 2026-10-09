@@ -29,17 +29,18 @@ import io.cloudslang.content.mail.entities.GetMailMessageInput;
 import io.cloudslang.content.mail.entities.StringOutputStream;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import jakarta.mail.BodyPart;
 import jakarta.mail.Flags;
@@ -59,16 +60,15 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
  * Created by giloan on 11/6/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({GetMailMessageService.class, MimeUtility.class, URLName.class, Session.class, System.class, SSLContext.class,
-        SSLUtils.class, ASCIIUtility.class, ByteArrayInputStream.class, SSLUtils.class})
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class GetMailMessageServiceTest {
 
     public static final int READ_ONLY = 1;
@@ -83,8 +83,6 @@ public class GetMailMessageServiceTest {
     private String messageMockToString = "stringMessageMock";
     private String cmessageMock = "testcmeesage";
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     @Spy
     private GetMailMessageService serviceSpy = new GetMailMessageService();
     private GetMailMessageInput.Builder inputBuilder;
@@ -107,13 +105,13 @@ public class GetMailMessageServiceTest {
     @Mock
     private ByteArrayInputStream byteArrayInputStreamMock;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         inputBuilder = new GetMailMessageInput.Builder();
         addRequiredInputs();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         inputBuilder = null;
     }
@@ -125,15 +123,15 @@ public class GetMailMessageServiceTest {
      */
     @Test
     public void testGetMessageThrowsFolderNotFoundException() throws Exception {
-        PowerMockito.mockStatic(SSLUtils.class);
-        when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
-        doReturn(folderMock).when(storeMock).getFolder(anyString());
-        doReturn(false).when(folderMock).exists();
-        serviceSpy.input = inputBuilder.build();
+        try (MockedStatic<SSLUtils> sslUtils = Mockito.mockStatic(SSLUtils.class)) {
+            sslUtils.when(() -> SSLUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
+            doReturn(folderMock).when(storeMock).getFolder(anyString());
+            doReturn(false).when(folderMock).exists();
+            serviceSpy.input = inputBuilder.build();
 
-        exception.expect(Exception.class);
-        exception.expectMessage(ExceptionMsgs.THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER);
-        serviceSpy.getMessage();
+            Exception exception = assertThrows(Exception.class, () -> serviceSpy.getMessage());
+            assertEquals(ExceptionMsgs.THE_SPECIFIED_FOLDER_DOES_NOT_EXIST_ON_THE_REMOTE_SERVER, exception.getMessage());
+        }
     }
 
     /**
@@ -144,21 +142,21 @@ public class GetMailMessageServiceTest {
      */
     @Test
     public void testGetMessageThrowsMessageNumberException() throws Exception {
-        PowerMockito.mockStatic(SSLUtils.class);
-        when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
-        doReturn(folderMock).when(storeMock).getFolder(anyString());
-        doReturn(true).when(folderMock).exists();
-        doReturn(READ_ONLY).when(serviceSpy).getFolderOpenMode();
-        doNothing().when(folderMock).open(READ_ONLY);
-        doReturn(0).when(folderMock).getMessageCount();
+        try (MockedStatic<SSLUtils> sslUtils = Mockito.mockStatic(SSLUtils.class)) {
+            sslUtils.when(() -> SSLUtils.createMessageStore(any(GetMailInput.class))).thenReturn(storeMock);
+            doReturn(folderMock).when(storeMock).getFolder(anyString());
+            doReturn(true).when(folderMock).exists();
+            doReturn(READ_ONLY).when(serviceSpy).getFolderOpenMode();
+            doNothing().when(folderMock).open(READ_ONLY);
+            doReturn(0).when(folderMock).getMessageCount();
 
-        addRequiredInputs();
-        serviceSpy.input = inputBuilder.build();
+            addRequiredInputs();
+            serviceSpy.input = inputBuilder.build();
 
-        exception.expect(Exception.class);
-        exception.expectMessage("message value was: " + MESSAGE_NUMBER + " there are only " + 0 +
-                " messages in folder");
-        serviceSpy.getMessage();
+            Exception exception = assertThrows(Exception.class, () -> serviceSpy.getMessage());
+            assertEquals("message value was: " + MESSAGE_NUMBER + " there are only " + 0 + " messages in folder",
+                    exception.getMessage());
+        }
     }
 
     /**
@@ -236,15 +234,14 @@ public class GetMailMessageServiceTest {
         Map<String, String> messageContentByType = new HashMap<>();
         messageContentByType.put("text/html", messageContent);
         doReturn(messageContentByType).when(serviceSpy).getMessageByContentTypes(messageMock, CHARACTERSET);
-        PowerMockito.whenNew(StringOutputStream.class).withNoArguments().thenReturn(stringOutputStreamMock);
-        doNothing().when(messageMock).writeTo(stringOutputStreamMock);
         String stringOutputStreamMockToString = "testStream";
-        doReturn(stringOutputStreamMockToString).when(stringOutputStreamMock).toString();
 
         addRequiredInputs();
         inputBuilder.subjectOnly(StringUtils.EMPTY);
         inputBuilder.characterSet(CHARACTERSET);
 
+        try (MockedConstruction<StringOutputStream> outputStreams = Mockito.mockConstruction(StringOutputStream.class,
+                (mock, context) -> doReturn(stringOutputStreamMockToString).when(mock).toString())) {
         Map<String, String> result = serviceSpy.execute(inputBuilder.build());
         verify(serviceSpy).getMessage();
         verify(messageMock).getHeader("Subject");
@@ -257,10 +254,11 @@ public class GetMailMessageServiceTest {
         assertEquals(messageContent, result.get(OutputNames.BODY));
 
         verify(serviceSpy).getMessageByContentTypes(messageMock, CHARACTERSET);
-        PowerMockito.verifyNew(StringOutputStream.class).withNoArguments();
-        verify(messageMock).writeTo(stringOutputStreamMock);
+        assertEquals(1, outputStreams.constructed().size());
+        verify(messageMock).writeTo(outputStreams.constructed().get(0));
         assertEquals(stringOutputStreamMockToString, result.get(io.cloudslang.content.constants.OutputNames.RETURN_RESULT));
         assertEquals(ReturnCodes.SUCCESS, result.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE));
+        }
     }
 
     /**
@@ -282,15 +280,14 @@ public class GetMailMessageServiceTest {
         String messageContent = "testMessageContent";
         messageContentByType.put("text/html", messageContent);
         doReturn(messageContentByType).when(serviceSpy).getMessageByContentTypes(messageMock, null);
-        PowerMockito.whenNew(StringOutputStream.class).withNoArguments().thenReturn(stringOutputStreamMock);
-        doNothing().when(messageMock).writeTo(stringOutputStreamMock);
         String stringOutputStreamMockToString = "testStream";
         String fiddledStringOutputStreamMockToString = (char) 0 + stringOutputStreamMockToString + (char) 0;
-        doReturn(fiddledStringOutputStreamMockToString).when(stringOutputStreamMock).toString();
 
         addRequiredInputs();
         inputBuilder.subjectOnly(StringUtils.EMPTY);
 
+        try (MockedConstruction<StringOutputStream> outputStreams = Mockito.mockConstruction(StringOutputStream.class,
+                (mock, context) -> doReturn(fiddledStringOutputStreamMockToString).when(mock).toString())) {
         Map<String, String> result = serviceSpy.execute(inputBuilder.build());
         verify(serviceSpy).getMessage();
         assertEquals(SUBJECT_TEST, result.get(OutputNames.SUBJECT));
@@ -299,10 +296,11 @@ public class GetMailMessageServiceTest {
         assertEquals(attachedFileNames, result.get(OutputNames.ATTACHED_FILE_NAMES));
         assertEquals(messageContent, result.get(OutputNames.BODY));
         verify(serviceSpy).getMessageByContentTypes(messageMock, null);
-        PowerMockito.verifyNew(StringOutputStream.class).withNoArguments();
-        verify(messageMock).writeTo(stringOutputStreamMock);
+        assertEquals(1, outputStreams.constructed().size());
+        verify(messageMock).writeTo(outputStreams.constructed().get(0));
         assertEquals(stringOutputStreamMockToString, result.get(io.cloudslang.content.constants.OutputNames.RETURN_RESULT));
         assertEquals(ReturnCodes.SUCCESS, result.get(io.cloudslang.content.constants.OutputNames.RETURN_CODE));
+        }
     }
 
     /**
@@ -316,16 +314,15 @@ public class GetMailMessageServiceTest {
         doNothing().when(messageMock).setFlag(Flags.Flag.DELETED, true);
         doReturn(new String[]{"1"}).when(messageMock).getHeader(anyString());
         doReturn(SUBJECT_TEST).when(serviceSpy).changeHeaderCharset("1", CHARACTERSET);
-        PowerMockito.mockStatic(MimeUtility.class);
-        PowerMockito.doThrow(new UnsupportedEncodingException(StringUtils.EMPTY)).when(MimeUtility.class, "decodeText", anyString());
-
         addRequiredInputs();
         inputBuilder.subjectOnly(StringUtils.EMPTY);
         inputBuilder.characterSet(BAD_CHARACTERSET);
 
-        exception.expect(Exception.class);
-        exception.expectMessage("The given encoding (" + BAD_CHARACTERSET + ") is invalid or not supported.");
-        serviceSpy.execute(inputBuilder.build());
+        try (MockedStatic<MimeUtility> mimeUtility = Mockito.mockStatic(MimeUtility.class)) {
+            mimeUtility.when(() -> MimeUtility.decodeText(anyString())).thenThrow(new UnsupportedEncodingException(StringUtils.EMPTY));
+            Exception exception = assertThrows(Exception.class, () -> serviceSpy.execute(inputBuilder.build()));
+            assertEquals("The given encoding (" + BAD_CHARACTERSET + ") is invalid or not supported.", exception.getMessage());
+        }
     }
 
     /**
@@ -335,11 +332,12 @@ public class GetMailMessageServiceTest {
      */
     @Test
     public void testGetMessageContentWithTextPlain() throws Exception {
-        commonStubbingForGetMessageContentMethod(MimeTypes.TEXT_PLAIN);
-
-        Map<String, String> messageByType = serviceSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
-        assertEquals(cmessageMock, messageByType.get(MimeTypes.TEXT_PLAIN));
-        commonVerifiesForGetMessageContentMethod(messageByType, MimeTypes.TEXT_PLAIN);
+        try (MockedStatic<MimeUtility> mimeUtility = Mockito.mockStatic(MimeUtility.class)) {
+            commonStubbingForGetMessageContentMethod(mimeUtility, MimeTypes.TEXT_PLAIN);
+            Map<String, String> messageByType = serviceSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+            assertEquals(cmessageMock, messageByType.get(MimeTypes.TEXT_PLAIN));
+            commonVerifiesForGetMessageContentMethod(mimeUtility, MimeTypes.TEXT_PLAIN);
+        }
     }
 
     /**
@@ -349,13 +347,15 @@ public class GetMailMessageServiceTest {
      */
     @Test
     public void testGetMessageContentWithTextHtml() throws Exception {
-        commonStubbingForGetMessageContentMethod(MimeTypes.TEXT_HTML);
+        try (MockedStatic<MimeUtility> mimeUtility = Mockito.mockStatic(MimeUtility.class)) {
+        commonStubbingForGetMessageContentMethod(mimeUtility, MimeTypes.TEXT_HTML);
         doReturn(messageMockToString).when(serviceSpy).convertMessage(messageMockToString);
 
         Map<String, String> messageByType = serviceSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
         assertEquals(cmessageMock, messageByType.get(MimeTypes.TEXT_HTML));
-        commonVerifiesForGetMessageContentMethod(messageByType, MimeTypes.TEXT_HTML);
+        commonVerifiesForGetMessageContentMethod(mimeUtility, MimeTypes.TEXT_HTML);
         verify(serviceSpy).convertMessage(messageMockToString);
+        }
     }
 
     /**
@@ -374,34 +374,33 @@ public class GetMailMessageServiceTest {
         doReturn("text/plain; charset=utf-8; format=flowed").when(partMock).getContentType();
         doReturn(inputStreamMock).when(partMock).getInputStream();
         byte[] bytes = {1};
-        PowerMockito.mockStatic(ASCIIUtility.class);
-        PowerMockito.doReturn(bytes).when(ASCIIUtility.class, "getBytes", inputStreamMock);
-        PowerMockito.whenNew(ByteArrayInputStream.class).withArguments(bytes).thenReturn(byteArrayInputStreamMock);
         int byteArrayInputStreamMockCount = 1;
-        doReturn(byteArrayInputStreamMockCount).when(byteArrayInputStreamMock).available();
-        doReturn(byteArrayInputStreamMockCount)
-                .when(byteArrayInputStreamMock)
-                .read(new byte[byteArrayInputStreamMockCount], 0, byteArrayInputStreamMockCount);
         String testCMessage = "testCMessage";
-        PowerMockito.mockStatic(MimeUtility.class);
-        PowerMockito.doReturn(testCMessage).when(MimeUtility.class, "decodeText", anyString());
-        serviceSpy.input = inputBuilder.build();
+        try (MockedStatic<ASCIIUtility> asciiUtility = Mockito.mockStatic(ASCIIUtility.class);
+             MockedConstruction<ByteArrayInputStream> inputStreams = Mockito.mockConstruction(ByteArrayInputStream.class,
+                     (mock, context) -> {
+                         doReturn(byteArrayInputStreamMockCount).when(mock).available();
+                         doReturn(byteArrayInputStreamMockCount).when(mock).read(any(byte[].class), eq(0), eq(byteArrayInputStreamMockCount));
+                     });
+             MockedStatic<MimeUtility> mimeUtility = Mockito.mockStatic(MimeUtility.class)) {
+            asciiUtility.when(() -> ASCIIUtility.getBytes(inputStreamMock)).thenReturn(bytes);
+            mimeUtility.when(() -> MimeUtility.decodeText(anyString())).thenReturn(testCMessage);
+            serviceSpy.input = inputBuilder.build();
 
-        Map<String, String> contentMessage = serviceSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
-        assertEquals(testCMessage, contentMessage.get("text/plain"));
-        verify(messageMock).isMimeType(MimeTypes.TEXT_PLAIN);
-        verify(messageMock).isMimeType(MimeTypes.TEXT_HTML);
-        verify(messageMock).getContent();
-        verify(multipartMock).getCount();
-        verify(partMock).getDisposition();
-        verify(partMock).getInputStream();
-        PowerMockito.verifyStatic();
-        ASCIIUtility.getBytes(inputStreamMock);
-        PowerMockito.verifyNew(ByteArrayInputStream.class).withArguments(bytes);
-        verify(byteArrayInputStreamMock).available();
-        verify(byteArrayInputStreamMock).read(new byte[byteArrayInputStreamMockCount], 0, byteArrayInputStreamMockCount);
-        PowerMockito.verifyStatic();
-        MimeUtility.decodeText(anyString());
+            Map<String, String> contentMessage = serviceSpy.getMessageByContentTypes(messageMock, CHARACTERSET);
+            assertEquals(testCMessage, contentMessage.get("text/plain"));
+            verify(messageMock).isMimeType(MimeTypes.TEXT_PLAIN);
+            verify(messageMock).isMimeType(MimeTypes.TEXT_HTML);
+            verify(messageMock).getContent();
+            verify(multipartMock).getCount();
+            verify(partMock).getDisposition();
+            verify(partMock).getInputStream();
+            asciiUtility.verify(() -> ASCIIUtility.getBytes(inputStreamMock));
+            assertEquals(1, inputStreams.constructed().size());
+            verify(inputStreams.constructed().get(0)).available();
+            verify(inputStreams.constructed().get(0)).read(any(byte[].class), eq(0), eq(byteArrayInputStreamMockCount));
+            mimeUtility.verify(() -> MimeUtility.decodeText(anyString()));
+        }
     }
 
     /**
@@ -502,20 +501,18 @@ public class GetMailMessageServiceTest {
     }
 
 
-    private void commonVerifiesForGetMessageContentMethod(Map<String, String> messageByType, String messageType)
+    private void commonVerifiesForGetMessageContentMethod(MockedStatic<MimeUtility> mimeUtility, String messageType)
             throws MessagingException, IOException {
         verify(messageMock).isMimeType(messageType);
         verify(messageMock).getContent();
-        PowerMockito.verifyStatic();
-        MimeUtility.decodeText(messageMockToString);
+        mimeUtility.verify(() -> MimeUtility.decodeText(messageMockToString));
     }
 
-    private void commonStubbingForGetMessageContentMethod(String messageType) throws Exception {
+    private void commonStubbingForGetMessageContentMethod(MockedStatic<MimeUtility> mimeUtility, String messageType) throws Exception {
         doReturn(true).when(messageMock).isMimeType(messageType);
         doReturn(objectMock).when(messageMock).getContent();
         doReturn(messageMockToString).when(objectMock).toString();
-        PowerMockito.mockStatic(MimeUtility.class);
-        PowerMockito.doReturn(cmessageMock).when(MimeUtility.class, "decodeText", messageMockToString);
+        mimeUtility.when(() -> MimeUtility.decodeText(messageMockToString)).thenReturn(cmessageMock);
     }
 
     /**
@@ -531,4 +528,3 @@ public class GetMailMessageServiceTest {
         inputBuilder.messageNumber(MESSAGE_NUMBER);
     }
 }
-

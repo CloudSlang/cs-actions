@@ -21,7 +21,7 @@ package io.cloudslang.content.utilities;
 
 import io.cloudslang.content.utilities.actions.GetTextFromPdf;
 import io.cloudslang.content.utilities.actions.MergePdfFiles;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -32,8 +32,8 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class MergePdfTest {
     private final MergePdfFiles mergePdfFiles = new MergePdfFiles();
