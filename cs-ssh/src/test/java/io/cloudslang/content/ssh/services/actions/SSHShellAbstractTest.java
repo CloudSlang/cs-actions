@@ -30,11 +30,12 @@ import io.cloudslang.content.ssh.services.SSHService;
 import io.cloudslang.content.ssh.services.impl.SSHServiceImpl;
 import io.cloudslang.content.ssh.utils.CacheUtils;
 import io.cloudslang.content.ssh.utils.IdentityKeyUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -42,16 +43,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({CacheUtils.class})
+@ExtendWith(MockitoExtension.class)
 public class SSHShellAbstractTest {
 
     @Mock
@@ -110,19 +109,20 @@ public class SSHShellAbstractTest {
     public void testGetFromCache() {
         SSHShellAbstract sshShellAbstract = new SSHShellAbstract() {
         };
-        mockStatic(CacheUtils.class);
         String sessionId = "sessionId";
 
         when(sshShellInputsMock.getSshGlobalSessionObject()).thenReturn(sshGlobalSessionObjectMock);
         when(sshGlobalSessionObjectMock.getResource()).thenReturn(sessionResourceMock);
-        when(CacheUtils.getFromCache(sessionResourceMock, sessionId)).thenReturn(sshServiceMock);
-        SSHService serviceFromCache = sshShellAbstract.getFromCache(sshShellInputsMock, sessionId);
-        assertNotNull(serviceFromCache);
-        assertEquals(sshServiceMock, serviceFromCache);
-        serviceFromCache = sshShellAbstract.getFromCache(sshShellInputsMock, "");
-        assertNull(serviceFromCache);
-        serviceFromCache = sshShellAbstract.getFromCache(sshShellInputsMock, null);
-        assertNull(serviceFromCache);
+        try (MockedStatic<CacheUtils> cacheUtilsMock = Mockito.mockStatic(CacheUtils.class)) {
+            cacheUtilsMock.when(() -> CacheUtils.getFromCache(sessionResourceMock, sessionId)).thenReturn(sshServiceMock);
+            SSHService serviceFromCache = sshShellAbstract.getFromCache(sshShellInputsMock, sessionId);
+            assertNotNull(serviceFromCache);
+            assertEquals(sshServiceMock, serviceFromCache);
+            serviceFromCache = sshShellAbstract.getFromCache(sshShellInputsMock, "");
+            assertNull(serviceFromCache);
+            serviceFromCache = sshShellAbstract.getFromCache(sshShellInputsMock, null);
+            assertNull(serviceFromCache);
+        }
     }
 
     @Test

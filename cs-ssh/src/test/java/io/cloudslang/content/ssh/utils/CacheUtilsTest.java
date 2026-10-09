@@ -25,25 +25,22 @@ import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.Session;
 import io.cloudslang.content.ssh.entities.SSHConnection;
 import io.cloudslang.content.ssh.services.SSHService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by vranau on 11/19/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({CacheUtils.class})
-
+@ExtendWith(MockitoExtension.class)
 public class CacheUtilsTest {
 
     @Mock
