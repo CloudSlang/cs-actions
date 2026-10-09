@@ -20,26 +20,23 @@
 package io.cloudslang.content.utilities.services.osdetector;
 
 import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by Tirla Florin-Alin on 08/12/2017.
  **/
-@RunWith(PowerMockRunner.class)
 public class OsDetectorHelperServiceTest {
     private OsDetectorHelperService osDetectorHelperService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         osDetectorHelperService = new OsDetectorHelperService();
     }

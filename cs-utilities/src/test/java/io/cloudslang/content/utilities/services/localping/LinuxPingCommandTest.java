@@ -19,9 +19,7 @@
 package io.cloudslang.content.utilities.services.localping;
 
 import io.cloudslang.content.utilities.entities.LocalPingInputs;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -34,7 +32,8 @@ import static io.cloudslang.content.utilities.entities.constants.LocalPingConsta
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_AVG;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_MAX;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_MIN;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LinuxPingCommandTest {
 
@@ -55,9 +54,6 @@ public class LinuxPingCommandTest {
             "\n" +
             "--- 10.0.0.1 ping statistics ---\n" +
             "3 packets transmitted, 3 received, 0% packet loss, time 2003ms\n";
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testCreateCommandSuccess() {
@@ -81,10 +77,9 @@ public class LinuxPingCommandTest {
                 .timeout("invalid")
                 .build();
 
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage(TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE);
-
-        new LinuxPingCommand().createCommand(localPingInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> new LinuxPingCommand().createCommand(localPingInputs));
+        assertEquals(TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE, exception.getMessage());
     }
 
     @Test
@@ -94,10 +89,9 @@ public class LinuxPingCommandTest {
                 .packetCount("invalid")
                 .build();
 
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE);
-
-        new LinuxPingCommand().createCommand(localPingInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> new LinuxPingCommand().createCommand(localPingInputs));
+        assertEquals(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE, exception.getMessage());
     }
 
     @Test
@@ -107,10 +101,9 @@ public class LinuxPingCommandTest {
                 .packetSize("invalid")
                 .build();
 
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE);
-
-        new LinuxPingCommand().createCommand(localPingInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> new LinuxPingCommand().createCommand(localPingInputs));
+        assertEquals(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE, exception.getMessage());
     }
 
     @Test

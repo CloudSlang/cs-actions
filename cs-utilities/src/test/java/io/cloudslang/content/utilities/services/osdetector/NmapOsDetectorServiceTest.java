@@ -24,48 +24,52 @@ import io.cloudslang.content.utilities.entities.OperatingSystemDetails;
 import io.cloudslang.content.utilities.entities.OsDetectorInputs;
 import io.cloudslang.content.utilities.util.ProcessExecutor;
 import io.cloudslang.content.utilities.entities.ProcessResponseEntity;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.doThrow;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mockConstruction;
 
 /**
  * Created by Tirla Florin-Alin on 08/12/2017.
  **/
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({NmapOsDetectorService.class})
 public class NmapOsDetectorServiceTest {
-    @Mock
     private OsDetectorHelperService osDetectorHelperService;
 
-    @Mock
-    private ProcessExecutor processExecutor;
-
     private NmapOsDetectorService nmapOsDetectorService;
+    private MockedConstruction<ProcessExecutor> processExecutorConstruction;
+    private ProcessResponseEntity processResponse;
+    private Exception processException;
 
-    @Rule
-    public final ExpectedException expectedException = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
+        osDetectorHelperService = Mockito.mock(OsDetectorHelperService.class);
         nmapOsDetectorService = new NmapOsDetectorService(osDetectorHelperService);
-        whenNew(ProcessExecutor.class).withNoArguments().thenReturn(processExecutor);
+        processExecutorConstruction = mockConstruction(ProcessExecutor.class, (mock, context) ->
+                doAnswer(invocation -> {
+                    if (processException != null) {
+                        throw processException;
+                    }
+                    return processResponse;
+                }).when(mock).execute(anyString(), anyInt()));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        processExecutorConstruction.close();
     }
 
     @Test
@@ -77,23 +81,21 @@ public class NmapOsDetectorServiceTest {
 
     @Test
     public void testProxyArgAppenderWithInvalidPort() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("The 'proxyPort' input does not contain a valid port.");
-
-        nmapOsDetectorService.appendProxyArgument("--existing-arguments", "http://some-proxy.host", "invalid");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> nmapOsDetectorService.appendProxyArgument("--existing-arguments", "http://some-proxy.host", "invalid"));
+        assertEquals("The 'proxyPort' input does not contain a valid port.", exception.getMessage());
     }
 
     @Test
     public void testProxyArgAppenderWithInvalidHost() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("The 'proxyHost' input does not contain a valid URL: no protocol: invalid.");
-
-        nmapOsDetectorService.appendProxyArgument("--existing-arguments", "invalid", "8080");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> nmapOsDetectorService.appendProxyArgument("--existing-arguments", "invalid", "8080"));
+        assertEquals("The 'proxyHost' input does not contain a valid URL: no protocol: invalid.", exception.getMessage());
     }
 
     @Test
     public void testNmapDetectionWithTimeout() throws InterruptedException, ExecutionException, TimeoutException, IOException {
-        doReturn(new ProcessResponseEntity("stdout", "stderr", -1, true)).when(processExecutor).execute(anyString(), anyInt());
+        processResponse = new ProcessResponseEntity("stdout", "stderr", -1, true);
         OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "The nmap command timed out");
@@ -102,7 +104,7 @@ public class NmapOsDetectorServiceTest {
 
     @Test
     public void testNmapDetectionWithIOException() throws InterruptedException, ExecutionException, TimeoutException, IOException {
-        doThrow(new IOException("error msg")).when(processExecutor).execute(anyString(), anyInt());
+        processException = new IOException("error msg");
         OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "Failed to run Nmap command: error msg");
@@ -111,7 +113,7 @@ public class NmapOsDetectorServiceTest {
 
     @Test
     public void testNmapDetectionWithTimeoutException() throws InterruptedException, ExecutionException, TimeoutException, IOException {
-        doThrow(new TimeoutException("timeout msg")).when(processExecutor).execute(anyString(), anyInt());
+        processException = new TimeoutException("timeout msg");
         OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "The nmap command timed out");
@@ -119,7 +121,7 @@ public class NmapOsDetectorServiceTest {
 
     @Test
     public void testNmapDetectionWithInterruptedException() throws InterruptedException, ExecutionException, TimeoutException, IOException {
-        doThrow(new InterruptedException("error msg")).when(processExecutor).execute(anyString(), anyInt());
+        processException = new InterruptedException("error msg");
         OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "Execution of Nmap command was canceled.");
@@ -127,7 +129,7 @@ public class NmapOsDetectorServiceTest {
 
     @Test
     public void testNmapDetectionWithExecutionException() throws InterruptedException, ExecutionException, TimeoutException, IOException {
-        doThrow(new ExecutionException(null)).when(processExecutor).execute(anyString(), anyInt());
+        processException = new ExecutionException(null);
         OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());
 
         performFailureChecks(actualOsDetails, "An exception occurred while running the Nmap command: null");
@@ -135,7 +137,7 @@ public class NmapOsDetectorServiceTest {
 
     @Test
     public void testNmapDetectionWithSuccess() throws InterruptedException, ExecutionException, TimeoutException, IOException {
-        doReturn(new ProcessResponseEntity("stdout", "stderr", 0, false)).when(processExecutor).execute(anyString(), anyInt());
+        processResponse = new ProcessResponseEntity("stdout", "stderr", 0, false);
         doReturn("b os").when(osDetectorHelperService).cropValue(anyString(), anyString(), anyString());
         doReturn("b os fam").when(osDetectorHelperService).resolveOsFamily(anyString());
         OperatingSystemDetails actualOsDetails = nmapOsDetectorService.detectOs(new OsDetectorInputs.Builder().withNmapTimeout("007").build());

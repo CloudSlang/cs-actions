@@ -19,9 +19,7 @@
 package io.cloudslang.content.utilities.services.localping;
 
 import io.cloudslang.content.utilities.entities.LocalPingInputs;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -34,7 +32,8 @@ import static io.cloudslang.content.utilities.entities.constants.LocalPingConsta
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_AVG;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_MAX;
 import static io.cloudslang.content.utilities.entities.constants.LocalPingConstants.TRANSMISSION_TIME_MIN;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WindowsPingCommandTest {
 
@@ -48,9 +47,6 @@ public class WindowsPingCommandTest {
             "    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),\n" +
             "Approximate round trip times in milli-seconds:\n" +
             "    Minimum = 185ms, Maximum = 186ms, Average = 185ms";
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testCreateCommandSuccess() {
@@ -74,10 +70,9 @@ public class WindowsPingCommandTest {
                 .timeout("invalid")
                 .build();
 
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage(TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE);
-
-        new WindowsPingCommand().createCommand(localPingInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> new WindowsPingCommand().createCommand(localPingInputs));
+        assertEquals(TIMEOUT_SHOULD_HAVE_A_NUMERIC_VALUE, exception.getMessage());
     }
 
     @Test
@@ -87,10 +82,9 @@ public class WindowsPingCommandTest {
                 .packetCount("invalid")
                 .build();
 
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE);
-
-        new WindowsPingCommand().createCommand(localPingInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> new WindowsPingCommand().createCommand(localPingInputs));
+        assertEquals(PACKET_COUNT_SHOULD_HAVE_A_NUMERIC_VALUE, exception.getMessage());
     }
 
     @Test
@@ -100,10 +94,9 @@ public class WindowsPingCommandTest {
                 .packetSize("invalid")
                 .build();
 
-        expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE);
-
-        new WindowsPingCommand().createCommand(localPingInputs);
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> new WindowsPingCommand().createCommand(localPingInputs));
+        assertEquals(PACKET_SIZE_SHOULD_HAVE_A_NUMERIC_VALUE, exception.getMessage());
     }
 
     @Test

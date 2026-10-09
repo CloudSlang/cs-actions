@@ -14,13 +14,10 @@
  */
 
 
-
-
-
 package io.cloudslang.content.utilities;
 
 import io.cloudslang.content.utilities.actions.DefaultIfEmpty;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -28,8 +25,8 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by moldovai on 8/22/2017.
