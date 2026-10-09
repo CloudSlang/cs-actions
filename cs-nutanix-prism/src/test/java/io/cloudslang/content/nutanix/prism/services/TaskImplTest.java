@@ -4,16 +4,11 @@ package io.cloudslang.content.nutanix.prism.services;
 
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetTaskDetailsInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.nutanix.prism.services.TaskImpl.getTaskDetailsURL;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(TaskImplTest.class)
 public class TaskImplTest {
     private static final String EXPECTED_GET_TASK_DETAILS_PATH = "https://myhost:9440/api/nutanix/v2.0/tasks/1234";
 

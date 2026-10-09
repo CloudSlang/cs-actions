@@ -33,14 +33,14 @@ package io.cloudslang.content.amazon.utils;
 
 import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
 import com.amazonaws.services.servicecatalog.model.Tag;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfParameters;
 import static io.cloudslang.content.amazon.utils.ServiceCatalogUtil.toArrayOfTags;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ServiceCatalogUtilTest {
 

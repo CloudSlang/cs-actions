@@ -33,10 +33,10 @@
 package io.cloudslang.content.amazon.entities.validators;
 
 import io.cloudslang.content.amazon.entities.aws.TagFilter;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by Tirla Alin
@@ -63,7 +63,7 @@ public class TagFilterValidatorTest {
     private static final String WRONG_VALUE = "WRONGy";
     private TagFilterValidator validator;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         validator = new TagFilterValidator();
     }
@@ -90,8 +90,9 @@ public class TagFilterValidatorTest {
 
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testBadValues() {
-        validator.getFilterValue(TagFilter.RESOURCE_TYPE, WRONG_VALUE);
+        org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class,
+                () -> validator.getFilterValue(TagFilter.RESOURCE_TYPE, WRONG_VALUE));
     }
 }

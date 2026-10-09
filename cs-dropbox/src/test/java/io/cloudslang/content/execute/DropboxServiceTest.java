@@ -23,44 +23,46 @@ import io.cloudslang.content.dropbox.entities.inputs.FolderInputs;
 import io.cloudslang.content.dropbox.execute.DropboxService;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
 
 import static io.cloudslang.content.dropbox.utils.InputsUtil.getHttpClientInputs;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 /**
  * Created by TusaM
  * 5/31/2017.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpClientService.class, DropboxService.class})
 public class DropboxServiceTest {
-    @Mock
     private HttpClientService csHttpClientMock;
+    private MockedConstruction<HttpClientService> httpClientServiceConstruction;
 
     private DropboxService toTest;
 
-    @Before
+    @BeforeEach
     public void init() throws Exception {
-        whenNew(HttpClientService.class).withNoArguments().thenReturn(csHttpClientMock);
-        when(csHttpClientMock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<String, String>());
+        httpClientServiceConstruction = mockConstruction(HttpClientService.class, (mock, context) -> {
+            csHttpClientMock = mock;
+            when(mock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<>());
+        });
         toTest = new DropboxService();
+    }
+
+    @AfterEach
+    public void closeHttpClientServiceConstruction() {
+        httpClientServiceConstruction.close();
     }
 
     @Test

@@ -19,14 +19,14 @@ package io.cloudslang.content.dca.controllers;
 
 import io.cloudslang.content.dca.models.DcaBaseResourceModel;
 import io.cloudslang.content.dca.models.DcaDeploymentParameterModel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static io.cloudslang.content.dca.controllers.CreateResourceJSONController.getDcaBaseResourceModels;
 import static io.cloudslang.content.dca.controllers.CreateResourceJSONController.getDcaDeploymentParameterModels;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CreateResourceJSONControllerTest {
 

@@ -26,10 +26,8 @@ import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -38,12 +36,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@PrepareForTest({ProcessTextFieldService.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class ProcessTextFieldServiceTest extends AbbyyServiceTest<ProcessTextFieldInput> {
 
     @Mock
@@ -112,7 +111,7 @@ public class ProcessTextFieldServiceTest extends AbbyyServiceTest<ProcessTextFie
 
         Map<String, String> resultsDummy = new HashMap<>();
 
-        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), eq(ExportFormat.XML), anyString(), anyBoolean()))
+        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), eq(ExportFormat.XML), isNull(), anyBoolean()))
                 .thenThrow(new TimeoutException(errMsg));
 
         try {
@@ -135,7 +134,7 @@ public class ProcessTextFieldServiceTest extends AbbyyServiceTest<ProcessTextFie
         AbbyyResponse responseMock = mockAbbyyResponse();
         when(responseMock.getResultUrls()).thenReturn(Collections.singletonList("txt"));
 
-        when(this.abbyyApiMock.getResult(any(AbbyyInput.class), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+        when(this.abbyyApiMock.getResult(any(AbbyyInput.class), anyString(), any(ExportFormat.class), isNull(), anyBoolean()))
                 .thenReturn(StringUtils.EMPTY);
 
         Map<String, String> resultsDummy = new HashMap<>();
@@ -160,8 +159,8 @@ public class ProcessTextFieldServiceTest extends AbbyyServiceTest<ProcessTextFie
         when(requestMock.getPassword()).thenReturn("dummy");
         when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
         Path sourceFileMock = mock(Path.class);
-        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
-        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
+        filesMock.when(() -> Files.exists(sourceFileMock)).thenReturn(true);
+        filesMock.when(() -> Files.isRegularFile(sourceFileMock)).thenReturn(true);
         when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
         when(requestMock.getDestinationFile()).thenReturn(null);
         when(requestMock.getLetterSet()).thenReturn("dummy");

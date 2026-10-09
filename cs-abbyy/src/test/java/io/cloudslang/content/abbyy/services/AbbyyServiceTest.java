@@ -24,43 +24,43 @@ import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyInputValidator;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
 
 import java.nio.file.Files;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Thread.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public abstract class AbbyyServiceTest<R extends AbbyyInput> {
 
     AbbyyService<R> sut;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    protected MockedStatic<Files> filesMock;
     @Mock
     AbbyyInputValidator<R> requestValidatorMock;
     @Mock
     AbbyyApi abbyyApiMock;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.sut = newSutInstance();
-        PowerMockito.mockStatic(Thread.class);
-        PowerMockito.mockStatic(Files.class);
+        this.filesMock = mockStatic(Files.class);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        this.filesMock.close();
     }
 
 
@@ -93,10 +93,7 @@ public abstract class AbbyyServiceTest<R extends AbbyyInput> {
         when(this.abbyyApiMock.request(eq(request))).thenReturn(responseMock);
 
         //Assert
-        this.exception.expect(AbbyySdkException.class);
-
-        //Act
-        this.sut.execute(request);
+        org.junit.jupiter.api.Assertions.assertThrows(AbbyySdkException.class, () -> this.sut.execute(request));
     }
 
 

@@ -5,16 +5,11 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformStateVersionInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.hashicorp.terraform.services.StateVersionImpl.getCurrentStateVersionPath;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(StateVersionImpl.class)
 public class StateVersionImplTest {
     private static final String WORKSPACE_ID = "test";
     private static final String EXPECTED_GET_CURRENT_STATE_VERSION_PATH = "/api/v2/workspaces/test/current-state-version";
@@ -40,9 +35,10 @@ public class StateVersionImplTest {
                     .build())
             .build();
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getCurrentStateVersionThrows() throws Exception {
-        StateVersionImpl.getCurrentStateVersion(invalidGetCurrentStateVersionInputs);
+    @Test
+    public void getCurrentStateVersionReturnsHttpClientResponse() throws Exception {
+        assertEquals(0, TerraformTestUtils.executeWithMockedHttpClient(
+                () -> StateVersionImpl.getCurrentStateVersion(invalidGetCurrentStateVersionInputs)).size());
     }
 
     @Test

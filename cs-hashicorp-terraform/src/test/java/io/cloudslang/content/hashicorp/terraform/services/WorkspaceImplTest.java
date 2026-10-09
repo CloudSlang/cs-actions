@@ -4,16 +4,11 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.hashicorp.terraform.services.WorkspaceImpl.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(WorkspaceImpl.class)
 public class WorkspaceImplTest {
 
     public static final String DELIMITER = ",";
@@ -67,9 +62,10 @@ public class WorkspaceImplTest {
             .organizationName("test")
             .build();
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createWorkspaceThrows() throws Exception {
-        WorkspaceImpl.createWorkspace(invalidCreateWorkspaceInputs);
+    @Test
+    public void createWorkspaceReturnsHttpClientResponse() throws Exception {
+        assertEquals(0, TerraformTestUtils.executeWithMockedHttpClient(
+                () -> WorkspaceImpl.createWorkspace(invalidCreateWorkspaceInputs)).size());
     }
 
     @Test

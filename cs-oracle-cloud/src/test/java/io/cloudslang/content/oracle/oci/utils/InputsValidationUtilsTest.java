@@ -2,13 +2,13 @@
 
 package io.cloudslang.content.oracle.oci.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.oracle.oci.utils.InputsValidation.verifyCommonInputs;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InputsValidationUtilsTest {
 
@@ -31,15 +31,15 @@ public class InputsValidationUtilsTest {
     public void verifyCommonInputsValid() {
         exceptionMessages = verifyCommonInputs(PRIVATE_KEY_DATA, PRIVATE_KEY_FILE, PROXY_PORT,
                 CONNECT_TIMEOUT, SOCKET_TIMEOUT, KEEP_ALIVE, CONNECTIONS_MAX_PER_ROUTE, CONNECTIONS_MAX_TOTAL);
-        assertEquals(exceptionMessages.size(), 0);
+        assertEquals(0, exceptionMessages.size());
     }
 
     @Test
     public void verifyCommonInputsInvalidBooleanAndNumber() {
         exceptionMessages = verifyCommonInputs(PRIVATE_KEY_DATA, PRIVATE_KEY_FILE, PROXY_PORT,
                 CONNECT_TIMEOUT, INVALID, KEEP_ALIVE, CONNECTIONS_MAX_PER_ROUTE, CONNECTIONS_MAX_TOTAL);
-        assertEquals(exceptionMessages.size(), 1);
-        assertEquals(exceptionMessages.get(0), NUMBER_VALIDATOR_EXCEPTION);
+        assertEquals(1, exceptionMessages.size());
+        assertEquals(NUMBER_VALIDATOR_EXCEPTION, exceptionMessages.get(0));
     }
 
 

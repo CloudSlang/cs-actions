@@ -14,43 +14,39 @@
  */
 
 
-
-
 package io.cloudslang.content.database.services.databases;
 
 import io.cloudslang.content.database.services.ConnectionService;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager;
 import io.cloudslang.content.database.utils.InputsProcessor;
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.sql.Connection;
 import java.util.List;
 import java.util.Properties;
 
-import static io.cloudslang.content.database.constants.DBOtherValues.FORWARD_SLASH;
 import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by vranau on 12/9/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({DBConnectionManager.class, Properties.class, ConnectionService.class, OracleDatabase.class})
-@PowerMockIgnore({"javax.management.*", "org.apache.commons.logging.*"})
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ConnectionServiceTestOracle {
 
 
@@ -67,23 +63,27 @@ public class ConnectionServiceTestOracle {
 
     @Mock
     private Connection connectionMock;
+    private MockedStatic<DBConnectionManager> dbConnectionManagerStatic;
 
-    @Rule
-    private ExpectedException expectedEx = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void beforeTest() throws Exception {
         sqlInputs = SQLInputs.builder().build();
         InputsProcessor.init(sqlInputs);
 
-        mockStatic(DBConnectionManager.class);
-        when(DBConnectionManager.getInstance()).thenReturn(dbConnectionManagerMock);
-        PowerMockito.when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Properties.class))).thenReturn(connectionMock);
+        dbConnectionManagerStatic = org.mockito.Mockito.mockStatic(DBConnectionManager.class);
+        dbConnectionManagerStatic.when(DBConnectionManager::getInstance).thenReturn(dbConnectionManagerMock);
+        when(dbConnectionManagerMock.getConnection(any(DBConnectionManager.DBType.class),
+                nullable(String.class),
+                nullable(String.class),
+                nullable(String.class),
+                nullable(String.class),
+                nullable(Properties.class))).thenReturn(connectionMock);
 
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
+        dbConnectionManagerStatic.close();
         if (connectionMock != null) {
             connectionMock.close();
         }

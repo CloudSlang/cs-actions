@@ -32,7 +32,7 @@
 
 package io.cloudslang.content.amazon.utils;
 
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.function.Executable;
 
 /**
  * Created by Mihai Tusa.
@@ -42,9 +42,9 @@ public class MockingHelper {
     private MockingHelper() {
     }
 
-    @SuppressWarnings("unchecked")
-    public static void setExpectedExceptions(ExpectedException exception, Class<?> type, String message) {
-        exception.expect((Class<? extends Throwable>) type);
-        exception.expectMessage(message);
+    public static <T extends Throwable> T assertThrowsWithMessage(Class<T> type, String message, Executable executable) {
+        T exception = org.junit.jupiter.api.Assertions.assertThrows(type, executable);
+        org.junit.jupiter.api.Assertions.assertEquals(message, exception.getMessage());
+        return exception;
     }
 }

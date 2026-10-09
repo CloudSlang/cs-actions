@@ -33,26 +33,21 @@
 package io.cloudslang.content.amazon.utils;
 
 import io.cloudslang.content.amazon.entities.aws.InstanceState;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Created by Mihai Tusa.
  * 2/24/2016.
  */
 public class InputsUtilTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test
     public void getMinInstancesCountBlank() {
         int testMinInstanceCount = InputsUtil.getValidInstancesCount("");
@@ -62,18 +57,16 @@ public class InputsUtilTest {
 
     @Test
     public void getMinInstancesCountNegative() {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "Incorrect provided value: -1 input. The value doesn't meet conditions for general purpose usage.");
-
-        InputsUtil.getValidInstancesCount("-1");
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Incorrect provided value: -1 input. The value doesn't meet conditions for general purpose usage.",
+                () -> InputsUtil.getValidInstancesCount("-1"));
     }
 
     @Test
     public void getMinInstancesCountNotInt() {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "The provided value: [abracadabra] input must be integer.");
-
-        InputsUtil.getValidInstancesCount("[abracadabra]");
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "The provided value: [abracadabra] input must be integer.",
+                () -> InputsUtil.getValidInstancesCount("[abracadabra]"));
     }
 
     @Test
@@ -101,10 +94,9 @@ public class InputsUtilTest {
 
     @Test
     public void getMaxInstancesCountOver() {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "Incorrect provided value: 51 input. The value doesn't meet conditions for general purpose usage.");
-
-        InputsUtil.getValidInstancesCount("51");
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Incorrect provided value: 51 input. The value doesn't meet conditions for general purpose usage.",
+                () -> InputsUtil.getValidInstancesCount("51"));
     }
 
     @Test
@@ -116,18 +108,16 @@ public class InputsUtilTest {
 
     @Test
     public void getValidLongNegative() {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "Incorrect provided value: -1. Valid values are positive longs.");
-
-        InputsUtil.getValidLong("-1", 0L);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Incorrect provided value: -1. Valid values are positive longs.",
+                () -> InputsUtil.getValidLong("-1", 0L));
     }
 
     @Test
     public void getValidLongNotLong() {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "The provided value: [anything_here] input must be long.");
-
-        InputsUtil.getValidLong("[anything_here]", 0L);
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "The provided value: [anything_here] input must be long.",
+                () -> InputsUtil.getValidLong("[anything_here]", 0L));
     }
 
     @Test
@@ -181,17 +171,15 @@ public class InputsUtilTest {
 
     @Test
     public void getValidVolumeAmountWrongValue() {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class,
-                "Incorrect provided value: 16385. Valid values are positive floats between 0.5f and 16000.0f.");
-
-        InputsUtil.getValidVolumeAmount("16385");
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class,
+                "Incorrect provided value: 16385. Valid values are positive floats between 0.5f and 16000.0f.",
+                () -> InputsUtil.getValidVolumeAmount("16385"));
     }
 
     @Test
     public void getValidVolumeAmountWrong() {
-        MockingHelper.setExpectedExceptions(exception, RuntimeException.class, "The provided value: blahblah input must be float.");
-
-        InputsUtil.getValidVolumeAmount("blahblah");
+        MockingHelper.assertThrowsWithMessage(RuntimeException.class, "The provided value: blahblah input must be float.",
+                () -> InputsUtil.getValidVolumeAmount("blahblah"));
     }
 
     @Test

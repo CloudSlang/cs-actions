@@ -22,29 +22,20 @@ import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.xml.sax.SAXException;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({XmlResultValidator.class, SchemaFactory.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
 
     @Mock
@@ -86,8 +77,7 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
         //Arrange
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
 
-        String resultMock = PowerMockito.mock(String.class);
-        when(resultMock.getBytes()).thenReturn(new byte[(int)Limits.MAX_SIZE_OF_XML_FILE + 1]);
+        String resultMock = StringUtils.repeat("a", (int) Limits.MAX_SIZE_OF_XML_FILE + 1);
 
         //Act
         ValidationException ex = this.sut.validateAfterDownload(abbyyInput, resultMock);
@@ -101,24 +91,9 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
     public void validateAfterDownload_resultXmlIsInvalid_ValidationException() throws Exception {
         //Arrange
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
-        final String xml = "";
+        final String xml = "<document";
 
         when(abbyyInput.getResponseCharacterSet()).thenReturn(StandardCharsets.UTF_8.displayName());
-
-        SchemaFactory schemaFactoryMock = mock(SchemaFactory.class);
-        PowerMockito.mockStatic(SchemaFactory.class);
-        PowerMockito.when(SchemaFactory.newInstance(anyString())).thenReturn(schemaFactoryMock);
-
-        StreamSource streamSourceMock = mock(StreamSource.class);
-        PowerMockito.whenNew(StreamSource.class).withAnyArguments().thenReturn(streamSourceMock);
-
-        Schema schemaMock = mock(Schema.class);
-        when(schemaFactoryMock.newSchema(any(StreamSource.class))).thenReturn(schemaMock);
-
-        Validator validatorMock = mock(Validator.class);
-        when(schemaMock.newValidator()).thenReturn(validatorMock);
-
-        doThrow(SAXException.class).when(validatorMock).validate(any(Source.class));
 
         //Act
         ValidationException ex = this.sut.validateAfterDownload(abbyyInput, xml);
@@ -132,22 +107,9 @@ public class XmlResultValidatorTest extends AbbyyResultValidatorTest {
     public void validateAfterDownload_resultXmlIsValid_nullReturned() throws Exception {
         //Arrange
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
-        final String xml = "";
+        final String xml = "<document xmlns=\"http://www.abbyy.com/FineReader_xml/FineReader10-schema-v1.xml\" version=\"1.0\" producer=\"test\"/>";
 
         when(abbyyInput.getResponseCharacterSet()).thenReturn(StandardCharsets.UTF_8.displayName());
-
-        SchemaFactory schemaFactoryMock = mock(SchemaFactory.class);
-        PowerMockito.mockStatic(SchemaFactory.class);
-        PowerMockito.when(SchemaFactory.newInstance(anyString())).thenReturn(schemaFactoryMock);
-
-        StreamSource streamSourceMock = mock(StreamSource.class);
-        PowerMockito.whenNew(StreamSource.class).withAnyArguments().thenReturn(streamSourceMock);
-
-        Schema schemaMock = mock(Schema.class);
-        when(schemaFactoryMock.newSchema(any(StreamSource.class))).thenReturn(schemaMock);
-
-        Validator validatorMock = mock(Validator.class);
-        when(schemaMock.newValidator()).thenReturn(validatorMock);
 
         //Act
         ValidationException ex = this.sut.validateAfterDownload(abbyyInput, xml);

@@ -2,14 +2,14 @@
 
 package io.cloudslang.content.nutanix.prism.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InputsValidationUtilsTest {
 
@@ -30,16 +30,16 @@ public class InputsValidationUtilsTest {
     public void verifyCommonInputsValid() {
         exceptionMessages = verifyCommonInputs(PROXY_PORT, TRUST_ALL_ROOTS,
                 CONNECT_TIMEOUT, SOCKET_TIMEOUT, KEEP_ALIVE, CONNECTIONS_MAX_PER_ROUTE, CONNECTIONS_MAX_TOTAL);
-        assertEquals(exceptionMessages.size(), 0);
+        assertEquals(0, exceptionMessages.size());
     }
 
     @Test
     public void verifyCommonInputsInvalidBooleanAndNumber() {
         exceptionMessages = verifyCommonInputs(PROXY_PORT, INVALID,
                 CONNECT_TIMEOUT, INVALID, KEEP_ALIVE, CONNECTIONS_MAX_PER_ROUTE, CONNECTIONS_MAX_TOTAL);
-        assertEquals(exceptionMessages.size(), 2);
-        assertEquals(exceptionMessages.get(0), BOOLEAN_VALIDATOR);
-        assertEquals(exceptionMessages.get(1), NUMBER_VALIDATOR_EXCEPTION);
+        assertEquals(2, exceptionMessages.size());
+        assertEquals(BOOLEAN_VALIDATOR, exceptionMessages.get(0));
+        assertEquals(NUMBER_VALIDATOR_EXCEPTION, exceptionMessages.get(1));
     }
 
 

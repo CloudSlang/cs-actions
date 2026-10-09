@@ -21,28 +21,23 @@ import io.cloudslang.content.abbyy.entities.inputs.AbbyyInput;
 import io.cloudslang.content.abbyy.entities.others.ExportFormat;
 import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.http.AbbyyApi;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.*;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({String.class, TxtResultValidator.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class TxtResultValidatorTest extends AbbyyResultValidatorTest {
 
     @Mock
@@ -87,8 +82,7 @@ public class TxtResultValidatorTest extends AbbyyResultValidatorTest {
         //Arrange
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
 
-        String resultMock = PowerMockito.mock(String.class);
-        when(resultMock.getBytes()).thenReturn(new byte[(int)Limits.MAX_SIZE_OF_TXT_FILE + 1]);
+        String resultMock = StringUtils.repeat("a", (int) Limits.MAX_SIZE_OF_TXT_FILE + 1);
 
         //Act
         ValidationException ex = this.sut.validateAfterDownload(abbyyInput, resultMock);
@@ -103,8 +97,7 @@ public class TxtResultValidatorTest extends AbbyyResultValidatorTest {
         //Arrange
         final AbbyyInput abbyyInput = mock(AbbyyInput.class);
 
-        String resultMock = PowerMockito.mock(String.class);
-        when(resultMock.getBytes()).thenReturn(new byte[(int)Limits.MAX_SIZE_OF_TXT_FILE - 1]);
+        String resultMock = StringUtils.repeat("a", (int) Limits.MAX_SIZE_OF_TXT_FILE - 1);
 
         //Act
         ValidationException ex = sut.validateAfterDownload(abbyyInput, resultMock);

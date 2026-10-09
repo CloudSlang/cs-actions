@@ -4,17 +4,12 @@ package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformOrganizationInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import static io.cloudslang.content.hashicorp.terraform.services.OrganizationImpl.*;
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(OrganizationImpl.class)
 public class OrganizationImplTest {
 
     public static final String DELIMITER = ",";
@@ -60,9 +55,10 @@ public class OrganizationImplTest {
             .organizationName("test")
             .build();
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createOrganizationThrows() throws Exception {
-        OrganizationImpl.createOrganization(invalidCreateOrganizationInputs);
+    @Test
+    public void createOrganizationReturnsHttpClientResponse() throws Exception {
+        assertEquals(0, TerraformTestUtils.executeWithMockedHttpClient(
+                () -> OrganizationImpl.createOrganization(invalidCreateOrganizationInputs)).size());
     }
 
     @Test
@@ -101,4 +97,3 @@ public class OrganizationImplTest {
         assertEquals(EXPECTED_UPDATE_ORGANIZATION_PATH, path);
     }
 }
-

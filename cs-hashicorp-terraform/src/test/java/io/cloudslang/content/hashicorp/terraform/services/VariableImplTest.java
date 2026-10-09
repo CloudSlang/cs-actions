@@ -5,20 +5,15 @@ package io.cloudslang.content.hashicorp.terraform.services;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformVariableInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static io.cloudslang.content.hashicorp.terraform.services.VariableImpl.getVariablePath;
 
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(io.cloudslang.content.hashicorp.terraform.services.VariableImpl.class)
 public class VariableImplTest {
     private final String EXPECTED_CREATE_VARIABLE_BODY = "{\"data\":{\"attributes\":{\"key\":\"test\",\"value\":\"test-123\",\"category\":\"env\",\"hcl\":\"false\",\"sensitive\":\"false\"},\"relationships\":{\"workspace\":{\"data\":{\"id\":\"ws-test123\",\"type\":\"workspaces\"}}},\"type\":\"vars\"}}";
     private static final String EXPECTED_DELETE_VAR_PATH = "/api/v2/vars/var-test";
@@ -109,14 +104,16 @@ public class VariableImplTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createVariable() throws Exception {
-        VariableImpl.createVariable(getTerraformVariableInputs);
+    @Test
+    public void createVariableReturnsHttpClientResponse() throws Exception {
+        assertEquals(0, TerraformTestUtils.executeWithMockedHttpClient(
+                () -> VariableImpl.createVariable(getTerraformVariableInputs)).size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void listVariables()throws Exception{
-        VariableImpl.listVariables(listVariableInputs);
+    @Test
+    public void listVariablesReturnsHttpClientResponse() throws Exception {
+        assertEquals(0, TerraformTestUtils.executeWithMockedHttpClient(
+                () -> VariableImpl.listVariables(listVariableInputs)).size());
     }
     @Test
     public void createVariables() throws  Exception{
@@ -133,4 +130,3 @@ public class VariableImplTest {
 
 
 }
-

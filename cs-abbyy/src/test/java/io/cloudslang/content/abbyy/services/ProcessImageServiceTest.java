@@ -26,13 +26,10 @@ import io.cloudslang.content.abbyy.exceptions.ValidationException;
 import io.cloudslang.content.abbyy.entities.responses.AbbyyResponse;
 import io.cloudslang.content.abbyy.validators.AbbyyResultValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,13 +38,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@PrepareForTest({ProcessImageService.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput> {
 
 
@@ -140,7 +138,6 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
 
         Map<String, String> resultsDummy = new HashMap<>();
 
-        PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(mock(FileWriter.class));
 
         when(this.txtResultValidatorMock.validateAfterDownload(any(AbbyyInput.class), anyString()))
                 .thenReturn(new ValidationException(errMsg));
@@ -183,9 +180,8 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
 
         Map<String, String> resultsDummy = new HashMap<>();
 
-        PowerMockito.whenNew(FileWriter.class).withAnyArguments().thenReturn(mock(FileWriter.class));
 
-        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), nullable(String.class), anyBoolean()))
                 .thenThrow(new TimeoutException(errMsg));
 
         try {
@@ -218,7 +214,7 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
 
         Map<String, String> resultsDummy = new HashMap<>();
 
-        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), anyString(), anyBoolean()))
+        when(this.abbyyApiMock.getResult(eq(requestMock), anyString(), any(ExportFormat.class), nullable(String.class), anyBoolean()))
                 .thenReturn(result);
 
         //Act
@@ -242,8 +238,8 @@ public class ProcessImageServiceTest extends AbbyyServiceTest<ProcessImageInput>
         when(requestMock.getPassword()).thenReturn("dummy");
         when(requestMock.getLanguages()).thenReturn(Collections.singletonList("English"));
         Path sourceFileMock = Paths.get(StringUtils.EMPTY);
-        PowerMockito.when(Files.exists(sourceFileMock)).thenReturn(true);
-        PowerMockito.when(Files.isRegularFile(sourceFileMock)).thenReturn(true);
+        filesMock.when(() -> Files.exists(sourceFileMock)).thenReturn(true);
+        filesMock.when(() -> Files.isRegularFile(sourceFileMock)).thenReturn(true);
         when(requestMock.getSourceFile()).thenReturn(sourceFileMock);
         when(requestMock.getDestinationFile()).thenReturn(null);
         when(requestMock.getProfile()).thenReturn(Profile.TEXT_EXTRACTION);

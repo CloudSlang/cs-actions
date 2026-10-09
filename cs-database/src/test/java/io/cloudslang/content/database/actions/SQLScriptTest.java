@@ -17,14 +17,14 @@
 
 
 package io.cloudslang.content.database.actions;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.anyList;
 
 import io.cloudslang.content.database.services.SQLScriptService;
 import io.cloudslang.content.database.utils.SQLInputs;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Spy;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
 import java.util.Map;
@@ -39,17 +39,13 @@ import static io.cloudslang.content.database.constants.DBOtherValues.MSSQL_DB_TY
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
-
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 /**
  * Created by victor on 13.02.2017.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SQLScript.class, SQLScriptService.class})
+@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@org.mockito.junit.jupiter.MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class SQLScriptTest {
 
     @Spy
@@ -67,18 +63,16 @@ public class SQLScriptTest {
     public void executeSuccess() throws Exception {
         final String res = "result";
 
-        mockStatic(SQLScriptService.class);
-
-        final List<String> anyList = any(List.class);
-
-        when(SQLScriptService.executeSqlScript(anyList, any(SQLInputs.class))).thenReturn(res);
+        try (org.mockito.MockedStatic<SQLScriptService> service = org.mockito.Mockito.mockStatic(SQLScriptService.class)) {
+        service.when(() -> SQLScriptService.executeSqlScript(anyList(), any(SQLInputs.class))).thenReturn(res);
 
         final Map<String, String> resultMap = sqlScript.execute("1", MSSQL_DB_TYPE, "username", "Password", "someInstance", "123", "db",
                 AUTH_SQL, EMPTY, EMPTY, EMPTY, "something", EMPTY, EMPTY,"true", EMPTY, EMPTY, EMPTY, EMPTY, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
 
-        verifyStatic();
+        service.verify(() -> SQLScriptService.executeSqlScript(anyList(), any(SQLInputs.class)));
         assertThat(resultMap.get(RETURN_CODE), is(SUCCESS));
         assertThat(resultMap.get(RETURN_RESULT), is(res));
+        }
     }
 
 
