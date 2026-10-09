@@ -26,19 +26,15 @@ import io.cloudslang.content.mail.constants.SecurityConstants;
 import io.cloudslang.content.mail.entities.GetMailAttachmentInput;
 import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
-import junit.framework.Assert;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.MockedConstruction;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import jakarta.mail.*;
 import javax.net.ssl.*;
@@ -53,21 +49,16 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
 /**
  * Created by persdana on 11/7/2014.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SSLUtils.class, KeyStore.class, KeyManagerFactory.class, TrustManagerFactory.class, Session.class, SSLContext.class})
+@ExtendWith(MockitoExtension.class)
 public class SSLUtilsTest {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     private static final String NULL_URL_EXCEPTION_MESSAGE = "Keystore url may not be null";
     private static final String NULL_KEYSTORE_EXCEPTION_MESSAGE = "Keystore may not be null";
     private String password = "";
@@ -107,7 +98,7 @@ public class SSLUtilsTest {
     @Mock
     private TrustManagerFactory trustManagerFactoryMock;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         inputBuilder = new GetMailAttachmentInput.Builder();
         inputBuilder.hostname(HOST);
@@ -123,14 +114,11 @@ public class SSLUtilsTest {
     public void testCreateKeyStore() throws Exception {
         when(urlMock.openStream()).thenReturn(isMock);
 
-        PowerMockito.mockStatic(KeyStore.class);
-        PowerMockito.doReturn(keystoreMock).when(KeyStore.class, "getInstance", "jks");
-
-        //Mockito.doNothing().when(isMock).close(); //error
-
-        KeyStore result = SSLUtils.createKeyStore(urlMock, password);
-
-        Assert.assertNull(result);
+        try (MockedStatic<KeyStore> keyStoreStatic = Mockito.mockStatic(KeyStore.class)) {
+            keyStoreStatic.when(() -> KeyStore.getInstance("jks")).thenReturn(keystoreMock);
+            KeyStore result = SSLUtils.createKeyStore(urlMock, password);
+            assertSame(keystoreMock, result);
+        }
         //Mockito.verify(isMock).close();   //error
         //Mockito.verify(urlMock).openStream(); //error
         //Mockito.verify(keystoreMock).load(isMock, password != null ? password.toCharArray() : null);
@@ -141,31 +129,29 @@ public class SSLUtilsTest {
     public void testCreateKeyStoreWithNullUrl()
             throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
         final URL url = null;
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage(NULL_URL_EXCEPTION_MESSAGE);
-
-        SSLUtils.createKeyStore(url, password);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> SSLUtils.createKeyStore(url, password));
+        assertEquals(NULL_URL_EXCEPTION_MESSAGE, exception.getMessage());
     }
 
     @Test
     public void testCreateKeyManagers() throws Exception {
-        PowerMockito.mockStatic(KeyManagerFactory.class);
-        PowerMockito.doReturn(keyManagerFactoryMock).when(KeyManagerFactory.class, "getInstance", anyString());
-
-
-        KeyManager[] result = SSLUtils.createKeyManagers(keystoreMock, "");
-
-        verify(keyManagerFactoryMock).init(keystoreMock, password != null ? password.toCharArray() : null);
-        Assert.assertEquals(keyManagerFactoryMock.getKeyManagers(), result);
+        String algorithm = KeyManagerFactory.getDefaultAlgorithm();
+        try (MockedStatic<KeyManagerFactory> keyManagerFactoryStatic = Mockito.mockStatic(KeyManagerFactory.class)) {
+            keyManagerFactoryStatic.when(KeyManagerFactory::getDefaultAlgorithm).thenReturn(algorithm);
+            keyManagerFactoryStatic.when(() -> KeyManagerFactory.getInstance(algorithm)).thenReturn(keyManagerFactoryMock);
+            KeyManager[] result = SSLUtils.createKeyManagers(keystoreMock, "");
+            verify(keyManagerFactoryMock).init(keystoreMock, password != null ? password.toCharArray() : null);
+            assertEquals(keyManagerFactoryMock.getKeyManagers(), result);
+        }
     }
 
     @Test
     public void testCreateKeyManagersWithNullKeyStore() throws Exception {
         final KeyStore keyStore = null;
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage(NULL_KEYSTORE_EXCEPTION_MESSAGE);
-
-        SSLUtils.createKeyManagers(keyStore, "");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> SSLUtils.createKeyManagers(keyStore, ""));
+        assertEquals(NULL_KEYSTORE_EXCEPTION_MESSAGE, exception.getMessage());
     }
 
     @Test
@@ -174,15 +160,16 @@ public class SSLUtilsTest {
         X509TrustManager tm = Mockito.mock(X509TrustManager.class);
         trustManagers[1] = tm;
 
-        PowerMockito.mockStatic(TrustManagerFactory.class);
-        PowerMockito.doReturn(trustManagerFactoryMock).when(TrustManagerFactory.class, "getInstance", anyObject());
-        Mockito.doReturn(trustManagers).when(trustManagerFactoryMock).getTrustManagers();
-
-        TrustManager[] result = SSLUtils.createAuthTrustManagers(keystoreMock);
-
-        Assert.assertEquals(trustManagers, result);
-        verify(trustManagerFactoryMock).init(keystoreMock);
-        Assert.assertTrue(result[1] instanceof AuthSSLX509TrustManager);
+        String algorithm = TrustManagerFactory.getDefaultAlgorithm();
+        try (MockedStatic<TrustManagerFactory> trustManagerFactoryStatic = Mockito.mockStatic(TrustManagerFactory.class)) {
+            trustManagerFactoryStatic.when(TrustManagerFactory::getDefaultAlgorithm).thenReturn(algorithm);
+            trustManagerFactoryStatic.when(() -> TrustManagerFactory.getInstance(algorithm)).thenReturn(trustManagerFactoryMock);
+            Mockito.doReturn(trustManagers).when(trustManagerFactoryMock).getTrustManagers();
+            TrustManager[] result = SSLUtils.createAuthTrustManagers(keystoreMock);
+            assertEquals(trustManagers, result);
+            verify(trustManagerFactoryMock).init(keystoreMock);
+            assertTrue(result[1] instanceof AuthSSLX509TrustManager);
+        }
     }
 
     @Test
@@ -196,8 +183,8 @@ public class SSLUtilsTest {
                 .setProperty(String.format(PropNames.MAIL_PORT, Constants.POP3), Constants.POP3_PORT);
         doReturn(objectMock).when(propertiesMock)
                 .setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_PORT, Constants.POP3), Constants.POP3_PORT);
-        PowerMockito.mockStatic(Session.class);
-        PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        try (MockedStatic<Session> sessionStatic = Mockito.mockStatic(Session.class)) {
+        sessionStatic.when(() -> Session.getInstance(any(Properties.class), any(Authenticator.class))).thenReturn(sessionMock);
         doReturn(storeMock).when(sessionMock).getStore(any(URLName.class));
 
         Store store = SSLUtils.configureStoreWithSSL(propertiesMock, authenticatorMock, input);
@@ -207,9 +194,9 @@ public class SSLUtilsTest {
         verify(propertiesMock).setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_FALLBACK, Constants.POP3), String.valueOf(false));
         verify(propertiesMock).setProperty(String.format(PropNames.MAIL_PORT, Constants.POP3), Constants.POP3_PORT);
         verify(propertiesMock).setProperty(String.format(PropNames.MAIL_SOCKET_FACTORY_PORT, Constants.POP3), Constants.POP3_PORT);
-        PowerMockito.verifyStatic();
-        Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        sessionStatic.verify(() -> Session.getInstance(any(Properties.class), any(Authenticator.class)));
         verify(sessionMock).getStore(any(URLName.class));
+        }
     }
 
     @Test
@@ -221,8 +208,8 @@ public class SSLUtilsTest {
                 .setProperty(String.format(PropNames.MAIL_STARTTLS_ENABLE, Constants.POP3), String.valueOf(true));
         doReturn(objectMock).when(propertiesMock)
                 .setProperty(String.format(PropNames.MAIL_STARTTLS_REQUIRED, Constants.POP3), String.valueOf(true));
-        PowerMockito.mockStatic(Session.class);
-        PowerMockito.doReturn(sessionMock).when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        try (MockedStatic<Session> sessionStatic = Mockito.mockStatic(Session.class)) {
+        sessionStatic.when(() -> Session.getInstance(any(Properties.class), any(Authenticator.class))).thenReturn(sessionMock);
         doReturn(storeMock).when(sessionMock).getStore(any(String.class));
 
         Store store = SSLUtils.configureStoreWithTLS(propertiesMock, authenticatorMock, input);
@@ -231,9 +218,9 @@ public class SSLUtilsTest {
         verify(propertiesMock).setProperty(String.format(PropNames.MAIL_SSL_ENABLE, Constants.POP3), String.valueOf(false));
         verify(propertiesMock).setProperty(String.format(PropNames.MAIL_STARTTLS_ENABLE, Constants.POP3), String.valueOf(true));
         verify(propertiesMock).setProperty(String.format(PropNames.MAIL_STARTTLS_REQUIRED, Constants.POP3), String.valueOf(true));
-        PowerMockito.verifyStatic();
-        Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
+        sessionStatic.verify(() -> Session.getInstance(any(Properties.class), any(Authenticator.class)));
         verify(sessionMock).getStore(Constants.POP3);
+        }
     }
 
     /**
@@ -246,21 +233,20 @@ public class SSLUtilsTest {
         GetMailInput input = inputBuilder.build();
         doReturn(objectMock).when(propertiesMock).put(String.format(PropNames.MAIL_HOST, Constants.POP3), HOST);
         doReturn(objectMock).when(propertiesMock).put(String.format(PropNames.MAIL_PORT, Constants.POP3), Short.parseShort(Constants.POP3_PORT));
-        PowerMockito.mockStatic(Session.class);
-        PowerMockito.doReturn(sessionMock)
-                .when(Session.class, "getInstance", Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        doReturn(storeMock).when(sessionMock).getStore(any(URLName.class));
-        PowerMockito.mockStatic(SSLUtils.class);
-        when(SSLUtils.configureStoreWithoutSSL(propertiesMock, authenticatorMock, input)).thenCallRealMethod();
+        try (MockedStatic<Session> sessionStatic = Mockito.mockStatic(Session.class);
+             MockedStatic<SSLUtils> sslUtilsStatic = Mockito.mockStatic(SSLUtils.class)) {
+            sessionStatic.when(() -> Session.getInstance(any(Properties.class), any(Authenticator.class))).thenReturn(sessionMock);
+            doReturn(storeMock).when(sessionMock).getStore(any(URLName.class));
+            sslUtilsStatic.when(() -> SSLUtils.configureStoreWithoutSSL(any(Properties.class), any(Authenticator.class), any(GetMailInput.class))).thenCallRealMethod();
 
-        Store store = SSLUtils.configureStoreWithoutSSL(propertiesMock, authenticatorMock, input);
+            Store store = SSLUtils.configureStoreWithoutSSL(propertiesMock, authenticatorMock, input);
 
-        assertEquals(storeMock, store);
-        verify(propertiesMock).put(String.format(PropNames.MAIL_HOST, Constants.POP3), HOST);
-        verify(propertiesMock).put(String.format(PropNames.MAIL_PORT, Constants.POP3), Short.parseShort(Constants.POP3_PORT));
-        PowerMockito.verifyStatic();
-        Session.getInstance(Matchers.<Properties>any(), Matchers.<Authenticator>any());
-        verify(sessionMock).getStore(any(URLName.class));
+            assertEquals(storeMock, store);
+            verify(propertiesMock).put(String.format(PropNames.MAIL_HOST, Constants.POP3), HOST);
+            verify(propertiesMock).put(String.format(PropNames.MAIL_PORT, Constants.POP3), Short.parseShort(Constants.POP3_PORT));
+            sessionStatic.verify(() -> Session.getInstance(any(Properties.class), any(Authenticator.class)));
+            verify(sessionMock).getStore(any(URLName.class));
+        }
     }
 
     /**
@@ -270,38 +256,30 @@ public class SSLUtilsTest {
      */
     @Test
     public void testAddSSLSettingsWithFalseTrustAllRoots() throws Exception {
-        PowerMockito.whenNew(File.class)
-                .withArguments(anyString())
-                .thenReturn(fileMock);
-        doReturn(true).when(fileMock).exists();
-        PowerMockito.mockStatic(SSLContext.class);
-        PowerMockito.doReturn(sslContextMock).when(SSLContext.class, "getInstance", anyString());
-        PowerMockito.mockStatic(SSLUtils.class);
-        PowerMockito.whenNew(URL.class).withArguments(anyString()).thenReturn(urlMock);
-        PowerMockito.doReturn(keyStoreMock).when(SSLUtils.class, "createKeyStore", anyObject(), anyString());
-        //can't mock TrustManager[] and KeyManager[] objects.
-        PowerMockito.doReturn(null).when(SSLUtils.class, "createAuthTrustManagers", anyObject());
-        PowerMockito.doReturn(null).when(SSLUtils.class, "createKeyManagers", anyObject(), anyObject());
-        PowerMockito.whenNew(SecureRandom.class).withNoArguments().thenReturn(secureRandomMock);
-        doNothing().when(sslContextMock).init(null, null, secureRandomMock);
-        PowerMockito.doNothing().when(SSLContext.class, "setDefault", sslContextMock);
-        PowerMockito.doCallRealMethod().when(SSLUtils.class, "addSSLSettings", anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        try (MockedConstruction<File> files = Mockito.mockConstruction(File.class,
+                    (mock, context) -> when(mock.exists()).thenReturn(true));
+             MockedConstruction<URL> urls = Mockito.mockConstruction(URL.class);
+             MockedConstruction<SecureRandom> randoms = Mockito.mockConstruction(SecureRandom.class);
+             MockedStatic<SSLContext> sslContextStatic = Mockito.mockStatic(SSLContext.class);
+             MockedStatic<SSLUtils> sslUtilsStatic = Mockito.mockStatic(SSLUtils.class)) {
+            sslContextStatic.when(() -> SSLContext.getInstance(anyString())).thenReturn(sslContextMock);
+            sslUtilsStatic.when(() -> SSLUtils.createKeyStore(any(URL.class), anyString())).thenReturn(keyStoreMock);
+            sslUtilsStatic.when(() -> SSLUtils.createAuthTrustManagers(any(KeyStore.class))).thenReturn(null);
+            sslUtilsStatic.when(() -> SSLUtils.createKeyManagers(any(KeyStore.class), anyString())).thenReturn(null);
+            sslUtilsStatic.when(() -> SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenCallRealMethod();
 
-        SSLUtils.addSSLSettings(false, StringUtils.EMPTY, StringUtils.EMPTY,
-                StringUtils.EMPTY, StringUtils.EMPTY);
+            SSLUtils.addSSLSettings(false, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY);
 
-        PowerMockito.verifyNew(File.class, times(2))
-                .withArguments(anyString());
-        verify(fileMock, times(2)).exists();
-        PowerMockito.verifyStatic();
-        SSLContext.getInstance(anyString());
-        SSLContext.setDefault(sslContextMock);
-        SSLUtils.createKeyStore(Matchers.<URL>any(), anyString());
-        SSLUtils.createAuthTrustManagers(Matchers.<KeyStore>anyObject());
-        SSLUtils.createKeyManagers(Matchers.<KeyStore>any(), anyString());
-        SSLContext.setDefault(sslContextMock);
-        PowerMockito.verifyNew(SecureRandom.class).withNoArguments();
-        PowerMockito.verifyNew(URL.class, times(2)).withArguments(anyString());
+            assertEquals(2, files.constructed().size());
+            files.constructed().forEach(file -> verify(file).exists());
+            sslContextStatic.verify(() -> SSLContext.getInstance(anyString()), times(1));
+            sslContextStatic.verify(() -> SSLContext.setDefault(sslContextMock), times(1));
+            sslUtilsStatic.verify(() -> SSLUtils.createKeyStore(any(URL.class), anyString()), times(2));
+            sslUtilsStatic.verify(() -> SSLUtils.createAuthTrustManagers(any(KeyStore.class)));
+            sslUtilsStatic.verify(() -> SSLUtils.createKeyManagers(any(KeyStore.class), anyString()));
+            assertEquals(1, randoms.constructed().size());
+            assertEquals(2, urls.constructed().size());
+        }
     }
 
     /**
@@ -312,86 +290,75 @@ public class SSLUtilsTest {
      */
     @Test
     public void testAddSSLSettings() throws Exception {
-        PowerMockito.mockStatic(SSLContext.class);
-        PowerMockito.doReturn(sslContextMock).when(SSLContext.class, "getInstance", anyString());
-        PowerMockito.whenNew(EasyX509TrustManager.class).withNoArguments().thenReturn(easyX509TrustManagerMock);
-        PowerMockito.mockStatic(SSLUtils.class);
-        PowerMockito.whenNew(URL.class).withArguments(anyString()).thenReturn(urlMock);
-        PowerMockito.doReturn(keyStoreMock).when(SSLUtils.class, "createKeyStore", anyObject(), anyString());
-        //can't mock TrustManager[] and KeyManager[] objects.
-        PowerMockito.doReturn(null).when(SSLUtils.class, "createAuthTrustManagers", anyObject());
-        PowerMockito.doReturn(null).when(SSLUtils.class, "createKeyManagers", anyObject(), anyObject());
-        PowerMockito.whenNew(SecureRandom.class).withNoArguments().thenReturn(secureRandomMock);
-        doNothing().when(sslContextMock).init(null, null, secureRandomMock);
-        PowerMockito.doNothing().when(SSLContext.class, "setDefault", sslContextMock);
-        PowerMockito.doCallRealMethod().when(SSLUtils.class, "addSSLSettings", anyBoolean(), anyString(), anyString(), anyString(), anyString());
+        try (MockedConstruction<EasyX509TrustManager> trustManagers = Mockito.mockConstruction(EasyX509TrustManager.class);
+             MockedConstruction<URL> urls = Mockito.mockConstruction(URL.class);
+             MockedConstruction<SecureRandom> randoms = Mockito.mockConstruction(SecureRandom.class);
+             MockedStatic<SSLContext> sslContextStatic = Mockito.mockStatic(SSLContext.class);
+             MockedStatic<SSLUtils> sslUtilsStatic = Mockito.mockStatic(SSLUtils.class)) {
+            sslContextStatic.when(() -> SSLContext.getInstance(anyString())).thenReturn(sslContextMock);
+            sslUtilsStatic.when(() -> SSLUtils.createKeyStore(any(URL.class), anyString())).thenReturn(keyStoreMock);
+            sslUtilsStatic.when(() -> SSLUtils.createAuthTrustManagers(any(KeyStore.class))).thenReturn(null);
+            sslUtilsStatic.when(() -> SSLUtils.createKeyManagers(any(KeyStore.class), anyString())).thenReturn(null);
+            sslUtilsStatic.when(() -> SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenCallRealMethod();
+            doNothing().when(sslContextMock).init(any(), any(), any());
 
-        SSLUtils.addSSLSettings(true, "HDD:\\keystore", "keystorePass",
-                "HDD:\\trustore", "truststorePass");
+            SSLUtils.addSSLSettings(true, "HDD:\\keystore", "keystorePass", "HDD:\\trustore", "truststorePass");
 
-        PowerMockito.verifyStatic();
-        SSLContext.getInstance(anyString());
-        PowerMockito.verifyNew(EasyX509TrustManager.class).withNoArguments();
-        PowerMockito.verifyStatic();
-        SSLContext.getInstance(anyString());
-        SSLContext.setDefault(sslContextMock);
-        SSLUtils.createKeyStore(Matchers.<URL>any(), anyString());
-        SSLUtils.createAuthTrustManagers(Matchers.<KeyStore>anyObject());
-        SSLUtils.createKeyManagers(Matchers.<KeyStore>any(), anyString());
-        SSLContext.setDefault(sslContextMock);
-        PowerMockito.verifyNew(SecureRandom.class).withNoArguments();
+            assertEquals(1, trustManagers.constructed().size());
+            sslContextStatic.verify(() -> SSLContext.getInstance(anyString()), times(1));
+            sslContextStatic.verify(() -> SSLContext.setDefault(sslContextMock), times(1));
+            sslUtilsStatic.verify(() -> SSLUtils.createKeyStore(any(URL.class), anyString()), times(0));
+            sslUtilsStatic.verify(() -> SSLUtils.createAuthTrustManagers(any(KeyStore.class)), times(0));
+            sslUtilsStatic.verify(() -> SSLUtils.createKeyManagers(any(KeyStore.class), anyString()), times(0));
+            assertEquals(1, randoms.constructed().size());
+            assertEquals(0, urls.constructed().size());
+        }
     }
 
     @Test
     public void testCreateMessageStoreWithEnableTLSInputTrueAndEnableSSLInputFalse() throws Exception {
-        PowerMockito.mockStatic(SSLUtils.class);
-        when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
-        when(SSLUtils.tryTLSOtherwiseTrySSL(any(SimpleAuthenticator.class), any(Properties.class), any(GetMailInput.class))).thenCallRealMethod();
-        PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
-        PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
-        PowerMockito.doNothing().when(SSLUtils.class, "addSSLSettings", anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        when(SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
-        doNothing().when(storeMock).connect(HOST, USERNAME, PASSWORD);
-        inputBuilder.enableTLS(String.valueOf(true));
-        inputBuilder.enableSSL(String.valueOf(false));
+        try (MockedStatic<SSLUtils> sslUtilsStatic = Mockito.mockStatic(SSLUtils.class)) {
+            sslUtilsStatic.when(() -> SSLUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
+            sslUtilsStatic.when(() -> SSLUtils.tryTLSOtherwiseTrySSL(any(SimpleAuthenticator.class), any(Properties.class), any(GetMailInput.class))).thenCallRealMethod();
+            sslUtilsStatic.when(() -> SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenAnswer(invocation -> null);
+            sslUtilsStatic.when(() -> SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
+            doNothing().when(storeMock).connect(HOST, USERNAME, PASSWORD);
+            inputBuilder.enableTLS(String.valueOf(true));
+            inputBuilder.enableSSL(String.valueOf(false));
 
-        try {
-            SSLUtils.createMessageStore(inputBuilder.build());
-        } catch (Exception ex) {
-            if (!(ex instanceof MailConnectException)) {
-                fail();
+            try {
+                SSLUtils.createMessageStore(inputBuilder.build());
+            } catch (Exception ex) {
+                if (!(ex instanceof MailConnectException)) {
+                    fail(ex);
+                }
             }
-        } finally {
-            PowerMockito.verifyStatic(times(1));
-            SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
-            PowerMockito.verifyStatic(times(1));
-            SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class));
+            sslUtilsStatic.verify(() -> SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString()), times(1));
+            sslUtilsStatic.verify(() -> SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class)), times(1));
         }
     }
 
     @Test
     public void testCreateMessageStoreWithEnableTLSInputTrueExceptionAndEnableSSLInputTrue() throws Exception {
-        PowerMockito.mockStatic(SSLUtils.class);
-        when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
-        when(SSLUtils.tryTLSOtherwiseTrySSL(any(SimpleAuthenticator.class), any(Properties.class), any(GetMailInput.class))).thenCallRealMethod();
-        when(SSLUtils.connectUsingSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenCallRealMethod();
-        PowerMockito.doNothing().when(SSLUtils.class, "addSSLSettings", anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        doThrow(AuthenticationFailedException.class).when(storeMock).connect(HOST, USERNAME, PASSWORD);
-        when(SSLUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
-        when(SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
-        doNothing().when(storeMock).connect();
-        inputBuilder.enableSSL(String.valueOf(true));
-        inputBuilder.enableTLS(String.valueOf(true));
+        try (MockedStatic<SSLUtils> sslUtilsStatic = Mockito.mockStatic(SSLUtils.class)) {
+            sslUtilsStatic.when(() -> SSLUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
+            sslUtilsStatic.when(() -> SSLUtils.tryTLSOtherwiseTrySSL(any(SimpleAuthenticator.class), any(Properties.class), any(GetMailInput.class))).thenCallRealMethod();
+            sslUtilsStatic.when(() -> SSLUtils.connectUsingSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenCallRealMethod();
+            sslUtilsStatic.when(() -> SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenAnswer(invocation -> null);
+            doThrow(AuthenticationFailedException.class).when(storeMock).connect(HOST, USERNAME, PASSWORD);
+            sslUtilsStatic.when(() -> SSLUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
+            sslUtilsStatic.when(() -> SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
+            doNothing().when(storeMock).connect();
+            inputBuilder.enableSSL(String.valueOf(true));
+            inputBuilder.enableTLS(String.valueOf(true));
 
-        Store store = SSLUtils.createMessageStore(inputBuilder.build());
+            Store store = SSLUtils.createMessageStore(inputBuilder.build());
 
-        assertEquals(storeMock, store);
-        PowerMockito.verifyStatic(times(1));
-        SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        PowerMockito.verifyStatic(times(1));
-        SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class));
-        PowerMockito.verifyStatic(times(1));
-        SSLUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class));
+            assertEquals(storeMock, store);
+            sslUtilsStatic.verify(() -> SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString()), times(1));
+            sslUtilsStatic.verify(() -> SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class)), times(1));
+            sslUtilsStatic.verify(() -> SSLUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class)), times(1));
+        }
     }
 
     /**
@@ -401,20 +368,16 @@ public class SSLUtilsTest {
     public void testCreateMessageStoreWithEnableSSLInputFalse() throws Exception {
         inputBuilder.enableSSL(String.valueOf(false));
         GetMailInput input = inputBuilder.build();
-        PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
-        PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
-        PowerMockito.mockStatic(SSLUtils.class);
-        when(SSLUtils.createMessageStore(input)).thenCallRealMethod();
-        when(SSLUtils.configureStoreWithoutSSL(any(Properties.class), any(Authenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
-        doNothing().when(storeMock).connect();
+        try (MockedStatic<SSLUtils> sslUtilsStatic = Mockito.mockStatic(SSLUtils.class)) {
+            sslUtilsStatic.when(() -> SSLUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
+            sslUtilsStatic.when(() -> SSLUtils.configureStoreWithoutSSL(any(Properties.class), any(Authenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
+            doNothing().when(storeMock).connect();
 
-        assertEquals(storeMock, SSLUtils.createMessageStore(input));
+            assertEquals(storeMock, SSLUtils.createMessageStore(input));
 
-        PowerMockito.verifyNew(Properties.class).withNoArguments();
-        PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
-        PowerMockito.verifyStatic(times(1));
-        SSLUtils.configureStoreWithoutSSL(propertiesMock, authenticatorMock, input);
-        verify(storeMock).connect();
+            sslUtilsStatic.verify(() -> SSLUtils.configureStoreWithoutSSL(any(Properties.class), any(Authenticator.class), any(GetMailInput.class)), times(1));
+            verify(storeMock).connect();
+        }
     }
 
     /**
@@ -425,22 +388,17 @@ public class SSLUtilsTest {
         inputBuilder.enableSSL(String.valueOf(true));
         inputBuilder.enableTLS(String.valueOf(false));
         GetMailInput input = inputBuilder.build();
-        PowerMockito.whenNew(Properties.class).withNoArguments().thenReturn(propertiesMock);
-        PowerMockito.whenNew(SimpleAuthenticator.class).withArguments(anyString(), anyString()).thenReturn(authenticatorMock);
-        PowerMockito.mockStatic(SSLUtils.class);
-        when(SSLUtils.createMessageStore(input)).thenCallRealMethod();
-        when(SSLUtils.connectUsingSSL(propertiesMock, authenticatorMock, input)).thenCallRealMethod();
-        PowerMockito.doNothing().when(SSLUtils.class, "addSSLSettings", anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        when(SSLUtils.configureStoreWithSSL(propertiesMock, authenticatorMock, input)).thenReturn(storeMock);
-        doNothing().when(storeMock).connect();
+        try (MockedStatic<SSLUtils> sslUtilsStatic = Mockito.mockStatic(SSLUtils.class)) {
+            sslUtilsStatic.when(() -> SSLUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
+            sslUtilsStatic.when(() -> SSLUtils.connectUsingSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenCallRealMethod();
+            sslUtilsStatic.when(() -> SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenAnswer(invocation -> null);
+            sslUtilsStatic.when(() -> SSLUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
+            doNothing().when(storeMock).connect();
 
-        assertEquals(storeMock, SSLUtils.createMessageStore(input));
+            assertEquals(storeMock, SSLUtils.createMessageStore(input));
 
-        PowerMockito.verifyNew(Properties.class).withNoArguments();
-        PowerMockito.verifyNew(SimpleAuthenticator.class).withArguments(anyString(), anyString());
-        PowerMockito.verifyStatic(times(1));
-        SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        PowerMockito.verifyStatic(times(1));
-        SSLUtils.configureStoreWithSSL(propertiesMock, authenticatorMock, input);
+            sslUtilsStatic.verify(() -> SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString()), times(1));
+            sslUtilsStatic.verify(() -> SSLUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class)), times(1));
+        }
     }
 }

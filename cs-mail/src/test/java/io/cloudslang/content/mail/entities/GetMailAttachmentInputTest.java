@@ -19,13 +19,15 @@ package io.cloudslang.content.mail.entities;
 import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.InputNames;
 import io.cloudslang.content.mail.constants.PropNames;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GetMailAttachmentInputTest {
     private GetMailAttachmentInput.Builder inputBuilder;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         inputBuilder = new GetMailAttachmentInput.Builder();
         inputBuilder.hostname("host");
@@ -37,10 +39,10 @@ public class GetMailAttachmentInputTest {
         inputBuilder.messageNumber(InputNames.MESSAGE_NUMBER);
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void executeMessageNumberLessThanOneThrowsException() throws Exception {
         inputBuilder.messageNumber("0");
 
-        inputBuilder.build();
+        assertThrows(Exception.class, () -> inputBuilder.build());
     }
 }

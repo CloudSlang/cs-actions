@@ -23,13 +23,12 @@ import org.apache.http.Header;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BufferedHeader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,7 +47,7 @@ public class HeadersBuilderTest {
                 .setContentType(contentType)
                 .buildHeaders();
         assertEquals(3, headers.size());
-        assertThat(headers.get(0), instanceOf(BufferedHeader.class));
+        assertThat(headers.get(0)).isInstanceOf(BufferedHeader.class);
         BufferedHeader basicHeader = (BufferedHeader) headers.get(1);
         assertEquals("header2", basicHeader.getName());
         assertEquals("value2", basicHeader.getValue());

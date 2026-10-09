@@ -19,38 +19,29 @@
 
 package io.cloudslang.content.httpclient.consume;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.BasicHttpEntity;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.*;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static org.mockito.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 
 /**
  * User: Adina Tusa
  * Date: 8/20/14
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({IOUtils.class, HttpResponseConsumer.class})
+@ExtendWith(MockitoExtension.class)
 public class HttpResponseConsumerTest {
 
     private static final String CONTENT_TYPE = "text/plain;charset=UTF-8";
@@ -58,32 +49,17 @@ public class HttpResponseConsumerTest {
     private HttpResponseConsumer httpResponseConsumer;
     @Mock
     private HttpResponse httpResponseMock;
-    @Mock
-    private InputStream inputStreamMock;
-    @Mock
-    private BufferedReader bufferedReaderMock;
-    @Mock
-    private InputStreamReader inputStreamReaderMock;
     private Map<String, String> result;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         httpResponseConsumer = new HttpResponseConsumer();
         result = new HashMap<>();
     }
 
-    @After
-    public void tearDown() {
-        httpResponseConsumer = null;
-        result = null;
-    }
-
     @Test
     public void consume() throws IOException {
-        setHttpResponseEntity("text/plain;charset=");
-
-        mockStatic(IOUtils.class);
-        when(IOUtils.toString(inputStreamMock, Consts.ISO_8859_1.name())).thenReturn("doc");
+        setHttpResponseEntity("text/plain;charset=", "doc");
         httpResponseConsumer
                 .setHttpResponse(httpResponseMock)
                 .setDestinationFile(null)
@@ -94,10 +70,7 @@ public class HttpResponseConsumerTest {
 
     @Test
     public void consumeWithContentType() throws IOException {
-        setHttpResponseEntity(CONTENT_TYPE);
-
-        mockStatic(IOUtils.class);
-        when(IOUtils.toString(inputStreamMock, Consts.UTF_8.name())).thenReturn("doc");
+        setHttpResponseEntity(CONTENT_TYPE, "doc");
         httpResponseConsumer
                 .setHttpResponse(httpResponseMock)
                 .setDestinationFile(null)
@@ -108,26 +81,26 @@ public class HttpResponseConsumerTest {
 
     @Test
     public void consumeWithDestinationFile() throws Exception {
-        setHttpResponseEntity(CONTENT_TYPE);
+        String fileName = "http-response-consumer-test.txt";
+        setHttpResponseEntity(CONTENT_TYPE, "file content");
 
-        whenNew(InputStreamReader.class).withArguments(anyObject(), anyString()).thenReturn(inputStreamReaderMock);
-        whenNew(BufferedReader.class).withArguments(inputStreamReaderMock).thenReturn(bufferedReaderMock);
-        when(bufferedReaderMock.read((char[]) anyObject(), anyInt(), anyInt())).thenReturn(-1);
+        try {
+            httpResponseConsumer
+                    .setHttpResponse(httpResponseMock)
+                    .setDestinationFile(fileName)
+                    .setResponseCharacterSet(null)
+                    .consume(result);
 
-        httpResponseConsumer
-                .setHttpResponse(httpResponseMock)
-                .setDestinationFile("test.txt")
-                .setResponseCharacterSet(null)
-                .consume(result);
-
-        File file = new File("test.txt");
-        file.delete();
-        assertNull(result.get(RETURN_RESULT));
+            assertEquals("file content", java.nio.file.Files.readString(new File(fileName).toPath()));
+            assertNull(result.get(RETURN_RESULT));
+        } finally {
+            new File(fileName).delete();
+        }
     }
 
-    private void setHttpResponseEntity(String contentType) {
+    private void setHttpResponseEntity(String contentType, String content) {
         BasicHttpEntity entity = new BasicHttpEntity();
-        entity.setContent(inputStreamMock);
+        entity.setContent(new ByteArrayInputStream(content.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
         Header contentTypeHeader = new HeaderEntity("Content-Type", contentType);
         entity.setContentType(contentTypeHeader);
         when(httpResponseMock.getEntity()).thenReturn(entity);

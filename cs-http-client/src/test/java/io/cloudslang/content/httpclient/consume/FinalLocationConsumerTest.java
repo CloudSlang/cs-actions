@@ -21,8 +21,8 @@ package io.cloudslang.content.httpclient.consume;
 
 import org.apache.http.HttpHost;
 import org.apache.http.client.utils.URIBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,7 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * User: Adina Tusa
@@ -43,7 +44,7 @@ public class FinalLocationConsumerTest {
     private static final String FINAL_LOCATION = "finalLocation";
     private FinalLocationConsumer finalLocationConsumer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         finalLocationConsumer = new FinalLocationConsumer();
     }
@@ -76,25 +77,28 @@ public class FinalLocationConsumerTest {
         assertEquals(URI, returnResult.get(FINAL_LOCATION));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void consumeWithNoUri() throws URISyntaxException {
-        Map<String, String> returnResult = new HashMap<>();
-        finalLocationConsumer.setUri(null)
-                .setTargetHost(null)
-                .setRedirectLocations(null)
-                .consume(returnResult);
+        assertThrows(IllegalArgumentException.class, () -> {
+            Map<String, String> returnResult = new HashMap<>();
+            finalLocationConsumer.setUri(null)
+                    .setTargetHost(null)
+                    .setRedirectLocations(null)
+                    .consume(returnResult);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void consumeWithException() throws URISyntaxException {
-        URI uri = new URIBuilder("/test").build();
-        HttpHost httpHost = new HttpHost("te[]st1", 8080);
-        Map<String, String> returnResult = new HashMap<>();
-        finalLocationConsumer.setUri(uri)
-                .setTargetHost(httpHost)
-                .setRedirectLocations(null)
-                .consume(returnResult);
-
+        assertThrows(IllegalArgumentException.class, () -> {
+            URI uri = new URIBuilder("/test").build();
+            HttpHost httpHost = new HttpHost("te[]st1", 8080);
+            Map<String, String> returnResult = new HashMap<>();
+            finalLocationConsumer.setUri(uri)
+                    .setTargetHost(httpHost)
+                    .setRedirectLocations(null)
+                    .consume(returnResult);
+        });
 
     }
 }

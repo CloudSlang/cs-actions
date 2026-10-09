@@ -22,15 +22,14 @@ import io.cloudslang.content.mail.entities.GetMailInput;
 import io.cloudslang.content.mail.entities.GetMailMessageCountInput;
 import io.cloudslang.content.mail.entities.SimpleAuthenticator;
 import io.cloudslang.content.mail.sslconfig.SSLUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import jakarta.mail.Folder;
 import jakarta.mail.Store;
@@ -38,11 +37,10 @@ import jakarta.mail.Store;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SSLUtils.class})
+@ExtendWith(MockitoExtension.class)
 public class GetMailMessageCountServiceTest {
 
     @Spy
@@ -53,7 +51,7 @@ public class GetMailMessageCountServiceTest {
     private Store storeMock;
     private GetMailMessageCountInput.Builder inputBuilder;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         inputBuilder = new GetMailMessageCountInput.Builder();
         inputBuilder.hostname("host");
@@ -68,20 +66,21 @@ public class GetMailMessageCountServiceTest {
     public void testExecute() throws Exception {
         doReturn(3).when(folderMock).getMessageCount();
         doReturn(true).when(folderMock).exists();
-        doNothing().when(folderMock).open(Matchers.anyInt());
-        doReturn(folderMock).when(storeMock).getFolder(Matchers.anyString());
-        doNothing().when(storeMock).connect();
-        PowerMockito.mockStatic(SSLUtils.class);
-        when(SSLUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
-        when(SSLUtils.tryTLSOtherwiseTrySSL(any(SimpleAuthenticator.class), any(Properties.class), any(GetMailInput.class))).thenCallRealMethod();
-        when(SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
-        when(SSLUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
-        PowerMockito.doNothing().when(SSLUtils.class, "addSSLSettings", anyBoolean(), anyString(), anyString(), anyString(), anyString());
-        inputBuilder.enableTLS(String.valueOf(true));
+        doNothing().when(folderMock).open(anyInt());
+        doReturn(folderMock).when(storeMock).getFolder(anyString());
+        doNothing().when(storeMock).connect("host", "username", "password");
+        try (MockedStatic<SSLUtils> sslUtils = Mockito.mockStatic(SSLUtils.class)) {
+            sslUtils.when(() -> SSLUtils.createMessageStore(any(GetMailInput.class))).thenCallRealMethod();
+            sslUtils.when(() -> SSLUtils.tryTLSOtherwiseTrySSL(any(SimpleAuthenticator.class), any(Properties.class), any(GetMailInput.class))).thenCallRealMethod();
+            sslUtils.when(() -> SSLUtils.configureStoreWithTLS(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
+            sslUtils.when(() -> SSLUtils.configureStoreWithSSL(any(Properties.class), any(SimpleAuthenticator.class), any(GetMailInput.class))).thenReturn(storeMock);
+            sslUtils.when(() -> SSLUtils.addSSLSettings(anyBoolean(), anyString(), anyString(), anyString(), anyString())).thenAnswer(invocation -> null);
+            inputBuilder.enableTLS(String.valueOf(true));
 
-        Map<String, String> results = serviceSpy.execute(inputBuilder.build());
+            Map<String, String> results = serviceSpy.execute(inputBuilder.build());
 
-        assertEquals(results.get(OutputNames.RETURN_RESULT), "3");
+            assertEquals("3", results.get(OutputNames.RETURN_RESULT));
+        }
     }
 
 }

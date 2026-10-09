@@ -20,9 +20,9 @@
 package io.cloudslang.content.httpclient.build.auth;
 
 import org.apache.http.impl.auth.NTLMEngineException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * User: Adina Tusa

@@ -19,7 +19,7 @@
 package io.cloudslang.content.urlencoder;
 
 import io.cloudslang.content.httpclient.actions.URLEncoderAction;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
 import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UrlEncoderTest {
     private final URLEncoderAction u = new URLEncoderAction();

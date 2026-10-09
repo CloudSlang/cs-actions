@@ -18,16 +18,16 @@ package io.cloudslang.content.json.actions;
 
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONOBJECT;
 import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONPATH;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by victor on 9/12/16.
@@ -39,12 +39,12 @@ public class JsonPathQueryTest {
             "{\"title\":\"The Lord of the Rings\",\"price\":22.99}]}," +
             "\"expensive\":10}";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         jsonPathQuery = new JsonPathQuery();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         jsonPathQuery = null;
     }

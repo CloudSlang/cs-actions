@@ -19,16 +19,13 @@ package io.cloudslang.content.json.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.internal.filter.ValueNode;
-import io.cloudslang.content.json.actions.JsonPathQuery;
 import io.cloudslang.content.json.exceptions.RemoveEmptyElementException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Created by nane on 2/9/2016.
@@ -39,16 +36,12 @@ public class JsonServiceTest {
     private String expectedJsonStringOutput;
     private String actualJsonStringOutput;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-
-    @Before
+    @BeforeEach
     public void setUp() {
         jsonServiceUnderTest = new JsonService();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         jsonServiceUnderTest = null;
         jsonStringInput = null;
@@ -140,38 +133,42 @@ public class JsonServiceTest {
         expectedJsonStringOutput = "{\"expected1\":\"value\",\"expected2\":1,\"expected\":{\"public\":[{\"expected1\":\"value\",\"expected2\":1}]},\"links\":[{\"expected1\":\"http://test.com\",\"expected2\":1}]}";
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(JsonPath.parse(expectedJsonStringOutput).json(), JsonPath.parse(actualJsonStringOutput).json());
+        assertEquals((Object) JsonPath.parse(expectedJsonStringOutput).json(),
+                JsonPath.parse(actualJsonStringOutput).json());
     }
 
     @Test
     public void givenValidComplexJsonStringSingleQuotesThenSuccessfullyRemoveEmpty() throws RemoveEmptyElementException {
-        jsonStringInput = "{ \n" +
-                " 'expected1': 'value', \n" +
-                " 'expected2': 1, \n" +
-                " 'remove1': null, \n" +
-                " 'remove2': [], \n" +
-                " 'remove3': '', \n" +
-                " 'expected': { \n" +
-                "  'public': [{ \n" +
-                "   'expected1': 'value', \n" +
-                "   'expected2': 1, \n" +
-                "   'remove1': null, \n" +
-                "   'remove2': [], \n" +
-                "   'remove3': '' \n" +
-                "  }] \n" +
-                " }, \n" +
-                " 'links': [{ \n" +
-                "  'expected1': 'http://test.com', \n" +
-                "  'expected2': 1, \n" +
-                "  'remove1': null, \n" +
-                "  'remove2': [], \n" +
-                "  'remove3': '' \n" +
-                " }] \n" +
-                "} \n";
-        expectedJsonStringOutput = "{'expected1':'value','expected2':1,'expected':{'public':[{'expected1':'value','expected2':1}]},'links':[{'expected1':'http://test.com','expected2':1}]}";
+        jsonStringInput = """
+                {
+                  "expected1": "value",
+                  "expected2": 1,
+                  "remove1": null,
+                  "remove2": [],
+                  "remove3": "",
+                  "expected": {
+                    "public": [{
+                      "expected1": "value",
+                      "expected2": 1,
+                      "remove1": null,
+                      "remove2": [],
+                      "remove3": ""
+                    }]
+                  },
+                  "links": [{
+                    "expected1": "http://test.com",
+                    "expected2": 1,
+                    "remove1": null,
+                    "remove2": [],
+                    "remove3": ""
+                  }]
+                }
+                """.replace('"', '\'');
+        expectedJsonStringOutput = "{\"expected1\":\"value\",\"expected2\":1,\"expected\":{\"public\":[{\"expected1\":\"value\",\"expected2\":1}]},\"links\":[{\"expected1\":\"http://test.com\",\"expected2\":1}]}".replace('"', '\'');
         actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
 
-        assertEquals(JsonPath.parse(expectedJsonStringOutput).json(), JsonPath.parse(actualJsonStringOutput).json());
+        assertEquals((Object) JsonPath.parse(expectedJsonStringOutput).json(),
+                JsonPath.parse(actualJsonStringOutput).json());
     }
 
     @Test
@@ -184,12 +181,12 @@ public class JsonServiceTest {
     }
 
     @Test
-    public void givenInvalidJsonThenThrowException() throws RemoveEmptyElementException {
+    public void givenInvalidJsonThenThrowException() {
         jsonStringInput = "{\"removed1\":\"\", \"removed2\":[], \"removed3\":null \"expected\":\"http://test.com\"}";
         expectedJsonStringOutput = "{\"expected\":\"http://test.com\"}";
 
-        exception.expect(RemoveEmptyElementException.class);
-        actualJsonStringOutput = jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput);
+        assertThrows(RemoveEmptyElementException.class,
+                () -> jsonServiceUnderTest.removeEmptyElementsJson(jsonStringInput));
     }
 
     @Test

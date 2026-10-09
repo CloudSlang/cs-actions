@@ -13,212 +13,127 @@
  * limitations under the License.
  */
 
-
-
-
-
 package io.cloudslang.content.httpclient.build.conn;
 
-import org.apache.http.conn.ssl.*;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
 import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyStore;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static org.mockito.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
 
-/**
- * User: Adina Tusa
- * Date: 8/20/14
- */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SSLContexts.class, System.class, SSLConnectionSocketFactoryBuilder.class, KeyStore.class})
-public class SSLConnectionSocketFactoryBuilderTest {
+@ExtendWith(MockitoExtension.class)
+class SSLConnectionSocketFactoryBuilderTest {
+    private static final String PASSWORD = "password";
+    private static final String KEYSTORE = "C:/keystore";
 
-    public static final String BAD_TRUST_KEYSTORE_ERROR = "The trust keystore provided in the 'trustKeystore' input is corrupted OR the password (in the 'trustPassword' input) is incorrect";
-    public static final String BAD_KEYSTORE_ERROR = "The keystore provided in the 'keystore' input is corrupted OR the password (in the 'keystorePassword' input) is incorrect";
-    public static final String PASSWORD = "password";
-    public static final String KEYSTORE = "C:/keystore";
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     @Mock
-    URL urlMock;
-    private SSLConnectionSocketFactoryBuilder builder;
+    private SSLContextBuilder sslContextBuilder;
     @Mock
-    private SSLContextBuilder sslContextBuilderMock;
-    @Mock
-    private File fileMock;
-    @Mock
-    private SSLContext sslCtxMock;
-    @Mock
-    private SSLConnectionSocketFactory sslsfMock;
-    @Mock
-    private KeyStore keyStoreMock;
-    @Mock
-    private InputStream inputStreamMock;
+    private KeyStore keyStore;
 
     @Test
-    public void build() throws Exception {
-        builder = new SSLConnectionSocketFactoryBuilder() {
-            protected void createTrustKeystore(SSLContextBuilder sslContextBuilder, boolean useTrustCert) {
+    void build() {
+        SSLConnectionSocketFactoryBuilder builder = new SSLConnectionSocketFactoryBuilder() {
+            @Override
+            protected void createTrustKeystore(SSLContextBuilder contextBuilder, boolean useTrustCert) {
             }
-
-            protected void createKeystore(SSLContextBuilder sslContextBuilder, boolean useClientCert) {
-            }
-        };
-
-        mockStatic(SSLContexts.class);
-        mockStatic(System.class);
-
-        when(SSLContexts.custom()).thenReturn(sslContextBuilderMock);
-        when(System.getProperty("java.home")).thenReturn("javaHome");
-        whenNew(File.class).withArguments(anyString()).thenReturn(fileMock);
-
-        when(fileMock.exists()).thenReturn(true);
-        when(sslContextBuilderMock.useSSL()).thenReturn(null);
-        when(sslContextBuilderMock.useTLS()).thenReturn(null);
-        when(sslContextBuilderMock.build()).thenReturn(sslCtxMock);
-
-        prepareSSLConnectionSocketFactory();
-
-        SSLConnectionSocketFactory sslsf = builder.build();
-        assertNotNull(sslsf);
-        assertEquals(sslsfMock, sslsf);
-    }
-
-    private void prepareSSLConnectionSocketFactory() throws Exception {
-        whenNew(SSLConnectionSocketFactory.class)
-                .withParameterTypes(SSLContext.class, String[].class, String[].class, HostnameVerifier.class)
-                .withArguments(isA(SSLContext.class), isA(String[].class), isNull(), isA(HostnameVerifier.class))
-                .thenReturn(sslsfMock);
-    }
-
-    @Test
-    public void buildWithTrustAllRoots() throws Exception {
-        builder = new SSLConnectionSocketFactoryBuilder();
-        builder.setTrustAllRoots("true");
-        builder.setKeystore(System.getProperty("java.home") + "/lib/security/cacerts");
-        builder.setKeystorePassword("changeit");
-
-
-
-
-
-
-
-
-
-
-        mockStatic(SSLContexts.class);
-
-        when(SSLContexts.custom()).thenReturn(sslContextBuilderMock);
-
-        when(sslContextBuilderMock.useTLS()).thenReturn(null);
-        when(sslContextBuilderMock.useSSL()).thenReturn(null);
-        when(sslContextBuilderMock.loadTrustMaterial(isA(KeyStore.class), isA(TrustStrategy.class))).thenReturn(null);
-
-        when(sslContextBuilderMock.build()).thenReturn(sslCtxMock);
-
-        prepareSSLConnectionSocketFactory();
-
-        SSLConnectionSocketFactory sslsf = builder.build();
-        assertNotNull(sslsf);
-        assertEquals(sslsfMock, sslsf);
-    }
-
-    @Test
-    public void createTrustKeystore() throws Exception {
-        builder = new SSLConnectionSocketFactoryBuilder() {
 
             @Override
-            protected KeyStore createKeyStore(final URL url, final String password) {
-                return keyStoreMock;
+            protected void createKeystore(SSLContextBuilder contextBuilder, boolean useClientCert) {
             }
         };
-        builder.setTrustKeystore("file:" + KEYSTORE)
-                .setTrustPassword(PASSWORD);
-        when(sslContextBuilderMock.loadTrustMaterial(keyStoreMock)).thenReturn(sslContextBuilderMock);
 
-        builder.createTrustKeystore(sslContextBuilderMock, true);
-        verify(sslContextBuilderMock).loadTrustMaterial(keyStoreMock);
+        assertNotNull(builder.build());
     }
 
     @Test
-    public void createTrustKeystoreWithException() throws Exception {
-        builder = new SSLConnectionSocketFactoryBuilder();
-        builder.setTrustKeystore(KEYSTORE);
+    void buildWithTrustAllRoots() {
+        String javaHome = System.getProperty("java.home");
+        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactoryBuilder()
+                .setTrustAllRoots("true")
+                .setKeystore(javaHome + "/lib/security/cacerts")
+                .setKeystorePassword("changeit")
+                .build();
 
-        exception.expect(RuntimeException.class);
-        exception.expectMessage(BAD_TRUST_KEYSTORE_ERROR);
-
-        builder.createTrustKeystore(sslContextBuilderMock, true);
-
+        assertNotNull(socketFactory);
     }
 
     @Test
-    public void createKeystore() throws Exception {
-        builder = new SSLConnectionSocketFactoryBuilder() {
-
+    void createTrustKeystore() throws Exception {
+        SSLConnectionSocketFactoryBuilder builder = new SSLConnectionSocketFactoryBuilder() {
             @Override
-            protected KeyStore createKeyStore(final URL url, final String password) {
-                return keyStoreMock;
+            protected KeyStore createKeyStore(URL url, String password) {
+                return keyStore;
             }
         };
-        builder.setKeystore("file:" + KEYSTORE)
-                .setKeystorePassword(PASSWORD);
-        when(sslContextBuilderMock.loadKeyMaterial(keyStoreMock, PASSWORD.toCharArray())).thenReturn(sslContextBuilderMock);
+        builder.setTrustKeystore("file:" + KEYSTORE).setTrustPassword(PASSWORD);
+        when(sslContextBuilder.loadTrustMaterial(keyStore)).thenReturn(sslContextBuilder);
 
-        builder.createKeystore(sslContextBuilderMock, true);
-        verify(sslContextBuilderMock).loadKeyMaterial(keyStoreMock, PASSWORD.toCharArray());
+        builder.createTrustKeystore(sslContextBuilder, true);
+
+        verify(sslContextBuilder).loadTrustMaterial(keyStore);
     }
 
     @Test
-    public void createKeystoreWithException() throws Exception {
-        builder = new SSLConnectionSocketFactoryBuilder();
-        builder.setKeystore(KEYSTORE);
+    void createTrustKeystoreWithException() {
+        SSLConnectionSocketFactoryBuilder builder = new SSLConnectionSocketFactoryBuilder()
+                .setTrustKeystore(KEYSTORE);
 
-        exception.expect(RuntimeException.class);
-        exception.expectMessage(BAD_KEYSTORE_ERROR);
-
-        builder.createKeystore(sslContextBuilderMock, true);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> builder.createTrustKeystore(sslContextBuilder, true));
+        assertTrue(exception.getMessage().contains(SSLConnectionSocketFactoryBuilder.BAD_TRUST_KEYSTORE_ERROR));
     }
 
     @Test
-    public void createKeyStoreWithException() throws Exception {
-        builder = new SSLConnectionSocketFactoryBuilder();
+    void createKeystore() throws Exception {
+        SSLConnectionSocketFactoryBuilder builder = new SSLConnectionSocketFactoryBuilder() {
+            @Override
+            protected KeyStore createKeyStore(URL url, String password) {
+                return keyStore;
+            }
+        };
+        builder.setKeystore("file:" + KEYSTORE).setKeystorePassword(PASSWORD);
+        when(sslContextBuilder.loadKeyMaterial(keyStore, PASSWORD.toCharArray())).thenReturn(sslContextBuilder);
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Keystore url may not be null");
+        builder.createKeystore(sslContextBuilder, true);
 
-        builder.createKeyStore(null, null);
+        verify(sslContextBuilder).loadKeyMaterial(keyStore, PASSWORD.toCharArray());
     }
 
     @Test
-    public void createKeyStore() throws Exception {
-        builder = new SSLConnectionSocketFactoryBuilder();
-        mockStatic(KeyStore.class);
-        when(KeyStore.getInstance("jks")).thenReturn(keyStoreMock);
-        when(urlMock.openStream()).thenReturn(inputStreamMock);
-        doNothing().when(keyStoreMock).load(inputStreamMock, PASSWORD.toCharArray());
-        doNothing().when(inputStreamMock).close();
+    void createKeystoreWithException() {
+        SSLConnectionSocketFactoryBuilder builder = new SSLConnectionSocketFactoryBuilder()
+                .setKeystore(KEYSTORE);
 
-        KeyStore keystore = builder.createKeyStore(urlMock, PASSWORD);
-        verify(keyStoreMock).load(inputStreamMock, PASSWORD.toCharArray());
-        assertEquals(keystore, keyStoreMock);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> builder.createKeystore(sslContextBuilder, true));
+        assertTrue(exception.getMessage().contains(SSLConnectionSocketFactoryBuilder.BAD_KEYSTORE_ERROR));
+    }
+
+    @Test
+    void createKeyStoreWithException() {
+        SSLConnectionSocketFactoryBuilder builder = new SSLConnectionSocketFactoryBuilder();
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> builder.createKeyStore(null, null));
+        assertEquals("Keystore url may not be null", exception.getMessage());
+    }
+
+    @Test
+    void createKeyStore() throws Exception {
+        File cacertsFile = new File(System.getProperty("java.home"), "lib/security/cacerts");
+        KeyStore loadedKeyStore = new SSLConnectionSocketFactoryBuilder()
+                .createKeyStore(cacertsFile.toURI().toURL(), "changeit");
+
+        assertTrue(loadedKeyStore.size() > 0);
     }
 }
