@@ -84,14 +84,12 @@
 
     <properties>
         <!--Maven versions-->
-        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <license-maven-plugin.version>3.0</license-maven-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-        <central-publishing-maven-plugin.version>1.1.0</central-publishing-maven-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <cs-commons.version>0.0.9</cs-commons.version>
@@ -292,10 +290,6 @@
                         <doclint>none</doclint>
                     </configuration>
                 </plugin>
-                <!--
-                    Default deploy skipped to prevent deployment directly to the (now-retired) ossrh URL.
-                    Actual publishing to Maven Central is handled by central-publishing-maven-plugin below.
-                -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -309,29 +303,6 @@
                             </goals>
                             <configuration>
                                 <skip>true</skip>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!--
-                    Publishes to Maven Central via the Central Publisher Portal.
-                    Legacy OSSRH (oss.sonatype.org) was fully retired on 2025-06-30, so this
-                    plugin (not distributionManagement) is what actually performs the release.
-                -->
-                <plugin>
-                    <groupId>io.github.mavenplugins</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>${central-publishing-maven-plugin.version}</version>
-                    <extensions>true</extensions>
-                    <executions>
-                        <execution>
-                            <id>publish-artifacts</id>
-                            <phase>deploy</phase>
-                            <goals>
-                                <goal>publish</goal>
-                            </goals>
-                            <configuration>
-                                <publishingServerId>central</publishingServerId>
                             </configuration>
                         </execution>
                     </executions>
@@ -363,10 +334,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>io.github.mavenplugins</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
@@ -424,6 +391,31 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>central-publishing</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.mavenplugins</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>1.1.0</version>
+                        <extensions>true</extensions>
+                        <executions>
+                            <execution>
+                                <id>publish-artifacts</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>publish</goal>
+                                </goals>
+                                <configuration>
+                                    <publishingServerId>central</publishingServerId>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

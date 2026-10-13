@@ -56,7 +56,6 @@
     <properties>
         <!--Maven versions-->
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
@@ -193,11 +192,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
