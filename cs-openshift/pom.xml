@@ -64,7 +64,7 @@
            <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
             <!--Dependencies versions-->
             <score-content-sdk.version>1.10.11</score-content-sdk.version>
-            <cs-commons.version>0.0.9</cs-commons.version>
+            <cs-commons.version>0.0.14</cs-commons.version>
             <cs-http-client.version>0.1.96</cs-http-client.version>
             <!--Misc properties-->
             <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -117,7 +117,6 @@
         </dependencies>
 
         <build>
-            <pluginManagement>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -170,10 +169,6 @@
                         <artifactId>maven-release-plugin</artifactId>
                         <version>${maven-release-plugin.version}</version>
                     </plugin>
-                </plugins>
-            </pluginManagement>
-
-            <plugins>
                 <plugin>
                     <groupId>com.mycila</groupId>
                     <artifactId>license-maven-plugin</artifactId>
