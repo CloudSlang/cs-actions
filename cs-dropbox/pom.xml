@@ -75,7 +75,7 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <cs-http-client.version>0.1.96</cs-http-client.version>
-        <cs-commons.version>0.0.9</cs-commons.version>
+        <cs-commons.version>0.0.14</cs-commons.version>
         <junit-jupiter.version>6.1.3</junit-jupiter.version>
         <mockito.version>5.24.0</mockito.version>
         <assertj.version>3.27.7</assertj.version>
@@ -143,7 +143,6 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -201,10 +200,6 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${maven-release-plugin.version}</version>
                 </plugin>
-            </plugins>
-        </pluginManagement>
-
-        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
