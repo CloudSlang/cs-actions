@@ -43,6 +43,15 @@
         <tag>master</tag>
     </scm>
 
+    <developers>
+        <developer>
+            <name>Matei Ioana</name>
+            <email>ioana.matei@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://software.microfocus.com/en-us/home</organizationUrl>
+        </developer>
+    </developers>
+
     <distributionManagement>
         <repository>
             <id>ossrh</id>
