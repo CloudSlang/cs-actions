@@ -43,6 +43,9 @@
         <tag>master</tag>
     </scm>
 
+    <developers>
+    </developers>
+
     <distributionManagement>
         <repository>
             <id>ossrh</id>
