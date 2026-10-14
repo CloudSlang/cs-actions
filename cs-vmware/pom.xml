@@ -74,7 +74,7 @@
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <cs-commons.version>0.0.9</cs-commons.version>
+        <cs-commons.version>0.0.13</cs-commons.version>
         <jackson-databind.version>2.22.3</jackson-databind.version>
         <commons-compress.version>1.26.1</commons-compress.version>
         <commons-io.version>2.17.0</commons-io.version>

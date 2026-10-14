@@ -50,7 +50,7 @@
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <cs-commons.version>0.0.9</cs-commons.version>
+        <cs-commons.version>0.0.13</cs-commons.version>
         <custom.nexus>overwritten_by_ci</custom.nexus>
     </properties>
 
