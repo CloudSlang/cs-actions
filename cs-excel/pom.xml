@@ -44,6 +44,12 @@
     </scm>
 
     <developers>
+        <developer>
+            <name>Alexandra Boicu</name>
+            <email>alexandra.boicu@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/en-us/home</organizationUrl>
+        </developer>
     </developers>
 
     <distributionManagement>
