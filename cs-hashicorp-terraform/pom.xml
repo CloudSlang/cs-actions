@@ -92,7 +92,7 @@
         <mockito.version>5.24.0</mockito.version>
         <assertj.version>3.27.7</assertj.version>
         <common-codec.version>1.15</common-codec.version>
-        <cs-http-client.version>0.1.96</cs-http-client.version>
+        <cs-http-client.version>0.1.102</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
