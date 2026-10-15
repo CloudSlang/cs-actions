@@ -112,7 +112,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-http-client</artifactId>
-            <version>0.1.96</version>
+            <version>0.1.102</version>
         </dependency>
         <dependency>
             <groupId>org.junit</groupId>

@@ -84,7 +84,7 @@
         <assertj.version>3.27.7</assertj.version>
         <common-codec.version>1.13</common-codec.version>
         <adal4j.version>1.6.7</adal4j.version>
-        <cs-http-client.version>0.1.96</cs-http-client.version>
+        <cs-http-client.version>0.1.102</cs-http-client.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
