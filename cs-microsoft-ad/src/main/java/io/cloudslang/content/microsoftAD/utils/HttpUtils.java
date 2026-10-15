@@ -18,7 +18,6 @@ package io.cloudslang.content.microsoftAD.utils;
 
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -169,41 +168,6 @@ public class HttpUtils {
                 .append(messageId)
                 .append(MOVE);
         return messagepathString.toString();
-    }
-
-    public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
-                                @NotNull final String proxyHost,
-                                @NotNull final String proxyPort,
-                                @NotNull final String proxyUsername,
-                                @NotNull final String proxyPassword) {
-        httpClientInputs.setProxyHost(proxyHost);
-        httpClientInputs.setProxyPort(proxyPort);
-        httpClientInputs.setProxyUsername(proxyUsername);
-        httpClientInputs.setProxyPassword(proxyPassword);
-    }
-
-    public static void setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
-                                         @NotNull final String trustAllRoots,
-                                         @NotNull final String x509HostnameVerifier,
-                                         @NotNull final String trustKeystore,
-                                         @NotNull final String trustPassword) {
-        httpClientInputs.setTrustAllRoots(trustAllRoots);
-        httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        httpClientInputs.setTrustKeystore(trustKeystore);
-        httpClientInputs.setTrustPassword(trustPassword);
-    }
-
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
-                                               @NotNull final String connectTimeout,
-                                               @NotNull final String socketTimeout,
-                                               @NotNull final String keepAlive,
-                                               @NotNull final String connectionsMaxPerRoot,
-                                               @NotNull final String connectionsMaxTotal) {
-        httpClientInputs.setConnectTimeout(connectTimeout);
-        httpClientInputs.setSocketTimeout(socketTimeout);
-        httpClientInputs.setKeepAlive(keepAlive);
-        httpClientInputs.setConnectionsMaxPerRoute(connectionsMaxPerRoot);
-        httpClientInputs.setConnectionsMaxTotal(connectionsMaxTotal);
     }
 
     @NotNull

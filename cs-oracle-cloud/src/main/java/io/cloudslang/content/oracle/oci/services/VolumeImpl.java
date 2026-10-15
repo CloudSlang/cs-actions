@@ -2,14 +2,14 @@ package io.cloudslang.content.oracle.oci.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCIAttachVolumeInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
+import io.cloudslang.content.oracle.oci.entities.inputs.OCIHttpClientInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCIVolumeInputs;
 import io.cloudslang.content.oracle.oci.services.models.volumes.AttachVolumeRequestBody;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URI;
@@ -35,7 +35,7 @@ public class VolumeImpl {
     public static Map<String, String> attachVolume(@NotNull final OCIAttachVolumeInputs ociAttachVolumeInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final OCIHttpClientInputs httpClientInputs = new OCIHttpClientInputs();
         httpClientInputs.setUrl(attachVolumeUrl(ociAttachVolumeInputs.getCommonInputs().getRegion()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -44,13 +44,13 @@ public class VolumeImpl {
         Map<String, String> headers = getRequestSigner(ociAttachVolumeInputs.getCommonInputs()).signRequest(uri, POST, httpClientInputs.getBody());
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociAttachVolumeInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getVolumeAttachmentDetails(@NotNull final OCIVolumeInputs ociVolumeInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final OCIHttpClientInputs httpClientInputs = new OCIHttpClientInputs();
         httpClientInputs.setUrl(getVolumeAttachmentDetailsUrl(ociVolumeInputs.getCommonInputs().getRegion(),
                 ociVolumeInputs.getVolumeAttachmentId()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -60,12 +60,12 @@ public class VolumeImpl {
                 .signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociVolumeInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> detachVolume(@NotNull final OCIVolumeInputs ociVolumeInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final OCIHttpClientInputs httpClientInputs = new OCIHttpClientInputs();
         httpClientInputs.setUrl(detachVolumeUrl(ociVolumeInputs.getCommonInputs().getRegion(),
                 ociVolumeInputs.getVolumeAttachmentId()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -75,7 +75,7 @@ public class VolumeImpl {
                 .signRequest(uri, DELETE, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociVolumeInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 

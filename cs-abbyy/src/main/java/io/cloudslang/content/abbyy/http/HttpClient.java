@@ -22,7 +22,8 @@ import io.cloudslang.content.abbyy.entities.responses.HttpClientResponse;
 import io.cloudslang.content.abbyy.exceptions.HttpClientException;
 import io.cloudslang.content.abbyy.utils.EncodingUtils;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientAction;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,57 +35,60 @@ import static io.cloudslang.content.abbyy.constants.DefaultInputValues.ZERO;
 
 class HttpClient {
     public static HttpClientResponse execute(@NotNull HttpRequest request) throws IOException, HttpClientException, URISyntaxException {
-        Map<String, String> rawResponse = new HttpClientAction().execute(
-                request.getUrl(),
-                request.getTlsVersion(),
-                request.getAllowedCyphers(),
-                request.getAuthType(),
-                String.valueOf(request.isPreemptiveAuth()),
-                request.getUsername(),
-                request.getPassword(),
-                request.getKerberosConfigFile(),
-                request.getKerberosLoginConfFile(),
-                request.getKerberosSkipPortForLookup(),
-                request.getProxyHost(),
-                String.valueOf(request.getProxyPort()),
-                request.getProxyUsername(),
-                request.getProxyPassword(),
-                String.valueOf(request.isTrustAllRoots()),
-                request.getX509HostnameVerifier(),
-                request.getTrustKeystore(),
-                request.getTrustPassword(),
-                request.getKeystore(),
-                request.getKeystorePassword(),
-                String.valueOf(request.getConnectTimeout()),
-                String.valueOf(request.getSocketTimeout()),
-                ZERO,
-                String.valueOf(request.isUseCookies()),
-                String.valueOf(request.isKeepAlive()),
-                String.valueOf(request.getConnectionsMaxPerRoute()),
-                String.valueOf(request.getConnectionsMaxTotal()),
-                request.getHeaders(),
-                request.getResponseCharacterSet(),
-                request.getDestinationFile() != null ? request.getDestinationFile().toAbsolutePath().toString() : null,
-                String.valueOf(request.isFollowRedirects()),
-                request.getQueryParams(),
-                String.valueOf(request.isQueryParamsAreURLEncoded()),
-                String.valueOf(request.isQueryParamsAreFormEncoded()),
-                request.getFormParams(),
-                String.valueOf(request.isFormParamsAreURLEncoded()),
-                request.getSourceFile() != null ? request.getSourceFile().toAbsolutePath().toString() : null,
-                request.getBody(),
-                request.getContentType(),
-                request.getRequestCharacterSet(),
-                request.getMultipartBodies(),
-                request.getMultipartBodiesContentType(),
-                request.getMultipartFiles(),
-                request.getMultipartFilesContentType(),
-                String.valueOf(request.isMultipartValuesAreURLEncoded()),
-                String.valueOf(request.isChunkedRequestEntity()),
-                request.getMethod(),
-                request.getHttpClientCookieSession(),
-                request.getHttpClientPoolingConnectionManager()
-        );
+        Map<String, String> rawResponse;
+        try {
+            HttpClientInputs httpClientInputs = HttpClientInputs.builder()
+                    .url(request.getUrl())
+                    .method(request.getMethod())
+                    .tlsVersion(request.getTlsVersion())
+                    .allowedCiphers(request.getAllowedCyphers())
+                    .authType(request.getAuthType())
+                    .preemptiveAuth(String.valueOf(request.isPreemptiveAuth()))
+                    .username(request.getUsername())
+                    .password(request.getPassword())
+                    .proxyHost(request.getProxyHost())
+                    .proxyPort(String.valueOf(request.getProxyPort()))
+                    .proxyUsername(request.getProxyUsername())
+                    .proxyPassword(request.getProxyPassword())
+                    .trustAllRoots(String.valueOf(request.isTrustAllRoots()))
+                    .x509HostnameVerifier(request.getX509HostnameVerifier())
+                    .trustKeystore(request.getTrustKeystore())
+                    .trustPassword(request.getTrustPassword())
+                    .keystore(request.getKeystore())
+                    .keystorePassword(request.getKeystorePassword())
+                    .connectTimeout(String.valueOf(request.getConnectTimeout()))
+                    .responseTimeout(String.valueOf(request.getSocketTimeout()))
+                    .executionTimeout(ZERO)
+                    .useCookies(String.valueOf(request.isUseCookies()))
+                    .keepAlive(String.valueOf(request.isKeepAlive()))
+                    .connectionsMaxPerRoute(String.valueOf(request.getConnectionsMaxPerRoute()))
+                    .connectionsMaxTotal(String.valueOf(request.getConnectionsMaxTotal()))
+                    .headers(request.getHeaders())
+                    .responseCharacterSet(request.getResponseCharacterSet())
+                    .destinationFile(request.getDestinationFile() != null ? request.getDestinationFile().toAbsolutePath().toString() : null)
+                    .followRedirects(String.valueOf(request.isFollowRedirects()))
+                    .queryParams(request.getQueryParams())
+                    .queryParamsAreURLEncoded(String.valueOf(request.isQueryParamsAreURLEncoded()))
+                    .queryParamsAreFormEncoded(String.valueOf(request.isQueryParamsAreFormEncoded()))
+                    .formParams(request.getFormParams())
+                    .formParamsAreURLEncoded(String.valueOf(request.isFormParamsAreURLEncoded()))
+                    .sourceFile(request.getSourceFile() != null ? request.getSourceFile().toAbsolutePath().toString() : null)
+                    .body(request.getBody())
+                    .contentType(request.getContentType())
+                    .requestCharacterSet(request.getRequestCharacterSet())
+                    .multipartBodies(request.getMultipartBodies())
+                    .multipartBodiesContentType(request.getMultipartBodiesContentType())
+                    .multipartFiles(request.getMultipartFiles())
+                    .multipartFilesContentType(request.getMultipartFilesContentType())
+                    .multipartValuesAreURLEncoded(String.valueOf(request.isMultipartValuesAreURLEncoded()))
+                    .cookieStoreSessionObject(request.getHttpClientCookieSession())
+                    .connectionPoolSessionObject(request.getHttpClientPoolingConnectionManager())
+                    .build();
+
+            rawResponse = HttpClientService.execute(httpClientInputs);
+        } catch (Exception exception) {
+            throw new HttpClientException(exception.getMessage(), exception);
+        }
 
         if (ReturnCodes.FAILURE.equals(rawResponse.get(HttpClientOutputNames.RETURN_CODE))) {
             throw new HttpClientException(rawResponse.get(HttpClientOutputNames.EXCEPTION));

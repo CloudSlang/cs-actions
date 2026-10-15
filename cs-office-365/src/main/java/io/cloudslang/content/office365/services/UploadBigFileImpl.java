@@ -26,12 +26,12 @@ import com.microsoft.graph.models.UploadSession;
 import com.microsoft.graph.requests.GraphServiceClient;
 import com.microsoft.graph.tasks.LargeFileUploadResult;
 import com.microsoft.graph.tasks.LargeFileUploadTask;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.office365.entities.Office365HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.AddAttachmentInputs;
 import okhttp3.*;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.SSLContext;
@@ -58,7 +58,7 @@ public class UploadBigFileImpl {
 
     public static String createUploadSession(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
 
         httpClientInputs.setUrl(addBigAttachmentUrl(addAttachmentInputs.getMessageId()));
 
@@ -78,7 +78,7 @@ public class UploadBigFileImpl {
                 Files.size(Paths.get(addAttachmentInputs.getFilePath()))));
 
         UploadSession uploadSession = new UploadSession();
-        uploadSession.uploadUrl = getUploadUrl(new HttpClientService().execute(httpClientInputs));
+        uploadSession.uploadUrl = getUploadUrl(HttpClientService.execute(httpClientInputs.build()));
         return uploadFileChunk(addAttachmentInputs, uploadSession);
     }
 

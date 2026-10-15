@@ -30,7 +30,7 @@ import io.cloudslang.content.utils.Constants;
 
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.powershell.utils.HttpClientInputNames.*;
 import static io.cloudslang.content.utils.Constants.InputNames.*;
 import static io.cloudslang.content.utils.Constants.Others.*;
 import static io.cloudslang.content.utils.Constants.OutputNames.*;

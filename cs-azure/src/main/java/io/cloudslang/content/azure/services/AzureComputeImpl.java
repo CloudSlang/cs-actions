@@ -24,11 +24,11 @@ import io.cloudslang.content.azure.entities.AzureComputeCommonInputs;
 import io.cloudslang.content.azure.entities.AzureCreateVMInputs;
 import io.cloudslang.content.azure.entities.models.compute.CreateVMRequestBody;
 import io.cloudslang.content.azure.utils.HttpUtils;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.azure.utils.AzureHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -78,7 +78,7 @@ public class AzureComputeImpl {
     @NotNull
     public static Map<String, String> createVM(@NotNull final AzureCreateVMInputs azureCreateVMInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getCreateVMUrl(azureCreateVMInputs));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(PUT);
@@ -87,21 +87,21 @@ public class AzureComputeImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, azureCreateVMInputs.getAzureComputeCommonInputs().getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(azureCreateVMInputs.getAzureComputeCommonInputs().getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(createVMRequestBody(azureCreateVMInputs));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
     @NotNull
     public static Map<String, String> deleteVM(@NotNull final AzureComputeCommonInputs azureComputeCommonInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getDeleteVMUrl(azureComputeCommonInputs));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(DELETE);
         httpClientInputs.setHeaders(getAuthHeaders(azureComputeCommonInputs.getAzureCommonInputs().getAuthToken()));
         HttpUtils.setCommonHttpInputs(httpClientInputs, azureComputeCommonInputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(azureComputeCommonInputs.getAzureCommonInputs().getApiVersion()));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
@@ -181,7 +181,7 @@ public class AzureComputeImpl {
     @NotNull
     public static String getAvailabilityInfo(@NotNull final AzureCreateVMInputs azureCreateVMInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getAvailabilityInfoUrl(azureCreateVMInputs));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -189,7 +189,7 @@ public class AzureComputeImpl {
         httpClientInputs.setHeaders(getAuthHeaders(azureCreateVMInputs.getAzureComputeCommonInputs().getAzureCommonInputs().getAuthToken()));
         HttpUtils.setCommonHttpInputs(httpClientInputs, azureCreateVMInputs.getAzureComputeCommonInputs().getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(azureCreateVMInputs.getAzureComputeCommonInputs().getAzureCommonInputs().getApiVersion()));
-        Map<String, String> result = new HttpClientService().execute(httpClientInputs);
+        Map<String, String> result = HttpClientService.execute(httpClientInputs.build());
         final String returnMessage = result.get(RETURN_RESULT);
         return (String) JsonPath.read(returnMessage, AZURE_AVAILABILITY_SET_SKU_JSON_PATH);
     }
@@ -197,7 +197,7 @@ public class AzureComputeImpl {
     @NotNull
     public static String getSSHPublicKeysINSubscriptionInfo(@NotNull final AzureCreateVMInputs azureCreateVMInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getSSHPublicKeysINSubscriptionInfoURL(azureCreateVMInputs));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -205,7 +205,7 @@ public class AzureComputeImpl {
         httpClientInputs.setHeaders(getAuthHeaders(azureCreateVMInputs.getAzureComputeCommonInputs().getAzureCommonInputs().getAuthToken()));
         HttpUtils.setCommonHttpInputs(httpClientInputs, azureCreateVMInputs.getAzureComputeCommonInputs().getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(DEFAULT_COMPUTE_SSH_API_VERSION));
-        Map<String, String> result = new HttpClientService().execute(httpClientInputs);
+        Map<String, String> result = HttpClientService.execute(httpClientInputs.build());
 
         final String returnMessage = result.get(RETURN_RESULT);
         JSONArray jsonArray = JsonPath.read(returnMessage, AZURE_SSH_PUBLIC_KEYS_JSON_PATH);

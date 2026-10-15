@@ -39,24 +39,24 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Bucke
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USERNAME;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USE_COOKIES;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.CONNECT_TIMEOUT;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.KEEP_ALIVE;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.KEYSTORE;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PASSWORD;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PROXY_HOST;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PROXY_PASSWORD;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PROXY_PORT;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PROXY_USERNAME;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.SOCKET_TIMEOUT;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.TRUST_KEYSTORE;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.TRUST_PASSWORD;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.USERNAME;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.USE_COOKIES;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.POST_METHOD;
 
 /**
  * Created by TusaM
@@ -175,7 +175,7 @@ public class FlushBucket {
         try {
             final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
-                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
+                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, POST_METHOD);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withAction(FLUSH_BUCKET)

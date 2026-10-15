@@ -19,7 +19,7 @@
 package io.cloudslang.content.dropbox.utils;
 
 import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.dropbox.entities.inputs.DropboxHttpClientInputs;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,7 +31,7 @@ import static io.cloudslang.content.dropbox.entities.constants.Constants.HttpCli
 import static io.cloudslang.content.dropbox.entities.constants.Constants.HttpClientInputsValues.STRICT;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.Values.INIT_INDEX;
 import static io.cloudslang.content.dropbox.factory.UriFactory.getUri;
-import static io.cloudslang.content.httpclient.build.auth.AuthTypes.ANONYMOUS;
+import static io.cloudslang.content.httpclient.utils.Constants.ANONYMOUS;
 import static io.cloudslang.content.utils.BooleanUtilities.isValid;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
@@ -49,12 +49,12 @@ public class InputsUtil {
         // prevent instantiation
     }
 
-    public static HttpClientInputs getHttpClientInputs(String proxyHost, String proxyPort, String proxyUsername,
+    public static DropboxHttpClientInputs getHttpClientInputs(String proxyHost, String proxyPort, String proxyUsername,
                                                        String proxyPassword, String trustAllRoots, String x509HostnameVerifier,
                                                        String trustKeystore, String trustPassword, String keystore,
                                                        String keystorePassword, String connectTimeout, String socketTimeout,
                                                        String useCookies, String keepAlive, String method) {
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
+        DropboxHttpClientInputs httpClientInputs = new DropboxHttpClientInputs();
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(method);
         httpClientInputs.setQueryParamsAreURLEncoded(FALSE);

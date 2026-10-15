@@ -29,7 +29,7 @@ import io.cloudslang.content.dca.controllers.GetCredentialFromManagerController;
 import io.cloudslang.content.dca.utils.OutputNames;
 import io.cloudslang.content.dca.utils.Validator;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.dca.models.DcaHttpClientInputs;
 
 import java.util.Map;
 
@@ -46,8 +46,8 @@ import static io.cloudslang.content.dca.utils.Descriptions.Common.*;
 import static io.cloudslang.content.dca.utils.Descriptions.GetCredentialFromManager.*;
 import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
+import static io.cloudslang.content.dca.utils.DcaHttpClientInputNames.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
@@ -114,7 +114,7 @@ public class GetCredentialFromManager {
             return getFailureResultsMap(validator.getErrors());
         }
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final DcaHttpClientInputs httpClientInputs = new DcaHttpClientInputs();
 
         httpClientInputs.setUrl(getDcaCMCredentialUrl(protocol, cmHost, cmPort, credentialUuid));
 
@@ -132,7 +132,7 @@ public class GetCredentialFromManager {
         try {
             final ObjectMapper mapper = new ObjectMapper();
 
-            final Map<String, String> httpClientResult = new HttpClientService().execute(httpClientInputs);
+            final Map<String, String> httpClientResult = HttpClientService.execute(httpClientInputs.build());
 
             final int statusCode = parseInt(httpClientResult.get(STATUS_CODE));
             if (statusCode != HTTP_OK) {

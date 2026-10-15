@@ -3,10 +3,10 @@
 package io.cloudslang.content.nutanix.prism.utils;
 
 import com.jayway.jsonpath.JsonPath;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixHttpClientInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
@@ -47,7 +47,7 @@ public class HttpUtils {
         return new Proxy(HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort));
     }
 
-    public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@NotNull final NutanixHttpClientInputs httpClientInputs,
                                 @NotNull final String proxyHost,
                                 @NotNull final String proxyPort,
                                 @NotNull final String proxyUsername,
@@ -91,7 +91,7 @@ public class HttpUtils {
         return results;
     }
 
-    public static void setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setSecurityInputs(@NotNull final NutanixHttpClientInputs httpClientInputs,
                                          @NotNull final String trustAllRoots,
                                          @NotNull final String x509HostnameVerifier,
                                          @NotNull final String trustKeystore,
@@ -106,7 +106,7 @@ public class HttpUtils {
         httpClientInputs.setKeystorePassword(keystorePassword);
     }
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+    public static void setConnectionParameters(NutanixHttpClientInputs httpClientInputs,
                                                @NotNull final String connectTimeout,
                                                @NotNull final String socketTimeout,
                                                @NotNull final String keepAlive,
@@ -121,9 +121,9 @@ public class HttpUtils {
         httpClientInputs.setPreemptiveAuth(String.valueOf(true));
     }
 
-    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
-        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
-        httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
+    public static void setTLSParameters(NutanixHttpClientInputs httpClientInputs) {
+        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.utils.Constants.TLSv12);
+        httpClientInputs.setAllowedCiphers(ALLOWED_CYPHERS);
     }
 
     @NotNull

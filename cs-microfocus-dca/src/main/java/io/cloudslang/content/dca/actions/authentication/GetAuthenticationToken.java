@@ -26,7 +26,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.utils.Validator;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.dca.models.DcaHttpClientInputs;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -45,9 +45,9 @@ import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.OutputNames.AUTH_TOKEN;
 import static io.cloudslang.content.dca.utils.OutputNames.REFRESH_TOKEN;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
+import static io.cloudslang.content.dca.utils.DcaHttpClientInputNames.*;
+import static io.cloudslang.content.httpclient.utils.Constants.BASIC;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
@@ -130,7 +130,7 @@ public class GetAuthenticationToken {
         }
 
         // SETUP HTTP INPUTS
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final DcaHttpClientInputs httpClientInputs = new DcaHttpClientInputs();
 
         httpClientInputs.setUrl(getIdmUrl(protocolInp, idmHostInp, idmPortStr));
 
@@ -153,7 +153,7 @@ public class GetAuthenticationToken {
         httpClientInputs.setMethod(POST);
 
         try {
-            final Map<String, String> httpClientResultMap = new HttpClientService().execute(httpClientInputs);
+            final Map<String, String> httpClientResultMap = HttpClientService.execute(httpClientInputs.build());
             final ObjectMapper mapper = new ObjectMapper();
             final Map responseMap = mapper.readValue(httpClientResultMap.get(RETURN_RESULT), Map.class);
 

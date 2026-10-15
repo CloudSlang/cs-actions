@@ -4,7 +4,7 @@
 package io.cloudslang.content.hashicorp.terraform.services;
 
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformHttpClientInputs;
 import org.jetbrains.annotations.NotNull;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setConnectionParameters;
 import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setProxy;
@@ -14,7 +14,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.HttpUtils.setTLSPa
 public class HttpCommons {
 
     @NotNull
-    static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    static void setCommonHttpInputs(@NotNull final TerraformHttpClientInputs httpClientInputs,
                                     @NotNull final TerraformCommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),

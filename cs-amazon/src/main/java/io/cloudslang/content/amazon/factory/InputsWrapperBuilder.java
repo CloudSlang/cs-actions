@@ -38,6 +38,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Miscellaneous.EMPTY;
 import static io.cloudslang.content.amazon.entities.constants.Constants.Values.START_INDEX;
 import static io.cloudslang.content.amazon.utils.InputsUtil.getUrlFromApiService;
+import static io.cloudslang.content.httpclient.utils.Constants.*;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
@@ -109,20 +110,42 @@ public class InputsWrapperBuilder {
 
     @SafeVarargs
     private static <T> HttpClientInputs getHttpClientInputs(CommonInputs commonInputs, T... builders) {
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
-
         String prefix = getPrefix(builders);
+        String defaultJavaKeyStore = System.getProperty("javax.net.ssl.keyStore", DEFAULT_JAVA_KEYSTORE);
+        String defaultJavaKeyStorePassword = System.getProperty("javax.net.ssl.keyStorePassword", "changeit");
+        String defaultTrustStore = System.getProperty("javax.net.ssl.trustStore", defaultJavaKeyStore);
+        String defaultTrustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword", defaultJavaKeyStorePassword);
 
-        httpClientInputs.setUrl(getUrlFromApiService(commonInputs.getEndpoint(), commonInputs.getApiService(), prefix));
-        httpClientInputs.setProxyHost(commonInputs.getProxyHost());
-        httpClientInputs.setProxyPort(commonInputs.getProxyPort());
-        httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
-        httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
-        httpClientInputs.setMethod(commonInputs.getHttpClientMethod());
-        httpClientInputs.setAuthType(AUTHORIZATION_TYPE_ANONYMOUS);
-        httpClientInputs.setQueryParamsAreURLEncoded(Boolean.FALSE.toString());
-
-        return httpClientInputs;
+        return HttpClientInputs.builder()
+                .url(getUrlFromApiService(commonInputs.getEndpoint(), commonInputs.getApiService(), prefix))
+                .method(commonInputs.getHttpClientMethod())
+                .authType(AUTHORIZATION_TYPE_ANONYMOUS)
+                .preemptiveAuth(BOOLEAN_TRUE)
+                .proxyHost(commonInputs.getProxyHost())
+                .proxyPort(commonInputs.getProxyPort())
+                .proxyUsername(commonInputs.getProxyUsername())
+                .proxyPassword(commonInputs.getProxyPassword())
+                .tlsVersion(TLSv13)
+                .allowedCiphers(DEFAULT_ALLOWED_CIPHERS_TLSv1_3)
+                .trustAllRoots(BOOLEAN_FALSE)
+                .x509HostnameVerifier(STRICT)
+                .trustKeystore(defaultTrustStore)
+                .trustPassword(defaultTrustStorePassword)
+                .keystore(defaultJavaKeyStore)
+                .keystorePassword(defaultJavaKeyStorePassword)
+                .connectTimeout(DEFAULT_CONNECT_TIMEOUT)
+                .responseTimeout(DEFAULT_RESPONSE_TIMEOUT)
+                .executionTimeout(DEFAULT_EXECUTION_TIMEOUT)
+                .useCookies(BOOLEAN_TRUE)
+                .keepAlive(BOOLEAN_FALSE)
+                .connectionsMaxPerRoute(DEFAULT_CONNECTIONS_MAX_PER_ROUTE)
+                .connectionsMaxTotal(DEFAULT_CONNECTIONS_MAX_TOTAL)
+                .responseCharacterSet(UTF_8)
+                .followRedirects(BOOLEAN_TRUE)
+                .queryParamsAreURLEncoded(BOOLEAN_FALSE)
+                .queryParamsAreFormEncoded(BOOLEAN_FALSE)
+                .requestCharacterSet(UTF_8)
+                .build();
     }
 
     private static <T> String getPrefix(T[] builders) {

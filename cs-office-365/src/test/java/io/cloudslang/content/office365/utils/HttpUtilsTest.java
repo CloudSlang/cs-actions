@@ -23,7 +23,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.services.HttpClientService.*;
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
 import static io.cloudslang.content.office365.utils.Constants.ZERO;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;

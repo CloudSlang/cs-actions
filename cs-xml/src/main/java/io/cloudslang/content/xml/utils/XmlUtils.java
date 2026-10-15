@@ -17,13 +17,11 @@
 
 package io.cloudslang.content.xml.utils;
 
-import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
-import io.cloudslang.content.httpclient.build.auth.AuthTypes;
+import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.xml.entities.SimpleNamespaceContext;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.methods.HttpGet;
 import org.jdom2.input.SAXBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -65,6 +63,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static io.cloudslang.content.httpclient.utils.Constants.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
 
 /**
  * Created by markowis on 23/02/2016.
@@ -323,34 +323,64 @@ public class XmlUtils {
     }
 
     public static String createXmlDocumentFromUrl(CommonInputs commonInputs) throws Exception {
-        HttpClientService scoreHttpClient = new HttpClientService();
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setMethod(HttpGet.METHOD_NAME);
-        httpClientInputs.setUrl(commonInputs.getXmlDocument());
+        String authType;
+        String username = StringUtils.defaultIfEmpty(commonInputs.getUsername(), EMPTY);
+        String password = StringUtils.defaultIfEmpty(commonInputs.getPassword(), EMPTY);
 
-        if (commonInputs.getUsername().isEmpty()) {
-            httpClientInputs.setAuthType(AuthTypes.ANONYMOUS);
+        if (StringUtils.isEmpty(commonInputs.getUsername())) {
+            authType = ANONYMOUS;
         } else {
-            httpClientInputs.setAuthType(AuthTypes.BASIC);
-            httpClientInputs.setUsername(commonInputs.getUsername());
-            httpClientInputs.setPassword(commonInputs.getPassword());
+            authType = BASIC;
         }
-        httpClientInputs.setRequestCharacterSet(StandardCharsets.UTF_8.toString());
-        httpClientInputs.setResponseCharacterSet(StandardCharsets.UTF_8.toString());
-        httpClientInputs.setTrustAllRoots(commonInputs.getTrustAllRoots());
-        httpClientInputs.setKeystore(commonInputs.getKeystore());
-        httpClientInputs.setKeystorePassword(commonInputs.getKeystorePassword());
-        httpClientInputs.setTrustKeystore(commonInputs.getTrustKeystore());
-        httpClientInputs.setTrustPassword(commonInputs.getTrustPassword());
-        httpClientInputs.setX509HostnameVerifier(commonInputs.getX509Hostnameverifier());
-        httpClientInputs.setProxyHost(commonInputs.getProxyHost());
-        httpClientInputs.setProxyPort(commonInputs.getProxyPort());
-        httpClientInputs.setProxyUsername(commonInputs.getProxyUsername());
-        httpClientInputs.setProxyPassword(commonInputs.getProxyPassword());
+        HttpClientInputs httpClientInputs = HttpClientInputs.builder()
+                .url(commonInputs.getXmlDocument())
+                .authType(authType)
+                .preemptiveAuth(BOOLEAN_TRUE)
+                .username(username)
+                .password(password)
+                .method(GET)
+                .body(EMPTY)
+                .contentType(EMPTY)
+                .headers(EMPTY)
+                .responseCharacterSet(StandardCharsets.UTF_8.toString())
+                .requestCharacterSet(StandardCharsets.UTF_8.toString())
+                .followRedirects(BOOLEAN_TRUE)
+                .proxyHost(StringUtils.defaultIfEmpty(commonInputs.getProxyHost(), EMPTY))
+                .proxyPort(StringUtils.defaultIfEmpty(commonInputs.getProxyPort(), EMPTY))
+                .proxyUsername(StringUtils.defaultIfEmpty(commonInputs.getProxyUsername(), EMPTY))
+                .proxyPassword(StringUtils.defaultIfEmpty(commonInputs.getProxyPassword(), EMPTY))
+                .trustAllRoots(StringUtils.defaultIfEmpty(commonInputs.getTrustAllRoots(), BOOLEAN_FALSE))
+                .x509HostnameVerifier(StringUtils.defaultIfEmpty(commonInputs.getX509Hostnameverifier(), STRICT))
+                .trustKeystore(StringUtils.defaultIfEmpty(commonInputs.getTrustKeystore(), DEFAULT_JAVA_KEYSTORE))
+                .trustPassword(StringUtils.defaultIfEmpty(commonInputs.getTrustPassword(), "changeit"))
+                .keystore(StringUtils.defaultIfEmpty(commonInputs.getKeystore(), DEFAULT_JAVA_KEYSTORE))
+                .keystorePassword(StringUtils.defaultIfEmpty(commonInputs.getKeystorePassword(), "changeit"))
+                .connectTimeout(DEFAULT_CONNECT_TIMEOUT)
+                .responseTimeout(DEFAULT_RESPONSE_TIMEOUT)
+                .executionTimeout(ZERO)
+                .useCookies(BOOLEAN_TRUE)
+                .keepAlive(BOOLEAN_FALSE)
+                .connectionsMaxPerRoute(DEFAULT_CONNECTIONS_MAX_PER_ROUTE)
+                .connectionsMaxTotal(DEFAULT_CONNECTIONS_MAX_TOTAL)
+                .queryParams(EMPTY)
+                .queryParamsAreURLEncoded(BOOLEAN_FALSE)
+                .queryParamsAreFormEncoded(BOOLEAN_TRUE)
+                .formParams(EMPTY)
+                .formParamsAreURLEncoded(BOOLEAN_FALSE)
+                .sourceFile(EMPTY)
+                .destinationFile(EMPTY)
+                .multipartBodies(EMPTY)
+                .multipartFiles(EMPTY)
+                .multipartValuesAreURLEncoded(BOOLEAN_FALSE)
+                .multipartBodiesContentType(DEFAULT_MULTIPART_BODIES_CONTENT_TYPE)
+                .multipartFilesContentType(DEFAULT_MULTIPART_FILES_CONTENT_TYPE)
+                .tlsVersion(TLSv12)
+                .allowedCiphers(DEFAULT_ALLOWED_CIPHERS_TLSv1_2)
+                .build();
 
-        Map<String, String> requestResponse = scoreHttpClient.execute(httpClientInputs);
-        if (!OK_STATUS_CODE.equals(requestResponse.get(HttpClientService.STATUS_CODE))) {
-            throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(HttpClientService.STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
+        Map<String, String> requestResponse = HttpClientService.execute(httpClientInputs);
+        if (!OK_STATUS_CODE.equals(requestResponse.get(STATUS_CODE))) {
+            throw new RuntimeException("Http request to specified URL: " + commonInputs.getXmlDocument() + " failed with status code: " + requestResponse.get(STATUS_CODE) + ". Request response is: " + requestResponse.get(Constants.Outputs.RETURN_RESULT));
         }
         return requestResponse.get(Constants.Outputs.RETURN_RESULT);
     }

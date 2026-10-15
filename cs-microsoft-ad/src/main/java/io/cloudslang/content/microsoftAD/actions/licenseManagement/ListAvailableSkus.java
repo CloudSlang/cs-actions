@@ -36,7 +36,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.microsoftAD.utils.HttpClientInputNames.*;
 import static io.cloudslang.content.microsoftAD.services.HttpCommons.httpGet;
 import static io.cloudslang.content.microsoftAD.utils.Constants.*;
 import static io.cloudslang.content.microsoftAD.utils.Constants.QUERY_PARAMS;

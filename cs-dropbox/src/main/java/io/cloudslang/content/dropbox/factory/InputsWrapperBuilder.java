@@ -19,9 +19,9 @@
 package io.cloudslang.content.dropbox.factory;
 
 import io.cloudslang.content.dropbox.entities.inputs.CommonInputs;
+import io.cloudslang.content.dropbox.entities.inputs.DropboxHttpClientInputs;
 import io.cloudslang.content.dropbox.entities.inputs.FolderInputs;
 import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import static io.cloudslang.content.dropbox.entities.constants.Constants.ErrorMessages.UNKNOWN_BUILDER_TYPE;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.Values.INIT_INDEX;
@@ -36,7 +36,7 @@ public class InputsWrapperBuilder {
     }
 
     @SafeVarargs
-    public static <T> InputsWrapper buildWrapper(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
+    public static <T> InputsWrapper buildWrapper(DropboxHttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) {
         InputsWrapper wrapper = new InputsWrapper.Builder()
                 .withHttpClientInputs(httpClientInputs)
                 .withCommonInputs(commonInputs)

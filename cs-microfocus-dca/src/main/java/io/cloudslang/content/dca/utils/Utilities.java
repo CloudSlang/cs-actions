@@ -18,9 +18,9 @@
 package io.cloudslang.content.dca.utils;
 
 import io.cloudslang.content.dca.models.DcaAuthModel;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.dca.models.DcaHttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
@@ -116,7 +116,7 @@ public class Utilities {
         return uriBuilder;
     }
 
-    public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@NotNull final DcaHttpClientInputs httpClientInputs,
                                 @NotNull final String proxyHost,
                                 @NotNull final String proxyPort,
                                 @NotNull final String proxyUsername,
@@ -127,7 +127,7 @@ public class Utilities {
         httpClientInputs.setProxyPassword(proxyPassword);
     }
 
-    public static void setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setSecurityInputs(@NotNull final DcaHttpClientInputs httpClientInputs,
                                          @NotNull final String trustAllRoots,
                                          @NotNull final String x509HostnameVerifier,
                                          @NotNull final String trustKeystore,
@@ -142,7 +142,7 @@ public class Utilities {
         httpClientInputs.setKeystorePassword(keystorePassword);
     }
 
-    public static void setDcaCredentials(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setDcaCredentials(@NotNull final DcaHttpClientInputs httpClientInputs,
                                          @NotNull final String dcaUsername,
                                          @NotNull final String dcaPassword,
                                          @NotNull final String dcaTenant) {
@@ -152,7 +152,7 @@ public class Utilities {
         httpClientInputs.setPreemptiveAuth("true");
     }
 
-    public static void setIdmAuthentication(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setIdmAuthentication(@NotNull final DcaHttpClientInputs httpClientInputs,
                                             @NotNull final String authType,
                                             @NotNull final String idmUsername,
                                             @NotNull final String idmPassword,
@@ -163,7 +163,7 @@ public class Utilities {
         httpClientInputs.setPassword(idmPassword);
     }
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+    public static void setConnectionParameters(DcaHttpClientInputs httpClientInputs,
                                                @NotNull final String connectTimeout,
                                                @NotNull final String socketTimeout,
                                                @NotNull final String useCookies,

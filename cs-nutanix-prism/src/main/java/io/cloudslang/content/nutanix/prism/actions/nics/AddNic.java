@@ -20,7 +20,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.nutanix.prism.utils.HttpClientInputNames.*;
 import static io.cloudslang.content.nutanix.prism.services.NicImpl.AddNic;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.AddNICConstants.ADD_NIC_OPERATION_NAME;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.AddNICConstants.TASK_UUID_PATH;

@@ -36,8 +36,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
+import static io.cloudslang.content.sitescope.constants.HttpClientInputNames.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Constants.GetMonitorsDeployedAt.MULTIPLE_SERVERS;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
@@ -163,4 +162,3 @@ public class GetMonitorsDeployedAt {
 
     }
 }
-

@@ -41,11 +41,11 @@ public class CouchbaseService {
             throws Exception {
         InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
 
-        httpClientInputs.setUrl(buildUrl(wrapper));
+        wrapper.setUrl(buildUrl(wrapper));
 
         buildHeaders(wrapper);
         buildPayload(wrapper);
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(wrapper.getHttpClientInputs());
     }
 }

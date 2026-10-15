@@ -44,7 +44,7 @@ import static io.cloudslang.content.amazon.utils.InputsUtil.getDefaultStringInpu
  * 8/10/2016.
  */
 public class InputsWrapper {
-    private final HttpClientInputs httpClientInputs;
+    private HttpClientInputs httpClientInputs;
     private final CommonInputs commonInputs;
     private CustomInputs customInputs;
     private EbsInputs ebsInputs;
@@ -85,6 +85,10 @@ public class InputsWrapper {
 
     public HttpClientInputs getHttpClientInputs() {
         return httpClientInputs;
+    }
+
+    public void setHttpClientInputs(HttpClientInputs httpClientInputs) {
+        this.httpClientInputs = httpClientInputs;
     }
 
     public CommonInputs getCommonInputs() {

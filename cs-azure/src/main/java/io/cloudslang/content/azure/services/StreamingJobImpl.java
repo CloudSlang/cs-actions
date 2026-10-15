@@ -27,9 +27,9 @@ import io.cloudslang.content.azure.entities.StartStreamingJobInputs;
 import io.cloudslang.content.azure.entities.models.streamanalytics.CreateStreamingJobRequestBody;
 import io.cloudslang.content.azure.entities.models.streamanalytics.StartStreamingJobRequestBody;
 import io.cloudslang.content.azure.utils.HttpUtils;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.azure.utils.AzureHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -59,7 +59,7 @@ public class StreamingJobImpl {
     @NotNull
     public static Map<String, String> createStreamingJob(@NotNull final CreateStreamingJobInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
                 inputs.getAzureCommonInputs().getJobName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -69,13 +69,13 @@ public class StreamingJobImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(createStreamingJobRequestBody(inputs));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> startStreamingJob(@NotNull final StartStreamingJobInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getStartStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
                 inputs.getAzureCommonInputs().getJobName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -85,13 +85,13 @@ public class StreamingJobImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(StartStreamingJobRequestBody(inputs));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> stopStreamingJob(@NotNull final AzureCommonInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getStopStreamingJobUrl(inputs.getSubscriptionId(), inputs.getResourceGroupName(),
                 inputs.getJobName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -102,13 +102,13 @@ public class StreamingJobImpl {
         httpClientInputs.setBody(EMPTY_JSON);
         httpClientInputs.setQueryParams(setAPIVersion(inputs.getApiVersion()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getStreamingJob(@NotNull final GetStreamingJobInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
                 inputs.getAzureCommonInputs().getJobName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -123,7 +123,7 @@ public class StreamingJobImpl {
         }
 
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

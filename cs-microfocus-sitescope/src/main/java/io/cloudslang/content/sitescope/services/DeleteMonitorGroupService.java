@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.sitescope.services;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.sitescope.entities.SiteScopeHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.sitescope.constants.Inputs;
 import io.cloudslang.content.sitescope.constants.SuccessMsgs;
@@ -24,13 +24,13 @@ import io.cloudslang.content.sitescope.entities.DeleteMonitorGroupInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
+import static io.cloudslang.content.httpclient.utils.Constants.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.services.HttpCommons.setCommonHttpInputs;
 
@@ -39,7 +39,7 @@ public class DeleteMonitorGroupService {
 
     public @NotNull
     Map<String, String> execute(@NotNull DeleteMonitorGroupInputs deleteMonitorGroupInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final SiteScopeHttpClientInputs httpClientInputs = new SiteScopeHttpClientInputs();
         final SiteScopeCommonInputs commonInputs = deleteMonitorGroupInputs.getCommonInputs();
 
         setCommonHttpInputs(httpClientInputs, commonInputs);
@@ -50,7 +50,7 @@ public class DeleteMonitorGroupService {
         httpClientInputs.setPassword(commonInputs.getPassword());
         httpClientInputs.setMethod(DELETE);
 
-        Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
+        Map<String, String> httpClientOutputs = HttpClientService.execute(httpClientInputs.build());
 
         return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, SuccessMsgs.DELETE_MONITOR_GROUP);
     }
@@ -71,5 +71,3 @@ public class DeleteMonitorGroupService {
         return urlBuilder.build().toString();
     }
 }
-
-

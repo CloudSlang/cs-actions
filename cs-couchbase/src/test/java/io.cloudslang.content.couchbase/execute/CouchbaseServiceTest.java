@@ -27,7 +27,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
 
 import java.util.HashMap;
 
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -50,24 +50,25 @@ import static org.mockito.Mockito.when;
  */
 
 public class CouchbaseServiceTest {
-    private HttpClientService csHttpClientMock;
-    private MockedConstruction<HttpClientService> httpClientServiceConstruction;
+    private MockedStatic<HttpClientService> httpClientServiceMock;
 
     private CouchbaseService toTest;
     private HttpClientInputs httpClientInputs;
 
     @BeforeEach
     public void init() throws Exception {
-        httpClientServiceConstruction = mockConstruction(HttpClientService.class, (mock, context) -> {
-            csHttpClientMock = mock;
-            when(mock.execute(any(HttpClientInputs.class))).thenReturn(new HashMap<>());
-        });
+        httpClientServiceMock = mockStatic(HttpClientService.class);
+        httpClientServiceMock.when(() -> HttpClientService.execute(any(HttpClientInputs.class)))
+                .thenAnswer(invocation -> {
+                    httpClientInputs = invocation.getArgument(0);
+                    return new HashMap<>();
+                });
         toTest = new CouchbaseService();
     }
 
     @AfterEach
     public void closeHttpClientServiceConstruction() {
-        httpClientServiceConstruction.close();
+        httpClientServiceMock.close();
     }
 
     @Test
@@ -93,8 +94,8 @@ public class CouchbaseServiceTest {
         CommonInputs commonInputs = getCommonInputs("CreateOrEditBucket", "buckets", "http://subdomain.couchbase.com:8091");
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://subdomain.couchbase.com:8091/pools/default/buckets", httpClientInputs.getUrl());
         assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
@@ -138,7 +139,7 @@ public class CouchbaseServiceTest {
         assertEquals("The combination of values supplied for inputs: authType, proxyPort and/or saslPassword " +
                 "doesn't meet conditions for general purpose usage.", exception.getMessage());
 
-        assertEquals(0, httpClientServiceConstruction.constructed().size());
+        httpClientServiceMock.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), never());
     }
 
     @Test
@@ -150,8 +151,8 @@ public class CouchbaseServiceTest {
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("toBeFlushedBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://anywhere.couchbase.com:8091/pools/default/buckets/toBeFlushedBucket/controller/doFlush", httpClientInputs.getUrl());
         assertEquals("application/json", httpClientInputs.getContentType());
@@ -166,8 +167,8 @@ public class CouchbaseServiceTest {
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("toBeDeletedBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://anywhere.couchbase.com:8091/pools/default/buckets/toBeDeletedBucket", httpClientInputs.getUrl());
         assertEquals("application/json", httpClientInputs.getContentType());
@@ -181,8 +182,8 @@ public class CouchbaseServiceTest {
         CommonInputs commonInputs = getCommonInputs("GetAllBuckets", "buckets", "http://somewhere.couchbase.com:8091");
         toTest.execute(httpClientInputs, commonInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
@@ -197,8 +198,8 @@ public class CouchbaseServiceTest {
         CommonInputs commonInputs = getCommonInputs("GetAutoFailOverSettings", "cluster", "http://somewhere.couchbase.com:8091");
         toTest.execute(httpClientInputs, commonInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://somewhere.couchbase.com:8091/settings/autoFailover", httpClientInputs.getUrl());
         assertEquals("application/json", httpClientInputs.getContentType());
@@ -213,8 +214,8 @@ public class CouchbaseServiceTest {
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("specifiedBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets/specifiedBucket", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
@@ -230,8 +231,8 @@ public class CouchbaseServiceTest {
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("testBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://somewhere.couchbase.com:8091/pools/default/buckets/testBucket/stats", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
@@ -246,8 +247,8 @@ public class CouchbaseServiceTest {
         CommonInputs commonInputs = getCommonInputs("GetClusterDetails", "cluster", "http://whatever.couchbase.com:8091");
         toTest.execute(httpClientInputs, commonInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://whatever.couchbase.com:8091/pools/default", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
@@ -262,8 +263,8 @@ public class CouchbaseServiceTest {
         CommonInputs commonInputs = getCommonInputs("GetClusterInfo", "cluster", "http://whatever.couchbase.com:8091");
         toTest.execute(httpClientInputs, commonInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://whatever.couchbase.com:8091/pools", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());
@@ -279,8 +280,8 @@ public class CouchbaseServiceTest {
         BucketInputs bucketInputs = new BucketInputs.Builder().withBucketName("toGetDesignDocsBucket").build();
         toTest.execute(httpClientInputs, commonInputs, bucketInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://whatever.couchbase.com:8091/pools/default/buckets/toGetDesignDocsBucket/ddocs", httpClientInputs.getUrl());
         assertEquals("application/json", httpClientInputs.getContentType());
@@ -295,8 +296,8 @@ public class CouchbaseServiceTest {
         NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress("ns_2@10.0.0.2").build();
         toTest.execute(httpClientInputs, commonInputs, nodeInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://whatever.couchbase.com:8091/controller/failOver", httpClientInputs.getUrl());
         assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
@@ -312,8 +313,8 @@ public class CouchbaseServiceTest {
         NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress("ns_2@10.0.0.2").build();
         toTest.execute(httpClientInputs, commonInputs, nodeInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://whatever.couchbase.com:8091/controller/startGracefulFailover", httpClientInputs.getUrl());
         assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
@@ -333,8 +334,8 @@ public class CouchbaseServiceTest {
                 .build();
         toTest.execute(httpClientInputs, commonInputs, clusterInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://whatever.couchbase.com:8091/controller/rebalance", httpClientInputs.getUrl());
         assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
@@ -357,8 +358,8 @@ public class CouchbaseServiceTest {
         NodeInputs nodeInputs = new NodeInputs.Builder().withInternalNodeIpAddress("ns_2@10.0.0.2").withRecoveryType("full").build();
         toTest.execute(httpClientInputs, commonInputs, nodeInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://whatever.couchbase.com:8091/controller/setRecoveryType", httpClientInputs.getUrl());
         assertEquals("Accept:application/json, text/plain, */*", httpClientInputs.getHeaders());
@@ -376,7 +377,7 @@ public class CouchbaseServiceTest {
         assertEquals("The value of: [ blah blah blah ] input as part of: [ns_2@ blah blah blah ] input must be a valid IPv4 address.",
                 exception.getMessage());
 
-        assertEquals(0, httpClientServiceConstruction.constructed().size());
+        httpClientServiceMock.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), never());
     }
 
     @Test
@@ -388,7 +389,7 @@ public class CouchbaseServiceTest {
         assertEquals("The provided value for: \" anything here but not [at] symbol \" input must be a valid Couchbase internal node format.",
                 exception.getMessage());
 
-        assertEquals(0, httpClientServiceConstruction.constructed().size());
+        httpClientServiceMock.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), never());
     }
 
     @Test
@@ -403,7 +404,7 @@ public class CouchbaseServiceTest {
                 () -> toTest.execute(httpClientInputs, commonInputs, bucketInputs));
         assertEquals("Unsupported Couchbase API.", exception.getMessage());
 
-        assertEquals(0, httpClientServiceConstruction.constructed().size());
+        httpClientServiceMock.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), never());
     }
 
     @Test
@@ -418,7 +419,7 @@ public class CouchbaseServiceTest {
                 () -> toTest.execute(httpClientInputs, commonInputs, bucketInputs, null));
         assertEquals("Unknown builder type.", exception.getMessage());
 
-        assertEquals(0, httpClientServiceConstruction.constructed().size());
+        httpClientServiceMock.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), never());
     }
 
     @Test
@@ -428,8 +429,8 @@ public class CouchbaseServiceTest {
         CommonInputs commonInputs = getCommonInputs("GetDestinationClusterReference", "cluster", "http://somewhere.couchbase.com:8091");
         toTest.execute(httpClientInputs, commonInputs);
 
-        verify(csHttpClientMock, times(1)).execute(eq(httpClientInputs));
-        verifyNoMoreInteractions(csHttpClientMock);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(eq(httpClientInputs)), times(1));
+        httpClientServiceMock.verifyNoMoreInteractions();
 
         assertEquals("http://somewhere.couchbase.com:8091/pools/default/remoteClusters", httpClientInputs.getUrl());
         assertEquals("X-memcachekv-Store-Client-Specification-Version:0.1", httpClientInputs.getHeaders());

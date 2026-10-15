@@ -36,7 +36,7 @@ import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.office365.utils.HttpClientInputNames.*;
 import static io.cloudslang.content.office365.services.UserServiceImpl.listUsers;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Descriptions.Common.*;

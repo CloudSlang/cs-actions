@@ -36,8 +36,8 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInput
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PASSWORD;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_PORT;
 import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CommonInputs.PROXY_USERNAME;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.RESPONSE_CHARACTER_SET;
+import static io.cloudslang.content.hashicorp.terraform.utils.TerraformHttpClientInputNames.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.TerraformHttpClientInputNames.RESPONSE_CHARACTER_SET;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;

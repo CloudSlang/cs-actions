@@ -25,7 +25,7 @@ import io.cloudslang.content.httpclient.entities.HttpClientInputs;
  * 4/9/2017.
  */
 public class InputsWrapper {
-    private final HttpClientInputs httpClientInputs;
+    private HttpClientInputs httpClientInputs;
     private final CommonInputs commonInputs;
 
     private BucketInputs bucketInputs;
@@ -39,6 +39,22 @@ public class InputsWrapper {
 
     public HttpClientInputs getHttpClientInputs() {
         return httpClientInputs;
+    }
+
+    public void setUrl(String url) {
+        updateHttpClientInputs(url, httpClientInputs.getHeaders(), httpClientInputs.getContentType(), httpClientInputs.getBody());
+    }
+
+    public void setHeaders(String headers) {
+        updateHttpClientInputs(httpClientInputs.getUrl(), headers, httpClientInputs.getContentType(), httpClientInputs.getBody());
+    }
+
+    public void setContentType(String contentType) {
+        updateHttpClientInputs(httpClientInputs.getUrl(), httpClientInputs.getHeaders(), contentType, httpClientInputs.getBody());
+    }
+
+    public void setBody(String body) {
+        updateHttpClientInputs(httpClientInputs.getUrl(), httpClientInputs.getHeaders(), httpClientInputs.getContentType(), body);
     }
 
     public CommonInputs getCommonInputs() {
@@ -67,6 +83,57 @@ public class InputsWrapper {
 
     public void setNodeInputs(NodeInputs nodeInputs) {
         this.nodeInputs = nodeInputs;
+    }
+
+    private void updateHttpClientInputs(String url, String headers, String contentType, String body) {
+        HttpClientInputs inputs = httpClientInputs;
+        httpClientInputs = HttpClientInputs.builder()
+                .url(url)
+                .method(inputs.getMethod())
+                .authType(inputs.getAuthType())
+                .preemptiveAuth(inputs.getPreemptiveAuth())
+                .username(inputs.getUsername())
+                .password(inputs.getPassword())
+                .proxyHost(inputs.getProxyHost())
+                .proxyPort(inputs.getProxyPort())
+                .proxyUsername(inputs.getProxyUsername())
+                .proxyPassword(inputs.getProxyPassword())
+                .tlsVersion(inputs.getTlsVersion())
+                .allowedCiphers(inputs.getAllowedCiphers())
+                .trustAllRoots(inputs.getTrustAllRoots())
+                .x509HostnameVerifier(inputs.getX509HostnameVerifier())
+                .trustKeystore(inputs.getTrustKeystore())
+                .trustPassword(inputs.getTrustPassword())
+                .keystore(inputs.getKeystore())
+                .keystorePassword(inputs.getKeystorePassword())
+                .connectTimeout(inputs.getConnectTimeout())
+                .responseTimeout(inputs.getResponseTimeout())
+                .executionTimeout(inputs.getExecutionTimeout())
+                .useCookies(inputs.getUseCookies())
+                .keepAlive(inputs.getKeepAlive())
+                .connectionsMaxPerRoute(inputs.getConnectionsMaxPerRoute())
+                .connectionsMaxTotal(inputs.getConnectionsMaxTotal())
+                .headers(headers)
+                .responseCharacterSet(inputs.getResponseCharacterSet())
+                .destinationFile(inputs.getDestinationFile())
+                .followRedirects(inputs.getFollowRedirects())
+                .queryParams(inputs.getQueryParams())
+                .queryParamsAreURLEncoded(inputs.getQueryParamsAreURLEncoded())
+                .queryParamsAreFormEncoded(inputs.getQueryParamsAreFormEncoded())
+                .formParams(inputs.getFormParams())
+                .formParamsAreURLEncoded(inputs.getFormParamsAreURLEncoded())
+                .sourceFile(inputs.getSourceFile())
+                .body(body)
+                .contentType(contentType)
+                .requestCharacterSet(inputs.getRequestCharacterSet())
+                .multipartBodies(inputs.getMultipartBodies())
+                .multipartFiles(inputs.getMultipartFiles())
+                .multipartValuesAreURLEncoded(inputs.getMultipartValuesAreURLEncoded())
+                .multipartBodiesContentType(inputs.getMultipartBodiesContentType())
+                .multipartFilesContentType(inputs.getMultipartFilesContentType())
+                .cookieStoreSessionObject(inputs.getCookieStoreSessionObject())
+                .connectionPoolSessionObject(inputs.getConnectionPoolSessionObject())
+                .build();
     }
 
     public static class Builder {

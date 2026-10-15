@@ -39,7 +39,7 @@ import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.office365.utils.HttpClientInputNames.*;
 import static io.cloudslang.content.office365.services.UserServiceImpl.createUser;
 import static io.cloudslang.content.office365.utils.Constants.*;
 import static io.cloudslang.content.office365.utils.Constants.NEW_LINE;
@@ -164,4 +164,3 @@ public class CreateUser {
         }
     }
 }
-

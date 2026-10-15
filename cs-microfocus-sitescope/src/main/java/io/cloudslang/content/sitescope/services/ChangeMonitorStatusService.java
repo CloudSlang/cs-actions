@@ -16,19 +16,19 @@
 
 package io.cloudslang.content.sitescope.services;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.sitescope.entities.SiteScopeHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.sitescope.entities.ChangeMonitorStatusInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
 import io.cloudslang.content.sitescope.utils.HttpUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.build.auth.AuthTypes.BASIC;
+import static io.cloudslang.content.httpclient.utils.Constants.BASIC;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorStatusInputs.MONITOR_ID;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.FULL_PATH_TO_MONITOR;
@@ -72,7 +72,7 @@ public class ChangeMonitorStatusService {
     public @NotNull
     Map<String, String> execute(@NotNull ChangeMonitorStatusInputs changeMonitorStatusInputs) throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final SiteScopeHttpClientInputs httpClientInputs = new SiteScopeHttpClientInputs();
         final SiteScopeCommonInputs commonInputs = changeMonitorStatusInputs.getCommonInputs();
 
         httpClientInputs.setUrl(commonInputs.getProtocol() + "://" + commonInputs.getHost() + COLON + commonInputs.getPort() +
@@ -89,7 +89,7 @@ public class ChangeMonitorStatusService {
         httpClientInputs.setFormParamsAreURLEncoded(String.valueOf(true));
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
 
-        Map<String, String> httpClientOutputs = new HttpClientService().execute(httpClientInputs);
+        Map<String, String> httpClientOutputs = HttpClientService.execute(httpClientInputs.build());
 
         return HttpUtils.convertToSitescopeResultsMap(httpClientOutputs, CHANGE_MONITOR_STATUS);
     }

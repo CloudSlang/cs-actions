@@ -18,9 +18,9 @@
 
 package io.cloudslang.content.office365.utils;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.office365.entities.Office365HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
@@ -179,7 +179,7 @@ public class HttpUtils {
         return messagepathString.toString();
     }
 
-    public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@NotNull final Office365HttpClientInputs httpClientInputs,
                                 @NotNull final String proxyHost,
                                 @NotNull final String proxyPort,
                                 @NotNull final String proxyUsername,
@@ -190,7 +190,7 @@ public class HttpUtils {
         httpClientInputs.setProxyPassword(proxyPassword);
     }
 
-    public static void setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setSecurityInputs(@NotNull final Office365HttpClientInputs httpClientInputs,
                                          @NotNull final String trustAllRoots,
                                          @NotNull final String x509HostnameVerifier,
                                          @NotNull final String trustKeystore,
@@ -201,7 +201,7 @@ public class HttpUtils {
         httpClientInputs.setTrustPassword(trustPassword);
     }
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+    public static void setConnectionParameters(Office365HttpClientInputs httpClientInputs,
                                                @NotNull final String connectTimeout,
                                                @NotNull final String socketTimeout,
                                                @NotNull final String keepAlive,

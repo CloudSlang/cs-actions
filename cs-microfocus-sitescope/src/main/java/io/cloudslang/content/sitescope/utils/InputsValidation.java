@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.sitescope.constants.HttpClientInputNames.*;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.STATUS;
 import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorStatusInputs.MONITOR_ID;

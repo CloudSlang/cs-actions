@@ -22,14 +22,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.office365.entities.Office365HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.*;
 import io.cloudslang.content.office365.utils.PopulateMessageBody;
 import io.cloudslang.content.office365.utils.PopulateMoveMessageBody;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -54,7 +54,7 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> getMessage(@NotNull final GetMessageInputs getMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = getMessageInputs.getCommonInputs();
         httpClientInputs.setUrl(getMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
@@ -73,12 +73,12 @@ public class EmailServiceImpl {
         if (!isEmpty(getMessageInputs.getSelectQuery()) || !isEmpty(getMessageInputs.getoDataQuery())) {
             httpClientInputs.setQueryParams(getQueryParams(getMessageInputs.getSelectQuery(), getMessageInputs.getoDataQuery()));
         }
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> sendMessage(@NotNull final SendMessageInputs postMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
 
         final Office365CommonInputs commonInputs = postMessageInputs.getCommonInputs();
         httpClientInputs.setUrl(sendMessageUrl(commonInputs.getUserPrincipalName(),
@@ -95,12 +95,12 @@ public class EmailServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()) + HEADERS_DELIMITER + CONTENT_LENGTH);
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> listMessages(@NotNull final ListMessagesInputs listMessagesInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = listMessagesInputs.getCommonInputs();
         httpClientInputs.setUrl(listMessagesUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
@@ -116,7 +116,7 @@ public class EmailServiceImpl {
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         httpClientInputs.setQueryParams(getQueryParams(listMessagesInputs.getTopQuery(), listMessagesInputs.getSelectQuery(), listMessagesInputs.getoDataQuery()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
@@ -180,7 +180,7 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> createMessage(@NotNull final CreateMessageInputs createMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = createMessageInputs.getCommonInputs();
         httpClientInputs.setUrl(createMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
@@ -198,7 +198,7 @@ public class EmailServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
@@ -225,7 +225,7 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> deleteMessage(@NotNull final DeleteMessageInputs deleteMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = deleteMessageInputs.getCommonInputs();
         httpClientInputs.setUrl(getMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
@@ -241,12 +241,12 @@ public class EmailServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> moveMessage(@NotNull final MoveMessageInputs moveMessageInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = moveMessageInputs.getCommonInputs();
         httpClientInputs.setUrl(moveMessageUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
@@ -263,12 +263,12 @@ public class EmailServiceImpl {
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
         httpClientInputs.setBody(PopulateMoveMessageBody.populateMoveMessageBody(moveMessageInputs.getDestinationId()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> addAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = addAttachmentInputs.getCommonInputs();
         httpClientInputs.setUrl(addAttachmentUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(),
                 addAttachmentInputs.getMessageId()));
@@ -287,7 +287,7 @@ public class EmailServiceImpl {
                 addAttachmentInputs.getContentName(),
                 addAttachmentInputs.getContentBytes()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     public static String addBigAttachment(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
@@ -296,7 +296,7 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> getAttachments(@NotNull final GetAttachmentsInputs getAttachmentsInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = getAttachmentsInputs.getCommonInputs();
         httpClientInputs.setUrl(getAttachmentsUrl(commonInputs.getUserPrincipalName(),
                 commonInputs.getUserId(),
@@ -312,7 +312,7 @@ public class EmailServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     private static void downloadAttachment(String filePath, String contentBytes, String contentName) throws IOException {
@@ -357,7 +357,7 @@ public class EmailServiceImpl {
 
     @NotNull
     public static Map<String, String> listAttachment(@NotNull final ListAttachmentsInputs getListAttachmentInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = getListAttachmentInputs.getCommonInputs();
         httpClientInputs.setUrl(listAttachmentsUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId(), getListAttachmentInputs.getMessageId()));
 
@@ -372,7 +372,7 @@ public class EmailServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

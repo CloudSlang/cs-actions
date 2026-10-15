@@ -21,7 +21,7 @@ import io.cloudslang.content.abbyy.constants.*;
 import io.cloudslang.content.abbyy.entities.others.*;
 import io.cloudslang.content.abbyy.utils.InputParser;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URISyntaxException;
@@ -133,8 +133,8 @@ public class ProcessImageInput extends AbbyyInput {
     public @NotNull String getUrl() throws URISyntaxException {
         URIBuilder urlBuilder = new URIBuilder()
                 .setScheme(this.getLocationId().getProtocol())
-                .setHost(String.format(Urls.HOST_TEMPLATE, this.getLocationId().toString(),
-                        Endpoints.PROCESS_IMAGE));
+                .setHost(String.format("%s.ocrsdk.com", this.getLocationId()))
+                .setPath("/" + Endpoints.PROCESS_IMAGE);
 
         if (this.getLanguages() != null && !this.getLanguages().isEmpty()) {
             urlBuilder.addParameter(QueryParams.LANGUAGE, StringUtils.join(this.getLanguages(), ','));

@@ -58,7 +58,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.split;
-import static org.apache.http.client.config.AuthSchemes.BASIC;
+import static io.cloudslang.content.httpclient.utils.Constants.*;
 
 /**
  * Created by Mihai Tusa
@@ -75,50 +75,50 @@ public class InputsUtil {
                                                        String x509HostnameVerifier, String trustKeystore, String trustPassword,
                                                        String keystore, String keystorePassword, String connectTimeout,
                                                        String socketTimeout, String useCookies, String keepAlive, String method) {
-        HttpClientInputs httpClientInputs = new HttpClientInputs();
-        httpClientInputs.setMethod(method);
-        httpClientInputs.setAuthType(BASIC);
-        httpClientInputs.setQueryParamsAreURLEncoded(valueOf(FALSE));
-        httpClientInputs.setUsername(username);
-        httpClientInputs.setPassword(password);
+        String defaultJavaKeyStore = System.getProperty("javax.net.ssl.keyStore", DEFAULT_JAVA_KEYSTORE);
+        String defaultJavaKeyStorePassword = System.getProperty("javax.net.ssl.keyStorePassword", "changeit");
+        String defaultTrustStore = System.getProperty("javax.net.ssl.trustStore", defaultJavaKeyStore);
+        String defaultTrustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword", defaultJavaKeyStorePassword);
+        boolean trustAllRootsEnabled = getEnforcedBooleanCondition(trustAllRoots, FALSE);
+        String effectiveKeystore = areBothValuesPresent(keystore, keystorePassword) ? keystore : defaultJavaKeyStore;
+        String effectiveKeystorePassword = areBothValuesPresent(keystore, keystorePassword) ? keystorePassword : defaultJavaKeyStorePassword;
+        String effectiveTrustKeystore = areBothValuesPresent(trustKeystore, trustPassword) ? trustKeystore : defaultTrustStore;
+        String effectiveTrustPassword = areBothValuesPresent(trustKeystore, trustPassword) ? trustPassword : defaultTrustStorePassword;
+        String effectiveHostnameVerifier = isBlank(x509HostnameVerifier) || !asList(ALLOW_ALL, BROWSER_COMPATIBLE, STRICT).contains(x509HostnameVerifier)
+                ? ALLOW_ALL : x509HostnameVerifier;
 
-        httpClientInputs.setTrustAllRoots(valueOf(getEnforcedBooleanCondition(trustAllRoots, FALSE)));
-        httpClientInputs.setKeepAlive(valueOf(getEnforcedBooleanCondition(keepAlive, TRUE)));
-        httpClientInputs.setUseCookies(valueOf(getEnforcedBooleanCondition(useCookies, TRUE)));
-
-        if (areBothValuesPresent(proxyHost, proxyPort)) {
-            httpClientInputs.setProxyHost(proxyHost);
-            httpClientInputs.setProxyPort(proxyPort);
-        }
-
-        if (isNotBlank(proxyUsername)) {
-            httpClientInputs.setProxyUsername(proxyUsername);
-        }
-
-        if (areBothValuesPresent(proxyUsername, proxyPassword)) {
-            httpClientInputs.setProxyPassword(proxyPassword);
-        }
-
-        if (areBothValuesPresent(trustKeystore, trustPassword)) {
-            httpClientInputs.setTrustKeystore(trustKeystore);
-            httpClientInputs.setTrustPassword(trustPassword);
-        }
-
-        if (areBothValuesPresent(keystore, keystorePassword)) {
-            httpClientInputs.setKeystore(keystore);
-            httpClientInputs.setKeystorePassword(keystorePassword);
-        }
-
-        httpClientInputs.setConnectTimeout(defaultIfBlank(connectTimeout, valueOf(INIT_INDEX)));
-        httpClientInputs.setSocketTimeout(defaultIfBlank(socketTimeout, valueOf(INIT_INDEX)));
-
-        if (isBlank(x509HostnameVerifier) || !asList(ALLOW_ALL, BROWSER_COMPATIBLE, STRICT).contains(x509HostnameVerifier)) {
-            httpClientInputs.setX509HostnameVerifier(ALLOW_ALL);
-        } else {
-            httpClientInputs.setX509HostnameVerifier(x509HostnameVerifier);
-        }
-
-        return httpClientInputs;
+        return HttpClientInputs.builder()
+                .method(method)
+                .authType(BASIC)
+                .preemptiveAuth(BOOLEAN_TRUE)
+                .queryParamsAreURLEncoded(valueOf(FALSE))
+                .username(username)
+                .password(password)
+                .trustAllRoots(valueOf(trustAllRootsEnabled))
+                .keepAlive(valueOf(getEnforcedBooleanCondition(keepAlive, TRUE)))
+                .useCookies(valueOf(getEnforcedBooleanCondition(useCookies, TRUE)))
+                .proxyHost(areBothValuesPresent(proxyHost, proxyPort) ? proxyHost : EMPTY)
+                .proxyPort(areBothValuesPresent(proxyHost, proxyPort) ? proxyPort : EMPTY)
+                .proxyUsername(isNotBlank(proxyUsername) ? proxyUsername : EMPTY)
+                .proxyPassword(areBothValuesPresent(proxyUsername, proxyPassword) ? proxyPassword : EMPTY)
+                .trustKeystore(effectiveTrustKeystore)
+                .trustPassword(effectiveTrustPassword)
+                .keystore(effectiveKeystore)
+                .keystorePassword(effectiveKeystorePassword)
+                .connectTimeout(defaultIfBlank(connectTimeout, valueOf(INIT_INDEX)))
+                .responseTimeout(defaultIfBlank(socketTimeout, valueOf(INIT_INDEX)))
+                .executionTimeout(valueOf(INIT_INDEX))
+                .tlsVersion(TLSv12)
+                .allowedCiphers(DEFAULT_ALLOWED_CIPHERS_TLSv1_2)
+                .x509HostnameVerifier(effectiveHostnameVerifier)
+                .followRedirects(BOOLEAN_TRUE)
+                .connectionsMaxPerRoute(DEFAULT_CONNECTIONS_MAX_PER_ROUTE)
+                .connectionsMaxTotal(DEFAULT_CONNECTIONS_MAX_TOTAL)
+                .responseCharacterSet(UTF_8)
+                .queryParamsAreFormEncoded(BOOLEAN_FALSE)
+                .formParamsAreURLEncoded(BOOLEAN_FALSE)
+                .multipartValuesAreURLEncoded(BOOLEAN_FALSE)
+                .build();
     }
 
     public static String buildUrl(InputsWrapper wrapper) throws MalformedURLException {

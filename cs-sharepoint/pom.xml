@@ -83,7 +83,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-httpclient-commons</artifactId>
-            <version>0.0.6</version>
+            <version>0.0.31</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

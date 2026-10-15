@@ -22,9 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.azure.entities.CreateStreamingOutputJobInputs;
 import io.cloudslang.content.azure.entities.models.streamanalytics.CreateStreamingOutputJobRequestBody;
 import io.cloudslang.content.azure.utils.HttpUtils;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.azure.utils.AzureHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 
@@ -54,7 +54,7 @@ public class StreamingOutputJobImpl {
     @NotNull
     public static Map<String, String> CreateOutputJob(@NotNull final CreateStreamingOutputJobInputs createStreamingOutputJobInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getCreateOutputStreamingJobUrl(createStreamingOutputJobInputs.getAzureCommonInputs().getSubscriptionId(), createStreamingOutputJobInputs.getAzureCommonInputs().getResourceGroupName(),
                 createStreamingOutputJobInputs.getJobName(), createStreamingOutputJobInputs.getOutputName(), createStreamingOutputJobInputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -64,7 +64,7 @@ public class StreamingOutputJobImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, createStreamingOutputJobInputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(createStreamingOutputJobInputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(createStreamingOutputJobRequestBody(createStreamingOutputJobInputs));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

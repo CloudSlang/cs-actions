@@ -19,8 +19,8 @@
 
 package io.cloudslang.content.office365.services;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.office365.entities.Office365CommonInputs;
+import io.cloudslang.content.office365.entities.Office365HttpClientInputs;
 import org.jetbrains.annotations.NotNull;
 
 import static io.cloudslang.content.office365.utils.HttpUtils.setConnectionParameters;
@@ -30,7 +30,7 @@ import static io.cloudslang.content.office365.utils.HttpUtils.setSecurityInputs;
 public class HttpCommons {
 
     @NotNull
-    static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    static void setCommonHttpInputs(@NotNull final Office365HttpClientInputs httpClientInputs,
                                     @NotNull final Office365CommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),

@@ -40,7 +40,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Inputs.CreateWorks
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyCommonInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.InputsValidation.verifyGetWorkspaceDetailsInputs;
 import static io.cloudslang.content.hashicorp.terraform.utils.Outputs.CreateWorkspaceOutputs.WORKSPACE_ID;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.hashicorp.terraform.utils.TerraformHttpClientInputNames.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;

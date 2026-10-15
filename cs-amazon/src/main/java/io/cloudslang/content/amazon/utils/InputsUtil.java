@@ -21,6 +21,7 @@ package io.cloudslang.content.amazon.utils;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
 import io.cloudslang.content.amazon.entities.inputs.InputsWrapper;
 import io.cloudslang.content.amazon.services.AmazonSignatureService;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.MalformedURLException;
@@ -85,17 +86,70 @@ public final class InputsUtil {
     public static void setQueryApiHeaders(InputsWrapper inputs, Map<String, String> headersMap, Map<String, String> queryParamsMap)
             throws SignatureException, MalformedURLException {
         AuthorizationHeader signedHeaders = new AmazonSignatureService().signRequestHeaders(inputs, headersMap, queryParamsMap);
-        inputs.getHttpClientInputs().setHeaders(signedHeaders.getAuthorizationHeader());
+        String headers = signedHeaders.getAuthorizationHeader();
         if (S3_API.equalsIgnoreCase(inputs.getCommonInputs().getApiService())) {
-            inputs.getHttpClientInputs().setHeaders(CANONICAL_HEADER_CONTENT_SHA + COLON + signedHeaders.getSignature());
+            headers = CANONICAL_HEADER_CONTENT_SHA + COLON + signedHeaders.getSignature();
         }
+        HttpClientInputs httpClientInputs = inputs.getHttpClientInputs();
+        inputs.setHttpClientInputs(copyHttpClientInputs(httpClientInputs, headers, httpClientInputs.getQueryParams()));
     }
 
     public static void setQueryApiParams(InputsWrapper inputs, Map<String, String> queryParamsMap) {
         String queryParamsString = getHeadersOrParamsString(queryParamsMap, EQUAL, AMPERSAND, true);
         if (isNotBlank(queryParamsString)) {
-            inputs.getHttpClientInputs().setQueryParams(queryParamsString);
+            HttpClientInputs httpClientInputs = inputs.getHttpClientInputs();
+            inputs.setHttpClientInputs(copyHttpClientInputs(httpClientInputs, httpClientInputs.getHeaders(), queryParamsString));
         }
+    }
+
+    private static HttpClientInputs copyHttpClientInputs(HttpClientInputs inputs, String headers, String queryParams) {
+        return HttpClientInputs.builder()
+                .url(inputs.getUrl())
+                .method(inputs.getMethod())
+                .authType(inputs.getAuthType())
+                .preemptiveAuth(inputs.getPreemptiveAuth())
+                .username(inputs.getUsername())
+                .password(inputs.getPassword())
+                .proxyHost(inputs.getProxyHost())
+                .proxyPort(inputs.getProxyPort())
+                .proxyUsername(inputs.getProxyUsername())
+                .proxyPassword(inputs.getProxyPassword())
+                .tlsVersion(inputs.getTlsVersion())
+                .allowedCiphers(inputs.getAllowedCiphers())
+                .trustAllRoots(inputs.getTrustAllRoots())
+                .x509HostnameVerifier(inputs.getX509HostnameVerifier())
+                .trustKeystore(inputs.getTrustKeystore())
+                .trustPassword(inputs.getTrustPassword())
+                .keystore(inputs.getKeystore())
+                .keystorePassword(inputs.getKeystorePassword())
+                .connectTimeout(inputs.getConnectTimeout())
+                .responseTimeout(inputs.getResponseTimeout())
+                .executionTimeout(inputs.getExecutionTimeout())
+                .useCookies(inputs.getUseCookies())
+                .keepAlive(inputs.getKeepAlive())
+                .connectionsMaxPerRoute(inputs.getConnectionsMaxPerRoute())
+                .connectionsMaxTotal(inputs.getConnectionsMaxTotal())
+                .headers(headers)
+                .responseCharacterSet(inputs.getResponseCharacterSet())
+                .destinationFile(inputs.getDestinationFile())
+                .followRedirects(inputs.getFollowRedirects())
+                .queryParams(queryParams)
+                .queryParamsAreURLEncoded(inputs.getQueryParamsAreURLEncoded())
+                .queryParamsAreFormEncoded(inputs.getQueryParamsAreFormEncoded())
+                .formParams(inputs.getFormParams())
+                .formParamsAreURLEncoded(inputs.getFormParamsAreURLEncoded())
+                .sourceFile(inputs.getSourceFile())
+                .body(inputs.getBody())
+                .contentType(inputs.getContentType())
+                .requestCharacterSet(inputs.getRequestCharacterSet())
+                .multipartBodies(inputs.getMultipartBodies())
+                .multipartFiles(inputs.getMultipartFiles())
+                .multipartValuesAreURLEncoded(inputs.getMultipartValuesAreURLEncoded())
+                .multipartBodiesContentType(inputs.getMultipartBodiesContentType())
+                .multipartFilesContentType(inputs.getMultipartFilesContentType())
+                .cookieStoreSessionObject(inputs.getCookieStoreSessionObject())
+                .connectionPoolSessionObject(inputs.getConnectionPoolSessionObject())
+                .build();
     }
 
 

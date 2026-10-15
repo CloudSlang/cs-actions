@@ -38,7 +38,7 @@ import static io.cloudslang.content.sitescope.constants.Inputs.DeleteMonitorGrou
 import static io.cloudslang.content.sitescope.constants.Outputs.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.sitescope.constants.HttpClientInputNames.*;
 import static io.cloudslang.content.sitescope.constants.Constants.*;
 import static io.cloudslang.content.sitescope.constants.Descriptions.Common.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.CommonInputs.*;

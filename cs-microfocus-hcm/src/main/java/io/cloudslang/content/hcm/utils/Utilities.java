@@ -18,12 +18,11 @@
 package io.cloudslang.content.hcm.utils;
 
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.jetbrains.annotations.NotNull;
 
 public class Utilities {
 
-    public static void setInput(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setInput(@NotNull final HcmHttpClientInputs httpClientInputs,
                                 @NotNull final String url,
                                 @NotNull final String authType,
                                 @NotNull final String username,

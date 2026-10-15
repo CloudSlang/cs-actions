@@ -22,9 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.azure.entities.CreateTransformationInputs;
 import io.cloudslang.content.azure.entities.models.streamanalytics.CreateTransformationRequestBody;
 import io.cloudslang.content.azure.utils.HttpUtils;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.azure.utils.AzureHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -46,7 +46,7 @@ public class TransformationImpl {
     @NotNull
     public static Map<String, String> createTransformation(@NotNull final CreateTransformationInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getCreateTransformationUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
                 inputs.getAzureCommonInputs().getJobName(), inputs.getTransformationName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -56,7 +56,7 @@ public class TransformationImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(createTransformationRequestBody(inputs));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

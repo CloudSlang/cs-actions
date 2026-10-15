@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE;
+import static io.cloudslang.content.nutanix.prism.utils.HttpClientInputNames.KEYSTORE;
 import static io.cloudslang.content.nutanix.prism.utils.InputsValidation.verifyCommonInputs;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

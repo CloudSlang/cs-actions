@@ -27,7 +27,7 @@ import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.utils.Validator;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.dca.models.DcaHttpClientInputs;
 
 import java.util.Map;
 
@@ -44,8 +44,8 @@ import static io.cloudslang.content.dca.utils.Descriptions.GetDeployment.*;
 import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.OutputNames.STATUS;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
+import static io.cloudslang.content.dca.utils.DcaHttpClientInputNames.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
@@ -112,7 +112,7 @@ public class GetDeployment {
             return getFailureResultsMap(validator.getErrors());
         }
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final DcaHttpClientInputs httpClientInputs = new DcaHttpClientInputs();
 
         httpClientInputs.setUrl(getDcaDeploymentUrl(protocol, host, port, deploymentUuid));
 
@@ -132,7 +132,7 @@ public class GetDeployment {
         try {
             final ObjectMapper mapper = new ObjectMapper();
 
-            final Map<String, String> httpClientResult = new HttpClientService().execute(httpClientInputs);
+            final Map<String, String> httpClientResult = HttpClientService.execute(httpClientInputs.build());
 
             final JsonNode result = mapper.readTree(httpClientResult.get(RETURN_RESULT));
 
