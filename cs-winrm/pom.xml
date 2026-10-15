@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-winrm</artifactId>
-    <version>0.0.34-SNAPSHOT</version>
+    <version>0.0.35-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A WinRM client for executing PowerShell Commands.</description>
@@ -92,7 +92,7 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <junit.version>4.13.2</junit.version>
-        <cs-commons.version>0.0.9</cs-commons.version>
+        <cs-commons.version>0.0.14</cs-commons.version>
         <winrm4j.version>0.13.4-ot</winrm4j.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -21,7 +21,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-cyberark</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
 
 
 
@@ -42,6 +42,15 @@
         <url>https://github.com/CloudSlang/cs-actions.git</url>
         <tag>master</tag>
     </scm>
+
+    <developers>
+        <developer>
+            <name>Matei Ioana</name>
+            <email>ioana.matei@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://software.microfocus.com/en-us/home</organizationUrl>
+        </developer>
+    </developers>
 
     <distributionManagement>
         <repository>
@@ -66,7 +75,7 @@
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <cs-commons.version>0.0.9</cs-commons.version>
+        <cs-commons.version>0.0.14</cs-commons.version>
         <junit.version>4.13.2</junit.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -113,7 +122,6 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -166,10 +174,6 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${maven-release-plugin.version}</version>
                 </plugin>
-            </plugins>
-        </pluginManagement>
-
-        <plugins>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>

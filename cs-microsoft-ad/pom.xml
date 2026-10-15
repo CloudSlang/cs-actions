@@ -20,7 +20,7 @@
 
     <groupId>io.cloudslang.content</groupId>
     <artifactId>cs-microsoft-ad</artifactId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.0.10-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Micrsoft AD</description>
@@ -41,6 +41,12 @@
     </scm>
 
     <developers>
+        <developer>
+            <name>Ioana Matei</name>
+            <email>ioana.matei@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/en-us/home</organizationUrl>
+        </developer>
     </developers>
 
     <distributionManagement>
@@ -66,7 +72,7 @@
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <cs-commons.version>0.0.9</cs-commons.version>
+        <cs-commons.version>0.0.14</cs-commons.version>
         <junit.version>4.13.2</junit.version>
         <common-codec.version>1.15</common-codec.version>
         <!--Misc properties-->
@@ -200,7 +206,6 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -253,10 +258,6 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${maven-release-plugin.version}</version>
                 </plugin>
-            </plugins>
-        </pluginManagement>
-
-        <plugins>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>

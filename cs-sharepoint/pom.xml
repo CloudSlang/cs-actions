@@ -42,6 +42,15 @@
         <tag>cs-sharepoint-0.0.9</tag>
     </scm>
 
+    <developers>
+        <developer>
+            <name>Alexandra Boicu</name>
+            <email>alexandra.boicu@microfocus.com</email>
+            <organization>Micro Focus</organization>
+            <organizationUrl>https://www.microfocus.com/en-us/home</organizationUrl>
+        </developer>
+    </developers>
+
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -65,7 +74,7 @@
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <cs-commons.version>0.0.9</cs-commons.version>
+        <cs-commons.version>0.0.14</cs-commons.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
@@ -167,7 +176,6 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -220,10 +228,6 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${maven-release-plugin.version}</version>
                 </plugin>
-            </plugins>
-        </pluginManagement>
-
-        <plugins>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
