@@ -16,8 +16,9 @@
 
 package io.cloudslang.content.json.actions;
 
-import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.databind.*;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.*;
+import tools.jackson.databind.json.JsonMapper;
 import com.hp.oo.sdk.content.annotations.*;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.*;
 import io.cloudslang.content.constants.*;
@@ -38,12 +39,9 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 public class AddPropertyToObject {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-
-    public AddPropertyToObject() {
-        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-    }
+    private final ObjectMapper objectMapper = JsonMapper.builder()
+            .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
+            .build();
 
 
     /**

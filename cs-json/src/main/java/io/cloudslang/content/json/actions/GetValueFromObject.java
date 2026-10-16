@@ -16,10 +16,10 @@
 
 package io.cloudslang.content.json.actions;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -105,7 +105,8 @@ public class GetValueFromObject {
             return populateResult(returnResult, exception);
         }
         if (valueFromObject.isValueNode()) {
-            return populateResult(returnResult, valueFromObject.asText(), null);
+            final String value = valueFromObject.isNull() ? "null" : valueFromObject.asString();
+            return populateResult(returnResult, value, null);
         } else {
             return populateResult(returnResult, valueFromObject.toString(), null);
         }

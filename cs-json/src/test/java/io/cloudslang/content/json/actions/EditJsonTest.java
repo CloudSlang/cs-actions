@@ -142,7 +142,7 @@ public class EditJsonTest {
     public void testUpdateActionValueValidateValue() throws Exception {
         final String jsonPathQuery = "$.store.book[0].category";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "update", "", "newCategory", VALIDATE_VALUE_TRUE);
-        assertTrue(result.get(RETURN_RESULT).toLowerCase().startsWith("com.fasterxml.jackson.core.jsonparseexception: unrecognized token 'newcategory'"));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().contains("unrecognized token 'newcategory'"));
     }
 
 
@@ -160,7 +160,7 @@ public class EditJsonTest {
     public void testUpdateActionSpacedValueValidateValue() throws Exception {
         final String jsonPathQuery = "$.arrayTest";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "update", "", "new Author value", VALIDATE_VALUE_TRUE);
-        assertTrue(result.get(RETURN_RESULT).toLowerCase().startsWith("com.fasterxml.jackson.core.jsonparseexception: unrecognized token 'new'"));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().contains("unrecognized token 'new'"));
     }
 
     @Test
@@ -284,7 +284,7 @@ public class EditJsonTest {
     public void testInsertActionSpacedValueValidateValue() throws Exception {
         final String jsonPathQuery = "$.store";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "insert", "new Author", "new A/uthor value", VALIDATE_VALUE_TRUE);
-        assertTrue(result.get(RETURN_RESULT).toLowerCase().startsWith("com.fasterxml.jackson.core.jsonparseexception: unrecognized token 'new'"));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().contains("unrecognized token 'new'"));
     }
 
     @Test
@@ -454,7 +454,7 @@ public class EditJsonTest {
                 "            \"price\":13\n" +
                 "         ";
         final Map<String, String> result = editJson.execute(jsonFile, jsonPathQuery, "add", "", newBook, VALIDATE_VALUE_TRUE);
-        assertTrue(result.get(RETURN_RESULT).toLowerCase().startsWith("com.fasterxml.jackson.core.jsonparseexception"));
+        assertTrue(result.get(RETURN_RESULT).toLowerCase().contains("was expecting a colon"));
     }
 
     @Test

@@ -48,18 +48,18 @@ public class SendMailAction {
     static {
         try {
             MailcapCommandMap mailcap = new MailcapCommandMap();
-            mailcap.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
-            mailcap.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
-            mailcap.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
-            mailcap.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
-            mailcap.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
+            mailcap.addMailcap("text/html;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_html");
+            mailcap.addMailcap("text/xml;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_xml");
+            mailcap.addMailcap("text/plain;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_plain");
+            mailcap.addMailcap("multipart/*;; x-java-content-handler=org.eclipse.angus.mail.handlers.multipart_mixed");
+            mailcap.addMailcap("message/rfc822;; x-java-content-handler=org.eclipse.angus.mail.handlers.message_rfc822");
             boolean pngHandlerAvailable = false;
-            try { Class.forName("com.sun.mail.handlers.image_png"); pngHandlerAvailable = true; } catch (Throwable ignored) {}
+            try { Class.forName("org.eclipse.angus.mail.handlers.image_png"); pngHandlerAvailable = true; } catch (Throwable ignored) {}
             if (pngHandlerAvailable) {
-                mailcap.addMailcap("image/png;; x-java-content-handler=com.sun.mail.handlers.image_png");
-                mailcap.addMailcap("image/jpeg;; x-java-content-handler=com.sun.mail.handlers.image_jpeg");
-                mailcap.addMailcap("image/gif;; x-java-content-handler=com.sun.mail.handlers.image_gif");
-                mailcap.addMailcap("image/*;; x-java-content-handler=com.sun.mail.handlers.image_jpeg");
+                mailcap.addMailcap("image/png;; x-java-content-handler=org.eclipse.angus.mail.handlers.image_png");
+                mailcap.addMailcap("image/jpeg;; x-java-content-handler=org.eclipse.angus.mail.handlers.image_jpeg");
+                mailcap.addMailcap("image/gif;; x-java-content-handler=org.eclipse.angus.mail.handlers.image_gif");
+                mailcap.addMailcap("image/*;; x-java-content-handler=org.eclipse.angus.mail.handlers.image_jpeg");
             } else {
                 mailcap.addMailcap("image/png;; x-java-content-handler=io.cloudslang.content.mail.handlers.ImageDataContentHandler");
                 mailcap.addMailcap("image/jpeg;; x-java-content-handler=io.cloudslang.content.mail.handlers.ImageDataContentHandler");

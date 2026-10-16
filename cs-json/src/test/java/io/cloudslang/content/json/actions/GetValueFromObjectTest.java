@@ -61,6 +61,12 @@ public class GetValueFromObjectTest {
     }
 
     @Test
+    public void testExecuteNullValue() {
+        final Map<String, String> result = getValueFromObject.execute("{\"value\":null}", "value");
+        assertEquals("null", result.get(RETURN_RESULT));
+    }
+
+    @Test
     public void testExecuteSimpleCaseEmptyKeys() {
         String jsonObject = " { \"\" : \"test1\", \n" +
                 "     \"\" : \"test2\", " +

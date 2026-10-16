@@ -24,7 +24,7 @@ import java.io.OutputStream;
 
 /**
  * Minimal DataContentHandler for image/* types that streams bytes directly.
- * This serves as a fallback when com.sun.mail handlers are not present at runtime.
+ * This serves as a fallback when Angus Mail handlers are not present at runtime.
  */
 public class ImageDataContentHandler implements DataContentHandler {
 

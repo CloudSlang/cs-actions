@@ -17,10 +17,10 @@
 
 package io.cloudslang.content.json.services;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ContainerNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ContainerNode;
+import tools.jackson.databind.node.ObjectNode;
 import io.cloudslang.content.json.entities.AddPropertyToObjectInputs;
 import org.jetbrains.annotations.NotNull;
 

@@ -18,7 +18,7 @@
 
 package io.cloudslang.content.mail.services;
 
-import com.sun.mail.util.ASCIIUtility;
+import org.eclipse.angus.mail.util.ASCIIUtility;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.ExceptionMsgs;

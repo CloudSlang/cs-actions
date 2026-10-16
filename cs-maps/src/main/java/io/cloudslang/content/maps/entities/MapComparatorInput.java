@@ -18,7 +18,8 @@ package io.cloudslang.content.maps.entities;
 import io.cloudslang.content.maps.constants.DefaultInputValues;
 import io.cloudslang.content.maps.exceptions.ValidationException;
 import io.cloudslang.content.maps.utils.BuilderUtils;
-import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
 
 public class MapComparatorInput {
     private final String map1;
@@ -141,7 +142,7 @@ public class MapComparatorInput {
 
 
         public Builder map1(String map1) {
-            this.map1 = StringUtils.defaultString(map1, DefaultInputValues.MAP);
+            this.map1 = Objects.toString(map1, DefaultInputValues.MAP);
             return this;
         }
 
@@ -159,23 +160,23 @@ public class MapComparatorInput {
 
 
         public Builder map1Start(String map1Start) {
-            this.map1Start = StringUtils.defaultString(map1Start, DefaultInputValues.MAP_START);
+            this.map1Start = Objects.toString(map1Start, DefaultInputValues.MAP_START);
             return this;
         }
 
 
         public Builder map1End(String map1End) {
-            this.map1End = StringUtils.defaultString(map1End, DefaultInputValues.MAP_END);
+            this.map1End = Objects.toString(map1End, DefaultInputValues.MAP_END);
             return this;
         }
 
         public Builder map1ElementWrapper(String map1ElementWrapper) {
-            this.map1ElementWrapper = StringUtils.defaultString(map1ElementWrapper, DefaultInputValues.ELEMENT_WRAPPER);
+            this.map1ElementWrapper = Objects.toString(map1ElementWrapper, DefaultInputValues.ELEMENT_WRAPPER);
             return this;
         }
 
         public Builder map2(String map2) {
-            this.map2 = StringUtils.defaultString(map2, DefaultInputValues.MAP);
+            this.map2 = Objects.toString(map2, DefaultInputValues.MAP);
             return this;
         }
 
@@ -192,7 +193,7 @@ public class MapComparatorInput {
 
 
         public Builder map2Start(String map2Start) {
-            this.map2Start = StringUtils.defaultString(map2Start, DefaultInputValues.MAP_START);
+            this.map2Start = Objects.toString(map2Start, DefaultInputValues.MAP_START);
             return this;
         }
 
@@ -202,17 +203,17 @@ public class MapComparatorInput {
         }
 
         public Builder map2End(String map2End) {
-            this.map2End = StringUtils.defaultString(map2End, DefaultInputValues.MAP_END);
+            this.map2End = Objects.toString(map2End, DefaultInputValues.MAP_END);
             return this;
         }
 
         public Builder map2ElementWrapper(String map2ElementWrapper) {
-            this.map2ElementWrapper = StringUtils.defaultString(map2ElementWrapper, DefaultInputValues.ELEMENT_WRAPPER);
+            this.map2ElementWrapper = Objects.toString(map2ElementWrapper, DefaultInputValues.ELEMENT_WRAPPER);
             return this;
         }
 
         public Builder matchType(String matchType) {
-            this.matchType = StringUtils.defaultString(matchType, DefaultInputValues.MATCH_TYPE);
+            this.matchType = Objects.toString(matchType, DefaultInputValues.MATCH_TYPE);
             return this;
         }
 

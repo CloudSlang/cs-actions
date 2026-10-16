@@ -18,7 +18,7 @@
 
 package io.cloudslang.content.utils;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -331,6 +331,6 @@ public class ListProcessor {
     }
 
     public static boolean elementsAreEqual(String a, String b, boolean ignoreCase) {
-        return ignoreCase ? StringUtils.equalsIgnoreCase(a, b) : StringUtils.equals(a, b);
+        return ignoreCase ? Strings.CI.equals(a, b) : Strings.CS.equals(a, b);
     }
 }

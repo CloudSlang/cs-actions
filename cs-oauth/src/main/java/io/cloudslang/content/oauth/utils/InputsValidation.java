@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.oauth.utils;
 
-import io.cloudslang.content.utils.StringUtilities;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,11 +36,11 @@ public final class InputsValidation {
         final List<String> exceptionMessages = new ArrayList<>();
         addVerifyLoginType(exceptionMessages, loginType, LOGIN_TYPE);
         addVerifyNotNullOrEmpty(exceptionMessages, clientId, CLIENT_ID);
-        if (StringUtilities.equalsIgnoreCase(loginType, NATIVE)) {
+        if (Strings.CI.equals(loginType, NATIVE)) {
             addVerifyNotNullOrEmpty(exceptionMessages, username, USERNAME);
             addVerifyNotNullOrEmpty(exceptionMessages, password, PASSWORD);
         }
-        if (StringUtilities.equalsIgnoreCase(loginType, API)) {
+        if (Strings.CI.equals(loginType, API)) {
             addVerifyNotNullOrEmpty(exceptionMessages, clientSecret, CLIENT_SECRET);
         }
         addVerifyProxy(exceptionMessages, proxyPort, PROXY_PORT);
@@ -49,7 +49,7 @@ public final class InputsValidation {
 
     @NotNull
     private static List<String> addVerifyLoginType(@NotNull List<String> exceptions, @Nullable final String input, @NotNull final String inputName) {
-        if (!(StringUtilities.equalsIgnoreCase(input, API) || StringUtilities.equalsIgnoreCase(input, NATIVE))) {
+        if (!(Strings.CI.equals(input, API) || Strings.CI.equals(input, NATIVE))) {
             exceptions.add(String.format(EXCEPTION_INVALID_LOGIN_TYPE, inputName));
         }
         return exceptions;
@@ -73,4 +73,3 @@ public final class InputsValidation {
         return exceptions;
     }
 }
-

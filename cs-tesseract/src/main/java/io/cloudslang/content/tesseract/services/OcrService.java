@@ -24,7 +24,10 @@ import net.sourceforge.tess4j.util.ImageHelper;
 import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerPointer;
-import org.bytedeco.javacpp.lept;
+import org.bytedeco.leptonica.BOX;
+import org.bytedeco.leptonica.BOXA;
+import org.bytedeco.leptonica.PIX;
+import org.bytedeco.tesseract.TessBaseAPI;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -37,8 +40,8 @@ import java.util.Iterator;
 
 import static io.cloudslang.content.tesseract.utils.Constants.*;
 import static java.lang.Boolean.parseBoolean;
-import static org.bytedeco.javacpp.lept.*;
-import static org.bytedeco.javacpp.tesseract.*;
+import static org.bytedeco.leptonica.global.leptonica.*;
+import static org.bytedeco.tesseract.global.tesseract.*;
 
 public class OcrService {
 
@@ -49,11 +52,11 @@ public class OcrService {
 
         try {
             //Initialize Tesseract OCR
-            if (TessBaseAPIInit3(api, dataPath, language) != 0) {
+            if (api.Init(dataPath, language) != 0) {
                 throw new Exception(TESSERACT_INITIALIZE_ERROR);
             }
 
-            final lept.PIX image;
+            final PIX image;
             if (parseBoolean(deskew)) {
                 tempImagePath = deskewImage(filePath);
                 image = pixRead(tempImagePath);
@@ -61,7 +64,7 @@ public class OcrService {
                 image = pixRead(filePath);
             }
             // Open input image with leptonica library
-            TessBaseAPISetImage2(api, image);
+            api.SetImage(image);
             pixDestroy(image);
 
             if (parseBoolean(textBlocks)) {
@@ -92,18 +95,18 @@ public class OcrService {
     }
 
     private static String extractBlocks(TessBaseAPI api) throws Exception {
-        TessBaseAPISetPageSegMode(api, PSM_AUTO_OSD);
-        lept.BOXA boxes = TessBaseAPIGetComponentImages(api, RIL_BLOCK, true, (PointerPointer) null, null);
+        api.SetPageSegMode(PSM_AUTO_OSD);
+        BOXA boxes = api.GetComponentImages(RIL_BLOCK, true, (PointerPointer) null, null);
         final int boxCount = boxaGetCount(boxes);
 
         JsonObject outputJson = new JsonObject();
         for (int i = 0; i < boxCount; i++) {
-            lept.BOX box = boxaGetBox(boxes, i, L_CLONE);
+            BOX box = boxaGetBox(boxes, i, L_CLONE);
             if (box == null) {
                 continue;
             }
-            TessBaseAPISetRectangle(api, box.x(), box.y(), box.w(), box.h());
-            BytePointer utf8Text = TessBaseAPIGetUTF8Text(api);
+            api.SetRectangle(box.x(), box.y(), box.w(), box.h());
+            BytePointer utf8Text = api.GetUTF8Text();
             String ocrResult = utf8Text.getString(UTF_8);
 
             outputJson = buildOutputJson(outputJson, ocrResult, i);

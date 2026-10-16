@@ -18,7 +18,7 @@
 
 package io.cloudslang.content.mail.sslconfig;
 
-import com.sun.mail.util.MailSSLSocketFactory;
+import org.eclipse.angus.mail.util.MailSSLSocketFactory;
 import io.cloudslang.content.mail.constants.Constants;
 import io.cloudslang.content.mail.constants.PropNames;
 import io.cloudslang.content.mail.constants.SecurityConstants;

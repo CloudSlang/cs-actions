@@ -16,8 +16,8 @@
 
 package io.cloudslang.content.json.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +40,7 @@ public class InputsValidation {
         }
         try {
             JsonNode jsonRoot = objectMapper.readTree(jsonObject);
-            if (jsonRoot == null || !(jsonRoot.isContainerNode() && jsonRoot.isObject())) {
+            if (jsonRoot == null || !jsonRoot.isObject()) {
                 throw new Exception();
             }
         } catch (Exception exception) {

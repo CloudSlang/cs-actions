@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
@@ -155,7 +156,8 @@ public class SSHServiceImpl implements SSHService {
 
         if (identityKey == null) {
             // use the password
-            session.setPassword(details.getPassword());
+            String password = details.getPassword();
+            session.setPassword(password == null ? null : password.getBytes(StandardCharsets.UTF_8));
         } else {
             // or use the OpenSSH private key file or string
             IdentityKeyUtils.setIdentity(jsch, identityKey);

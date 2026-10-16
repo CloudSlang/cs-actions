@@ -16,9 +16,10 @@
 
 package io.cloudslang.content.json.actions;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.core.JacksonException;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -31,7 +32,6 @@ import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.utils.StringUtilities;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +82,7 @@ public class ArraySize {
         try {
             ObjectMapper mapper = new ObjectMapper();
             jsonNode = mapper.readTree(array);
-        } catch (IOException exception) {
+        } catch (JacksonException exception) {
             final String value = INVALID_JSONOBJECT + exception.getMessage();
             return populateResult(returnResult, value, exception);
         }
