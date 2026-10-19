@@ -15,21 +15,30 @@
 
 package io.cloudslang.content.active_directory.utils;
 
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.apache.hc.client5.http.ssl.DefaultHostnameVerifier;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 
 import javax.naming.Context;
+import javax.naming.InvalidNameException;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.ldap.InitialLdapContext;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 import javax.naming.ldap.StartTlsRequest;
 import javax.naming.ldap.StartTlsResponse;
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSession;
 import java.io.IOException;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,22 +55,76 @@ public class LDAPQuery {
     private boolean bUseSecureAuth = true;
 
     private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
-        String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
+        String x509HostnameVerifierStr = hostnameVerifier.toLowerCase(Locale.ROOT);
 
-        X509HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
-        ;
         switch (x509HostnameVerifierStr) {
             case "strict":
-                x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
-                break;
+                return new DefaultHostnameVerifier();
             case "browser_compatible":
-                x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
-                break;
+                DefaultHostnameVerifier strictVerifier = new DefaultHostnameVerifier();
+                return (hostname, session) -> strictVerifier.verify(hostname, session)
+                        || matchesBrowserCompatibleHostname(hostname, session);
             case "allow_all":
-                x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-                break;
+                return NoopHostnameVerifier.INSTANCE;
+            default:
+                return new DefaultHostnameVerifier();
         }
-        return x509HostnameVerifier;
+    }
+
+    private static boolean matchesBrowserCompatibleHostname(String hostname, SSLSession session) {
+        try {
+            java.security.cert.Certificate[] peerCertificates = session.getPeerCertificates();
+            if (peerCertificates.length == 0 || !(peerCertificates[0] instanceof X509Certificate)) {
+                return false;
+            }
+
+            X509Certificate certificate = (X509Certificate) peerCertificates[0];
+            Collection<List<?>> subjectAlternativeNames = certificate.getSubjectAlternativeNames();
+            if (subjectAlternativeNames != null) {
+                boolean hasDnsName = false;
+                for (List<?> subjectAlternativeName : subjectAlternativeNames) {
+                    if (subjectAlternativeName.size() > 1
+                            && Integer.valueOf(2).equals(subjectAlternativeName.get(0))
+                            && subjectAlternativeName.get(1) instanceof String) {
+                        hasDnsName = true;
+                        if (matchesMultiLevelWildcard(hostname, (String) subjectAlternativeName.get(1))) {
+                            return true;
+                        }
+                    }
+                }
+                if (hasDnsName) {
+                    return false;
+                }
+            }
+
+            LdapName subject = new LdapName(certificate.getSubjectX500Principal().getName());
+            for (Rdn rdn : subject.getRdns()) {
+                if ("CN".equalsIgnoreCase(rdn.getType())
+                        && rdn.getValue() instanceof String
+                        && matchesMultiLevelWildcard(hostname, (String) rdn.getValue())) {
+                    return true;
+                }
+            }
+        } catch (SSLPeerUnverifiedException | CertificateParsingException | InvalidNameException e) {
+            return false;
+        }
+        return false;
+    }
+
+    private static boolean matchesMultiLevelWildcard(String hostname, String certificateName) {
+        if (!certificateName.startsWith("*.")) {
+            return false;
+        }
+
+        String suffix = certificateName.substring(2).toLowerCase(Locale.ROOT);
+        String normalizedHostname = hostname.toLowerCase(Locale.ROOT);
+        if (!suffix.contains(".")
+                || normalizedHostname.length() <= suffix.length() + 1
+                || !normalizedHostname.endsWith("." + suffix)) {
+            return false;
+        }
+        String wildcardMatch = normalizedHostname.substring(0, normalizedHostname.length() - suffix.length() - 1);
+        return !wildcardMatch.startsWith(".") && !wildcardMatch.endsWith(".") && !wildcardMatch.contains("..");
     }
 
     public DirContext MakeLDAPConnection(String host, String username, String password,  String timeout,

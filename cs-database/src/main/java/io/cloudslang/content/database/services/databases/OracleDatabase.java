@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_JDBC_DRIVER;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static io.cloudslang.content.database.utils.SQLUtils.loadClassForName;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
@@ -35,7 +36,7 @@ public class OracleDatabase implements SqlDatabase {
 
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        loadClassForName("oracle.jdbc.driver.OracleDriver");
+        loadClassForName(ORACLE_JDBC_DRIVER);
 
         final List<String> dbUrls = getDbUrls(sqlInputs.getDbUrl());
 

@@ -123,7 +123,7 @@ public class ModifyCellService {
                 } else {
                     //if the cell needs to be modified is in formula type,
                     if (cell.getCellType() == CellType.FORMULA) {
-                        cell.setCellType(CellType.STRING);
+                        cell.setCellFormula(null);
                     }
                     try {
                         double valueNumeric = Double.parseDouble(dataList.get(i).trim());

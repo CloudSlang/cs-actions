@@ -84,7 +84,7 @@ public class SQLQueryLOB {
      *                                  Default: sql
      *                                  Values: sql, windows
      * @param dbClass                   The classname of the JDBC driver to use.
-     *                                  Examples: "oracle.jdbc.driver.OracleDriver", "org.postgresql.Driver"
+     *                                  Examples: "oracle.jdbc.OracleDriver", "org.postgresql.Driver"
      * @param dbURL                     The url required to load up the driver and make your connection.
      *                                  Examples: "jdbc:oracle:drivertype:@database", "jdbc:postgresql://host:port/database"
      * @param command                   The SQL query to execute.
