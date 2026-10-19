@@ -25,7 +25,8 @@ import com.google.api.services.sqladmin.model._
 import io.cloudslang.content.google.services.databases._
 import io.cloudslang.content.google.utils.action.InputNames.CreateSQLDatabaseInstanceInputs.{ACTIVATION_POLICY_ALWAYS, ACTIVATION_POLICY_NEVER, RESTART_INSTANCE, START_INSTANCE}
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
+import scala.jdk.CollectionConverters.*
 
 object SQLDatabaseInstanceService {
 
@@ -44,13 +45,15 @@ object SQLDatabaseInstanceService {
 
     var instances: List[DatabaseInstance] = List()
     var response: InstancesListResponse = null
-    do {
+    var hasNextPage = true
+    while (hasNextPage) {
       response = request.execute()
       if (response.getItems != null) {
-        instances ++= response.getItems
+        instances ++= response.getItems.asScala
         request.setPageToken(response.getNextPageToken)
       }
-    } while (response.getNextPageToken != null)
+      hasNextPage = response.getNextPageToken != null
+    }
     instances
   }
 

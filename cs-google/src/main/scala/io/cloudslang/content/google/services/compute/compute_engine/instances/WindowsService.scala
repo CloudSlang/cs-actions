@@ -41,7 +41,7 @@ import spray.json.DefaultJsonProtocol._
 import spray.json._
 
 import scala.annotation.tailrec
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration.Inf

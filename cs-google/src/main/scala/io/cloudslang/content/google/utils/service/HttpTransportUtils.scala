@@ -41,7 +41,7 @@ object HttpTransportUtils {
     case None => Proxy.NO_PROXY
     case Some(proxyHost) =>
       proxyUserOpt match {
-        case None => Unit
+        case None => ()
         case Some(proxyUser) =>
           Authenticator.setDefault(ProxyAuthenticator(proxyUser, proxyPassword))
       }

@@ -40,7 +40,7 @@ import io.cloudslang.content.utils.NumberUtilities.toInteger
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 import scala.collection.JavaConverters._
 
 /**

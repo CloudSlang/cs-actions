@@ -45,7 +45,7 @@ import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 import scala.collection.JavaConverters._
 import scala.concurrent.TimeoutException
 import scala.language.postfixOps
@@ -335,14 +335,19 @@ class InstancesInsert {
           autoDelete = volumeAutoDelete,
           mountMode = volumeMountModeStr,
           sourceOpt = volumeSourceOpt,
-          deviceNameOpt = volumeDiskDeviceNameOpt
+          deviceNameOpt = volumeDiskDeviceNameOpt,
+          mountTypeOpt = None,
+          interfaceOpt = None,
+          initializeParamsOpt = None
         )
         case None => DiskController.createAttachedDisk(
           boot = true,
           autoDelete = volumeAutoDelete,
           mountMode = volumeMountModeStr,
           deviceNameOpt = volumeDiskDeviceNameOpt,
+          sourceOpt = None,
           mountTypeOpt = Some(volumeMountTypeStr),
+          interfaceOpt = None,
           initializeParamsOpt = Some(
             DiskController.createAttachedDiskInitializeParams(
               diskName = volumeDiskNameStr,

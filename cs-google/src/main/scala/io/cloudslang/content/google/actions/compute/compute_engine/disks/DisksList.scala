@@ -136,7 +136,7 @@ class DisksList {
       val disksDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 
       val resultList = DiskService.list(httpTransport, jsonFactory, credential, projectId, zone, filterOpt, orderByOpt)
-        .map { disk: Disk => if (prettyPrint) disk.toPrettyString else disk.toString }
+        .map { (disk: Disk) => if (prettyPrint) disk.toPrettyString else disk.toString }
         .mkString(SQR_LEFT_BRACKET, disksDelimiter, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)
     } catch {

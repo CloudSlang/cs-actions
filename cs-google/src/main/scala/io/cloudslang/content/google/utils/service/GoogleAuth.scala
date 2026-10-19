@@ -26,7 +26,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 
 /**
   * Created by victor on 2/26/17.

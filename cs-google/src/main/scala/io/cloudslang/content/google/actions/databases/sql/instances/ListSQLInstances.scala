@@ -91,7 +91,7 @@ class ListSQLInstances {
       val instancesDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 
       val sqlInstances = SQLDatabaseInstanceService.list(httpTransport, jsonFactory, credential, projectId, filterOpt)
-        .map { dbInstance: DatabaseInstance => if (prettyPrint) dbInstance.toPrettyString else dbInstance.toString }
+        .map { (dbInstance: DatabaseInstance) => if (prettyPrint) dbInstance.toPrettyString else dbInstance.toString }
         .mkString(SQR_LEFT_BRACKET, instancesDelimiter, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(sqlInstances)
     } catch {

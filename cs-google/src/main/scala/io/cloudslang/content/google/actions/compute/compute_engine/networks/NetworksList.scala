@@ -129,7 +129,7 @@ class NetworksList {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val resultList = NetworkService.list(httpTransport, jsonFactory, credential, projectId, filterOpt, orderByOpt)
-        .map { network: Network => if (prettyPrint) network.toPrettyString else network.toString }
+        .map { (network: Network) => if (prettyPrint) network.toPrettyString else network.toString }
         .mkString(SQR_LEFT_BRACKET, if (prettyPrint) COMMA_NEW_LINE else COMMA, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)
     } catch {

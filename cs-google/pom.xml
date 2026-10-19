@@ -87,16 +87,17 @@
         <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <google-api-services-compute.version>v1-rev235-1.25.0</google-api-services-compute.version>
-        <google-api-services-sqladmin.version>v1beta4-rev76-1.25.0</google-api-services-sqladmin.version>
-        <google-api-services-storage.version>v1-rev171-1.25.0</google-api-services-storage.version>
-        <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <scala-library.version>2.12.12</scala-library.version>
+        <google-api-services-compute.version>v1-rev20261007-2.0.0</google-api-services-compute.version>
+        <google-api-services-sqladmin.version>v1-rev20260929-2.0.0</google-api-services-sqladmin.version>
+        <google-api-services-storage.version>v1-rev20261009-2.0.0</google-api-services-storage.version>
+        <google-http-client.version>2.2.0</google-http-client.version>
+        <score-content-sdk.version>10.20.3.1</score-content-sdk.version>
+        <scala.version>3.10.0</scala.version>
         <bouncycastle.version>1.86</bouncycastle.version>
-        <spray-json.version>1.3.5</spray-json.version>
+        <spray-json.version>1.3.6</spray-json.version>
         <cs-commons.version>0.0.14</cs-commons.version>
-        <commons-io.version>2.17.0</commons-io.version>
-        <specs2.version>4.10.2</specs2.version>
+        <commons-io.version>2.22.0</commons-io.version>
+        <specs2.version>4.23.0</specs2.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
@@ -109,13 +110,13 @@
         <!-- Scala dependency -->
         <dependency>
             <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>${scala-library.version}</version>
+            <artifactId>scala3-library_3</artifactId>
+            <version>${scala.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client-jackson2</artifactId>
-            <version>1.20.0</version>
+            <version>2.9.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
@@ -127,6 +128,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>2.22.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.22</version>
         </dependency>
         <!-- Google cloud api -->
         <dependency>
@@ -147,7 +153,7 @@
         <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
-            <version>2.2.0</version>
+            <version>2.9.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.guava</groupId>
@@ -156,9 +162,14 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-jackson2</artifactId>
+            <version>${google-http-client.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.oauth-client</groupId>
             <artifactId>google-oauth-client</artifactId>
-            <version>1.33.3</version>
+            <version>1.39.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.grpc</groupId>
@@ -177,17 +188,17 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.15</version>
+            <version>1.23.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>32.1.3-jre</version>
+            <version>33.7.2-jre</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-context</artifactId>
-            <version>1.60.0</version>
+            <version>1.85.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>
@@ -218,18 +229,12 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.10.1</version>
+            <version>2.14.0</version>
         </dependency>
         <dependency>
             <groupId>io.spray</groupId>
-            <artifactId>spray-json_2.12</artifactId>
+            <artifactId>spray-json_3</artifactId>
             <version>${spray-json.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -239,25 +244,13 @@
         <!-- Testing -->
         <dependency>
             <groupId>org.specs2</groupId>
-            <artifactId>specs2-core_2.12</artifactId>
-            <version>${specs2.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.specs2</groupId>
-            <artifactId>specs2-mock_2.12</artifactId>
+            <artifactId>specs2-core_3</artifactId>
             <version>${specs2.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.specs2</groupId>
-            <artifactId>specs2-junit_2.12</artifactId>
+            <artifactId>specs2-junit_3</artifactId>
             <version>${specs2.version}</version>
             <scope>test</scope>
         </dependency>
@@ -265,18 +258,13 @@
         <dependency>
             <groupId>org.junit</groupId>
             <artifactId>junit-bom</artifactId>
-            <version>5.11.0</version>
+            <version>6.1.3</version>
             <type>pom</type>
         </dependency>
     </dependencies>
 
     <build>
             <plugins>
-                <plugin>
-                    <groupId>net.alchim31.maven</groupId>
-                    <artifactId>scala-maven-plugin</artifactId>
-                    <version>3.2.2</version>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
@@ -331,7 +319,9 @@
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
+                <version>4.10.0</version>
                 <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
                     <javacArgs>
                         <javacArg>-Xlint:unchecked</javacArg>
                         <javacArg>-Xlint:deprecation</javacArg>

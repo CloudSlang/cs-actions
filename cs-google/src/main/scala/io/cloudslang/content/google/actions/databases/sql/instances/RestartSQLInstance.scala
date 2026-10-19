@@ -45,7 +45,7 @@ import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 
 class RestartSQLInstance {
   @Action(name = RESTART_SQL_INSTANCE_OPERATION_NAME,
@@ -127,7 +127,7 @@ class RestartSQLInstance {
             (ACTIVATION_POLICY -> ACTIVATION_POLICY_ALWAYS)
         }
 
-        case SQLErrorOperation(error) => getFailureResultsMap(error)
+      case SQLErrorOperation(error) => getFailureResultsMap(error)
       }
     } catch {
       case e: Throwable => getFailureResultsMap(e)

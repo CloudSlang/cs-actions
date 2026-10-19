@@ -25,7 +25,7 @@ import com.google.api.services.compute.model._
 import io.cloudslang.content.utils.CollectionUtilities
 import io.cloudslang.content.utils.CollectionUtilities.toList
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 
 /**
   * Created by victor on 26.04.2017.

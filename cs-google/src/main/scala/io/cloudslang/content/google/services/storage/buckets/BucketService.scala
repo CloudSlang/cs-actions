@@ -28,7 +28,7 @@ import io.cloudslang.content.google.utils.Constants.FALSE
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toLong
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 
 object BucketService {
 

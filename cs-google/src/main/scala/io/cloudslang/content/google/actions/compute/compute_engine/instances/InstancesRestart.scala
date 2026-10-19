@@ -41,7 +41,7 @@ import io.cloudslang.content.utils.NumberUtilities._
 import io.cloudslang.content.utils.OutputUtilities._
 import org.apache.commons.lang3.StringUtils._
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 import scala.concurrent.TimeoutException
 
 /**

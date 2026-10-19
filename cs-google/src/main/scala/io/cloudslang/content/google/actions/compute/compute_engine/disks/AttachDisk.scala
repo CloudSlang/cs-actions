@@ -42,7 +42,7 @@ import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty, equals => strEquals}
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 import scala.collection.JavaConverters._
 import scala.concurrent.TimeoutException
 
@@ -173,7 +173,9 @@ class AttachDisk {
         mountMode = modeStr,
         deviceNameOpt = deviceNameOpt,
         sourceOpt = Some(source),
-        interfaceOpt = None)
+        mountTypeOpt = None,
+        interfaceOpt = None,
+        initializeParamsOpt = None)
 
       OperationStatus(InstanceService.attachDisk(httpTransport, jsonFactory, credential, projectId, zone, instanceName,
         attachedDisk, async, timeout, pollingIntervalMilli)) match {

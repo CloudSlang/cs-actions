@@ -21,7 +21,7 @@ package io.cloudslang.content.google.services.compute.compute_engine.networks
 
 import com.google.api.services.compute.model.{AccessConfig, Network, NetworkInterface}
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 
 /**
   * Created by victor on 26.04.2017.

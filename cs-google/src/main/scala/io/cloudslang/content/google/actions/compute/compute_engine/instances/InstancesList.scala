@@ -136,7 +136,7 @@ class InstancesList {
       val instanceDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 
       val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone, filterOpt, orderByOpt)
-        .map { instance: Instance => if (prettyPrint) instance.toPrettyString else instance.toString }
+        .map { (instance: Instance) => if (prettyPrint) instance.toPrettyString else instance.toString }
         .mkString(SQR_LEFT_BRACKET, instanceDelimiter, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)
     } catch {

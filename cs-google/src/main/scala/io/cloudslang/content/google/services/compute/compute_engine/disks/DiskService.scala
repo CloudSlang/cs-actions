@@ -25,7 +25,8 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.services.compute.model._
 import io.cloudslang.content.google.services.compute.compute_engine.{ComputeController, ComputeService}
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
+import scala.jdk.CollectionConverters.*
 
 /**
   * Created by victor on 03.03.2017.
@@ -42,13 +43,15 @@ object DiskService {
 
     var disks: List[Disk] = List()
     var response: DiskList = null
-    do {
+    var hasNextPage = true
+    while (hasNextPage) {
       response = request.execute()
       if (response.getItems != null) {
-        disks ++= response.getItems
+        disks ++= response.getItems.asScala
         request.setPageToken(response.getNextPageToken)
       }
-    } while (response.getNextPageToken != null)
+      hasNextPage = response.getNextPageToken != null
+    }
 
     disks
   }

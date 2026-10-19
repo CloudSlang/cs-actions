@@ -27,7 +27,7 @@ import io.cloudslang.content.google.utils.action.DefaultValues.StorageBucket.{RE
 import io.cloudslang.content.utils.BooleanUtilities.toBoolean
 import io.cloudslang.content.utils.NumberUtilities.toLong
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 
 object BucketController {
 
