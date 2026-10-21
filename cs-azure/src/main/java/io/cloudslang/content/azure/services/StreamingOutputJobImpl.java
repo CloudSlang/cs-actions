@@ -26,8 +26,7 @@ import io.cloudslang.content.azure.utils.AzureHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONArray;
-
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.azure.utils.Constants.Common.ANONYMOUS;
@@ -104,9 +103,7 @@ public class StreamingOutputJobImpl {
         properties.setDatasource(datasource);
         storage.setAccountName(inputs.getAccountName());
         storage.setAccountKey(inputs.getAccountKey());
-        JSONArray json = new JSONArray();
-        json.add(storage);
-        subproperties.setStrogeaccounts(json);
+        subproperties.setStrogeaccounts(List.of(storage));
         datasource.setProperties(subproperties);
         subproperties.setContainer(inputs.getContainerName());
         subproperties.setPathPattern(PATH_PATTERN);

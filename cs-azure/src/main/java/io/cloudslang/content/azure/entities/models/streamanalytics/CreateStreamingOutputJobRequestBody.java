@@ -19,8 +19,8 @@ package io.cloudslang.content.azure.entities.models.streamanalytics;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.json.simple.JSONArray;
 
+import java.util.List;
 
 public class CreateStreamingOutputJobRequestBody {
 
@@ -136,7 +136,7 @@ public class CreateStreamingOutputJobRequestBody {
             public String dateFormat;
             public String timeFormat;
             @JsonProperty("storageAccounts")
-            JSONArray strogeaccounts;
+            List<StorageAccounts> strogeaccounts;
 
             public String getDateFormat() { return dateFormat; }
 
@@ -162,11 +162,11 @@ public class CreateStreamingOutputJobRequestBody {
                 this.pathPattern = pathPattern;
             }
 
-            public JSONArray getStrogeaccounts() {
+            public List<StorageAccounts> getStrogeaccounts() {
                 return strogeaccounts;
             }
 
-            public void setStrogeaccounts(JSONArray strogeaccounts) {
+            public void setStrogeaccounts(List<StorageAccounts> strogeaccounts) {
                 this.strogeaccounts = strogeaccounts;
             }
 
@@ -202,4 +202,3 @@ public class CreateStreamingOutputJobRequestBody {
     }
 
 }
-

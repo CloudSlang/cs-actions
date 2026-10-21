@@ -80,7 +80,8 @@
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <cs-commons.version>0.0.14</cs-commons.version>
+        <cs-commons.version>0.0.15-SNAPSHOT</cs-commons.version>
+        <cs-httpclient-commons.version>0.0.32-SNAPSHOT</cs-httpclient-commons.version>
         <junit-jupiter.version>6.1.3</junit-jupiter.version>
         <mockito.version>5.24.0</mockito.version>
         <assertj.version>3.27.7</assertj.version>
@@ -106,12 +107,12 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-httpclient-commons</artifactId>
-            <version>0.0.31</version>
+            <version>${cs-httpclient-commons.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
-            <version>1.7</version>
+            <version>1.11.0</version>
         </dependency>
         <!--testing dependencies-->
         <dependency>

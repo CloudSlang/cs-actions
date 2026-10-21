@@ -23,7 +23,7 @@ import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
-import com.microsoft.aad.adal4j.AuthenticationResult;
+import com.microsoft.aad.msal4j.IAuthenticationResult;
 import io.cloudslang.content.azure.entities.AuthorizationTokenInputs;
 import io.cloudslang.content.azure.services.AuthorizationTokenImpl;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -49,6 +49,7 @@ import static io.cloudslang.content.azure.utils.Constants.DEFAULT_AUTHORITY;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_CLIENT_ID;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_PROXY_PORT;
 import static io.cloudslang.content.azure.utils.Constants.DEFAULT_RESOURCE;
+import static io.cloudslang.content.azure.utils.Constants.Common.BEARER;
 import static io.cloudslang.content.azure.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.azure.utils.InputsValidation.verifyAuthorizationInputs;
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
@@ -59,7 +60,6 @@ import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 /**
@@ -115,7 +115,7 @@ public class GetAuthorizationToken {
         }
 
         try {
-            final AuthenticationResult result = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
+            final IAuthenticationResult result = AuthorizationTokenImpl.getToken(AuthorizationTokenInputs.builder()
                     .username(username)
                     .password(password)
                     .clientId(clientId)
@@ -126,7 +126,7 @@ public class GetAuthorizationToken {
                     .proxyUsername(proxyUsername)
                     .proxyPassword(proxyPassword)
                     .build());
-            return getSuccessResultsMap(result.getAccessTokenType() + SPACE + result.getAccessToken());
+            return getSuccessResultsMap(BEARER + result.accessToken());
         } catch (Exception exception) {
             return getFailureResultsMap(exception);
         }

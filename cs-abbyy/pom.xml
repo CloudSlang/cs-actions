@@ -75,8 +75,9 @@
         <!--Dependencies versions-->
         <aliyun-java-sdk-core.version>4.0.3</aliyun-java-sdk-core.version>
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <cs-commons.version>0.0.14</cs-commons.version>
-        <commons-io.version>2.17.0</commons-io.version>
+        <cs-commons.version>0.0.15-SNAPSHOT</cs-commons.version>
+        <cs-httpclient-commons.version>0.0.32-SNAPSHOT</cs-httpclient-commons.version>
+        <commons-io.version>2.22.0</commons-io.version>
         <junit-jupiter.version>6.1.3</junit-jupiter.version>
         <mockito.version>5.24.0</mockito.version>
         <!--Misc properties-->
@@ -107,13 +108,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-httpclient-commons</artifactId>
-            <version>0.0.31</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit</groupId>
-            <artifactId>junit-bom</artifactId>
-            <version>5.11.0</version>
-            <type>pom</type>
+            <version>${cs-httpclient-commons.version}</version>
         </dependency>
         <!-- Testing -->
         <dependency>

@@ -33,18 +33,18 @@ public class CreateVMRequestBody {
 
     CreateVMRequestBody.Plan plan;
 
-    CreateVMRequestBody.Properties Properties;
+    CreateVMRequestBody.Properties properties;
 
     @JsonCreator
     public CreateVMRequestBody() {
     }
 
     public CreateVMRequestBody.Properties getProperties() {
-        return Properties;
+        return properties;
     }
 
     public void setProperties(CreateVMRequestBody.Properties properties) {
-        Properties = properties;
+        this.properties = properties;
     }
 
     public String getId() {

@@ -18,14 +18,15 @@
 package io.cloudslang.content.azure.entities.models.streamanalytics;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.json.simple.JSONObject;
+
+import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CreateStreamingJobRequestBody {
 
     Properties properties;
     String location;
-    JSONObject tags;
+    Map<String, Object> tags;
 
 
     public Properties getProperties() {
@@ -44,11 +45,11 @@ public class CreateStreamingJobRequestBody {
         this.location = location;
     }
 
-    public JSONObject getTags() {
+    public Map<String, Object> getTags() {
         return tags;
     }
 
-    public void setTags(JSONObject tags) {
+    public void setTags(Map<String, Object> tags) {
         this.tags = tags;
     }
 
