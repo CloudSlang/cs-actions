@@ -22,7 +22,6 @@ import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.xml.entities.SimpleNamespaceContext;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import org.apache.commons.lang3.StringUtils;
-import org.jdom2.input.SAXBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -35,6 +34,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -397,7 +397,7 @@ public class XmlUtils {
 
     }
 
-    public static void setFeatures(SAXBuilder reader, String features) throws SAXException {
+    public static void setFeatures(SAXParserFactory reader, String features) throws SAXException, ParserConfigurationException {
         if (!StringUtils.isEmpty(features)) {
             Map<String, Boolean> featuresMap = parseFeatures(features);
             for (String key : featuresMap.keySet()) {

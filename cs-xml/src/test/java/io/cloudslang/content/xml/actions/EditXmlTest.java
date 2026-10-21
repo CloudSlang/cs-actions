@@ -18,25 +18,25 @@
 package io.cloudslang.content.xml.actions;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Map;
 
 import static org.apache.commons.io.IOUtils.readLines;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by moldovas on 6/22/2016.
@@ -82,7 +82,7 @@ public class EditXmlTest {
     public void testDeleteFromFile() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, DELETE, "/Employees/Employee/firstname|/Employees/Employee/age",
                 EMPTY, EMPTY, ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLdelete.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLdelete.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, result.get(RETURN_CODE));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -90,7 +90,7 @@ public class EditXmlTest {
     @Test
     public void testDeleteFromString() throws Exception {
         result = editXml.xPathReplaceNode(STRING_XML, EMPTY, DELETE, "/Employees/Employee/firstname|/Employees/Employee/age", EMPTY, EMPTY, ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLdelete.xml"), result.get(RETURN_RESULT));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLdelete.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, result.get(RETURN_CODE));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -98,7 +98,7 @@ public class EditXmlTest {
     @Test
     public void testDeleteAttribute() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, DELETE, "/Employees/Employee", EMPTY, EMPTY, ATTR, "emplid", "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLdeleteAttribute.xml"), result.get(RETURN_RESULT));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLdeleteAttribute.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, result.get(RETURN_CODE));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -106,7 +106,7 @@ public class EditXmlTest {
     @Test
     public void testDeleteText() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, DELETE, "/Employees/Employee/firstname", EMPTY, EMPTY, TEXT, "", "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLdeleteText.xml"), result.get(RETURN_RESULT));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLdeleteText.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, result.get(RETURN_CODE));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -114,7 +114,7 @@ public class EditXmlTest {
     @Test
     public void testRenameElem() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, RENAME, "/Employees/Employee/age", EMPTY, "newNameElem", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLRenameElem.xml"), result.get(RETURN_RESULT));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLRenameElem.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, result.get(RETURN_CODE));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -122,7 +122,7 @@ public class EditXmlTest {
     @Test
     public void testRenameAttribute() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, RENAME, "/Employees/Employee", EMPTY, "newNameAttribute", ATTR, "emplid", "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLRenameAttribute.xml"), result.get(RETURN_RESULT));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLRenameAttribute.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -130,7 +130,7 @@ public class EditXmlTest {
     @Test
     public void testInsertText() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, INSERT, "/Employees/Employee/firstname", EMPTY, " new text", TEXT, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLInsertText1.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLInsertText1.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -138,7 +138,7 @@ public class EditXmlTest {
     @Test
     public void testInsetText1() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, INSERT, "/Employees/Employee", EMPTY, " new text", TEXT, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLinsertTextResponse.xml"), result.get(RETURN_RESULT));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLinsertTextResponse.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, result.get(RETURN_CODE));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -146,7 +146,7 @@ public class EditXmlTest {
     @Test
     public void testInsertAttribute() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, INSERT, "/Employees/Employee", EMPTY, " new text", ATTR, "newAttr", "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLInsertAttribute.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLInsertAttribute.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -154,7 +154,7 @@ public class EditXmlTest {
     @Test
     public void testInsertElem() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, INSERT, "/Employees/Employee/firstname", EMPTY, "<a id=\"test id \"><b name =\"testName\"><c test=\"testCV\">newAttributeValue</c></b></a>", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLInsertElement.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLInsertElement.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -162,7 +162,7 @@ public class EditXmlTest {
     @Test
     public void testInsertElem1() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, INSERT, "/Employees/Employee", EMPTY, "<a>newAttributeValue</a>", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLInsertElement1.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLInsertElement1.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -170,7 +170,7 @@ public class EditXmlTest {
     @Test
     public void testInsertElem2() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, INSERT, "/Employees", EMPTY, "<a>newAttributeValue</a>", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/xmlFile.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/xmlFile.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -179,7 +179,7 @@ public class EditXmlTest {
     public void testAppendText() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, APPEND, "/Employees/Employee/firstname", EMPTY,
                 " new text", TEXT, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLAppendText.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLAppendText.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -187,7 +187,7 @@ public class EditXmlTest {
     @Test
     public void testAppendText1() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, APPEND, "/Employees/Employee", EMPTY, " new text", TEXT, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/appendTextResponse.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/appendTextResponse.xml"), result.get(RETURN_RESULT));
         assertEquals(result.get(EXCEPTION), null);
     }
 
@@ -195,7 +195,7 @@ public class EditXmlTest {
     public void testAppendAttribute() throws Exception {
         //NOTE append attribute and insert attribute work in the same way!!!
         result = editXml.xPathReplaceNode(EMPTY, fullPath, APPEND, "/Employees/Employee", EMPTY, " new text", ATTR, "newAttr", "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLInsertAttribute.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLInsertAttribute.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -203,7 +203,7 @@ public class EditXmlTest {
     @Test
     public void testAppendElem() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, APPEND, "/Employees/Employee/email", EMPTY, "<a id=\"test id \"><b name =\"testName\"><c test=\"testCV\">newAttributeValue</c></b></a>", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLAppendElement.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLAppendElement.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -211,7 +211,7 @@ public class EditXmlTest {
     @Test
     public void testAppendElem1() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, APPEND, "/Employees/Employee", EMPTY, "<a>newAttributeValue</a>", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLAppendElement1.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLAppendElement1.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -219,7 +219,7 @@ public class EditXmlTest {
     @Test
     public void testAppendElem2() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, APPEND, "/Employees", EMPTY, "<a>newAttributeValue</a>", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/xmlFile.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/xmlFile.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -227,7 +227,7 @@ public class EditXmlTest {
     @Test
     public void testSubNodeElem() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, SUBNODE, "/Employees", EMPTY, "<a id=\"testID\">newAttributeValue</a>", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLSubNode.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLSubNode.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -235,7 +235,7 @@ public class EditXmlTest {
     @Test
     public void testSubNodeElem1() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, SUBNODE, "/Employees/Employee", EMPTY, "<a>newAttributeValue</a>", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLSubNode1.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLSubNode1.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -243,7 +243,7 @@ public class EditXmlTest {
     @Test
     public void testSubNodeElem2() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, SUBNODE, "/Employees/Employee/firstname", EMPTY, "<a>newAttributeValue</a>", ELEM, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLSubNode2.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLSubNode2.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -251,7 +251,7 @@ public class EditXmlTest {
     @Test
     public void testMove() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, MOVE, "/Employees/Employee/firstname", "/Employees/Employee[3]", EMPTY, EMPTY, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLMove.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLMove.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -259,7 +259,7 @@ public class EditXmlTest {
     @Test
     public void testMove2() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, fullPath, MOVE, "/Employees/Employee/firstname", "/Employees/Employee", EMPTY, EMPTY, EMPTY, "");
-        assertEquals(getResponseFromFile("/editxmlres/editXMLMove2.xml"), (result.get(RETURN_RESULT)));
+        assertXmlEquals(getResponseFromFile("/editxmlres/editXMLMove2.xml"), result.get(RETURN_RESULT));
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
         assertEquals(result.get(EXCEPTION), null);
     }
@@ -322,48 +322,70 @@ public class EditXmlTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, getClass().getResource("/editxmlres/nameSpace.xml").getPath(), UPDATE, "/t:Definitions/t:ServiceTemplate/t:TopologyTemplate/t:NodeTemplate/t:Properties/eve:realized_server_group/eve:resource_pool_ref",
                 EMPTY, "<eve:test><t:test1>alabala</t:test1></eve:test>", "elem", EMPTY, "");
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
-        String resultFormatted = result.get(RETURN_RESULT).replace("\t", EMPTY).replace("\n", EMPTY).replace("returnResult=", EMPTY).replace("  ", "");
-        assertEquals(nameSpaceResult1, (resultFormatted));
+        assertXmlEquals(nameSpaceResult1, result.get(RETURN_RESULT));
     }
 
     @Test
-    public void testUpdateText() {
+    public void testUpdateText() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, getClass().getResource("/editxmlres/nameSpace.xml").getPath(), UPDATE, "/t:Definitions/t:ServiceTemplate/t:TopologyTemplate/t:NodeTemplate/t:Properties/eve:realized_server_group/eve:resource_pool_ref",
                 EMPTY, "newText", "text", EMPTY, "");
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
-        String resultFormatted = result.get(RETURN_RESULT).replace("\t", EMPTY).replace("\n", EMPTY).replace("returnResult=", EMPTY).replace("  ", "");
-        assertEquals(nameSpaceResult2, (resultFormatted));
+        assertXmlEquals(nameSpaceResult2, result.get(RETURN_RESULT));
     }
 
     @Test
-    public void testUpdateAttr() {
+    public void testUpdateAttr() throws Exception {
         result = editXml.xPathReplaceNode(EMPTY, getClass().getResource("/editxmlres/nameSpace.xml").getPath(), UPDATE, "/t:Definitions/t:ServiceTemplate/t:TopologyTemplate/t:NodeTemplate",
                 EMPTY, "newAttr", "attr", "name", "");
         assertEquals(RETURN_CODE_SUCCESS, (result.get(RETURN_CODE)));
-        String resultFormatted = result.get(RETURN_RESULT).replace("\t", EMPTY).replace("\n", EMPTY).replace("returnResult=", EMPTY).replace("  ", "");
-        assertEquals(nameSpaceResult3, (resultFormatted));
+        assertXmlEquals(nameSpaceResult3, result.get(RETURN_RESULT));
     }
 
-    private String getResponseFromFile(String file) throws Exception {
-        String filePath = this.getClass().getResource(file).getPath();
-        Document xmlDocument;
-        InputStream inputXML;
-        inputXML = new FileInputStream(new File(filePath));
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = builderFactory.newDocumentBuilder();
-        xmlDocument = builder.parse(inputXML);
-        OutputFormat format = new OutputFormat(xmlDocument);
-        format.setLineWidth(65);
-        format.setIndenting(true);
-        format.setIndent(2);
-        Writer out = new StringWriter();
-        XMLSerializer serializer = new XMLSerializer(out, format);
-        serializer.serialize(xmlDocument);
-        return out.toString();
+    private String getResponseFromFile(String file) throws IOException {
+        InputStream inputXML = getClass().getResourceAsStream(file);
+        if (inputXML == null) {
+            throw new IOException("XML test resource not found: " + file);
+        }
+        try (inputXML) {
+            return IOUtils.toString(inputXML, Charset.forName("UTF-8"));
+        }
+    }
 
+    private void assertXmlEquals(String expectedXml, String actualXml) throws Exception {
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        builderFactory.setNamespaceAware(true);
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        // These legacy expected strings were compacted by removing spaces between adjacent attributes.
+        expectedXml = expectedXml.replaceAll("\"(?=[A-Za-z_:][A-Za-z0-9_.:-]*=)", "\" ");
+        Document expected = builder.parse(new InputSource(new StringReader(expectedXml)));
+        Document actual = builder.parse(new InputSource(new StringReader(actualXml)));
+        removeFormattingWhitespace(expected);
+        removeFormattingWhitespace(actual);
+        assertTrue(expected.isEqualNode(actual), "XML documents differ");
+    }
+
+    private void removeFormattingWhitespace(Node node) {
+        NodeList children = node.getChildNodes();
+        boolean hasElementChild = false;
+        for (int i = 0; i < children.getLength(); i++) {
+            Node child = children.item(i);
+            if (child.getNodeType() == Node.ELEMENT_NODE) {
+                hasElementChild = true;
+            }
+        }
+
+        for (int i = children.getLength() - 1; i >= 0; i--) {
+            Node child = children.item(i);
+            if (hasElementChild
+                    && child.getNodeType() == Node.TEXT_NODE && child.getTextContent().trim().isEmpty()) {
+                node.removeChild(child);
+            } else {
+                removeFormattingWhitespace(child);
+            }
+        }
     }
 }

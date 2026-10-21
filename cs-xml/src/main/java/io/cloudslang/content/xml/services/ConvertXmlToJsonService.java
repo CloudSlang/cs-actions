@@ -26,23 +26,32 @@ import com.google.gson.JsonPrimitive;
 import io.cloudslang.content.xml.entities.inputs.ConvertXmlToJsonInputs;
 import io.cloudslang.content.xml.utils.XmlUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jdom2.Attribute;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.Namespace;
-import org.jdom2.input.SAXBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.cloudslang.content.xml.utils.Constants.Defaults;
-import static io.cloudslang.content.xml.utils.Constants.Defaults.PREFIX_DELIMITER;
 import static io.cloudslang.content.xml.utils.Constants.JSON_ATTRIBUTE_PREFIX;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -53,22 +62,33 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public class ConvertXmlToJsonService {
     private final StringBuilder namespacesPrefixes;
     private final StringBuilder namespacesUris;
+    private final Map<Element, List<Attr>> attributes = new IdentityHashMap<>();
+    private final Map<Element, Map<String, String>> namespaceDeclarations = new IdentityHashMap<>();
 
     public ConvertXmlToJsonService() {
         namespacesPrefixes = new StringBuilder();
         namespacesUris = new StringBuilder();
     }
 
-    public String convertToJsonString(final ConvertXmlToJsonInputs inputs) throws JDOMException, IOException, SAXException {
+    public String convertToJsonString(final ConvertXmlToJsonInputs inputs) throws ParserConfigurationException, IOException, SAXException {
         if (StringUtils.isBlank(inputs.getXml())) {
             return EMPTY;
         }
+        attributes.clear();
+        namespaceDeclarations.clear();
         final InputSource inputSource = new InputSource(new StringReader(inputs.getXml()));
-        final SAXBuilder builder = new SAXBuilder();
-        XmlUtils.setFeatures(builder, inputs.getParsingFeatures());
-        final Element root = builder.build(inputSource).getRootElement();
+        final SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        XmlUtils.setFeatures(factory, inputs.getParsingFeatures());
+        final Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        try {
+            factory.newSAXParser().parse(inputSource, new ConversionHandler(document));
+        } catch (SAXParseException e) {
+            throw new SAXException("Error on line " + e.getLineNumber() + ": " + e.getMessage(), e);
+        }
+        final Element root = document.getDocumentElement();
         final List<Element> xmlElements = Collections.singletonList(root);
-        if (root.getChildren().isEmpty() && !inputs.getIncludeAttributes()) {
+        if (getChildren(root).isEmpty() && !inputs.getIncludeAttributes()) {
             return prettyPrint(addJsonObjectsAndPrimitives(new JsonObject(), xmlElements, inputs.getIncludeAttributes(), inputs.getTextElementsName()),
                     inputs.getPrettyPrint());
         }
@@ -81,7 +101,7 @@ public class ConvertXmlToJsonService {
     private JsonObject getJsonObjectWithRootElement(final Element rootElement, final JsonObject jsonObject, final boolean addRootElement) {
         if (addRootElement) {
             final JsonObject rootJson = new JsonObject();
-            rootJson.add(rootElement.getName(), jsonObject);
+            rootJson.add(rootElement.getLocalName(), jsonObject);
             return rootJson;
         }
         return jsonObject;
@@ -101,7 +121,7 @@ public class ConvertXmlToJsonService {
     private JsonObject addJsonObjectsAndPrimitives(final JsonObject jsonObject, final List<Element> elements, final boolean includeAttributes, final String textPropName) {
         for (final Element element : elements) {
             final JsonElement jsonElement = isPrimitiveElement(element) ?
-                    new JsonPrimitive(element.getValue()) : convertXmlElementsToJsonObject(Collections.singletonList(element), includeAttributes, textPropName);
+                    new JsonPrimitive(element.getTextContent()) : convertXmlElementsToJsonObject(Collections.singletonList(element), includeAttributes, textPropName);
             jsonObject.add(getElementFullName(element), jsonElement);
         }
         return jsonObject;
@@ -124,15 +144,15 @@ public class ConvertXmlToJsonService {
     }
 
     private JsonObject addXmlElementToJsonObject(JsonObject jsonObject, final Element xmlElement, final boolean includeAttributes, final String textPropName) {
-        addNamespaces(xmlElement.getAdditionalNamespaces());
+        addNamespaces(xmlElement);
         if (includeAttributes) {
-            jsonObject = addAttributesToJsonObject(jsonObject, xmlElement.getAttributes());
+            jsonObject = addAttributesToJsonObject(jsonObject, attributes.get(xmlElement));
         }
-        List<Element> children = xmlElement.getChildren();
+        List<Element> children = getChildren(xmlElement);
         jsonObject = searchAndAddArrayElementsToJsonObject(jsonObject, children, includeAttributes, textPropName);
         children = eliminateArrayElements(children);
         jsonObject = addJsonObjectsAndPrimitives(jsonObject, children, includeAttributes, textPropName);
-        jsonObject = addTextProp(jsonObject, xmlElement.getText(), textPropName);
+        jsonObject = addTextProp(jsonObject, getText(xmlElement), textPropName);
         return jsonObject;
     }
 
@@ -160,31 +180,31 @@ public class ConvertXmlToJsonService {
         return jsonObject;
     }
 
-    private void addNamespaces(final List<Namespace> namespaces) {
-        for (final Namespace namespace : namespaces) {
+    private void addNamespaces(final Element element) {
+        final String elementPrefix = StringUtils.defaultString(element.getPrefix());
+        for (final Map.Entry<String, String> namespace : namespaceDeclarations.get(element).entrySet()) {
+            if (namespace.getKey().equals(elementPrefix)) {
+                continue;
+            }
             if (namespacesUris.length() > 0) {
                 namespacesPrefixes.append(Defaults.DELIMITER);
                 namespacesUris.append(Defaults.DELIMITER);
             }
-            namespacesPrefixes.append(namespace.getPrefix());
-            namespacesUris.append(namespace.getURI());
+            namespacesPrefixes.append(namespace.getKey());
+            namespacesUris.append(namespace.getValue());
         }
     }
 
-    private JsonObject addAttributesToJsonObject(final JsonObject jsonObject, final List<Attribute> attributes) {
-        for (final Attribute attribute : attributes) {
-            jsonObject.addProperty(JSON_ATTRIBUTE_PREFIX + attribute.getName(), attribute.getValue());
+    private JsonObject addAttributesToJsonObject(final JsonObject jsonObject, final List<Attr> attributes) {
+        for (final Attr attribute : attributes) {
+            jsonObject.addProperty(JSON_ATTRIBUTE_PREFIX + attribute.getLocalName(), attribute.getValue());
         }
         return jsonObject;
     }
 
     @NotNull
     private String getElementFullName(final Element element) {
-        final StringBuilder name = new StringBuilder(element.getNamespacePrefix());
-        if (!element.getNamespacePrefix().isEmpty())
-            name.append(PREFIX_DELIMITER);
-        name.append(element.getName());
-        return name.toString();
+        return element.getTagName();
     }
 
     private List<String> getElementsFullName(final List<Element> elements) {
@@ -197,7 +217,100 @@ public class ConvertXmlToJsonService {
 
 
     private boolean isPrimitiveElement(final Element element) {
-        return element.getChildren().isEmpty() && element.getAttributes().isEmpty(); //if it doesn't have child and doesn't have attributes it's primitive.
+        return getChildren(element).isEmpty() && attributes.get(element).isEmpty();
+    }
+
+    private List<Element> getChildren(final Element element) {
+        final List<Element> result = new ArrayList<>();
+        final NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                result.add((Element) nodes.item(i));
+            }
+        }
+        return result;
+    }
+
+    private String getText(final Element element) {
+        final StringBuilder result = new StringBuilder();
+        final NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            final Node node = nodes.item(i);
+            if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.CDATA_SECTION_NODE) {
+                result.append(node.getNodeValue());
+            }
+        }
+        return result.toString();
+    }
+
+    private class ConversionHandler extends DefaultHandler {
+        private final Document document;
+        private final Map<String, String> pendingNamespaces = new LinkedHashMap<>();
+        private Element current;
+
+        private ConversionHandler(Document document) {
+            this.document = document;
+        }
+
+        @Override
+        public void startPrefixMapping(String prefix, String uri) {
+            pendingNamespaces.put(prefix, uri);
+        }
+
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes saxAttributes) {
+            final Element element = document.createElementNS(uri, qName);
+            // SAX preserves source ordering, unlike DOM's NamedNodeMap.
+            final List<Attr> orderedAttributes = new ArrayList<>();
+            for (int i = 0; i < saxAttributes.getLength(); i++) {
+                final String attributeName = saxAttributes.getQName(i);
+                if (!XMLConstants.XMLNS_ATTRIBUTE.equals(attributeName)
+                        && !attributeName.startsWith(XMLConstants.XMLNS_ATTRIBUTE + ":")
+                        && !XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(saxAttributes.getURI(i))) {
+                    final Attr attribute = document.createAttributeNS(saxAttributes.getURI(i), saxAttributes.getQName(i));
+                    attribute.setValue(saxAttributes.getValue(i));
+                    element.setAttributeNodeNS(attribute);
+                    orderedAttributes.add(attribute);
+                }
+            }
+            attributes.put(element, orderedAttributes);
+            namespaceDeclarations.put(element, new LinkedHashMap<>(pendingNamespaces));
+            pendingNamespaces.clear();
+            if (current == null) {
+                document.appendChild(element);
+            } else {
+                current.appendChild(element);
+            }
+            current = element;
+        }
+
+        @Override
+        public void characters(char[] characters, int start, int length) {
+            if (current != null) {
+                current.appendChild(document.createTextNode(new String(characters, start, length)));
+            }
+        }
+
+        @Override
+        public void ignorableWhitespace(char[] characters, int start, int length) {
+            characters(characters, start, length);
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) {
+            final Node parent = current.getParentNode();
+            current = parent instanceof Element ? (Element) parent : null;
+        }
+
+        @Override
+        public void error(SAXParseException e) throws SAXException {
+            throw e;
+        }
+
+        @Override
+        public void fatalError(SAXParseException e) throws SAXException {
+            throw e;
+        }
     }
 
     private List<String> getListOfArrayElementNames(final List<Element> elements) {

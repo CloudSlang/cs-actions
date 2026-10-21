@@ -54,6 +54,8 @@ public class ConvertJsonToXml {
 
     /**
      * Converts a JSON array or a JSON object to a XML document.
+     * XML is serialized using the JDK XML APIs. Empty-element spacing, attribute order, and character-reference
+     * notation may differ from older releases without changing XML content.
      *
      * @param json                     - The JSON array or object (in the form of a String).
      * @param prettyPrint              - The flag for formatting the resulted XML. If it is true the result will contain tabs and newline ('\n') chars.
