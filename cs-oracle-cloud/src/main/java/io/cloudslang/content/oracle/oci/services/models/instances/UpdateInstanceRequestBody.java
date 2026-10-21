@@ -1,14 +1,14 @@
 package io.cloudslang.content.oracle.oci.services.models.instances;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.json.simple.JSONObject;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UpdateInstanceRequestBody {
     AgentConfig agentConfig;
-    JSONObject definedTags;
+    ObjectNode definedTags;
     String displayName;
-    JSONObject freeformTags;
+    ObjectNode freeformTags;
     String shape;
     ShapeConfig shapeConfig;
 
@@ -20,11 +20,11 @@ public class UpdateInstanceRequestBody {
         this.agentConfig = agentConfig;
     }
 
-    public JSONObject getDefinedTags() {
+    public ObjectNode getDefinedTags() {
         return definedTags;
     }
 
-    public void setDefinedTags(JSONObject definedTags) {
+    public void setDefinedTags(ObjectNode definedTags) {
         this.definedTags = definedTags;
     }
 
@@ -36,11 +36,11 @@ public class UpdateInstanceRequestBody {
         this.displayName = displayName;
     }
 
-    public JSONObject getFreeformTags() {
+    public ObjectNode getFreeformTags() {
         return freeformTags;
     }
 
-    public void setFreeformTags(JSONObject freeformTags) {
+    public void setFreeformTags(ObjectNode freeformTags) {
         this.freeformTags = freeformTags;
     }
 

@@ -11,9 +11,6 @@ import io.cloudslang.content.oracle.oci.services.models.instances.UpdateInstance
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.net.URI;
 import java.security.PrivateKey;
@@ -52,8 +49,6 @@ public class InstanceImpl {
         metadata.setSshAuthorizedKeys(createInstancesInputs.getSSHAuthorizedKeys());
         metadata.setUserData(createInstancesInputs.getUserdata());
         createInstanceRequestBody.setMetadata(metadata);
-        JSONParser jsonParser = new JSONParser();
-
         createInstanceRequestBody.setAvailabilityDomain(createInstancesInputs.getCommonInputs().getAvailabilityDomain());
         createInstanceRequestBody.setCompartmentId(createInstancesInputs.getCommonInputs().getCompartmentOcid());
         createInstanceRequestBody.setShape(createInstancesInputs.getShape());
@@ -102,13 +97,13 @@ public class InstanceImpl {
         createInstanceRequestBody.setSourceDetails(sourceDetails);
         createInstanceRequestBody.setAgentConfig(agentConfig);
         try {
-            createInstanceRequestBody.setDefinedTags(stringToJSON(jsonParser, createInstancesInputs.getDefinedTags()));
-            createInstanceRequestBody.setFreeformTags(stringToJSON(jsonParser, createInstancesInputs.getFreeformTags()));
-            createVnicDetails.setDefinedTags(stringToJSON(jsonParser, createInstancesInputs.getVnicDefinedTags()));
-            createVnicDetails.setFreeformTags(stringToJSON(jsonParser, createInstancesInputs.getVnicFreeformTags()));
+            createInstanceRequestBody.setDefinedTags(JsonObjectParser.parse(createInstanceMapper, createInstancesInputs.getDefinedTags()));
+            createInstanceRequestBody.setFreeformTags(JsonObjectParser.parse(createInstanceMapper, createInstancesInputs.getFreeformTags()));
+            createVnicDetails.setDefinedTags(JsonObjectParser.parse(createInstanceMapper, createInstancesInputs.getVnicDefinedTags()));
+            createVnicDetails.setFreeformTags(JsonObjectParser.parse(createInstanceMapper, createInstancesInputs.getVnicFreeformTags()));
             createInstanceRequestBody.setCreateVnicDetails(createVnicDetails);
 
-            createInstanceRequestBody.setExtendedMetadata(stringToJSON(jsonParser, createInstancesInputs.getExtendedMetadata()));
+            createInstanceRequestBody.setExtendedMetadata(JsonObjectParser.parse(createInstanceMapper, createInstancesInputs.getExtendedMetadata()));
             requestBody = createInstanceMapper.writeValueAsString(createInstanceRequestBody);
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,7 +123,6 @@ public class InstanceImpl {
             updateInstanceRequestBody.setShapeConfig(shapeConfig);
         }
 
-        JSONParser jsonParser = new JSONParser();
         updateInstanceRequestBody.setShape(ociUpdateInstanceInputs.getShape());
         updateInstanceRequestBody.setDisplayName(ociUpdateInstanceInputs.getDisplayName());
 
@@ -141,8 +135,8 @@ public class InstanceImpl {
 
 
         try {
-            updateInstanceRequestBody.setDefinedTags(stringToJSON(jsonParser, ociUpdateInstanceInputs.getDefinedTags()));
-            updateInstanceRequestBody.setFreeformTags(stringToJSON(jsonParser, ociUpdateInstanceInputs.getFreeformTags()));
+            updateInstanceRequestBody.setDefinedTags(JsonObjectParser.parse(updateInstanceMapper, ociUpdateInstanceInputs.getDefinedTags()));
+            updateInstanceRequestBody.setFreeformTags(JsonObjectParser.parse(updateInstanceMapper, ociUpdateInstanceInputs.getFreeformTags()));
             requestBody = updateInstanceMapper.writeValueAsString(updateInstanceRequestBody);
         } catch (Exception e) {
             e.printStackTrace();
@@ -320,12 +314,6 @@ public class InstanceImpl {
                 .append(instanceId)
                 .append(GET_INSTANCE_DEFAULT_CREDENTIALS_OPERATION_PATH);
         return pathString.toString();
-    }
-
-    private static JSONObject stringToJSON(JSONParser jsonParser, String property) throws ParseException {
-        if (!isEmpty(property))
-            return (JSONObject) jsonParser.parse(property);
-        return new JSONObject();
     }
 
     private static boolean stringToBoolean(String property) {

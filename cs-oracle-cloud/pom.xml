@@ -80,12 +80,12 @@
         <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <cs-commons.version>0.0.14</cs-commons.version>
+        <cs-commons.version>0.0.15-SNAPSHOT</cs-commons.version>
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <junit-jupiter.version>6.1.3</junit-jupiter.version>
         <mockito.version>5.24.0</mockito.version>
         <assertj.version>3.27.7</assertj.version>
-        <common-codec.version>1.15</common-codec.version>
+        <common-codec.version>1.23.0</common-codec.version>
         <!--Misc properties-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
@@ -107,23 +107,10 @@
             <version>${common-codec.version}</version>
         </dependency>
 
-        <!-- Json provider required for Jayway in order to handle single quoted JSONs-->
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
-            <version>2.9.0</version>
+            <version>3.0.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>net.minidev</groupId>
@@ -131,20 +118,21 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- JsonPath JSON provider. -->
         <dependency>
             <groupId>net.minidev</groupId>
             <artifactId>json-smart</artifactId>
-            <version>2.5.2</version>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.9.1</version>
+            <version>2.14.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>32.1.0-jre</version>
+            <version>33.7.2-jre</version>
         </dependency>
 
         <dependency>
@@ -168,18 +156,11 @@
             <scope>compile</scope>
         </dependency>
 
-        <!--Commons-lang-->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
-        </dependency>
-
         <!--HTTP CLIENT-->
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-httpclient-commons</artifactId>
-            <version>0.0.31</version>
+            <version>0.0.32-SNAPSHOT</version>
         </dependency>
 
         <!-- Testing dependencies -->
@@ -217,7 +198,7 @@
         <dependency>
             <groupId>org.tomitribe</groupId>
             <artifactId>tomitribe-http-signatures</artifactId>
-            <version>1.3</version>
+            <version>1.8</version>
         </dependency>
 
 

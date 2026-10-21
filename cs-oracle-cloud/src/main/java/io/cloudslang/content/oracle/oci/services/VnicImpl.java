@@ -10,9 +10,6 @@ import io.cloudslang.content.oracle.oci.services.models.instances.AttachVnicRequ
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
 import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.net.URI;
 import java.security.PrivateKey;
@@ -48,11 +45,9 @@ public class VnicImpl {
         if (!isEmpty(ociAttachVnicInputs.getNicIndex())) {
             attachVnicRequestBody.setNicIndex(ociAttachVnicInputs.getNicIndex());
         }
-        JSONParser jsonParser = new JSONParser();
-
         try {
-            createVnicDetails.setDefinedTags(stringToJSON(jsonParser, ociAttachVnicInputs.getDefinedTags()));
-            createVnicDetails.setFreeformTags(stringToJSON(jsonParser, ociAttachVnicInputs.getFreeformTags()));
+            createVnicDetails.setDefinedTags(JsonObjectParser.parse(attachVnicMapper, ociAttachVnicInputs.getDefinedTags()));
+            createVnicDetails.setFreeformTags(JsonObjectParser.parse(attachVnicMapper, ociAttachVnicInputs.getFreeformTags()));
             attachVnicRequestBody.setCreateVnicDetails(createVnicDetails);
             requestBody = attachVnicMapper.writeValueAsString(attachVnicRequestBody);
         } catch (Exception e) {
@@ -205,11 +200,5 @@ public class VnicImpl {
         if (!isEmpty(property))
             return Boolean.parseBoolean(property);
         return false;
-    }
-
-    private static JSONObject stringToJSON(JSONParser jsonParser, String property) throws ParseException {
-        if (!isEmpty(property))
-            return (JSONObject) jsonParser.parse(property);
-        return new JSONObject();
     }
 }
