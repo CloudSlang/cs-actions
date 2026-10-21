@@ -18,6 +18,8 @@
 
 package io.cloudslang.content.utilities.services;
 
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -43,8 +45,8 @@ public class PdfParseService {
 
     private static PDDocument getPdfDocument(final Path path, final String password) throws IOException {
         if (isEmpty(password))
-            return PDDocument.load(path.toFile());
-        return PDDocument.load(path.toFile(), password);
+            return Loader.loadPDF(path.toFile());
+        return Loader.loadPDF(path.toFile(), password);
     }
 
     public static String getOccurrences(final String pdfContent, final String text, boolean ignoreCase) {
@@ -59,7 +61,7 @@ public class PdfParseService {
         for (String pdfPath : pathToFiles.split(",")) {
             PDFmerger.addSource(new File(pdfPath.trim()));
         }
-        PDFmerger.mergeDocuments(null);
+        PDFmerger.mergeDocuments(IOUtils.createMemoryOnlyStreamCache());
         return pathToFile;
     }
 }

@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.utilities.util.randomPasswordGenerator;
 
-import org.passay.CharacterData;
+import org.passay.data.CharacterData;
 
 public class SpecialCharacters implements CharacterData {
 
