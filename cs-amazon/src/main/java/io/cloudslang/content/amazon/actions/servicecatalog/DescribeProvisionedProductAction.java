@@ -31,8 +31,8 @@
 
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
-import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
+import software.amazon.awssdk.services.servicecatalog.ServiceCatalogClient;
+import software.amazon.awssdk.services.servicecatalog.model.DescribeProvisionedProductResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -118,10 +118,10 @@ public class DescribeProvisionedProductAction {
 
         try {
             //The client
-            final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
+            final ServiceCatalogClient awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, regionVal, asyncImp);
             //The result
-            final DescribeProvisionedProductResult result = AmazonServiceCatalogService.describeProvisionProduct(acceptedLanguageVal,
+            final DescribeProvisionedProductResponse result = AmazonServiceCatalogService.describeProvisionProduct(acceptedLanguageVal,
                     productId, awsServiceCatalog);
 
             return getSuccessResultMapDescribedProvisionedProduct(result);

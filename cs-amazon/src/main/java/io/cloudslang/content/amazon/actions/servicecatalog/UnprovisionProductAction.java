@@ -31,9 +31,9 @@
 
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
-import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
-import com.amazonaws.services.servicecatalog.model.TerminateProvisionedProductResult;
+import software.amazon.awssdk.services.servicecatalog.ServiceCatalogClient;
+import software.amazon.awssdk.services.servicecatalog.model.DescribeRecordResponse;
+import software.amazon.awssdk.services.servicecatalog.model.TerminateProvisionedProductResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -128,24 +128,24 @@ public class UnprovisionProductAction {
 
         try {
 
-            final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
+            final ServiceCatalogClient awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, regionVal, asyncImp);
 
-            final TerminateProvisionedProductResult result = AmazonServiceCatalogService.terminateProvisionedProduct(acceptLanguageVal, ignoreErrorsImp, provisionedProductId, provisionedProductName, terminateToken, awsServiceCatalog);
+            final TerminateProvisionedProductResponse result = AmazonServiceCatalogService.terminateProvisionedProduct(acceptLanguageVal, ignoreErrorsImp, provisionedProductId, provisionedProductName, terminateToken, awsServiceCatalog);
 
-            String undeployStatus = result.getRecordDetail().getStatus();
+            String undeployStatus = result.recordDetail().statusAsString();
 
             while (UPDATE_STATUSES.contains(undeployStatus)) {
                 Thread.sleep(pollingIntervalImp);
-                undeployStatus = getUpdatedProductStatus(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+                undeployStatus = getUpdatedProductStatus(result.recordDetail().recordId(), awsServiceCatalog);
             }
             if (undeployStatus.equals(SUCCEEDED)) {
                 return getSuccessResultsMap(result.toString());
             }
 
-            final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+            final DescribeRecordResponse recordResult = AmazonServiceCatalogService.describeRecord(result.recordDetail().recordId(), awsServiceCatalog);
 
-            throw new RuntimeException(UNPROVISION_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
+            throw new RuntimeException(UNPROVISION_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.recordDetail().recordErrors().toString());
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }

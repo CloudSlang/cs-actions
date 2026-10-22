@@ -31,8 +31,8 @@
 
 package io.cloudslang.content.amazon.utils;
 
-import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
-import com.amazonaws.services.servicecatalog.model.Tag;
+import software.amazon.awssdk.services.servicecatalog.model.ProvisioningParameter;
+import software.amazon.awssdk.services.servicecatalog.model.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -51,10 +51,10 @@ public class ServiceCatalogUtilTest {
     public void toArrayOfTagsTest() {
         final String tags = "key1=value1,key2=value2";
         List<Tag> tagsList = toArrayOfTags(tags, DELIMITER);
-        assertEquals("key1", tagsList.get(0).getKey());
-        assertEquals("value1", tagsList.get(0).getValue());
-        assertEquals("key2", tagsList.get(1).getKey());
-        assertEquals("value2", tagsList.get(1).getValue());
+        assertEquals("key1", tagsList.get(0).key());
+        assertEquals("value1", tagsList.get(0).value());
+        assertEquals("key2", tagsList.get(1).key());
+        assertEquals("value2", tagsList.get(1).value());
     }
 
     @Test
@@ -81,10 +81,10 @@ public class ServiceCatalogUtilTest {
     public void toArrayOfParametersTest() {
         final String parameters = "key1=value1,key2=value2";
         List<ProvisioningParameter> tagsList = toArrayOfParameters(parameters, DELIMITER);
-        assertEquals("key1", tagsList.get(0).getKey());
-        assertEquals("value1", tagsList.get(0).getValue());
-        assertEquals("key2", tagsList.get(1).getKey());
-        assertEquals("value2", tagsList.get(1).getValue());
+        assertEquals("key1", tagsList.get(0).key());
+        assertEquals("value1", tagsList.get(0).value());
+        assertEquals("key2", tagsList.get(1).key());
+        assertEquals("value2", tagsList.get(1).value());
     }
 
 }

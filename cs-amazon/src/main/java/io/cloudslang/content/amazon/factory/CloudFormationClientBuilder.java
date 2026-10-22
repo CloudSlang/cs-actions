@@ -31,13 +31,11 @@
 
 package io.cloudslang.content.amazon.factory;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.AmazonCloudFormationClientBuilder;
 import io.cloudslang.content.amazon.utils.AmazonWebServiceClientUtil;
 import io.cloudslang.content.amazon.utils.DefaultValues;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
 
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -45,7 +43,7 @@ public class CloudFormationClientBuilder {
     private CloudFormationClientBuilder() {
     }
 
-    public static AmazonCloudFormation getCloudFormationClient(
+    public static CloudFormationClient getCloudFormationClient(
             String accessKeyId,
             String secretAccessKey,
             String proxyHost,
@@ -59,12 +57,13 @@ public class CloudFormationClientBuilder {
         connectTimeoutMs = defaultIfEmpty(connectTimeoutMs, DefaultValues.CONNECT_TIMEOUT);
         executionTimeoutMs = defaultIfEmpty(executionTimeoutMs, DefaultValues.EXEC_TIMEOUT);
 
-        ClientConfiguration clientConf = AmazonWebServiceClientUtil.getClientConfiguration(proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, executionTimeoutMs);
+        var credentials = StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey));
 
-        return AmazonCloudFormationClientBuilder.standard()
-                .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))
-                .withClientConfiguration(clientConf)
+        return CloudFormationClient.builder()
+                .region(software.amazon.awssdk.regions.Region.of(region))
+                .credentialsProvider(credentials)
+                .httpClientBuilder(AmazonWebServiceClientUtil.getHttpClientBuilder(proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs))
+                .overrideConfiguration(AmazonWebServiceClientUtil.getClientOverrideConfiguration(executionTimeoutMs))
                 .build();
     }
 

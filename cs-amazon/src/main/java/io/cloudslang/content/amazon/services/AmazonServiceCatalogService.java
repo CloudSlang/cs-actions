@@ -12,33 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Copyright 2019-2024 Open Text
- * This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
- 
-
-
 package io.cloudslang.content.amazon.services;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.DescribeStackResourcesRequest;
-import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
-import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
-import com.amazonaws.services.cloudformation.model.Stack;
-import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.*;
 import org.apache.commons.lang3.StringUtils;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.DescribeStackResourcesRequest;
+import software.amazon.awssdk.services.cloudformation.model.DescribeStackResourcesResponse;
+import software.amazon.awssdk.services.cloudformation.model.DescribeStacksRequest;
+import software.amazon.awssdk.services.cloudformation.model.Stack;
+import software.amazon.awssdk.services.servicecatalog.ServiceCatalogClient;
+import software.amazon.awssdk.services.servicecatalog.model.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -49,150 +32,93 @@ import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceC
 import static io.cloudslang.content.amazon.entities.constants.Constants.ServiceCatalogActions.FAILED;
 
 public class AmazonServiceCatalogService {
-
-    public static ProvisionProductResult provisionProduct(final String provisionedProductName,
-                                                          final List<ProvisioningParameter> provisioningParameters,
-                                                          final String productId,
-                                                          String provisionToken,
-                                                          final String provisioningArtifactId,
-                                                          final List<Tag> tags,
-                                                          final String acceptLanguage,
-                                                          final String notificationArns,
-                                                          final String pathId,
-                                                          final AWSServiceCatalog serviceCatalogClient) {
-
-        if (StringUtils.isEmpty(provisionToken)) {
-            provisionToken = generateRandomToken();
-        }
-
-        ProvisionProductRequest provisionProductRequest = new ProvisionProductRequest()
-                .withProvisionedProductName(provisionedProductName)
-                .withProvisioningParameters(provisioningParameters)
-                .withProductId(productId)
-                .withProvisioningArtifactId(provisioningArtifactId)
-                .withTags(tags)
-                .withAcceptLanguage(acceptLanguage)
-                .withProvisionToken(provisionToken);
-
-        if (!StringUtils.isEmpty(notificationArns)) {
-            provisionProductRequest.withNotificationArns(notificationArns);
-        }
-
-        if (!StringUtils.isEmpty(pathId)) {
-            provisionProductRequest.withPathId(pathId);
-        }
-
-        return serviceCatalogClient.provisionProduct(provisionProductRequest);
+    public static ProvisionProductResponse provisionProduct(
+            String name, List<ProvisioningParameter> parameters, String productId, String token,
+            String artifactId, List<Tag> tags, String acceptLanguage, String notificationArns,
+            String pathId, ServiceCatalogClient client) {
+        String provisionToken = StringUtils.isEmpty(token) ? generateRandomToken() : token;
+        ProvisionProductRequest.Builder request = ProvisionProductRequest.builder()
+                .provisionedProductName(name)
+                .provisioningParameters(parameters)
+                .productId(productId)
+                .provisioningArtifactId(artifactId)
+                .tags(tags)
+                .acceptLanguage(acceptLanguage)
+                .provisionToken(provisionToken);
+        if (!StringUtils.isEmpty(notificationArns)) request.notificationArns(notificationArns);
+        if (!StringUtils.isEmpty(pathId)) request.pathId(pathId);
+        return client.provisionProduct(request.build());
     }
 
-    public static DescribeProvisionedProductResult describeProvisionProduct(final String acceptedLanguage,
-                                                                            final String productId,
-                                                                            final AWSServiceCatalog serviceCatalogClient) {
-        DescribeProvisionedProductRequest describeProvisionProductRequest = new DescribeProvisionedProductRequest()
-                .withAcceptLanguage(acceptedLanguage)
-                .withId(productId);
-        return serviceCatalogClient.describeProvisionedProduct(describeProvisionProductRequest);
+    public static DescribeProvisionedProductResponse describeProvisionProduct(
+            String acceptedLanguage, String productId, ServiceCatalogClient client) {
+        return client.describeProvisionedProduct(DescribeProvisionedProductRequest.builder()
+                .acceptLanguage(acceptedLanguage).id(productId).build());
     }
 
-    public static String getUpdatedProductStatus(final String recordId,
-                                                 final AWSServiceCatalog serviceCatalogClient){
-        final DescribeRecordResult result = describeRecord(recordId, serviceCatalogClient);
-        return result.getRecordDetail().getStatus();
+    public static String getUpdatedProductStatus(String recordId, ServiceCatalogClient client) {
+        return describeRecord(recordId, client).recordDetail().statusAsString();
     }
 
-    public static DescribeRecordResult describeRecord(final String recordId, final AWSServiceCatalog serviceCatalogClient) {
-        DescribeRecordRequest describeRecordRequest = new DescribeRecordRequest()
-                .withId(recordId);
-        return serviceCatalogClient.describeRecord(describeRecordRequest);
+    public static DescribeRecordResponse describeRecord(String recordId, ServiceCatalogClient client) {
+        return client.describeRecord(DescribeRecordRequest.builder().id(recordId).build());
     }
 
-    public static List<Stack> describeCloudFormationStack(final String stackName, final AmazonCloudFormation cloudFormationClient) {
-        DescribeStacksRequest describeStacksRequest = new DescribeStacksRequest()
-                .withStackName(stackName);
-        return cloudFormationClient.describeStacks(describeStacksRequest).getStacks();
+    public static List<Stack> describeCloudFormationStack(String stackName, CloudFormationClient client) {
+        return client.describeStacks(DescribeStacksRequest.builder().stackName(stackName).build()).stacks();
     }
 
-    public static DescribeStackResourcesResult describeStackResourcesResult(final String stackName, final AmazonCloudFormation cloudFormationClient) {
-        DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest()
-                .withStackName(stackName);
-        return cloudFormationClient.describeStackResources(stackResourceRequest);
+    public static DescribeStackResourcesResponse describeStackResourcesResult(String stackName, CloudFormationClient client) {
+        return client.describeStackResources(DescribeStackResourcesRequest.builder().stackName(stackName).build());
     }
 
-    public static String getCloudFormationStackName(String recordId, AWSServiceCatalog serviceCatalogClient, Long pollingInterval) throws InterruptedException {
-        DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(recordId, serviceCatalogClient);
-        Pattern stackNamePattern = Pattern.compile(CLOUD_FORMATION_STACK_NAME_REGEX);
-        Matcher stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
-        while (!stackNameMatcher.find()) {
-            if ((recordResult.getRecordDetail().getStatus().equals(FAILED))) {
-                throw new RuntimeException(recordResult.getRecordDetail().getRecordErrors().toString());
+    public static String getCloudFormationStackName(String recordId, ServiceCatalogClient client, Long pollingInterval)
+            throws InterruptedException {
+        DescribeRecordResponse recordResult = describeRecord(recordId, client);
+        Pattern pattern = Pattern.compile(CLOUD_FORMATION_STACK_NAME_REGEX);
+        Matcher matcher = pattern.matcher(recordResult.recordOutputs().toString());
+        while (!matcher.find()) {
+            if (recordResult.recordDetail().statusAsString().equals(FAILED)) {
+                throw new RuntimeException(recordResult.recordDetail().recordErrors().toString());
             }
             Thread.sleep(pollingInterval);
-            recordResult = AmazonServiceCatalogService.describeRecord(recordId, serviceCatalogClient);
-            stackNameMatcher = stackNamePattern.matcher(recordResult.getRecordOutputs().toString());
+            recordResult = describeRecord(recordId, client);
+            matcher = pattern.matcher(recordResult.recordOutputs().toString());
         }
-        return recordResult.getRecordOutputs().toString().split("/")[1];
+        return recordResult.recordOutputs().toString().split("/")[1];
     }
 
-    public static TerminateProvisionedProductResult terminateProvisionedProduct(String acceptLanguage,
-                                                                                Boolean ignoreErrors,
-                                                                                String provisionedProductId,
-                                                                                String provisionedProductName,
-                                                                                String terminateToken,
-                                                                                final AWSServiceCatalog serviceCatalogClient) {
-        if (StringUtils.isEmpty(terminateToken)) {
-            terminateToken = generateRandomToken();
-        }
-
-        TerminateProvisionedProductRequest terminateProvisionedProductRequest = new TerminateProvisionedProductRequest()
-                .withIgnoreErrors(ignoreErrors)
-                .withAcceptLanguage(acceptLanguage)
-                .withTerminateToken(terminateToken);
-        if (!StringUtils.isEmpty(provisionedProductId)) {
-            terminateProvisionedProductRequest.withProvisionedProductId(provisionedProductId);
-        }
-        if (!StringUtils.isEmpty(provisionedProductName)) {
-            terminateProvisionedProductRequest.withProvisionedProductName(provisionedProductName);
-        }
-
-        return serviceCatalogClient.terminateProvisionedProduct(terminateProvisionedProductRequest);
+    public static TerminateProvisionedProductResponse terminateProvisionedProduct(
+            String acceptLanguage, Boolean ignoreErrors, String productId, String productName, String token,
+            ServiceCatalogClient client) {
+        String terminateToken = StringUtils.isEmpty(token) ? generateRandomToken() : token;
+        TerminateProvisionedProductRequest.Builder request = TerminateProvisionedProductRequest.builder()
+                .ignoreErrors(ignoreErrors)
+                .acceptLanguage(acceptLanguage)
+                .terminateToken(terminateToken);
+        if (!StringUtils.isEmpty(productId)) request.provisionedProductId(productId);
+        if (!StringUtils.isEmpty(productName)) request.provisionedProductName(productName);
+        return client.terminateProvisionedProduct(request.build());
     }
 
-    public static UpdateProvisionedProductResult updateProvisionedProduct(final String acceptedLanguage,
-                                                                          final String pathId,
-                                                                          final String productId,
-                                                                          final String provisionedProductId,
-                                                                          final List<UpdateProvisioningParameter> provisioningParameters,
-                                                                          final String provisionedProductName,
-                                                                          final String provisioningArtifactId,
-                                                                          String updateToken,
-                                                                          final AWSServiceCatalog serviceCatalogclient) {
-
-        if (StringUtils.isEmpty(updateToken)) {
-            updateToken = generateRandomToken();
-        }
-
-        UpdateProvisionedProductRequest updateProvisionedProductRequest = new UpdateProvisionedProductRequest()
-                .withAcceptLanguage(acceptedLanguage)
-                .withProductId(productId)
-                .withProvisioningParameters(provisioningParameters)
-                .withProvisioningArtifactId(provisioningArtifactId)
-                .withUpdateToken(updateToken);
-
-        if (!StringUtils.isEmpty(pathId)) {
-            updateProvisionedProductRequest.withPathId(pathId);
-        }
-        if (!StringUtils.isEmpty(provisionedProductId)) {
-            updateProvisionedProductRequest.withProvisionedProductId(provisionedProductId);
-        }
-        if (!StringUtils.isEmpty(provisionedProductName)) {
-            updateProvisionedProductRequest.withProvisionedProductName(provisionedProductName);
-        }
-
-
-        return serviceCatalogclient.updateProvisionedProduct(updateProvisionedProductRequest);
+    public static UpdateProvisionedProductResponse updateProvisionedProduct(
+            String acceptedLanguage, String pathId, String productId, String provisionedProductId,
+            List<UpdateProvisioningParameter> parameters, String provisionedProductName,
+            String artifactId, String token, ServiceCatalogClient client) {
+        String updateToken = StringUtils.isEmpty(token) ? generateRandomToken() : token;
+        UpdateProvisionedProductRequest.Builder request = UpdateProvisionedProductRequest.builder()
+                .acceptLanguage(acceptedLanguage)
+                .productId(productId)
+                .provisioningParameters(parameters)
+                .provisioningArtifactId(artifactId)
+                .updateToken(updateToken);
+        if (!StringUtils.isEmpty(pathId)) request.pathId(pathId);
+        if (!StringUtils.isEmpty(provisionedProductId)) request.provisionedProductId(provisionedProductId);
+        if (!StringUtils.isEmpty(provisionedProductName)) request.provisionedProductName(provisionedProductName);
+        return client.updateProvisionedProduct(request.build());
     }
 
-    private static String generateRandomToken(){
+    private static String generateRandomToken() {
         return UUID.randomUUID().toString();
     }
 }

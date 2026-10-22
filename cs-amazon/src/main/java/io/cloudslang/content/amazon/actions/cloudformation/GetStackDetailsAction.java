@@ -31,11 +31,13 @@
 
 package io.cloudslang.content.amazon.actions.cloudformation;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.DescribeStackResourcesRequest;
-import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
-import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
-import com.amazonaws.services.cloudformation.model.Stack;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.DescribeStackResourcesRequest;
+import software.amazon.awssdk.services.cloudformation.model.DescribeStackResourcesResponse;
+import software.amazon.awssdk.services.cloudformation.model.DescribeStacksRequest;
+import software.amazon.awssdk.services.cloudformation.model.Stack;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -128,23 +130,23 @@ public class GetStackDetailsAction {
         connectTimeoutMs = defaultIfEmpty(connectTimeoutMs, DefaultValues.CONNECT_TIMEOUT);
         execTimeoutMs = defaultIfEmpty(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
 
-        AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
+        CloudFormationClient stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
         final Map<String, String> results = new HashMap();
 
         try {
-            final DescribeStacksRequest describeStacksRequest = new DescribeStacksRequest().withStackName(stackName);
+            final DescribeStacksRequest describeStacksRequest = DescribeStacksRequest.builder().stackName(stackName).build();
 
             //final Stack stack =  stackBuilder.describeStacks(describeStacksRequest).getStacks().get(0);
 
-            for (Stack stack : stackBuilder.describeStacks(describeStacksRequest).getStacks()) {
-                results.put(Outputs.RETURN_RESULT, stack.getStackName() + "[" + stack.getStackStatus() + "]");
-                results.put(Outputs.STACK_NAME_RESULT, stack.getStackName());
-                results.put(Outputs.STACK_ID_RESULT, stack.getStackId());
-                results.put(Outputs.STACK_STATUS_RESULT, stack.getStackStatus());
-                results.put(Outputs.STACK_STATUS_RESULT_REASON, stack.getStackStatusReason());
-                results.put(Outputs.STACK_CREATION_TIME_RESULT, stack.getCreationTime().toString());
-                results.put(Outputs.STACK_DESCRIPTION_RESULT, stack.getDescription());
+            for (Stack stack : stackBuilder.describeStacks(describeStacksRequest).stacks()) {
+                results.put(Outputs.RETURN_RESULT, stack.stackName() + "[" + stack.stackStatusAsString() + "]");
+                results.put(Outputs.STACK_NAME_RESULT, stack.stackName());
+                results.put(Outputs.STACK_ID_RESULT, stack.stackId());
+                results.put(Outputs.STACK_STATUS_RESULT, stack.stackStatusAsString());
+                results.put(Outputs.STACK_STATUS_RESULT_REASON, stack.stackStatusReason());
+                results.put(Outputs.STACK_CREATION_TIME_RESULT, stack.creationTime().toString());
+                results.put(Outputs.STACK_DESCRIPTION_RESULT, stack.description());
                 results.put(Outputs.STACK_OUTPUTS_RESULT, getStackOutputs(stack));
                 results.put(Outputs.STACK_RESOURCES_RESULT, getStackResources(stackName, stackBuilder));
 
@@ -167,21 +169,23 @@ public class GetStackDetailsAction {
         return results;
     }
 
-    private String getStackResources(String stackName, AmazonCloudFormation stackBuilder) throws IOException {
-        final DescribeStackResourcesRequest stackResourceRequest = new DescribeStackResourcesRequest()
-                .withStackName(stackName);
+    private String getStackResources(String stackName, CloudFormationClient stackBuilder) throws IOException {
+        final DescribeStackResourcesRequest stackResourceRequest = DescribeStackResourcesRequest.builder()
+                .stackName(stackName)
+                .build();
 
-        DescribeStackResourcesResult describeStackResourcesResult = stackBuilder.describeStackResources(stackResourceRequest);
+        DescribeStackResourcesResponse describeStackResourcesResult = stackBuilder.describeStackResources(stackResourceRequest);
         String stackResources = OutputsUtil.getStackResourcesToJson(describeStackResourcesResult);
         return stackResources;
     }
 
     public static String getStackOutputs(Stack stack) throws IOException {
-        List<com.amazonaws.services.cloudformation.model.Output> stackOutputs = stack.getOutputs();
+        List<software.amazon.awssdk.services.cloudformation.model.Output> stackOutputs = stack.outputs();
 
         final ObjectMapper om = new ObjectMapper();
         om.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         om.enable(SerializationFeature.INDENT_OUTPUT);
+        om.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
         final String outputsAsJson = om.writeValueAsString(stackOutputs);
 

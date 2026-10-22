@@ -31,11 +31,11 @@
 
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.Stack;
-import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
-import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.Stack;
+import software.amazon.awssdk.services.servicecatalog.ServiceCatalogClient;
+import software.amazon.awssdk.services.servicecatalog.model.DescribeRecordResponse;
+import software.amazon.awssdk.services.servicecatalog.model.ProvisionProductResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -148,26 +148,26 @@ public class ProvisionProductAction {
 
         try {
 
-            final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
+            final ServiceCatalogClient awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, regionVal, asyncImp);
 
-            final ProvisionProductResult result = AmazonServiceCatalogService.provisionProduct(provisionedProductName,
+            final ProvisionProductResponse result = AmazonServiceCatalogService.provisionProduct(provisionedProductName,
                     toArrayOfParameters(provisioningParameters, delimiterVal), productId, provisionTokens, provisioningArtifactId,
                     toArrayOfTags(tags, delimiterVal), acceptLanguageVal, notificationArns, pathId, awsServiceCatalog);
 
-            String provisionStatus = result.getRecordDetail().getStatus();
+            String provisionStatus = result.recordDetail().statusAsString();
             while (UPDATE_STATUSES.contains(provisionStatus)) {
                 Thread.sleep(pollingIntervalImp);
-                provisionStatus = getUpdatedProductStatus(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+                provisionStatus = getUpdatedProductStatus(result.recordDetail().recordId(), awsServiceCatalog);
             }
             if (provisionStatus.equals(FAILED)) {
-                final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
-                throw new RuntimeException(PROVISION_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
+                final DescribeRecordResponse recordResult = AmazonServiceCatalogService.describeRecord(result.recordDetail().recordId(), awsServiceCatalog);
+                throw new RuntimeException(PROVISION_PRODUCT_FAILED_REASON + recordResult.recordDetail().recordErrors().toString());
             }
 
-            final AmazonCloudFormation awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
+            final CloudFormationClient awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
                     proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutVal, execTimeoutVal, regionVal);
-            final String cloudFormationStackName = getCloudFormationStackName(result.getRecordDetail().getRecordId(), awsServiceCatalog, pollingIntervalImp);
+            final String cloudFormationStackName = getCloudFormationStackName(result.recordDetail().recordId(), awsServiceCatalog, pollingIntervalImp);
             List<Stack> stacks = describeCloudFormationStack(cloudFormationStackName, awsCloudFormation);
 
             String stackOutputs = getStackOutputsToJson(getStack(stacks));
@@ -175,8 +175,8 @@ public class ProvisionProductAction {
 
             Map<String, String> results = getSuccessResultMapProvisionProduct(result);
 
-            results.put(STACK_NAME, getStack(stacks).getStackName());
-            results.put(STACK_ID, getStack(stacks).getStackId());
+            results.put(STACK_NAME, getStack(stacks).stackName());
+            results.put(STACK_ID, getStack(stacks).stackId());
             results.put(STACK_OUTPUTS, stackOutputs);
             results.put(STACK_RESOURCES, stackResources);
 

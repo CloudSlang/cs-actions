@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.amazon.actions.rds;
 
-import com.amazonaws.services.rds.AmazonRDS;
-import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
+import software.amazon.awssdk.services.rds.RdsClient;
+import software.amazon.awssdk.services.rds.model.DescribeDbInstancesResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -101,10 +101,10 @@ public class DescribeDBInstance {
 
         try {
 
-            final AmazonRDS amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
+            final RdsClient amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
 
-            final DescribeDBInstancesResult result = AmazonRDSService.getDBDetails(
+            final DescribeDbInstancesResponse result = AmazonRDSService.getDBDetails(
                     dbInstanceIdentifier, amazonRDS);
 
             return getSuccessResultMapDescribedDBInstance(result);

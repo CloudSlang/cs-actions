@@ -16,9 +16,9 @@
 
 package io.cloudslang.content.amazon.actions.cloudformation;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
-import com.amazonaws.services.cloudformation.model.Stack;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.DescribeStacksRequest;
+import software.amazon.awssdk.services.cloudformation.model.Stack;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -87,12 +87,12 @@ public class ListStacksAction {
         execTimeoutMs = defaultIfEmpty(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
 
         try {
-            AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
+            CloudFormationClient stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
             StringBuilder listOfStacksResult = new StringBuilder(EMPTY);
             // Show all the stacks for this account along with the resources for each stack
-            for (Stack stack : stackBuilder.describeStacks(new DescribeStacksRequest()).getStacks()) {
-                listOfStacksResult.append(stack.getStackName() + Constants.Miscellaneous.COMMA_DELIMITER);
+            for (Stack stack : stackBuilder.describeStacks(DescribeStacksRequest.builder().build()).stacks()) {
+                listOfStacksResult.append(stack.stackName() + Constants.Miscellaneous.COMMA_DELIMITER);
             }
 
             if (listOfStacksResult.length() > 0) {

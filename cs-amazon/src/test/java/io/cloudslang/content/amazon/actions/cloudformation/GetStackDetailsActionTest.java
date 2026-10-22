@@ -29,8 +29,8 @@
  
 package io.cloudslang.content.amazon.actions.cloudformation;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import org.json.JSONException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,12 +79,12 @@ public class GetStackDetailsActionTest {
 
     //@Test
     public void execute() {
-        AWSCredentialsProvider awsCreds = new DefaultAWSCredentialsProviderChain();
+        AwsCredentialsProvider awsCreds = DefaultCredentialsProvider.create();
 
         GetStackDetailsAction getStackDetailsAction = new GetStackDetailsAction();
         Map<String, String> getStackDetailsResult = getStackDetailsAction.execute(
-                awsCreds.getCredentials().getAWSAccessKeyId(),
-                awsCreds.getCredentials().getAWSSecretKey(),
+                awsCreds.resolveCredentials().accessKeyId(),
+                awsCreds.resolveCredentials().secretAccessKey(),
                 US_EAST_1,
                 proxyHost,
                 proxyPort,

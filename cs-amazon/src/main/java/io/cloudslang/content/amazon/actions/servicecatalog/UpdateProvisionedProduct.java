@@ -31,11 +31,11 @@
 
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.Stack;
-import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
-import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.Stack;
+import software.amazon.awssdk.services.servicecatalog.ServiceCatalogClient;
+import software.amazon.awssdk.services.servicecatalog.model.DescribeRecordResponse;
+import software.amazon.awssdk.services.servicecatalog.model.UpdateProvisionedProductResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -159,25 +159,25 @@ public class UpdateProvisionedProduct {
 
         try {
             //The client
-            final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
+            final ServiceCatalogClient awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, regionVal, asyncImp);
             //The result
-            final UpdateProvisionedProductResult result = AmazonServiceCatalogService.updateProvisionedProduct(acceptedLanguageVal, pathId,
+            final UpdateProvisionedProductResponse result = AmazonServiceCatalogService.updateProvisionedProduct(acceptedLanguageVal, pathId,
                     productId, provisionedProductId, toArrayOfUpdateParameters(provisioningParameters, delimiterVal, usePreviousValueImp),
                     provisionedProductName, provisioningArtifactId, updateToken, awsServiceCatalog);
-            String updateStatus = result.getRecordDetail().getStatus();
+            String updateStatus = result.recordDetail().statusAsString();
             while (UPDATE_STATUSES.contains(updateStatus)) {
                 Thread.sleep(pollingIntervalImp);
-                updateStatus = getUpdatedProductStatus(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+                updateStatus = getUpdatedProductStatus(result.recordDetail().recordId(), awsServiceCatalog);
             }
             if (updateStatus.equals(FAILED)) {
-                final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
-                throw new RuntimeException(UPDATE_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
+                final DescribeRecordResponse recordResult = AmazonServiceCatalogService.describeRecord(result.recordDetail().recordId(), awsServiceCatalog);
+                throw new RuntimeException(UPDATE_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.recordDetail().recordErrors().toString());
             }
 
-            final AmazonCloudFormation awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
+            final CloudFormationClient awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
                     proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutVal, execTimeoutVal, regionVal);
-            final String cloudFormationStackName = getCloudFormationStackName(result.getRecordDetail().getRecordId(), awsServiceCatalog, pollingIntervalImp);
+            final String cloudFormationStackName = getCloudFormationStackName(result.recordDetail().recordId(), awsServiceCatalog, pollingIntervalImp);
             List<Stack> stacks = describeCloudFormationStack(cloudFormationStackName, awsCloudFormation);
             String stackOutputs = getStackOutputsToJson(getStack(stacks));
             String stackResources = getStackResourcesToJson(describeStackResourcesResult(cloudFormationStackName, awsCloudFormation));

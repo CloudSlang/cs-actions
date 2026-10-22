@@ -31,9 +31,9 @@
 
 package io.cloudslang.content.amazon.actions.cloudformation;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.DeleteStackRequest;
-import com.amazonaws.services.cloudformation.model.DeleteStackResult;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.DeleteStackRequest;
+import software.amazon.awssdk.services.cloudformation.model.DeleteStackResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -112,13 +112,14 @@ public class DeleteStackAction {
         execTimeoutMs = defaultIfEmpty(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
 
         try {
-            AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
+            CloudFormationClient stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
             // Delete the stack
-            DeleteStackRequest deleteRequest = new DeleteStackRequest()
-                    .withStackName(stackName);
+            DeleteStackRequest deleteRequest = DeleteStackRequest.builder()
+                    .stackName(stackName)
+                    .build();
 
-            DeleteStackResult result = stackBuilder.deleteStack(deleteRequest);
+            DeleteStackResponse result = stackBuilder.deleteStack(deleteRequest);
             return OutputUtilities.getSuccessResultsMap(result.toString());
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);

@@ -31,10 +31,10 @@
 
 package io.cloudslang.content.amazon.actions.cloudformation;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.CreateStackRequest;
-import com.amazonaws.services.cloudformation.model.CreateStackResult;
-import com.amazonaws.services.cloudformation.model.Parameter;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.CreateStackRequest;
+import software.amazon.awssdk.services.cloudformation.model.CreateStackResponse;
+import software.amazon.awssdk.services.cloudformation.model.Parameter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.hp.oo.sdk.content.annotations.Action;
@@ -120,30 +120,30 @@ public class CreateStackAction {
 
         try {
 
-            final CreateStackRequest createRequest = new CreateStackRequest()
-                    .withStackName(stackName)
-                    .withParameters(toArrayOfParameters(parameters))
-                    .withCapabilities(toArrayOfString(capabilities));
+            final CreateStackRequest.Builder createRequestBuilder = CreateStackRequest.builder()
+                    .stackName(stackName)
+                    .parameters(toArrayOfParameters(parameters))
+                    .capabilitiesWithStrings(toArrayOfString(capabilities));
 
             if (StringUtils.isNotEmpty(templateUrl)) {
                 UrlValidator urlValidator = new UrlValidator();
                 if (!urlValidator.isValid(templateUrl)) {
                     throw new IllegalArgumentException("templateUrl value is not a valid URL");
                 }
-                createRequest.setTemplateURL(templateUrl);
+                createRequestBuilder.templateURL(templateUrl);
             } else if (StringUtils.isNotEmpty(templateBody)) {
-                createRequest.setTemplateURL(templateBody);
+                createRequestBuilder.templateBody(templateBody);
             } else {
                 throw new IllegalArgumentException("templateUrl or templateBody should be specified");
             }
 
-            final AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
+            final CloudFormationClient stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
-            final CreateStackResult createStackResult = stackBuilder.createStack(createRequest);
+            final CreateStackResponse createStackResult = stackBuilder.createStack(createRequestBuilder.build());
             final String createStackResultAsString = StringUtils.defaultIfEmpty(createStackResult.toString(),"");
 
             final ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            final String createStackResultAsJson = ow.writeValueAsString(createStackResult);
+            final String createStackResultAsJson = ow.writeValueAsString(Map.of("stackId", createStackResult.stackId()));
 
             final HashMap<String, String> results = new HashMap();
             results.put(RETURN_CODE, SUCCESS_RETURN_CODE);
@@ -165,10 +165,10 @@ public class CreateStackAction {
         for (final String line : parameters.split(StringUtils.LF)) {
             final ParametersLine paramLine = new ParametersLine(line);
             if (paramLine.isValid()) {
-                final Parameter parameter = new Parameter();
-                parameter.setParameterKey(paramLine.getKey());
-                parameter.setParameterValue(paramLine.getValue());
-                parametersList.add(parameter);
+                parametersList.add(Parameter.builder()
+                        .parameterKey(paramLine.getKey())
+                        .parameterValue(paramLine.getValue())
+                        .build());
             }
         }
         return parametersList;

@@ -14,8 +14,8 @@
  */
 package io.cloudslang.content.amazon.actions.trustedadvisor;
 
-import com.amazonaws.services.costexplorer.AWSCostExplorer;
-import com.amazonaws.services.costexplorer.model.GetRightsizingRecommendationResult;
+import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
+import software.amazon.awssdk.services.costexplorer.model.GetRightsizingRecommendationResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -102,10 +102,10 @@ public class CostExplorerRecommendations {
 
         try {
 
-            final AWSCostExplorer awsCostExplorer = AmazonAWSAdvisoryClientBuilder.getAWSCostExplorerClientBuilder(accessKeyID, accessKey,
+            final CostExplorerClient awsCostExplorer = AmazonAWSAdvisoryClientBuilder.getAWSCostExplorerClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region);
 
-            final GetRightsizingRecommendationResult result = AWSAdvisorService.getCostRecommendations(awsCostExplorer,serviceNameVal);
+            final GetRightsizingRecommendationResponse result = AWSAdvisorService.getCostRecommendations(awsCostExplorer,serviceNameVal);
 
             return getSuccessResultMapDescribedRecommendations(result);
 

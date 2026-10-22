@@ -31,13 +31,13 @@
 
 package io.cloudslang.content.amazon.actions.lambda;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.lambda.AWSLambdaAsyncClient;
-import com.amazonaws.services.lambda.AWSLambdaAsyncClientBuilder;
-import com.amazonaws.services.lambda.model.InvokeRequest;
-import com.amazonaws.services.lambda.model.InvokeResult;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.SdkBytes;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.lambda.LambdaClient;
+import software.amazon.awssdk.services.lambda.model.InvokeRequest;
+import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -115,23 +115,20 @@ public class InvokeLambdaAction {
         execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
         qualifier = defaultIfBlank(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
-        ClientConfiguration lambdaClientConf = AmazonWebServiceClientUtil.getClientConfiguration(proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs);
-
-        AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
-                .withClientConfiguration(lambdaClientConf)
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(identity, credential)))
-                .withRegion(region)
-                .build();
-
-        InvokeRequest invokeRequest = new InvokeRequest()
-                .withFunctionName(function)
-                .withQualifier(qualifier)
-                .withPayload(payload)
-                .withSdkClientExecutionTimeout(Integer.parseInt(execTimeoutMs));
-
         try {
-            InvokeResult invokeResult = client.invoke(invokeRequest);
-            return OutputUtilities.getSuccessResultsMap(new String(invokeResult.getPayload().array()));
+            try (LambdaClient client = LambdaClient.builder()
+                    .region(Region.of(region))
+                    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(identity, credential)))
+                    .httpClientBuilder(AmazonWebServiceClientUtil.getHttpClientBuilder(
+                            proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs))
+                    .overrideConfiguration(AmazonWebServiceClientUtil.getClientOverrideConfiguration(execTimeoutMs))
+                    .build()) {
+                InvokeRequest.Builder request = InvokeRequest.builder().functionName(function).qualifier(qualifier);
+                if (payload != null) {
+                    request.payload(SdkBytes.fromUtf8String(payload));
+                }
+                return OutputUtilities.getSuccessResultsMap(client.invoke(request.build()).payload().asUtf8String());
+            }
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);
         }

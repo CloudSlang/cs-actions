@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.amazon.actions.rds;
 
-import com.amazonaws.services.rds.AmazonRDS;
-import com.amazonaws.services.rds.model.DBInstance;
+import software.amazon.awssdk.services.rds.RdsClient;
+import software.amazon.awssdk.services.rds.model.DBInstance;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -124,7 +124,7 @@ public class CreateDBInstance {
                 return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
             }
 
-            final AmazonRDS amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
+            final RdsClient amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
 
             final DBInstance result = AmazonRDSService.createRDSInstance(dbEngineName, dbEngineVersion, dbUsername, dbPassword,vpcSecurityGroupIds,dbSubnetGroupName,

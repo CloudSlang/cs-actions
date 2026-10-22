@@ -31,10 +31,10 @@
 
 package io.cloudslang.content.amazon.utils;
 
-import com.amazonaws.services.cloudformation.model.Stack;
-import com.amazonaws.services.servicecatalog.model.ProvisioningParameter;
-import com.amazonaws.services.servicecatalog.model.Tag;
-import com.amazonaws.services.servicecatalog.model.UpdateProvisioningParameter;
+import software.amazon.awssdk.services.cloudformation.model.Stack;
+import software.amazon.awssdk.services.servicecatalog.model.ProvisioningParameter;
+import software.amazon.awssdk.services.servicecatalog.model.Tag;
+import software.amazon.awssdk.services.servicecatalog.model.UpdateProvisioningParameter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -54,10 +54,7 @@ public class ServiceCatalogUtil {
         for (String line : provisioningTags.split(delimiter)) {
             final ParametersLine tagLine = new ParametersLine(line);
             if (tagLine.isValid()) {
-                final Tag tag = new Tag();
-                tag.setKey(tagLine.getKey());
-                tag.setValue(tagLine.getValue());
-                tags.add(tag);
+                tags.add(Tag.builder().key(tagLine.getKey()).value(tagLine.getValue()).build());
             }
         }
         return tags;
@@ -72,10 +69,8 @@ public class ServiceCatalogUtil {
         for (String line : parameters.split(delimiter)) {
             final ParametersLine paramLine = new ParametersLine(line);
             if (paramLine.isValid()) {
-                final ProvisioningParameter parameter = new ProvisioningParameter();
-                parameter.setKey(paramLine.getKey());
-                parameter.setValue(paramLine.getValue());
-                parametersList.add(parameter);
+                parametersList.add(ProvisioningParameter.builder()
+                        .key(paramLine.getKey()).value(paramLine.getValue()).build());
             }
         }
         return parametersList;
@@ -89,11 +84,9 @@ public class ServiceCatalogUtil {
         for (String line : updateParameters.split(delimiter)) {
             final ParametersLine paramLine = new ParametersLine(line);
             if (paramLine.isValid()) {
-                final UpdateProvisioningParameter updateParamter = new UpdateProvisioningParameter();
-                updateParamter.setKey(paramLine.getKey());
-                updateParamter.setValue(paramLine.getValue());
-                updateParamter.setUsePreviousValue(usePreviousValue);
-                updateParametersList.add(updateParamter);
+                updateParametersList.add(UpdateProvisioningParameter.builder()
+                        .key(paramLine.getKey()).value(paramLine.getValue())
+                        .usePreviousValue(usePreviousValue).build());
             }
         }
         return updateParametersList;

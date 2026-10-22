@@ -14,8 +14,8 @@
  */
 package io.cloudslang.content.amazon.actions.trustedadvisor;
 
-import com.amazonaws.services.support.AWSSupport;
-import com.amazonaws.services.support.model.DescribeTrustedAdvisorCheckResultResult;
+import software.amazon.awssdk.services.support.SupportClient;
+import software.amazon.awssdk.services.support.model.DescribeTrustedAdvisorCheckResultResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -96,10 +96,10 @@ public class CostOptimizationRecommendations {
 
         try {
 
-            final AWSSupport awsSupport = AmazonAWSAdvisoryClientBuilder.getAWSAdvisorSupportClientBuilder(accessKeyID, accessKey,
+            final SupportClient awsSupport = AmazonAWSAdvisoryClientBuilder.getAWSAdvisorSupportClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region);
 
-            final DescribeTrustedAdvisorCheckResultResult result = AWSAdvisorService.getRecommendationDetails(
+            final DescribeTrustedAdvisorCheckResultResponse result = AWSAdvisorService.getRecommendationDetails(
                     checkID, awsSupport);
 
             return getSuccessResultMapDescribedRecommendations(result);

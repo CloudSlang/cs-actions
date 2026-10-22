@@ -31,16 +31,18 @@
 
 package io.cloudslang.content.amazon.utils;
 
-import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
-import com.amazonaws.services.cloudformation.model.Stack;
-import com.amazonaws.services.costexplorer.model.GetRightsizingRecommendationResult;
-import com.amazonaws.services.rds.model.AddTagsToResourceResult;
-import com.amazonaws.services.rds.model.DBInstance;
-import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
-import com.amazonaws.services.servicecatalog.model.DescribeProvisionedProductResult;
-import com.amazonaws.services.servicecatalog.model.ProvisionProductResult;
-import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
-import com.amazonaws.services.support.model.DescribeTrustedAdvisorCheckResultResult;
+import software.amazon.awssdk.services.cloudformation.model.DescribeStackResourcesResponse;
+import software.amazon.awssdk.services.cloudformation.model.Stack;
+import software.amazon.awssdk.services.costexplorer.model.GetRightsizingRecommendationResponse;
+import software.amazon.awssdk.services.rds.model.AddTagsToResourceResponse;
+import software.amazon.awssdk.services.rds.model.DBInstance;
+import software.amazon.awssdk.services.rds.model.DescribeDbInstancesResponse;
+import software.amazon.awssdk.services.servicecatalog.model.DescribeProvisionedProductResponse;
+import software.amazon.awssdk.services.servicecatalog.model.ProvisionProductResponse;
+import software.amazon.awssdk.services.servicecatalog.model.UpdateProvisionedProductResponse;
+import software.amazon.awssdk.services.support.model.DescribeTrustedAdvisorCheckResultResponse;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.amazon.entities.aws.AuthorizationHeader;
@@ -139,63 +141,63 @@ public class OutputsUtil {
         return results;
     }
 
-    public static Map<String, String> getSuccessResultMapProvisionProduct(ProvisionProductResult result) {
+    public static Map<String, String> getSuccessResultMapProvisionProduct(ProvisionProductResponse result) {
 
         Map<String, String> results = getSuccessResultsMap(result.toString());
 
-        results.put(CREATED_TIME, result.getRecordDetail().getCreatedTime().toString());
-        results.put(PATH_ID, result.getRecordDetail().getPathId());
-        results.put(PRODUCT_ID, result.getRecordDetail().getProductId());
-        results.put(PROVISIONED_PRODUCT_ID, result.getRecordDetail().getProvisionedProductId());
-        results.put(PROVISIONED_PRODUCT_NAME, result.getRecordDetail().getProvisionedProductName());
-        results.put(PROVISIONED_PRODUCT_TYPE, result.getRecordDetail().getProvisionedProductType());
-        results.put(PROVISIONING_ARTIFACT_ID, result.getRecordDetail().getProvisioningArtifactId());
-        results.put(STATUS, result.getRecordDetail().getStatus());
+        results.put(CREATED_TIME, result.recordDetail().createdTime().toString());
+        results.put(PATH_ID, result.recordDetail().pathId());
+        results.put(PRODUCT_ID, result.recordDetail().productId());
+        results.put(PROVISIONED_PRODUCT_ID, result.recordDetail().provisionedProductId());
+        results.put(PROVISIONED_PRODUCT_NAME, result.recordDetail().provisionedProductName());
+        results.put(PROVISIONED_PRODUCT_TYPE, result.recordDetail().provisionedProductType());
+        results.put(PROVISIONING_ARTIFACT_ID, result.recordDetail().provisioningArtifactId());
+        results.put(STATUS, result.recordDetail().statusAsString());
 
         return results;
     }
 
-    public static Map<String, String> getSuccessResultMapUpdateProvisioningProduct(UpdateProvisionedProductResult result) {
+    public static Map<String, String> getSuccessResultMapUpdateProvisioningProduct(UpdateProvisionedProductResponse result) {
 
         Map<String, String> results = getSuccessResultsMap(result.toString());
 
-        results.put(CREATED_TIME, result.getRecordDetail().getCreatedTime().toString());
-        results.put(PATH_ID, result.getRecordDetail().getPathId());
-        results.put(PRODUCT_ID, result.getRecordDetail().getProductId());
-        results.put(PROVISIONED_PRODUCT_ID, result.getRecordDetail().getProvisionedProductId());
-        results.put(PROVISIONED_PRODUCT_NAME, result.getRecordDetail().getProvisionedProductName());
-        results.put(PROVISIONED_PRODUCT_TYPE, result.getRecordDetail().getProvisionedProductType());
-        results.put(PROVISIONING_ARTIFACT_ID, result.getRecordDetail().getProvisioningArtifactId());
-        results.put(UPDATE_TIME, result.getRecordDetail().getUpdatedTime().toString());
-        results.put(RECORD_ID, result.getRecordDetail().getRecordId());
-        results.put(RECORD_TYPE, result.getRecordDetail().getRecordType());
-        results.put(RECORD_ERRORS, result.getRecordDetail().getRecordErrors().toString());
-        results.put(RECORD_TAGS, result.getRecordDetail().getRecordErrors().toString());
-        results.put(STATUS, result.getRecordDetail().getStatus());
+        results.put(CREATED_TIME, result.recordDetail().createdTime().toString());
+        results.put(PATH_ID, result.recordDetail().pathId());
+        results.put(PRODUCT_ID, result.recordDetail().productId());
+        results.put(PROVISIONED_PRODUCT_ID, result.recordDetail().provisionedProductId());
+        results.put(PROVISIONED_PRODUCT_NAME, result.recordDetail().provisionedProductName());
+        results.put(PROVISIONED_PRODUCT_TYPE, result.recordDetail().provisionedProductType());
+        results.put(PROVISIONING_ARTIFACT_ID, result.recordDetail().provisioningArtifactId());
+        results.put(UPDATE_TIME, result.recordDetail().updatedTime().toString());
+        results.put(RECORD_ID, result.recordDetail().recordId());
+        results.put(RECORD_TYPE, result.recordDetail().recordType());
+        results.put(RECORD_ERRORS, result.recordDetail().recordErrors().toString());
+        results.put(RECORD_TAGS, result.recordDetail().recordErrors().toString());
+        results.put(STATUS, result.recordDetail().statusAsString());
 
         return results;
     }
 
-    public static Map<String, String> getSuccessResultMapDescribedProvisionedProduct(DescribeProvisionedProductResult result) {
+    public static Map<String, String> getSuccessResultMapDescribedProvisionedProduct(DescribeProvisionedProductResponse result) {
 
         Map<String, String> results = getSuccessResultsMap(result.toString());
 
-        results.put(PROVISIONED_PRODUCT_ARN, result.getProvisionedProductDetail().getArn());
-        results.put(PROVISIONED_PRODUCT_CREATED_TIME, result.getProvisionedProductDetail().getCreatedTime().toString());
-        results.put(PROVISIONED_PRODUCT_ID, result.getProvisionedProductDetail().getId());
-        results.put(PROVISIONED_PRODUCT_STATUS, result.getProvisionedProductDetail().getStatus());
-        results.put(PROVISIONED_PRODUCT_NAME, result.getProvisionedProductDetail().getName());
-        results.put(PROVISIONED_PRODUCT_TYPE, result.getProvisionedProductDetail().getType());
+        results.put(PROVISIONED_PRODUCT_ARN, result.provisionedProductDetail().arn());
+        results.put(PROVISIONED_PRODUCT_CREATED_TIME, result.provisionedProductDetail().createdTime().toString());
+        results.put(PROVISIONED_PRODUCT_ID, result.provisionedProductDetail().id());
+        results.put(PROVISIONED_PRODUCT_STATUS, result.provisionedProductDetail().statusAsString());
+        results.put(PROVISIONED_PRODUCT_NAME, result.provisionedProductDetail().name());
+        results.put(PROVISIONED_PRODUCT_TYPE, result.provisionedProductDetail().type());
 
         return results;
     }
 
-    public static String getStackResourcesToJson(DescribeStackResourcesResult describeStackResources) throws IOException {
+    public static String getStackResourcesToJson(DescribeStackResourcesResponse describeStackResources) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        final ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = newSdkModelMapper();
         mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
-        mapper.writeValue(out, describeStackResources.getStackResources());
+        mapper.writeValue(out, describeStackResources.stackResources());
 
         final byte[] stackResources = out.toByteArray();
 
@@ -205,51 +207,57 @@ public class OutputsUtil {
     public static String getStackOutputsToJson(Stack stack) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        final ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = newSdkModelMapper();
         mapper.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
-        mapper.writeValue(out, stack.getOutputs());
+        mapper.writeValue(out, stack.outputs());
 
         final byte[] stackOutputs = out.toByteArray();
 
         return new String(stackOutputs);
     }
 
-    public static Map<String, String> getSuccessResultMapDescribedDBInstance(DescribeDBInstancesResult result) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        DBInstance dbInstance = result.getDBInstances().get(0);
+    public static Map<String, String> getSuccessResultMapDescribedDBInstance(DescribeDbInstancesResponse result) throws Exception {
+        ObjectMapper objectMapper = newSdkModelMapper();
+        DBInstance dbInstance = result.dbInstances().get(0);
 
 
         Map<String, String> results = getSuccessResultsMap(objectMapper.writeValueAsString(dbInstance));
-        String status = dbInstance.getDBInstanceStatus();
+        String status = dbInstance.dbInstanceStatus();
         results.put(DB_INSTANCE_STATUS, status);
         if (status.equalsIgnoreCase(AVAILABLE)) {
-            results.put(ENDPOINT_ADDRESS, dbInstance.getEndpoint().getAddress());
-            results.put(DB_INSTANCE_ARN, dbInstance.getDBInstanceArn());
+            results.put(ENDPOINT_ADDRESS, dbInstance.endpoint().address());
+            results.put(DB_INSTANCE_ARN, dbInstance.dbInstanceArn());
         }
         return results;
     }
 
     public static Map<String, String> getSuccessResultMapDBInstance(DBInstance result) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = newSdkModelMapper();
         return getSuccessResultsMap(objectMapper.writeValueAsString(result));
     }
 
-    public static Map<String, String> getSuccessResultMapDBInstanceTags(AddTagsToResourceResult result) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static Map<String, String> getSuccessResultMapDBInstanceTags(AddTagsToResourceResponse result) throws Exception {
+        ObjectMapper objectMapper = newSdkModelMapper();
         return getSuccessResultsMap(objectMapper.writeValueAsString(result));
     }
 
-    public static Map<String, String> getSuccessResultMapDescribedRecommendations(DescribeTrustedAdvisorCheckResultResult result) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static Map<String, String> getSuccessResultMapDescribedRecommendations(DescribeTrustedAdvisorCheckResultResponse result) throws Exception {
+        ObjectMapper objectMapper = newSdkModelMapper();
         Map<String, String> results = getSuccessResultsMap(objectMapper.writeValueAsString(result));
 
         return results;
     }
 
-    public static Map<String, String> getSuccessResultMapDescribedRecommendations(GetRightsizingRecommendationResult result) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static Map<String, String> getSuccessResultMapDescribedRecommendations(GetRightsizingRecommendationResponse result) throws Exception {
+        ObjectMapper objectMapper = newSdkModelMapper();
         Map<String, String> results = getSuccessResultsMap(objectMapper.writeValueAsString(result));
 
         return results;
+    }
+
+    private static ObjectMapper newSdkModelMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        return mapper;
     }
 }

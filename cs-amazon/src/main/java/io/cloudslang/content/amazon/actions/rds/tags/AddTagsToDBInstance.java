@@ -29,9 +29,9 @@
 
 package io.cloudslang.content.amazon.actions.rds.tags;
 
-import com.amazonaws.services.rds.AmazonRDS;
-import com.amazonaws.services.rds.model.AddTagsToResourceResult;
-import com.amazonaws.services.rds.model.DescribeDBInstancesResult;
+import software.amazon.awssdk.services.rds.RdsClient;
+import software.amazon.awssdk.services.rds.model.AddTagsToResourceResponse;
+import software.amazon.awssdk.services.rds.model.DescribeDbInstancesResponse;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -119,12 +119,12 @@ public class AddTagsToDBInstance {
                 return getFailureResultsMap(StringUtilities.join(exceptionMessage, NEW_LINE));
             }
 
-            final AmazonRDS amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
+            final RdsClient amazonRDS = RDSClientBuilder.getRDSClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region, asyncImp);
 
-            final DescribeDBInstancesResult dbInstanceDetails = AmazonRDSService.getDBDetails(dbInstanceIdentifier, amazonRDS);
+            final DescribeDbInstancesResponse dbInstanceDetails = AmazonRDSService.getDBDetails(dbInstanceIdentifier, amazonRDS);
 
-            AddTagsToResourceResult result = AmazonRDSService.addTagsToDBInstance(dbInstanceDetails.getDBInstances().get(0).getDBInstanceArn(), tagKeyList, tagValueList, amazonRDS);
+            AddTagsToResourceResponse result = AmazonRDSService.addTagsToDBInstance(dbInstanceDetails.dbInstances().get(0).dbInstanceArn(), tagKeyList, tagValueList, amazonRDS);
 
             return getSuccessResultMapDBInstanceTags(result);
 
