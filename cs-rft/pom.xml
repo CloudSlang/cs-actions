@@ -243,10 +243,6 @@
                         <additionalparam>-Xdoclint:none</additionalparam>
                     </configuration>
                 </plugin>
-                <!--
-                    Default deploy skipped to prevent deployment directly to the (now-retired) ossrh URL.
-                    Actual publishing to Maven Central is handled by central-publishing-maven-plugin below.
-                -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -285,13 +281,6 @@
         </pluginManagement>
 
         <plugins>
-            <!--
-                FIX: maven-source-plugin, maven-javadoc-plugin and maven-deploy-plugin were
-                declared only under <pluginManagement>, so their <executions> never actually
-                ran. central-publishing-maven-plugin was missing altogether. Declaring the
-                stubs below (config inherited from pluginManagement) makes deployment/publishing
-                actually work.
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -303,10 +292,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>io.github.mavenplugins</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
@@ -385,7 +370,7 @@
                     <plugin>
                         <groupId>io.github.mavenplugins</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>1.1.0</version>
+                        <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <executions>
                             <execution>
