@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.utilities.actions;
 
-import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
+import io.cloudslang.content.plugin.StepSerializableSessionObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

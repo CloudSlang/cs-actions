@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.rft.entities.sftp;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

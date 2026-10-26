@@ -18,10 +18,10 @@ package io.cloudslang.content.sharepoint.actions.authorization;
 
 import java.util.List;
 import java.util.Map;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.sharepoint.entities.GetAuthorizationTokenInputs;
@@ -29,9 +29,9 @@ import io.cloudslang.content.sharepoint.services.GetAuthorizationTokenImpl;
 import io.cloudslang.content.utils.NumberUtilities;
 import io.cloudslang.content.utils.StringUtilities;
 
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.*;
 import static io.cloudslang.content.sharepoint.utils.Constants.*;

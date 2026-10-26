@@ -18,7 +18,7 @@ package io.cloudslang.content.json.utils;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 

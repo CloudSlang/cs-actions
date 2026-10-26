@@ -16,8 +16,8 @@
 
 package io.cloudslang.content.rft.utils;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SessionResource;
+import io.cloudslang.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.SessionResource;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;

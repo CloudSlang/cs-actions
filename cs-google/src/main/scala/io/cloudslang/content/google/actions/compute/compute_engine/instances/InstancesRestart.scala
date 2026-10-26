@@ -21,8 +21,8 @@ package io.cloudslang.content.google.actions.compute.compute_engine.instances
 
 import java.util
 
-import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
-import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
+import io.cloudslang.content.annotations.{Action, Output, Param, Response}
+import io.cloudslang.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.BooleanValues.TRUE
 import io.cloudslang.content.constants.OutputNames._
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}

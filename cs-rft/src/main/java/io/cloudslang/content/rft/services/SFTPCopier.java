@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.rft.services;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 import com.jcraft.jsch.*;
 import io.cloudslang.content.rft.entities.sftp.*;
 import io.cloudslang.content.rft.utils.CacheUtils;

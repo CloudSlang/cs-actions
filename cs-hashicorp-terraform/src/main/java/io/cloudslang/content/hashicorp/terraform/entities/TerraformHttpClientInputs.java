@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.hashicorp.terraform.entities;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
 import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.CHANGEIT;

@@ -74,7 +74,7 @@
         <maven-license-plugin.version>3.0</maven-license-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <score-content-sdk.version>1.10.11</score-content-sdk.version>
+        <score-content-sdk.version>1.10.12</score-content-sdk.version>
         <commons-collection.version>4.6.0</commons-collection.version>
         <cs-commons.version>0.0.15-SNAPSHOT</cs-commons.version>
         <cs-xml.version>0.0.29-SNAPSHOT</cs-xml.version>
@@ -101,7 +101,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.hp.score.sdk</groupId>
+            <groupId>io.cloudslang.content</groupId>
             <artifactId>score-content-sdk</artifactId>
             <version>${score-content-sdk.version}</version>
         </dependency>

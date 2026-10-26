@@ -18,7 +18,7 @@
 
 package io.cloudslang.content.database.utils;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.database.services.databases.*;
 import io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType;
 import io.cloudslang.content.utils.CollectionUtilities;

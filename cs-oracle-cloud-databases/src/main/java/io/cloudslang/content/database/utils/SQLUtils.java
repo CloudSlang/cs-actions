@@ -16,8 +16,8 @@
 package io.cloudslang.content.database.utils;
 
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.StepSerializableSessionObject;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;

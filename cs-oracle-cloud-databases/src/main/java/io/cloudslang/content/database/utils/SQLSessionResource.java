@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.database.utils;
 
-import com.hp.oo.sdk.content.plugin.SessionResource;
+import io.cloudslang.content.plugin.SessionResource;
 
 import java.io.Serializable;
 import java.util.Map;

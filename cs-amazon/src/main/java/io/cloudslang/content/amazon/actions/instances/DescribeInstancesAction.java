@@ -32,12 +32,12 @@
 
 package io.cloudslang.content.amazon.actions.instances;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.inputs.CommonInputs;
 import io.cloudslang.content.amazon.entities.inputs.InstanceInputs;
 import io.cloudslang.content.amazon.execute.QueryApiExecutor;

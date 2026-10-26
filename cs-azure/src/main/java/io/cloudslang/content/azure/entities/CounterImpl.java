@@ -18,7 +18,7 @@
 
 package io.cloudslang.content.azure.entities;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.azure.exceptions.CounterImplException;
 import io.cloudslang.content.azure.utils.CounterProcessor;
 

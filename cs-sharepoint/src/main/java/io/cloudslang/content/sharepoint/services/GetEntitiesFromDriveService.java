@@ -18,8 +18,8 @@ package io.cloudslang.content.sharepoint.services;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.httpclient.actions.HttpClientGetAction;
 import io.cloudslang.content.sharepoint.utils.Constants;
 import io.cloudslang.content.sharepoint.utils.Descriptions;

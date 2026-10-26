@@ -19,7 +19,7 @@
 package io.cloudslang.content.database.utils;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 

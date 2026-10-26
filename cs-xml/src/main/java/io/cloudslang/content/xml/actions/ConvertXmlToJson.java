@@ -17,10 +17,10 @@
 
 package io.cloudslang.content.xml.actions;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.entities.inputs.ConvertXmlToJsonInputs;
 import io.cloudslang.content.xml.services.ConvertXmlToJsonService;

@@ -15,9 +15,9 @@
 
 package io.cloudslang.content.cyberark.actions.accounts;
 
-import com.hp.oo.sdk.content.annotations.*;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.*;
-import com.hp.oo.sdk.content.plugin.*;
+import io.cloudslang.content.annotations.*;
+import io.cloudslang.content.plugin.ActionMetadata.*;
+import io.cloudslang.content.plugin.*;
 import io.cloudslang.content.constants.*;
 import io.cloudslang.content.httpclient.actions.*;
 import io.cloudslang.content.utils.*;

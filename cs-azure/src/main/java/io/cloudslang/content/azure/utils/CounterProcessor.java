@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.azure.utils;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.azure.exceptions.CounterImplException;
 
 import java.util.HashMap;

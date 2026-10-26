@@ -2,7 +2,7 @@
 
 package io.cloudslang.content.oracle.oci.services;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.oracle.oci.exceptions.CounterImplException;
 import io.cloudslang.content.oracle.oci.utils.CounterProcessor;
 

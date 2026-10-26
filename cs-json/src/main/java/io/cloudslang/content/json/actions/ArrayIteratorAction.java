@@ -16,9 +16,9 @@
 
 package io.cloudslang.content.json.actions;
 
-import com.hp.oo.sdk.content.annotations.*;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.*;
-import com.hp.oo.sdk.content.plugin.*;
+import io.cloudslang.content.annotations.*;
+import io.cloudslang.content.plugin.ActionMetadata.*;
+import io.cloudslang.content.plugin.*;
 import io.cloudslang.content.constants.*;
 import io.cloudslang.content.json.services.*;
 import io.cloudslang.content.json.utils.*;
@@ -28,7 +28,7 @@ import java.util.*;
 import static io.cloudslang.content.constants.ResponseNames.*;
 import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.*;
 import static io.cloudslang.content.json.utils.Descriptions.ArrayIteratorDescription.*;
-import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
+import io.cloudslang.content.plugin.StepSerializableSessionObject;
 
 public class ArrayIteratorAction {
 

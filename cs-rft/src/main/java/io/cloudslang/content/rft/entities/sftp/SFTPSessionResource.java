@@ -15,7 +15,7 @@
 
 package io.cloudslang.content.rft.entities.sftp;
 
-import com.hp.oo.sdk.content.plugin.SessionResource;
+import io.cloudslang.content.plugin.SessionResource;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 

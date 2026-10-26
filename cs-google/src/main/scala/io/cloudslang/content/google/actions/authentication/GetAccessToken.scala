@@ -22,9 +22,9 @@ package io.cloudslang.content.google.actions.authentication
 import java.nio.charset.StandardCharsets
 import java.util
 
-import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType
+import io.cloudslang.content.annotations.{Action, Output, Param, Response}
+import io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.utils.Constants.NEW_LINE

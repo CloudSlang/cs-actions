@@ -212,7 +212,7 @@
         </dependency>
         <!-- Utils -->
         <dependency>
-            <groupId>com.hp.score.sdk</groupId>
+            <groupId>io.cloudslang.content</groupId>
             <artifactId>score-content-sdk</artifactId>
             <version>${score-content-sdk.version}</version>
         </dependency>

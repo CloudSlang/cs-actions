@@ -19,11 +19,11 @@ package io.cloudslang.content.dca.actions.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.utils.Validator;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -31,8 +31,8 @@ import io.cloudslang.content.dca.models.DcaHttpClientInputs;
 
 import java.util.Map;
 
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;

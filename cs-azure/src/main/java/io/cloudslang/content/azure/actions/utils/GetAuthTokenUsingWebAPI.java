@@ -17,10 +17,10 @@
 
 package io.cloudslang.content.azure.actions.utils;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
 import io.cloudslang.content.azure.entities.AuthorizationTokenUsingWebAPIInputs;
 import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.services.AuthenticationTokenUsingWebAPIImpl;
@@ -28,9 +28,9 @@ import io.cloudslang.content.constants.ReturnCodes;
 
 import java.util.Map;
 
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_HOST;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PASSWORD;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;

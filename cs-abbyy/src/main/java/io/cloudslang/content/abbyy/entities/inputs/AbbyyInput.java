@@ -16,8 +16,8 @@
 
 package io.cloudslang.content.abbyy.entities.inputs;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.abbyy.constants.*;
 import io.cloudslang.content.abbyy.entities.others.LocationId;
 import io.cloudslang.content.abbyy.entities.requests.HttpRequest;
