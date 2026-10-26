@@ -221,7 +221,7 @@
                         <include>pom.xml</include>
                     </includes>
                     <properties>
-                        <copyright.year>2022-2025</copyright.year>
+                        <copyright.year>2026-2027</copyright.year>
                     </properties>
                     <useDefaultMapping>false</useDefaultMapping>
                     <mapping>
