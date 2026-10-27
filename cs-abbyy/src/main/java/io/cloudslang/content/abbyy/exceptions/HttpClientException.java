@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,5 +19,9 @@ package io.cloudslang.content.abbyy.exceptions;
 public class HttpClientException extends Exception {
     public HttpClientException(String message) {
         super(message);
+    }
+
+    public HttpClientException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

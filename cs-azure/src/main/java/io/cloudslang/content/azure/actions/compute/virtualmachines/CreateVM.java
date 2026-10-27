@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -17,10 +17,10 @@
 
 package io.cloudslang.content.azure.actions.compute.virtualmachines;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
 import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.AzureComputeCommonInputs;
 import io.cloudslang.content.azure.entities.AzureCreateVMInputs;
@@ -32,9 +32,9 @@ import io.cloudslang.content.utils.StringUtilities;
 import java.util.List;
 import java.util.Map;
 
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_HOST;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PASSWORD;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PROXY_PORT;
@@ -55,7 +55,7 @@ import static io.cloudslang.content.azure.utils.InputsValidation.verifyComputeIn
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.azure.utils.AzureHttpClientInputNames.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;

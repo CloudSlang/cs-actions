@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -35,7 +35,7 @@ public class MySqlDatabase implements SqlDatabase {
 
     @Override
     public List<String> setUp(@NotNull final SQLInputs sqlInputs) {
-        loadClassForName("com.mysql.jdbc.Driver");
+        loadClassForName(MYSQL_JDBC_DRIVER);
 
         final String connectionString = getConnectionString(sqlInputs);
 

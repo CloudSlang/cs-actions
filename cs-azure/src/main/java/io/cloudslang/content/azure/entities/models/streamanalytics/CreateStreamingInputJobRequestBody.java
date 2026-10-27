@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,7 +19,7 @@ package io.cloudslang.content.azure.entities.models.streamanalytics;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.json.simple.JSONArray;
+import java.util.List;
 
 public class CreateStreamingInputJobRequestBody {
     CreateStreamingInputJobRequestBody.Properties properties;
@@ -143,7 +143,7 @@ public class CreateStreamingInputJobRequestBody {
             public String dateFormat;
             public String timeFormat;
             @JsonProperty("storageAccounts")
-            JSONArray strogeaccounts;
+            List<StorageAccounts> strogeaccounts;
 
             public String getDateFormat() {
                 return dateFormat;
@@ -177,11 +177,11 @@ public class CreateStreamingInputJobRequestBody {
                 this.pathPattern = pathPattern;
             }
 
-            public JSONArray getStrogeaccounts() {
+            public List<StorageAccounts> getStrogeaccounts() {
                 return strogeaccounts;
             }
 
-            public void setStrogeaccounts(JSONArray strogeaccounts) {
+            public void setStrogeaccounts(List<StorageAccounts> strogeaccounts) {
                 this.strogeaccounts = strogeaccounts;
             }
 

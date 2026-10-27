@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,15 +16,15 @@
 
 package io.cloudslang.content.amazon.actions.cloudformation;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
-import com.amazonaws.services.cloudformation.model.Stack;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.DescribeStacksRequest;
+import software.amazon.awssdk.services.cloudformation.model.Stack;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Constants;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
@@ -87,12 +87,12 @@ public class ListStacksAction {
         execTimeoutMs = defaultIfEmpty(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
 
         try {
-            AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
+            CloudFormationClient stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
             StringBuilder listOfStacksResult = new StringBuilder(EMPTY);
             // Show all the stacks for this account along with the resources for each stack
-            for (Stack stack : stackBuilder.describeStacks(new DescribeStacksRequest()).getStacks()) {
-                listOfStacksResult.append(stack.getStackName() + Constants.Miscellaneous.COMMA_DELIMITER);
+            for (Stack stack : stackBuilder.describeStacks(DescribeStacksRequest.builder().build()).stacks()) {
+                listOfStacksResult.append(stack.stackName() + Constants.Miscellaneous.COMMA_DELIMITER);
             }
 
             if (listOfStacksResult.length() > 0) {

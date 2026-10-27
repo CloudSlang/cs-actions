@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,18 +16,20 @@
 
 package io.cloudslang.content.json.actions;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ContainerNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ContainerNode;
+import tools.jackson.databind.node.ObjectNode;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OtherValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
@@ -36,7 +38,6 @@ import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.json.utils.JsonUtils;
 import io.cloudslang.content.utils.StringUtilities;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,7 +95,9 @@ public class AddJsonPropertyToObject {
             return populateResult(returnResult, new Exception(EMPTY_JSONOBJECT));
         }
 
-        ObjectMapper mapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        ObjectMapper mapper = JsonMapper.builder()
+                .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
+                .build();
         final boolean validateValueBoolean = JsonUtils.parseBooleanWithDefault(validateValue, true);
 
         if (StringUtilities.isBlank(newPropertyValue)) {
@@ -118,7 +121,7 @@ public class AddJsonPropertyToObject {
         JsonNode jsonNodeValueWrapper;
         try {
             jsonNodeValueWrapper = mapper.readTree(newPropertyValue);
-        } catch (IOException exception) {
+        } catch (JacksonException exception) {
             if (!validateValueBoolean) {
                 jsonNodeValueWrapper = mapper.valueToTree(newPropertyValue);
             } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,6 +19,7 @@ import io.cloudslang.content.entities.OutputStream;
 import io.cloudslang.content.entities.WSManRequestInputs;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
+import io.cloudslang.content.powershell.entities.PowerShellHttpClientInputs;
 import io.cloudslang.content.utils.WSManUtils;
 import io.cloudslang.content.utils.XMLUtils;
 import org.junit.jupiter.api.Test;
@@ -52,31 +53,30 @@ class WSManRemoteShellServiceTest {
 
     @Test
     void executeRequestSetsBodyAndReturnsResponse() throws Exception {
-        HttpClientService client = mock(HttpClientService.class);
-        HttpClientInputs inputs = mock(HttpClientInputs.class);
+        PowerShellHttpClientInputs inputs = spy(new PowerShellHttpClientInputs());
         Map<String, String> response = Map.of(STATUS_CODE, "200");
-        when(client.execute(inputs)).thenReturn(response);
+        try (MockedStatic<HttpClientService> client = mockStatic(HttpClientService.class)) {
+            client.when(() -> HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(response);
+            Map<String, String> result = invoke("executeRequestWithBody",
+                    new Class<?>[]{PowerShellHttpClientInputs.class, String.class}, inputs, RESPONSE);
 
-        Map<String, String> result = invoke("executeRequestWithBody",
-                new Class<?>[]{HttpClientService.class, HttpClientInputs.class, String.class},
-                client, inputs, RESPONSE);
-
-        assertEquals(response, result);
-        verify(inputs).setBody(RESPONSE);
-        verify(client).execute(inputs);
+            assertEquals(response, result);
+            verify(inputs).setBody(RESPONSE);
+            client.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)));
+        }
     }
 
     @Test
     void executeRequestRejectsUnauthorizedResponse() throws Exception {
-        HttpClientService client = mock(HttpClientService.class);
-        HttpClientInputs inputs = mock(HttpClientInputs.class);
-        when(client.execute(inputs)).thenReturn(Map.of(STATUS_CODE, "401"));
+        PowerShellHttpClientInputs inputs = spy(new PowerShellHttpClientInputs());
+        try (MockedStatic<HttpClientService> client = mockStatic(HttpClientService.class)) {
+            client.when(() -> HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(Map.of(STATUS_CODE, "401"));
 
-        Exception exception = assertThrows(Exception.class, () -> invoke("executeRequestWithBody",
-                new Class<?>[]{HttpClientService.class, HttpClientInputs.class, String.class},
-                client, inputs, RESPONSE));
+            Exception exception = assertThrows(Exception.class, () -> invoke("executeRequestWithBody",
+                    new Class<?>[]{PowerShellHttpClientInputs.class, String.class}, inputs, RESPONSE));
 
-        assertTrue(rootCause(exception).getMessage().contains("Unauthorized! Service responded with 401 status code!"));
+            assertTrue(rootCause(exception).getMessage().contains("Unauthorized! Service responded with 401 status code!"));
+        }
     }
 
     @Test
@@ -125,14 +125,15 @@ class WSManRemoteShellServiceTest {
 
     @Test
     void receiveCommandResultProcessesCompletedResponse() throws Exception {
-        HttpClientService client = mock(HttpClientService.class);
-        HttpClientInputs inputs = mock(HttpClientInputs.class);
+        PowerShellHttpClientInputs inputs = spy(new PowerShellHttpClientInputs());
         WSManRequestInputs request = requestInputs("60");
-        when(inputs.getUrl()).thenReturn("https://host:5986/wsman");
-        when(client.execute(inputs)).thenReturn(Map.of(RETURN_RESULT, RESPONSE, STATUS_CODE, "200"));
+        inputs.setUrl("https://host:5986/wsman");
         setField(service, "commandExecutionStartTime", System.currentTimeMillis() / 1000);
-        try (MockedStatic<WSManUtils> wsman = mockStatic(WSManUtils.class);
+        try (MockedStatic<HttpClientService> client = mockStatic(HttpClientService.class);
+             MockedStatic<WSManUtils> wsman = mockStatic(WSManUtils.class);
              MockedStatic<XMLUtils> xml = mockStatic(XMLUtils.class)) {
+            client.when(() -> HttpClientService.execute(any(HttpClientInputs.class)))
+                    .thenReturn(Map.of(RETURN_RESULT, RESPONSE, STATUS_CODE, "200"));
             wsman.when(() -> WSManUtils.isSpecificResponseAction(RESPONSE, RECEIVE_ACTION)).thenReturn(true);
             wsman.when(() -> WSManUtils.commandExecutionIsDone(RESPONSE)).thenReturn(true);
             wsman.when(() -> WSManUtils.countStreamElements(RESPONSE)).thenReturn(1);
@@ -141,8 +142,8 @@ class WSManRemoteShellServiceTest {
                     invocation.<String>getArgument(1).contains("stdout") ? "aGVsbG8=" : "ZXJyb3I=");
 
             Map<String, String> result = invoke("receiveCommandResult",
-                    new Class<?>[]{HttpClientService.class, HttpClientInputs.class, String.class, String.class, WSManRequestInputs.class},
-                    client, inputs, SHELL_ID, COMMAND_ID, request);
+                    new Class<?>[]{PowerShellHttpClientInputs.class, String.class, String.class, WSManRequestInputs.class},
+                    inputs, SHELL_ID, COMMAND_ID, request);
 
             assertEquals("hello", result.get(RETURN_RESULT));
             assertEquals("error", result.get("stderr"));
@@ -152,40 +153,43 @@ class WSManRemoteShellServiceTest {
 
     @Test
     void receiveCommandResultTimesOut() throws Exception {
-        HttpClientService client = mock(HttpClientService.class);
-        HttpClientInputs inputs = mock(HttpClientInputs.class);
-        when(inputs.getUrl()).thenReturn("https://host:5986/wsman");
-        when(client.execute(inputs)).thenReturn(Map.of(RETURN_RESULT, RESPONSE, STATUS_CODE, "200"));
+        PowerShellHttpClientInputs inputs = spy(new PowerShellHttpClientInputs());
+        inputs.setUrl("https://host:5986/wsman");
         setField(service, "commandExecutionStartTime", 0L);
 
-        Exception exception = assertThrows(Exception.class, () -> invoke("receiveCommandResult",
-                new Class<?>[]{HttpClientService.class, HttpClientInputs.class, String.class, String.class, WSManRequestInputs.class},
-                client, inputs, SHELL_ID, COMMAND_ID, requestInputs("1")));
+        try (MockedStatic<HttpClientService> client = mockStatic(HttpClientService.class)) {
+            client.when(() -> HttpClientService.execute(any(HttpClientInputs.class)))
+                    .thenReturn(Map.of(RETURN_RESULT, RESPONSE, STATUS_CODE, "200"));
+            Exception exception = assertThrows(Exception.class, () -> invoke("receiveCommandResult",
+                    new Class<?>[]{PowerShellHttpClientInputs.class, String.class, String.class, WSManRequestInputs.class},
+                    inputs, SHELL_ID, COMMAND_ID, requestInputs("1")));
 
-        assertTrue(rootCause(exception) instanceof TimeoutException);
-        assertTrue(rootCause(exception).getMessage().contains("The script execution timed out!"));
+            assertTrue(rootCause(exception) instanceof TimeoutException);
+            assertTrue(rootCause(exception).getMessage().contains("The script execution timed out!"));
+        }
     }
 
     @Test
     void deleteShellAcceptsExpectedActionAndRejectsFault() throws Exception {
-        HttpClientService client = mock(HttpClientService.class);
-        HttpClientInputs inputs = mock(HttpClientInputs.class);
-        when(inputs.getUrl()).thenReturn("https://host:5986/wsman");
-        when(client.execute(inputs)).thenReturn(Map.of(RETURN_RESULT, RESPONSE, STATUS_CODE, "200"));
-        try (MockedStatic<WSManUtils> wsman = mockStatic(WSManUtils.class)) {
+        PowerShellHttpClientInputs inputs = spy(new PowerShellHttpClientInputs());
+        inputs.setUrl("https://host:5986/wsman");
+        try (MockedStatic<HttpClientService> client = mockStatic(HttpClientService.class);
+             MockedStatic<WSManUtils> wsman = mockStatic(WSManUtils.class)) {
+            client.when(() -> HttpClientService.execute(any(HttpClientInputs.class)))
+                    .thenReturn(Map.of(RETURN_RESULT, RESPONSE, STATUS_CODE, "200"));
             wsman.when(() -> WSManUtils.isSpecificResponseAction(RESPONSE,
                     "http://schemas.xmlsoap.org/ws/2004/09/transfer/DeleteResponse")).thenReturn(true);
-            invoke("deleteShell", new Class<?>[]{HttpClientService.class, HttpClientInputs.class,
-                    String.class, WSManRequestInputs.class}, client, inputs, SHELL_ID, requestInputs("60"));
-            verify(client).execute(inputs);
+            invoke("deleteShell", new Class<?>[]{PowerShellHttpClientInputs.class,
+                    String.class, WSManRequestInputs.class}, inputs, SHELL_ID, requestInputs("60"));
+            client.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)));
 
             wsman.when(() -> WSManUtils.isSpecificResponseAction(RESPONSE,
                     "http://schemas.xmlsoap.org/ws/2004/09/transfer/DeleteResponse")).thenReturn(false);
             wsman.when(() -> WSManUtils.isFaultResponse(RESPONSE)).thenReturn(true);
             wsman.when(() -> WSManUtils.getResponseFault(RESPONSE)).thenReturn(FAULT);
             Exception exception = assertThrows(Exception.class, () -> invoke("deleteShell",
-                    new Class<?>[]{HttpClientService.class, HttpClientInputs.class, String.class, WSManRequestInputs.class},
-                    client, inputs, SHELL_ID, requestInputs("60")));
+                    new Class<?>[]{PowerShellHttpClientInputs.class, String.class, WSManRequestInputs.class},
+                    inputs, SHELL_ID, requestInputs("60")));
             assertTrue(rootCause(exception).getMessage().contains(FAULT));
         }
     }
@@ -219,13 +223,12 @@ class WSManRemoteShellServiceTest {
     @Test
     void runCommandPropagatesHttpClientFailure() throws Exception {
         WSManRequestInputs request = requestInputs("60");
-        try (var construction = mockConstruction(HttpClientService.class,
-                (client, context) -> doThrow(new IllegalStateException("transport failed"))
-                        .when(client).execute(any(HttpClientInputs.class)))) {
+        try (MockedStatic<HttpClientService> client = mockStatic(HttpClientService.class)) {
+            client.when(() -> HttpClientService.execute(any(HttpClientInputs.class)))
+                    .thenThrow(new IllegalStateException("transport failed"));
             IllegalStateException exception = assertThrows(IllegalStateException.class, () -> service.runCommand(request));
             assertEquals("transport failed", exception.getMessage());
-            assertEquals(1, construction.constructed().size());
-            verify(construction.constructed().get(0)).execute(any(HttpClientInputs.class));
+            client.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)));
         }
     }
 
@@ -237,11 +240,11 @@ class WSManRemoteShellServiceTest {
         Map<String, String> receiveResponse = Map.of(RETURN_RESULT, "receive-response", STATUS_CODE, "200");
         Map<String, String> deleteResponse = Map.of(RETURN_RESULT, "delete-response", STATUS_CODE, "200");
 
-        try (var construction = mockConstruction(HttpClientService.class, (client, context) ->
-                     when(client.execute(any(HttpClientInputs.class))).thenReturn(
-                             createResponse, commandResponse, receiveResponse, deleteResponse));
+        try (MockedStatic<HttpClientService> client = mockStatic(HttpClientService.class);
              MockedStatic<WSManUtils> wsman = mockStatic(WSManUtils.class);
              MockedStatic<XMLUtils> xml = mockStatic(XMLUtils.class)) {
+            client.when(() -> HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(
+                    createResponse, commandResponse, receiveResponse, deleteResponse);
             wsman.when(() -> WSManUtils.isSpecificResponseAction(anyString(), anyString()))
                     .thenAnswer(invocation -> {
                         String response = invocation.getArgument(0);
@@ -275,7 +278,7 @@ class WSManRemoteShellServiceTest {
             assertEquals("hello", result.get(RETURN_RESULT));
             assertEquals("error", result.get("stderr"));
             assertEquals("0", result.get("scriptExitCode"));
-            verify(construction.constructed().get(0), times(4)).execute(any(HttpClientInputs.class));
+            client.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), times(4));
         }
     }
 

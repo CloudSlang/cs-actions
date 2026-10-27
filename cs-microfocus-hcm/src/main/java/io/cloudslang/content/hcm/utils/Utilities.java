@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -18,12 +18,11 @@
 package io.cloudslang.content.hcm.utils;
 
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.jetbrains.annotations.NotNull;
 
 public class Utilities {
 
-    public static void setInput(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setInput(@NotNull final HcmHttpClientInputs httpClientInputs,
                                 @NotNull final String url,
                                 @NotNull final String authType,
                                 @NotNull final String username,

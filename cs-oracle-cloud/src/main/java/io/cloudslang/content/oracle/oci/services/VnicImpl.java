@@ -1,18 +1,15 @@
 package io.cloudslang.content.oracle.oci.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCIAttachVnicInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCICommonInputs;
+import io.cloudslang.content.oracle.oci.entities.inputs.OCIHttpClientInputs;
 import io.cloudslang.content.oracle.oci.entities.inputs.OCIVnicAttachmentInputs;
 import io.cloudslang.content.oracle.oci.services.models.instances.AttachVnicRequestBody;
 import io.cloudslang.content.oracle.oci.utils.HttpUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.net.URI;
 import java.security.PrivateKey;
@@ -48,11 +45,9 @@ public class VnicImpl {
         if (!isEmpty(ociAttachVnicInputs.getNicIndex())) {
             attachVnicRequestBody.setNicIndex(ociAttachVnicInputs.getNicIndex());
         }
-        JSONParser jsonParser = new JSONParser();
-
         try {
-            createVnicDetails.setDefinedTags(stringToJSON(jsonParser, ociAttachVnicInputs.getDefinedTags()));
-            createVnicDetails.setFreeformTags(stringToJSON(jsonParser, ociAttachVnicInputs.getFreeformTags()));
+            createVnicDetails.setDefinedTags(JsonObjectParser.parse(attachVnicMapper, ociAttachVnicInputs.getDefinedTags()));
+            createVnicDetails.setFreeformTags(JsonObjectParser.parse(attachVnicMapper, ociAttachVnicInputs.getFreeformTags()));
             attachVnicRequestBody.setCreateVnicDetails(createVnicDetails);
             requestBody = attachVnicMapper.writeValueAsString(attachVnicRequestBody);
         } catch (Exception e) {
@@ -75,7 +70,7 @@ public class VnicImpl {
             throws Exception {
 
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final OCIHttpClientInputs httpClientInputs = new OCIHttpClientInputs();
         httpClientInputs.setUrl(listVnicAttachmentsUrl(ociCommonInputs.getRegion()));
         httpClientInputs.setQueryParams(getQueryParams(ociCommonInputs.getAvailabilityDomain(), ociCommonInputs.getCompartmentOcid(), ociCommonInputs.getInstanceId(), ociCommonInputs.getPage(), ociCommonInputs.getLimit(), ociCommonInputs.getVnicId()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -84,7 +79,7 @@ public class VnicImpl {
         Map<String, String> headers = getRequestSigner(ociCommonInputs).signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociCommonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
@@ -92,7 +87,7 @@ public class VnicImpl {
     public static Map<String, String> getVnicDetails(@NotNull final OCICommonInputs ociCommonInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final OCIHttpClientInputs httpClientInputs = new OCIHttpClientInputs();
         httpClientInputs.setUrl(getVnicDetailsUrl(ociCommonInputs.getRegion(), ociCommonInputs.getVnicId()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -100,7 +95,7 @@ public class VnicImpl {
         Map<String, String> headers = getRequestSigner(ociCommonInputs).signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociCommonInputs);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
@@ -108,7 +103,7 @@ public class VnicImpl {
     public static Map<String, String> getVnicAttachmentDetails(@NotNull final OCIVnicAttachmentInputs ociVnicAttachmentInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final OCIHttpClientInputs httpClientInputs = new OCIHttpClientInputs();
         httpClientInputs.setUrl(vnicUrl(ociVnicAttachmentInputs.getCommonInputs().getRegion(), ociVnicAttachmentInputs.getVnicAttachmentId()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(GET);
@@ -116,7 +111,7 @@ public class VnicImpl {
         Map<String, String> headers = getRequestSigner(ociVnicAttachmentInputs.getCommonInputs()).signRequest(uri, GET, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociVnicAttachmentInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
@@ -124,7 +119,7 @@ public class VnicImpl {
     public static Map<String, String> attachVnic(@NotNull final OCIAttachVnicInputs ociAttachVnicInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final OCIHttpClientInputs httpClientInputs = new OCIHttpClientInputs();
         httpClientInputs.setUrl(listVnicAttachmentsUrl(ociAttachVnicInputs.getCommonInputs().getRegion()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
@@ -134,7 +129,7 @@ public class VnicImpl {
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociAttachVnicInputs.getCommonInputs());
         System.out.println(httpClientInputs.getBody());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
@@ -142,7 +137,7 @@ public class VnicImpl {
     public static Map<String, String> detachVnic(@NotNull final OCIVnicAttachmentInputs ociDetachVnicAttachmentInputs)
             throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final OCIHttpClientInputs httpClientInputs = new OCIHttpClientInputs();
         httpClientInputs.setUrl(vnicUrl(ociDetachVnicAttachmentInputs.getCommonInputs().getRegion(), ociDetachVnicAttachmentInputs.getVnicAttachmentId()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(DELETE);
@@ -150,7 +145,7 @@ public class VnicImpl {
         Map<String, String> headers = getRequestSigner(ociDetachVnicAttachmentInputs.getCommonInputs()).signRequest(uri, DELETE, EMPTY);
         httpClientInputs.setHeaders(HttpUtils.getAuthHeaders(headers));
         HttpCommons.setCommonHttpInputs(httpClientInputs, ociDetachVnicAttachmentInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
@@ -205,11 +200,5 @@ public class VnicImpl {
         if (!isEmpty(property))
             return Boolean.parseBoolean(property);
         return false;
-    }
-
-    private static JSONObject stringToJSON(JSONParser jsonParser, String property) throws ParseException {
-        if (!isEmpty(property))
-            return (JSONObject) jsonParser.parse(property);
-        return new JSONObject();
     }
 }

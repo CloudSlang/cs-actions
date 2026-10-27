@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -23,6 +23,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -110,7 +111,7 @@ public class GetRowIndexByConditionService {
                 }
                 if (isInRange)
                     if (!(j == firstRow && cIndex == firstColumn)) {
-                        cell.setCellType(CellType.ERROR);
+                        cell.setCellErrorValue(FormulaError.VALUE.getCode());
                     }
             }
         }
@@ -200,16 +201,19 @@ public class GetRowIndexByConditionService {
 
                         switch (cellValue.getCellType()) {
                             case BOOLEAN:
-                                cell.setCellType(CellType.STRING);
+                                cell.setCellFormula(null);
+                                cell.setCellValue(Boolean.toString(cellValue.getBooleanValue()));
                                 break;
                             case NUMERIC:
-                                cell.setCellType(CellType.NUMERIC);
+                                cell.setCellFormula(null);
+                                cell.setCellValue(cellValue.getNumberValue());
                                 break;
                             case STRING:
-                                if (StringUtils.isBlank(cell.getStringCellValue())) {
-                                    cell.setCellType(CellType.BLANK);
+                                cell.setCellFormula(null);
+                                if (StringUtils.isBlank(cellValue.getStringValue())) {
+                                    cell.setBlank();
                                 } else {
-                                    cell.setCellType(CellType.STRING);
+                                    cell.setCellValue(cellValue.getStringValue());
                                 }
                                 break;
                             case BLANK:

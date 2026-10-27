@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2025 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,7 +19,7 @@ package io.cloudslang.content.sitescope.utils;
 
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.sitescope.entities.SiteScopeHttpClientInputs;
 import io.cloudslang.content.sitescope.constants.ExceptionMsgs;
 import io.cloudslang.content.sitescope.constants.Outputs;
 import io.cloudslang.content.utils.StringUtilities;
@@ -54,7 +54,7 @@ public class HttpUtils {
     }
 
 
-    public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@NotNull final SiteScopeHttpClientInputs httpClientInputs,
                                 @NotNull final String proxyHost,
                                 @NotNull final String proxyPort,
                                 @NotNull final String proxyUsername,
@@ -66,7 +66,7 @@ public class HttpUtils {
     }
 
 
-    public static void setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setSecurityInputs(@NotNull final SiteScopeHttpClientInputs httpClientInputs,
                                          @NotNull final String trustAllRoots,
                                          @NotNull final String x509HostnameVerifier,
                                          @NotNull final String keystore,
@@ -82,7 +82,7 @@ public class HttpUtils {
     }
 
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+    public static void setConnectionParameters(SiteScopeHttpClientInputs httpClientInputs,
                                                @NotNull final String connectTimeout,
                                                @NotNull final String socketTimeout,
                                                @NotNull final String keepAlive,

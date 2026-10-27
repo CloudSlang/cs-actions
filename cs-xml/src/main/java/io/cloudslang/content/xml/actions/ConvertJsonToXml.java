@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -17,10 +17,10 @@
 
 package io.cloudslang.content.xml.actions;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.entities.inputs.ConvertJsonToXmlInputs;
 import io.cloudslang.content.xml.services.ConvertJsonToXmlService;
@@ -54,6 +54,8 @@ public class ConvertJsonToXml {
 
     /**
      * Converts a JSON array or a JSON object to a XML document.
+     * XML is serialized using the JDK XML APIs. Empty-element spacing, attribute order, and character-reference
+     * notation may differ from older releases without changing XML content.
      *
      * @param json                     - The JSON array or object (in the form of a String).
      * @param prettyPrint              - The flag for formatting the resulted XML. If it is true the result will contain tabs and newline ('\n') chars.

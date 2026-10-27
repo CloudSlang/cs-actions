@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -21,7 +21,7 @@ package io.cloudslang.content.google.services.compute.compute_engine.networks
 
 import com.google.api.services.compute.model.{AccessConfig, Network, NetworkInterface}
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 
 /**
   * Created by victor on 26.04.2017.

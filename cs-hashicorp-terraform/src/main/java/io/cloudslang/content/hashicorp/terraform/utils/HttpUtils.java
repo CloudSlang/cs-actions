@@ -2,10 +2,10 @@
 
 package io.cloudslang.content.hashicorp.terraform.utils;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformHttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
@@ -39,7 +39,7 @@ public class HttpUtils {
         return new Proxy(HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort));
     }
 
-    public static void setProxy(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@org.jetbrains.annotations.NotNull final TerraformHttpClientInputs httpClientInputs,
                                 @org.jetbrains.annotations.NotNull final String proxyHost,
                                 @org.jetbrains.annotations.NotNull final String proxyPort,
                                 @org.jetbrains.annotations.NotNull final String proxyUsername,
@@ -83,7 +83,7 @@ public class HttpUtils {
         return results;
     }
 
-    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final HttpClientInputs httpClientInputs,
+    public static void setSecurityInputs(@org.jetbrains.annotations.NotNull final TerraformHttpClientInputs httpClientInputs,
                                          @org.jetbrains.annotations.NotNull final String trustAllRoots,
                                          @org.jetbrains.annotations.NotNull final String x509HostnameVerifier,
                                          @org.jetbrains.annotations.NotNull final String trustKeystore,
@@ -94,7 +94,7 @@ public class HttpUtils {
         httpClientInputs.setTrustPassword(trustPassword);
     }
 
-    public static void setConnectionParameters(HttpClientInputs httpClientInputs,
+    public static void setConnectionParameters(TerraformHttpClientInputs httpClientInputs,
                                                @NotNull final String connectTimeout,
                                                @NotNull final String socketTimeout,
                                                @NotNull final String keepAlive,
@@ -109,8 +109,8 @@ public class HttpUtils {
         httpClientInputs.setKeystorePassword(CHANGEIT);
     }
 
-    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
-        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
+    public static void setTLSParameters(TerraformHttpClientInputs httpClientInputs) {
+        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.utils.Constants.TLSv12);
         httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
 
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -14,35 +14,34 @@
  */
 package io.cloudslang.content.amazon.services;
 
-import com.amazonaws.services.costexplorer.AWSCostExplorer;
-import com.amazonaws.services.costexplorer.model.GetRightsizingRecommendationRequest;
-import com.amazonaws.services.costexplorer.model.GetRightsizingRecommendationResult;
-import com.amazonaws.services.support.AWSSupport;
-import com.amazonaws.services.support.model.DescribeTrustedAdvisorCheckResultRequest;
-import com.amazonaws.services.support.model.DescribeTrustedAdvisorCheckResultResult;
+import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
+import software.amazon.awssdk.services.costexplorer.model.GetRightsizingRecommendationRequest;
+import software.amazon.awssdk.services.costexplorer.model.GetRightsizingRecommendationResponse;
+import software.amazon.awssdk.services.support.SupportClient;
+import software.amazon.awssdk.services.support.model.DescribeTrustedAdvisorCheckResultRequest;
+import software.amazon.awssdk.services.support.model.DescribeTrustedAdvisorCheckResultResponse;
 
 public class AWSAdvisorService {
 
 
-    public static DescribeTrustedAdvisorCheckResultResult getRecommendationDetails(
+    public static DescribeTrustedAdvisorCheckResultResponse getRecommendationDetails(
             final String checkID,
-            final AWSSupport awsSupport) {
-        DescribeTrustedAdvisorCheckResultRequest request = new DescribeTrustedAdvisorCheckResultRequest()
-                .withLanguage("en")
-                .withCheckId(checkID)
-                ;
-        DescribeTrustedAdvisorCheckResultResult requestResult = awsSupport.describeTrustedAdvisorCheckResult(request);
+            final SupportClient awsSupport) {
+        DescribeTrustedAdvisorCheckResultRequest request = DescribeTrustedAdvisorCheckResultRequest.builder()
+                .language("en")
+                .checkId(checkID)
+                .build();
+        DescribeTrustedAdvisorCheckResultResponse requestResult = awsSupport.describeTrustedAdvisorCheckResult(request);
         return requestResult;
     }
 
-    public static GetRightsizingRecommendationResult getCostRecommendations(AWSCostExplorer awsCostExplorer, String serviceNameVal)
+    public static GetRightsizingRecommendationResponse getCostRecommendations(CostExplorerClient awsCostExplorer, String serviceNameVal)
     {
 
-        GetRightsizingRecommendationRequest getRightsizingRecommendationRequest = new GetRightsizingRecommendationRequest();
-        getRightsizingRecommendationRequest.setService(serviceNameVal);
-        GetRightsizingRecommendationResult getRightsizingRecommendationResult = awsCostExplorer.getRightsizingRecommendation(getRightsizingRecommendationRequest);
-
-        return getRightsizingRecommendationResult;
+        GetRightsizingRecommendationRequest request = GetRightsizingRecommendationRequest.builder()
+                .service(serviceNameVal)
+                .build();
+        return awsCostExplorer.getRightsizingRecommendation(request);
     }
 
 }

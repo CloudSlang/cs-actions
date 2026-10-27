@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -26,7 +26,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.HttpTransport
 import com.google.api.client.json.JsonFactory
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 
 /**
   * Created by victor on 2/26/17.

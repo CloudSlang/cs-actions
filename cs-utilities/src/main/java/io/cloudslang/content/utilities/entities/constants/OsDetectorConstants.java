@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -41,6 +41,9 @@ public class OsDetectorConstants {
     public static final String DEFAULT_POWER_SHELL_OP_TIMEOUT = "60000";
     public static final String DEFAULT_SSH_TIMEOUT = "90000";
     public static final String DEFAULT_PROXY_PORT = "8080";
+    public static final String KERBEROS_CONFIG_FILE = "kerberosConfFile";
+    public static final String KERBEROS_LOGIN_CONFIG_FILE = "kerberosLoginConfFile";
+    public static final String KERBEROS_SKIP_PORT_CHECK = "kerberosSkipPortForLookup";
     public static final String SSH_TIMEOUT = "sshTimeout";
     public static final String SSH_CONNECT_TIMEOUT = "sshConnectTimeout";
     public static final String POWERSHELL_OPERATION_TIMEOUT = "powershellOperationTimeout";

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2025 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,15 +19,15 @@
 package io.cloudslang.content.sitescope.services;
 
 import org.jetbrains.annotations.NotNull;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.sitescope.entities.SiteScopeCommonInputs;
+import io.cloudslang.content.sitescope.entities.SiteScopeHttpClientInputs;
 
 import static io.cloudslang.content.sitescope.utils.HttpUtils.*;
 
 public class HttpCommons {
 
     @NotNull
-    static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    static void setCommonHttpInputs(@NotNull final SiteScopeHttpClientInputs httpClientInputs,
                                     @NotNull final SiteScopeCommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),

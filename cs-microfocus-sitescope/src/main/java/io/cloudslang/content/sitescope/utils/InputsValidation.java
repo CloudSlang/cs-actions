@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2025 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.sitescope.constants.HttpClientInputNames.*;
 import static io.cloudslang.content.sitescope.constants.ExceptionMsgs.*;
 import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorGroupStatusInputs.STATUS;
 import static io.cloudslang.content.sitescope.constants.Inputs.ChangeMonitorStatusInputs.MONITOR_ID;

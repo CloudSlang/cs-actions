@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,8 +16,6 @@
 
 package io.cloudslang.content.vmware.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vmware.vim25.GuestOsDescriptor;
 import com.vmware.vim25.VirtualMachineConfigSummary;
 import com.vmware.vim25.VirtualMachineSummary;
@@ -26,6 +24,8 @@ import io.cloudslang.content.vmware.constants.Inputs;
 import io.cloudslang.content.vmware.constants.Outputs;
 import io.cloudslang.content.vmware.entities.ManagedObjectType;
 import io.cloudslang.content.vmware.entities.VmInputs;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -89,7 +89,7 @@ public class ResponseUtils {
         }
     }
 
-    public static String getJsonString(Map<String, String> inputMap) throws JsonProcessingException {
+    public static String getJsonString(Map<String, String> inputMap) throws JacksonException {
         return new ObjectMapper().writeValueAsString(inputMap);
     }
 }

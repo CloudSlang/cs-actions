@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -23,7 +23,7 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Clust
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.ALL_TYPE_HEADER;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.FORM_URL_ENCODED;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.HttpClientInputsValues.X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1;
-import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.APPLICATION_JSON;
 
 /**
  * Created by TusaM
@@ -37,12 +37,12 @@ public class ClusterHeadersBuilder {
     public static void setClusterHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             case REBALANCING_NODES:
-                wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
-                wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
+                wrapper.setContentType(FORM_URL_ENCODED);
+                wrapper.setHeaders(ALL_TYPE_HEADER);
                 break;
             default:
-                wrapper.getHttpClientInputs().setContentType(APPLICATION_JSON.getMimeType());
-                wrapper.getHttpClientInputs().setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
+                wrapper.setContentType(APPLICATION_JSON);
+                wrapper.setHeaders(X_MEMCACHEKV_STORE_CLIENT_SPECIFICATION_VERSION_0_1);
         }
     }
 }

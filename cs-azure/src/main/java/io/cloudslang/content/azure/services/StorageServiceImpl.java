@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,21 +19,23 @@
 
 package io.cloudslang.content.azure.services;
 
-import com.microsoft.azure.storage.CloudStorageAccount;
-import com.microsoft.azure.storage.OperationContext;
-import com.microsoft.azure.storage.blob.CloudBlobClient;
-import com.microsoft.azure.storage.blob.CloudBlobContainer;
-import com.microsoft.azure.storage.blob.CloudBlockBlob;
-import com.microsoft.azure.storage.blob.ListBlobItem;
+import com.azure.core.http.ProxyOptions;
+import com.azure.core.http.netty.NettyAsyncHttpClientBuilder;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.models.BlobItem;
+import com.azure.storage.blob.models.BlobContainerItem;
 import io.cloudslang.content.azure.entities.StorageInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.InetSocketAddress;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.cloudslang.content.azure.utils.Constants.*;
-import static io.cloudslang.content.azure.utils.HttpUtils.getProxy;
 
 /**
  * Created by victor on 25.10.2016.
@@ -41,17 +43,17 @@ import static io.cloudslang.content.azure.utils.HttpUtils.getProxy;
 public final class StorageServiceImpl {
     @NotNull
     public static String createContainer(@NotNull final StorageInputs inputs) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
-        final CloudBlobContainer container = blobClient.getContainerReference(inputs.getContainerName());
+        final BlobServiceClient blobServiceClient = getBlobServiceClient(inputs);
+        final BlobContainerClient container = blobServiceClient.getBlobContainerClient(inputs.getContainerName());
         container.create();
         return inputs.getContainerName();
     }
 
     @NotNull
     public static String listContainers(@NotNull final StorageInputs inputs) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
+        final BlobServiceClient blobServiceClient = getBlobServiceClient(inputs);
         final List<String> containerList = new ArrayList<>();
-        for (final CloudBlobContainer blobItem : blobClient.listContainers()) {
+        for (final BlobContainerItem blobItem : blobServiceClient.listBlobContainers()) {
             containerList.add(blobItem.getName());
         }
         return StringUtilities.join(containerList, COMMA);
@@ -59,41 +61,51 @@ public final class StorageServiceImpl {
 
     @NotNull
     public static String deleteContainer(@NotNull final StorageInputs inputs) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
-        final CloudBlobContainer container = blobClient.getContainerReference(inputs.getContainerName());
+        final BlobServiceClient blobServiceClient = getBlobServiceClient(inputs);
+        final BlobContainerClient container = blobServiceClient.getBlobContainerClient(inputs.getContainerName());
         container.delete();
         return inputs.getContainerName();
     }
 
     @NotNull
     public static String listBlobs(@NotNull final StorageInputs inputs) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
-        final CloudBlobContainer container = blobClient.getContainerReference(inputs.getContainerName());
+        final BlobServiceClient blobServiceClient = getBlobServiceClient(inputs);
+        final BlobContainerClient container = blobServiceClient.getBlobContainerClient(inputs.getContainerName());
         final List<String> blobList = new ArrayList<>();
-        for (final ListBlobItem blobItem : container.listBlobs()) {
-            final String path = blobItem.getUri().getPath();
-            blobList.add(path.substring(path.lastIndexOf(FORWARD_SLASH) + 1));
+        for (final BlobItem blobItem : container.listBlobsByHierarchy(FORWARD_SLASH)) {
+            final String name = blobItem.getName();
+            blobList.add(name.substring(name.lastIndexOf(FORWARD_SLASH) + 1));
         }
         return StringUtilities.join(blobList, COMMA);
     }
 
     @NotNull
     public static String deleteBlob(@NotNull final StorageInputs inputs) throws Exception {
-        final CloudBlobClient blobClient = getCloudBlobClient(inputs);
-        final CloudBlobContainer container = blobClient.getContainerReference(inputs.getContainerName());
-        final CloudBlockBlob blob = container.getBlockBlobReference(inputs.getBlobName());
-        blob.delete();
+        final BlobServiceClient blobServiceClient = getBlobServiceClient(inputs);
+        final BlobContainerClient container = blobServiceClient.getBlobContainerClient(inputs.getContainerName());
+        container.getBlobClient(inputs.getBlobName()).delete();
         return inputs.getBlobName();
     }
 
     @NotNull
-    public static CloudBlobClient getCloudBlobClient(@NotNull final StorageInputs inputs) throws Exception {
+    public static BlobServiceClient getBlobServiceClient(@NotNull final StorageInputs inputs) {
         final String storageConnectionString = String.format(STORAGE_AUTH_ENDPOINT, inputs.getStorageAccount(), inputs.getKey());
-        OperationContext.setDefaultProxy(getProxy(inputs.getProxyHost(), inputs.getProxyPort(), inputs.getProxyUsername(), inputs.getProxyPassword()));
-        final CloudBlobClient client = CloudStorageAccount.parse(storageConnectionString).createCloudBlobClient();
-        if (inputs.getTimeout() != 0) {
-            client.getDefaultRequestOptions().setTimeoutIntervalInMs(inputs.getTimeout());
+        final NettyAsyncHttpClientBuilder httpClientBuilder = new NettyAsyncHttpClientBuilder();
+        if (!StringUtilities.isBlank(inputs.getProxyHost())) {
+            final ProxyOptions proxyOptions = new ProxyOptions(
+                    ProxyOptions.Type.HTTP,
+                    new InetSocketAddress(inputs.getProxyHost(), inputs.getProxyPort()));
+            if (StringUtilities.isNotEmpty(inputs.getProxyUsername())) {
+                proxyOptions.setCredentials(inputs.getProxyUsername(), inputs.getProxyPassword());
+            }
+            httpClientBuilder.proxy(proxyOptions);
         }
-        return client;
+        if (inputs.getTimeout() != 0) {
+            httpClientBuilder.responseTimeout(Duration.ofMillis(inputs.getTimeout()));
+        }
+        return new BlobServiceClientBuilder()
+                .connectionString(storageConnectionString)
+                .httpClient(httpClientBuilder.build())
+                .buildClient();
     }
 }

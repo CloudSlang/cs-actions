@@ -4,12 +4,12 @@ package io.cloudslang.content.nutanix.prism.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAddNicInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDeleteNICInputs;
 import io.cloudslang.content.nutanix.prism.services.models.nics.AddNicRequestBody;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class NicImpl {
 
     public static Map<String, String> AddNic(@NotNull final NutanixAddNicInputs nutanixAddNicInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final NutanixHttpClientInputs httpClientInputs = new NutanixHttpClientInputs();
         httpClientInputs.setUrl(AddNicURL(nutanixAddNicInputs));
         setCommonHttpInputs(httpClientInputs, nutanixAddNicInputs.getCommonInputs());
         try {
@@ -43,13 +43,13 @@ public class NicImpl {
         httpClientInputs.setUsername(nutanixAddNicInputs.getCommonInputs().getUsername());
         httpClientInputs.setPassword(nutanixAddNicInputs.getCommonInputs().getPassword());
         httpClientInputs.setContentType(APPLICATION_API_JSON);
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> deleteNic(@NotNull final NutanixDeleteNICInputs nutanixDeleteNICInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final NutanixHttpClientInputs httpClientInputs = new NutanixHttpClientInputs();
         httpClientInputs.setUrl(deleteNicURL(nutanixDeleteNICInputs));
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setMethod(DELETE);
@@ -60,7 +60,7 @@ public class NicImpl {
             httpClientInputs.setQueryParams(getQueryParams(nutanixDeleteNICInputs.getVmLogicalTimestamp()));
         }
         setCommonHttpInputs(httpClientInputs, nutanixDeleteNICInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
@@ -91,7 +91,7 @@ public class NicImpl {
                 .append(DELETE_NIC_PATH)
                 .append(nutanixDeleteNICInputs.getNicMacAddress());
         uriBuilder.setPath(pathString.toString());
-        return uriBuilder.build().toURL().toString();
+        return uriBuilder.build().toURL().toString().replace("%3A", ":");
     }
 
     @NotNull

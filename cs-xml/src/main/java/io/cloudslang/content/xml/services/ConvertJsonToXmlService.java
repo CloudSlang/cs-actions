@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -23,27 +23,25 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import io.cloudslang.content.xml.entities.inputs.ConvertJsonToXmlInputs;
-import org.apache.commons.lang3.StringUtils;
-import org.jdom2.Attribute;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
+import io.cloudslang.content.xml.utils.DocumentUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.xml.utils.Constants.INDENT;
 import static io.cloudslang.content.xml.utils.Constants.JSON_ATTRIBUTE_PREFIX;
 import static io.cloudslang.content.xml.utils.Constants.NAMESPACE_DELIMITER;
 import static io.cloudslang.content.xml.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.xml.utils.Constants.ONLY_ONE_ROOT_ELEMENT;
 import static io.cloudslang.content.xml.utils.Constants.ROOT_TAG_NAME_IS_MISSING;
-import static io.cloudslang.content.xml.utils.Constants.UTF_8_ENCODING;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -54,7 +52,9 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class ConvertJsonToXmlService {
     private Map<String, String> jsonArrayItemNames;
     private String jsonArrayItemName;
-    private final Map<String, Namespace> namespaces;
+    private final Map<String, String> namespaces;
+    private Document document;
+    private boolean prettyPrint;
 
 
     public ConvertJsonToXmlService() {
@@ -66,28 +66,38 @@ public class ConvertJsonToXmlService {
         if (isBlank(inputs.getJson())) {
             return EMPTY;
         }
-        final XMLOutputter xmlWriter = new XMLOutputter();
-        xmlWriter.setFormat(getFormat(inputs.getPrettyPrint(), inputs.getShowXmlDeclaration()));
+        document = createDocument();
+        prettyPrint = inputs.getPrettyPrint();
         if (inputs.getShowXmlDeclaration()) {
-            return xmlWriter.outputString(convertJsonStringToXmlDocument(inputs.getJson(), inputs.getRootTagName()));
+            document.appendChild(addRootTagJsonElement(inputs.getRootTagName(), new JsonParser().parse(inputs.getJson())));
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEW_LINE
+                    + serialize(document.getDocumentElement()) + NEW_LINE;
         }
-        return getXmlFromElements(convertJsonStringToXmlElements(inputs.getJson(), inputs.getRootTagName()), xmlWriter);
+        return getXmlFromElements(convertJsonStringToXmlElements(inputs.getJson(), inputs.getRootTagName()));
     }
 
-    private String getXmlFromElements(final List<Element> elements, final XMLOutputter xmlWriter) {
-        final StringBuilder result = new StringBuilder();
+    private String getXmlFromElements(final List<Element> elements) {
+        final List<String> result = new ArrayList<>(elements.size());
         for (final Element element : elements) {
-            result.append(xmlWriter.outputString(element)).append(NEW_LINE);
+            result.add(serialize(element));
         }
-        result.delete(result.length() - NEW_LINE.length(), result.length());
-        return result.toString();
+        return String.join(NEW_LINE, result);
     }
 
-    private Format getFormat(final boolean prettyPrint, final boolean showXmlDeclaration) {
-        final Format format = prettyPrint ? Format.getPrettyFormat().setIndent(INDENT) : Format.getCompactFormat();
-        return format.setOmitDeclaration(!showXmlDeclaration)
-                .setEncoding(UTF_8_ENCODING)
-                .setLineSeparator(NEW_LINE);
+    private String serialize(final Element element) {
+        try {
+            return DocumentUtils.elementToString(element, prettyPrint);
+        } catch (TransformerException e) {
+            throw new IllegalStateException("Unable to serialize converted XML", e);
+        }
+    }
+
+    private Document createDocument() {
+        try {
+            return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException e) {
+            throw new IllegalStateException("Unable to initialize XML document builder", e);
+        }
     }
 
     private List<Element> convertJsonStringToXmlElements(final String json, final String rootTagName) {
@@ -97,13 +107,6 @@ public class ConvertJsonToXmlService {
         }
         final Element root = convertToXmlElementJsonElementWithRootTag(jsonElement, rootTagName);
         return Collections.singletonList(root);
-    }
-
-    private Document convertJsonStringToXmlDocument(final String json, final String rootTagName) {
-        final JsonElement jsonElement = new JsonParser().parse(json);
-        final Document document = new Document();
-        return document.setRootElement(addRootTagJsonElement(rootTagName, jsonElement));
-
     }
 
     private Element addRootTagJsonElement(final String rootTagName, final JsonElement jsonElement) {
@@ -128,7 +131,7 @@ public class ConvertJsonToXmlService {
         for (JsonElement itemJson : jsonArray) {
             final Element elementToAdd = getXmlElementFromJsonElement(itemJson, jsonArrayItemName);
             if (elementToAdd != null) {
-                result.addContent(elementToAdd);
+                result.appendChild(elementToAdd);
             }
         }
         return result;
@@ -181,7 +184,11 @@ public class ConvertJsonToXmlService {
     private Element getXmlElementFromJsonElement(final JsonElement childJson, final String childTagName) {
         if (childJson.isJsonPrimitive()) {
             final String childValue = getJsonPrimitiveValue(childJson.getAsJsonPrimitive());
-            return createElement(childTagName).setText(childValue);
+            validateXmlCharacters(childValue);
+            final Element element = createElement(childTagName);
+            final String text = prettyPrint ? childValue.trim() : childValue.trim().replaceAll("[ \\t\\r\\n]+", " ");
+            element.setTextContent(text);
+            return element;
         } else if (childJson.isJsonObject()) {
             return convertJsonObjectToXmlElement(childJson.getAsJsonObject(), childTagName);
         } else if (childJson.isJsonArray()) {
@@ -190,7 +197,7 @@ public class ConvertJsonToXmlService {
             final Element container = createElement(childTagName);
             final List<Element> elements = convertToXmlElementsJsonArray(childJson.getAsJsonArray(), itemName);
             for (final Element element : elements) {
-                container.addContent(element);
+                container.appendChild(element);
             }
             return container;
         }
@@ -209,13 +216,15 @@ public class ConvertJsonToXmlService {
                     //remove @ char from the attribute name
                     childTagName = childTagName.substring(JSON_ATTRIBUTE_PREFIX.length());
                     final String attributeValue = getJsonPrimitiveValue(childJson.getAsJsonPrimitive());
-                    result.setAttribute(new Attribute(childTagName, attributeValue));
+                    validateXmlCharacters(attributeValue);
+                    result.setAttributeNode(document.createAttributeNS(null, childTagName));
+                    result.setAttribute(childTagName, attributeValue);
                 }
             } else {
                 //if it's null we don't care
                 final Element elementToAdd = getXmlElementFromJsonElement(childJson, childTagName);
                 if (elementToAdd != null) {
-                    result.addContent(elementToAdd);
+                    result.appendChild(elementToAdd);
                 }
             }
         }
@@ -224,11 +233,25 @@ public class ConvertJsonToXmlService {
 
     private Element createElement(final String tagName) {
         final String[] tagNames = tagName.split(NAMESPACE_DELIMITER);
-        final Element result = tagNames.length == 1 ? new Element(tagName) : new Element(tagNames[1], namespaces.get(tagNames[0]));
-        for (Namespace namespace : namespaces.values()) {
-            result.addNamespaceDeclaration(namespace);
+        final String namespace = tagNames.length == 1 ? null : namespaces.get(tagNames[0]);
+        final String name = tagNames.length == 1 ? tagName
+                : namespace == null || namespace.isEmpty() ? tagNames[1] : tagNames[0] + NAMESPACE_DELIMITER + tagNames[1];
+        final Element result = document.createElementNS(namespace, name);
+        for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+            final String attribute = entry.getKey().isEmpty() ? XMLConstants.XMLNS_ATTRIBUTE
+                    : XMLConstants.XMLNS_ATTRIBUTE + NAMESPACE_DELIMITER + entry.getKey();
+            result.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, attribute, entry.getValue());
         }
         return result;
+    }
+
+    private void validateXmlCharacters(final String value) {
+        if (!value.codePoints().allMatch(character -> character == 0x9 || character == 0xA || character == 0xD
+                || character >= 0x20 && character <= 0xD7FF
+                || character >= 0xE000 && character <= 0xFFFD
+                || character >= 0x10000 && character <= 0x10FFFF)) {
+            throw new IllegalArgumentException("Value contains characters that are not allowed in XML 1.0");
+        }
     }
 
     private String getJsonPrimitiveValue(final JsonPrimitive jsonPrimitive) {
@@ -249,8 +272,21 @@ public class ConvertJsonToXmlService {
     }
 
     public void setNamespaces(final Map<String, String> namespacesString) {
+        final Document namespaceValidator = createDocument();
         for (final Map.Entry<String, String> entry : namespacesString.entrySet()) {
-            namespaces.put(entry.getValue(), Namespace.getNamespace(entry.getValue(), entry.getKey()));
+            final String prefix = entry.getValue();
+            final String uri = entry.getKey();
+            if (!prefix.isEmpty() && uri.isEmpty()
+                    || XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)
+                    || XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(uri)
+                    || XMLConstants.XML_NS_PREFIX.equals(prefix) != XMLConstants.XML_NS_URI.equals(uri)) {
+                throw new IllegalArgumentException("Invalid XML namespace binding: " + prefix + "=" + uri);
+            }
+            validateXmlCharacters(uri);
+            if (!prefix.isEmpty()) {
+                namespaceValidator.createElementNS(uri, prefix + NAMESPACE_DELIMITER + "element");
+            }
+            namespaces.put(prefix, uri);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -22,9 +22,9 @@ package io.cloudslang.content.google.actions.compute.compute_engine.instances
 import java.util
 
 import com.google.api.services.compute.model._
-import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType
+import io.cloudslang.content.annotations.{Action, Output, Param, Response}
+import io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType
 import io.cloudslang.content.constants.BooleanValues.{FALSE, TRUE}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
@@ -45,7 +45,7 @@ import io.cloudslang.content.utils.NumberUtilities.{toDouble, toInteger, toLong}
 import io.cloudslang.content.utils.OutputUtilities.{getFailureResultsMap, getSuccessResultsMap}
 import org.apache.commons.lang3.StringUtils.{EMPTY, defaultIfEmpty}
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.ImplicitConversions.*
 import scala.collection.JavaConverters._
 import scala.concurrent.TimeoutException
 import scala.language.postfixOps
@@ -335,14 +335,19 @@ class InstancesInsert {
           autoDelete = volumeAutoDelete,
           mountMode = volumeMountModeStr,
           sourceOpt = volumeSourceOpt,
-          deviceNameOpt = volumeDiskDeviceNameOpt
+          deviceNameOpt = volumeDiskDeviceNameOpt,
+          mountTypeOpt = None,
+          interfaceOpt = None,
+          initializeParamsOpt = None
         )
         case None => DiskController.createAttachedDisk(
           boot = true,
           autoDelete = volumeAutoDelete,
           mountMode = volumeMountModeStr,
           deviceNameOpt = volumeDiskDeviceNameOpt,
+          sourceOpt = None,
           mountTypeOpt = Some(volumeMountTypeStr),
+          interfaceOpt = None,
           initializeParamsOpt = Some(
             DiskController.createAttachedDiskInitializeParams(
               diskName = volumeDiskNameStr,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -18,7 +18,8 @@ package io.cloudslang.content.maps.entities;
 import io.cloudslang.content.maps.constants.DefaultInputValues;
 import io.cloudslang.content.maps.exceptions.ValidationException;
 import io.cloudslang.content.maps.utils.BuilderUtils;
-import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
 
 public class SortMapsInput {
 
@@ -104,19 +105,19 @@ public class SortMapsInput {
 
 
         public Builder map(String map) {
-            this.map = StringUtils.defaultString(map, DefaultInputValues.MAP);
+            this.map = Objects.toString(map, DefaultInputValues.MAP);
             return this;
         }
 
 
         public Builder sortBy(String sortBy) {
-            this.sortBy = StringUtils.defaultString(sortBy, DefaultInputValues.SORT_BY);
+            this.sortBy = Objects.toString(sortBy, DefaultInputValues.SORT_BY);
             return this;
         }
 
 
         public Builder sortOrder(String sortOrder) {
-            this.sortOrder = StringUtils.defaultString(sortOrder, DefaultInputValues.SORT_ORDER);
+            this.sortOrder = Objects.toString(sortOrder, DefaultInputValues.SORT_ORDER);
             return this;
         }
 
@@ -134,19 +135,19 @@ public class SortMapsInput {
 
 
         public Builder mapStart(String mapStart) {
-            this.mapStart = StringUtils.defaultString(mapStart, DefaultInputValues.MAP_START);
+            this.mapStart = Objects.toString(mapStart, DefaultInputValues.MAP_START);
             return this;
         }
 
 
         public Builder mapEnd(String mapEnd) {
-            this.mapEnd = StringUtils.defaultString(mapEnd, DefaultInputValues.MAP_END);
+            this.mapEnd = Objects.toString(mapEnd, DefaultInputValues.MAP_END);
             return this;
         }
 
 
         public Builder elementWrapper(String elementWrapper) {
-            this.elementWrapper = StringUtils.defaultString(elementWrapper, DefaultInputValues.ELEMENT_WRAPPER);
+            this.elementWrapper = Objects.toString(elementWrapper, DefaultInputValues.ELEMENT_WRAPPER);
             return this;
         }
 

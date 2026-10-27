@@ -1,11 +1,11 @@
 package io.cloudslang.content.oracle.oci.actions.volumes;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import com.jayway.jsonpath.JsonPath;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.*;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.oracle.oci.utils.HttpClientInputNames.*;
 import static io.cloudslang.content.oracle.oci.utils.Constants.AttachVolumeConstants.ATTACH_VOLUME_OPERATION_NAME;
 import static io.cloudslang.content.oracle.oci.utils.Constants.AttachVolumeConstants.VOLUME_ATTACHMENT_ID_JSON_PATH;
 import static io.cloudslang.content.oracle.oci.utils.Constants.Common.*;

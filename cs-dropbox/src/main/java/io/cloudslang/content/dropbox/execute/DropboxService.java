@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,11 +19,10 @@
 package io.cloudslang.content.dropbox.execute;
 
 import io.cloudslang.content.dropbox.entities.inputs.CommonInputs;
+import io.cloudslang.content.dropbox.entities.inputs.DropboxHttpClientInputs;
 import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 
-import java.net.MalformedURLException;
 import java.util.Map;
 
 import static io.cloudslang.content.dropbox.factory.HeadersBuilder.buildHeaders;
@@ -37,13 +36,13 @@ import static io.cloudslang.content.dropbox.utils.InputsUtil.buildUrl;
  */
 public class DropboxService {
     @SafeVarargs
-    public final <T> Map<String, String> execute(HttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) throws Exception {
+    public final <T> Map<String, String> execute(DropboxHttpClientInputs httpClientInputs, CommonInputs commonInputs, T... builders) throws Exception {
         InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
 
         httpClientInputs.setUrl(buildUrl(wrapper));
         httpClientInputs.setBody(buildPayload(wrapper));
         buildHeaders(wrapper);
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    * Copyright 2019-2024 Open Text
+    * Copyright 2026-2027 Open Text
     * This program and the accompanying materials
     * are made available under the terms of the Apache License v2.0 which accompany this distribution.
     *
@@ -15,7 +15,6 @@
     * limitations under the License.
 
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -74,12 +73,12 @@
         <maven-license-plugin.version>3.0</maven-license-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <score-content-sdk.version>1.10.11</score-content-sdk.version>
-        <commons-collection.version>4.1</commons-collection.version>
-        <cs-commons.version>0.0.14</cs-commons.version>
-        <cs-xml.version>0.0.28</cs-xml.version>
-        <cs-http-client.version>0.1.102</cs-http-client.version>
-        <jackson.version>2.22.3</jackson.version>
+        <score-content-sdk.version>1.10.12</score-content-sdk.version>
+        <commons-collection.version>4.6.0</commons-collection.version>
+        <cs-commons.version>0.0.15-SNAPSHOT</cs-commons.version>
+        <cs-xml.version>0.0.29-SNAPSHOT</cs-xml.version>
+        <cs-httpclient-commons.version>0.0.32-SNAPSHOT</cs-httpclient-commons.version>
+        <jackson.version>2.22.4</jackson.version>
         <junit-jupiter.version>6.1.3</junit-jupiter.version>
         <mockito.version>5.24.0</mockito.version>
         <assertj.version>3.27.7</assertj.version>
@@ -101,7 +100,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.hp.score.sdk</groupId>
+            <groupId>io.cloudslang.content</groupId>
             <artifactId>score-content-sdk</artifactId>
             <version>${score-content-sdk.version}</version>
         </dependency>
@@ -116,6 +115,12 @@
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-xml</artifactId>
             <version>${cs-xml.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.cloudslang.content</groupId>
+                    <artifactId>cs-httpclient-commons</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -131,8 +136,8 @@
         <!--HTTP CLIENT-->
         <dependency>
             <groupId>io.cloudslang.content</groupId>
-            <artifactId>cs-http-client</artifactId>
-            <version>${cs-http-client.version}</version>
+            <artifactId>cs-httpclient-commons</artifactId>
+            <version>${cs-httpclient-commons.version}</version>
         </dependency>
 
         <!-- Testing -->
@@ -243,7 +248,7 @@
                     </includes>
                     <!--Pass arguments using ${var} syntax in license.template file-->
                     <properties>
-                        <copyright.year>2019-2024</copyright.year>
+                        <copyright.year>2026-2027</copyright.year>
                     </properties>
                     <!--Custom mapping for java extensions-->
                     <useDefaultMapping>false</useDefaultMapping>

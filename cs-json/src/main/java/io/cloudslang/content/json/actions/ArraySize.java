@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,22 +16,22 @@
 
 package io.cloudslang.content.json.actions;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.core.JacksonException;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.utils.StringUtilities;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +82,7 @@ public class ArraySize {
         try {
             ObjectMapper mapper = new ObjectMapper();
             jsonNode = mapper.readTree(array);
-        } catch (IOException exception) {
+        } catch (JacksonException exception) {
             final String value = INVALID_JSONOBJECT + exception.getMessage();
             return populateResult(returnResult, value, exception);
         }

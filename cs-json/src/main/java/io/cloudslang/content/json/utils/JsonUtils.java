@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -18,15 +18,16 @@
 
 package io.cloudslang.content.json.utils;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.AbstractJsonProvider;
-import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import com.jayway.jsonpath.spi.json.Jackson3JsonNodeJsonProvider;
 import io.cloudslang.content.constants.OtherValues;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -125,8 +126,10 @@ public class JsonUtils {
     @NotNull
     public static DocumentContext getValidJsonContext(final String jsonObject) {
         try {
-            final ObjectMapper objectMapper = new ObjectMapper().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-            final AbstractJsonProvider provider = new JacksonJsonNodeJsonProvider(objectMapper);
+            final ObjectMapper objectMapper = JsonMapper.builder()
+                    .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
+                    .build();
+            final AbstractJsonProvider provider = new Jackson3JsonNodeJsonProvider(objectMapper);
             final Configuration configuration = Configuration.defaultConfiguration()
                     .jsonProvider(provider);
             return JsonPath.using(configuration).parse(jsonObject);

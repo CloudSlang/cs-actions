@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -14,14 +14,14 @@
  */
 package io.cloudslang.content.amazon.actions.trustedadvisor;
 
-import com.amazonaws.services.support.AWSSupport;
-import com.amazonaws.services.support.model.DescribeTrustedAdvisorCheckResultResult;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import software.amazon.awssdk.services.support.SupportClient;
+import software.amazon.awssdk.services.support.model.DescribeTrustedAdvisorCheckResultResponse;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.validators.Validator;
 import io.cloudslang.content.amazon.factory.AmazonAWSAdvisoryClientBuilder;
@@ -96,10 +96,10 @@ public class CostOptimizationRecommendations {
 
         try {
 
-            final AWSSupport awsSupport = AmazonAWSAdvisoryClientBuilder.getAWSAdvisorSupportClientBuilder(accessKeyID, accessKey,
+            final SupportClient awsSupport = AmazonAWSAdvisoryClientBuilder.getAWSAdvisorSupportClientBuilder(accessKeyID, accessKey,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, region);
 
-            final DescribeTrustedAdvisorCheckResultResult result = AWSAdvisorService.getRecommendationDetails(
+            final DescribeTrustedAdvisorCheckResultResponse result = AWSAdvisorService.getRecommendationDetails(
                     checkID, awsSupport);
 
             return getSuccessResultMapDescribedRecommendations(result);

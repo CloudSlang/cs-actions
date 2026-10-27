@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -21,12 +21,10 @@ package io.cloudslang.content.azure.utils;
 
 import io.cloudslang.content.azure.entities.AuthorizationTokenUsingWebAPIInputs;
 import io.cloudslang.content.azure.entities.AzureCommonInputs;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.utils.StringUtilities;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.Authenticator;
@@ -66,7 +64,7 @@ public class HttpUtils {
     }
 
     @NotNull
-    public static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setCommonHttpInputs(@NotNull final AzureHttpClientInputs httpClientInputs,
                                            @NotNull final AzureCommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),
@@ -82,7 +80,7 @@ public class HttpUtils {
         setTLSParameters(httpClientInputs);
     }
 
-    public static void setProxy(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setProxy(@NotNull final AzureHttpClientInputs httpClientInputs,
                                 @NotNull final String proxyHost,
                                 @NotNull final String proxyPort,
                                 @NotNull final String proxyUsername,
@@ -119,7 +117,7 @@ public class HttpUtils {
         return results;
     }
 
-    public static void setSecurityInputs(@NotNull final HttpClientInputs httpClientInputs,
+    public static void setSecurityInputs(@NotNull final AzureHttpClientInputs httpClientInputs,
                                          @NotNull final String trustAllRoots,
                                          @NotNull final String x509HostnameVerifier,
                                          @NotNull final String trustKeystore,
@@ -133,8 +131,8 @@ public class HttpUtils {
     }
 
 
-    public static void setTLSParameters(HttpClientInputs httpClientInputs) {
-        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.entities.Constants.TLSv12);
+    public static void setTLSParameters(AzureHttpClientInputs httpClientInputs) {
+        httpClientInputs.setTlsVersion(io.cloudslang.content.httpclient.utils.Constants.TLSv12);
         httpClientInputs.setAllowedCyphers(ALLOWED_CYPHERS);
 
     }

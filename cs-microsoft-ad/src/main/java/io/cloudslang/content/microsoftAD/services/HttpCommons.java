@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -20,28 +20,41 @@ package io.cloudslang.content.microsoftAD.services;
 import io.cloudslang.content.microsoftAD.entities.AzureActiveDirectoryCommonInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserInputs;
 import io.cloudslang.content.microsoftAD.entities.GetUserLicenseDetailsInputs;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
-import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustAllStrategy;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPatch;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.DefaultHostnameVerifier;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
+import org.apache.hc.client5.http.ssl.TrustAllStrategy;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.core5.util.Timeout;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -55,66 +68,44 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class HttpCommons {
 
-    private static ConnectionKeepAliveStrategy keepAliveStrategy = (httpResponse, httpContext) -> Long.MAX_VALUE;
-
     private static HostnameVerifier x509HostnameVerifier(String hostnameVerifier) {
         String x509HostnameVerifierStr = hostnameVerifier.toLowerCase();
-        HostnameVerifier x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
         switch (x509HostnameVerifierStr) {
             case STRICT:
-                x509HostnameVerifier = SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
-                break;
             case BROWSER_COMPATIBLE:
-                x509HostnameVerifier = SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
-                break;
+                return new DefaultHostnameVerifier();
             case ALLOW_ALL:
-                x509HostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-                break;
+                return NoopHostnameVerifier.INSTANCE;
+            default:
+                return new DefaultHostnameVerifier();
         }
-        return x509HostnameVerifier;
     }
 
 
-    public static void setSSLContext(HttpClientBuilder httpClientBuilder, AzureActiveDirectoryCommonInputs commonInputs) {
-
+    private static SSLConnectionSocketFactory createSSLSocketFactory(AzureActiveDirectoryCommonInputs commonInputs) {
         HostnameVerifier hostnameVerifier = x509HostnameVerifier(commonInputs.getX509HostnameVerifier());
-
+        SSLContext sslContext;
         if (commonInputs.getTrustAllRoots().equals(BOOLEAN_TRUE)) {
-
             try {
-
-                SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustAllStrategy()).build();
-                //SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, commonInputs.getTLSVersion,commonInputs.getCipherSuites,hostnameVerifier);
-                SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
-                httpClientBuilder.setSSLSocketFactory(socketFactory);
-
-            } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
-            } catch (KeyStoreException e) {
-                throw new RuntimeException(e);
-            } catch (KeyManagementException e) {
+                sslContext = new SSLContextBuilder()
+                        .loadTrustMaterial(null, new TrustAllStrategy())
+                        .build();
+            } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
                 throw new RuntimeException(e);
             }
-
         } else {
-
             try {
-
-                SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
+                sslContext = new SSLContextBuilder().loadTrustMaterial(
                         new File(commonInputs.getTrustKeystore()),
                         commonInputs.getTrustPassword().toCharArray()).build();
-
-                SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
-                //SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, commonInputs.getTLSVersion,commonInputs.getCipherSuites,hostnameVerifier);
-                httpClientBuilder.setSSLSocketFactory(socketFactory);
-
-
             } catch (Exception e) {
-
                 throw new RuntimeException(e);
             }
-
         }
+        return SSLConnectionSocketFactoryBuilder.create()
+                .setSslContext(sslContext)
+                .setHostnameVerifier(hostnameVerifier)
+                .build();
     }
 
     public static void setProxy(HttpClientBuilder httpClientBuilder, AzureActiveDirectoryCommonInputs commonInputs) {
@@ -124,14 +115,14 @@ public class HttpCommons {
 
         try {
 
-            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            HttpHost proxy = new HttpHost(commonInputs.getProxyHost(), Integer.parseInt(commonInputs.getProxyPort()));
             credentialsProvider.setCredentials(
-                    new AuthScope(commonInputs.getProxyHost(), Integer.parseInt(commonInputs.getProxyPort())),
-                    new UsernamePasswordCredentials(commonInputs.getProxyUsername(), commonInputs.getProxyPassword()));
+                    new AuthScope(proxy),
+                    new UsernamePasswordCredentials(commonInputs.getProxyUsername(), commonInputs.getProxyPassword().toCharArray()));
 
             httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-
-            httpClientBuilder.setProxy(new HttpHost(commonInputs.getProxyHost(), Integer.parseInt(commonInputs.getProxyPort())));
+            httpClientBuilder.setProxy(proxy);
 
         } catch (NumberFormatException e) {
             throw new RuntimeException(e);
@@ -142,10 +133,9 @@ public class HttpCommons {
 
         try {
 
-            //Timeout is specified in millis in the javadoc
             RequestConfig requestConfig = RequestConfig.custom()
-                    .setConnectTimeout(Integer.parseInt(commonInputs.getConnectTimeout()) * 1000)
-                    .setSocketTimeout(Integer.parseInt(commonInputs.getSocketTimeout()) * 1000)
+                    .setConnectTimeout(Timeout.ofSeconds(Long.parseLong(commonInputs.getConnectTimeout())))
+                    .setResponseTimeout(Timeout.ofSeconds(Long.parseLong(commonInputs.getSocketTimeout())))
                     .build();
 
             httpClientBuilder.setDefaultRequestConfig(requestConfig);
@@ -158,26 +148,25 @@ public class HttpCommons {
     public static void setMaxConnections(HttpClientBuilder httpClientBuilder, AzureActiveDirectoryCommonInputs commonInputs) {
 
         if (commonInputs.getKeepAlive().equals(BOOLEAN_TRUE))
-            httpClientBuilder.setKeepAliveStrategy(keepAliveStrategy);
-
-        try {
-
-            PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-            connectionManager.setMaxTotal(Integer.parseInt(commonInputs.getConnectionsMaxTotal()));
-            connectionManager.setDefaultMaxPerRoute(Integer.parseInt(commonInputs.getConnectionsMaxPerRoute()));
-
-            httpClientBuilder.setConnectionManager(connectionManager);
-
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
-        }
+            httpClientBuilder.setKeepAliveStrategy((response, context) -> TimeValue.ofMilliseconds(Long.MAX_VALUE));
     }
 
-    public static HttpClient createHttpClient(AzureActiveDirectoryCommonInputs commonInputs) {
+    private static PoolingHttpClientConnectionManager createConnectionManager(AzureActiveDirectoryCommonInputs commonInputs) {
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.INSTANCE)
+                .register("https", createSSLSocketFactory(commonInputs))
+                .build();
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+        connectionManager.setMaxTotal(Integer.parseInt(commonInputs.getConnectionsMaxTotal()));
+        connectionManager.setDefaultMaxPerRoute(Integer.parseInt(commonInputs.getConnectionsMaxPerRoute()));
+        return connectionManager;
+    }
 
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+    public static CloseableHttpClient createHttpClient(AzureActiveDirectoryCommonInputs commonInputs) {
+
+        HttpClientBuilder httpClientBuilder = HttpClients.custom();
+        httpClientBuilder.setConnectionManager(createConnectionManager(commonInputs));
         setProxy(httpClientBuilder, commonInputs);
-        setSSLContext(httpClientBuilder, commonInputs);
         setTimeout(httpClientBuilder, commonInputs);
         setMaxConnections(httpClientBuilder, commonInputs);
 
@@ -188,20 +177,19 @@ public class HttpCommons {
 
         Map<String, String> result = new HashMap<>();
 
-        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
+        try (CloseableHttpClient httpClient = createHttpClient(commonInputs)) {
 
             HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
-            StringEntity stringEntity = new StringEntity(body, UTF8);
-            stringEntity.setContentType(APPLICATION_JSON);
+            StringEntity stringEntity = new StringEntity(body, ContentType.create(APPLICATION_JSON, StandardCharsets.UTF_8));
             httpPost.setEntity(stringEntity);
 
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
 
-                result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
+                result.put(STATUS_CODE, response.getCode() + EMPTY);
                 if (!(response.getEntity() == null))
-                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
+                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
                 return result;
             }
         } catch (Exception e) {
@@ -217,16 +205,16 @@ public class HttpCommons {
         Map<String, String> result = new HashMap<>();
         result.put(STATUS_CODE, EMPTY);
         result.put(RETURN_RESULT, EMPTY);
-        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
+        try (CloseableHttpClient httpClient = createHttpClient(commonInputs)) {
             HttpDelete httpDelete = new HttpDelete(url);
             httpDelete.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
             httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpDelete)) {
-                result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
+                result.put(STATUS_CODE, response.getCode() + EMPTY);
                 //if status code is 204, no return result is provided, otherwise there is a return result
-                int statusCode = response.getStatusLine().getStatusCode();
+                int statusCode = response.getCode();
                 if (statusCode < 200 || statusCode > 300)
-                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
+                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
                 return result;
             }
         } catch (Exception e) {
@@ -242,13 +230,13 @@ public class HttpCommons {
         Map<String, String> result = new HashMap<>();
         result.put(STATUS_CODE, EMPTY);
         result.put(RETURN_RESULT, EMPTY);
-        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
+        try (CloseableHttpClient httpClient = createHttpClient(commonInputs)) {
             HttpGet httpGet = new HttpGet(url);
             httpGet.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
             httpGet.setHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
-                result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
-                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
+                result.put(STATUS_CODE, response.getCode() + EMPTY);
+                result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
                 return result;
             }
         } catch (Exception e) {
@@ -264,10 +252,9 @@ public class HttpCommons {
 
         Map<String, String> result = new HashMap<>();
 
-        try (CloseableHttpClient httpClient = (CloseableHttpClient) createHttpClient(commonInputs)) {
+        try (CloseableHttpClient httpClient = createHttpClient(commonInputs)) {
 
-            StringEntity stringEntity = new StringEntity(body, UTF8);
-            stringEntity.setContentType(APPLICATION_JSON);
+            StringEntity stringEntity = new StringEntity(body, ContentType.create(APPLICATION_JSON, StandardCharsets.UTF_8));
 
             HttpPatch httpPatch = new HttpPatch(url);
             httpPatch.setHeader(HttpHeaders.AUTHORIZATION, BEARER + commonInputs.getAuthToken());
@@ -276,11 +263,11 @@ public class HttpCommons {
 
             try (CloseableHttpResponse response = httpClient.execute(httpPatch)) {
 
-                int statusCode = response.getStatusLine().getStatusCode();
+                int statusCode = response.getCode();
                 if (statusCode < 200 || statusCode > 300)
-                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), UTF8));
+                    result.put(RETURN_RESULT, EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8));
 
-                result.put(STATUS_CODE, response.getStatusLine().getStatusCode() + EMPTY);
+                result.put(STATUS_CODE, response.getCode() + EMPTY);
 
                 return result;
             }

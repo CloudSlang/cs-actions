@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,37 +12,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Copyright 2019-2024 Open Text
- * This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
 
 
 
 package io.cloudslang.content.amazon.actions.cloudformation;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.CreateStackRequest;
-import com.amazonaws.services.cloudformation.model.CreateStackResult;
-import com.amazonaws.services.cloudformation.model.Parameter;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.CreateStackRequest;
+import software.amazon.awssdk.services.cloudformation.model.CreateStackResponse;
+import software.amazon.awssdk.services.cloudformation.model.Parameter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Constants;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.factory.CloudFormationClientBuilder;
@@ -120,30 +106,30 @@ public class CreateStackAction {
 
         try {
 
-            final CreateStackRequest createRequest = new CreateStackRequest()
-                    .withStackName(stackName)
-                    .withParameters(toArrayOfParameters(parameters))
-                    .withCapabilities(toArrayOfString(capabilities));
+            final CreateStackRequest.Builder createRequestBuilder = CreateStackRequest.builder()
+                    .stackName(stackName)
+                    .parameters(toArrayOfParameters(parameters))
+                    .capabilitiesWithStrings(toArrayOfString(capabilities));
 
             if (StringUtils.isNotEmpty(templateUrl)) {
                 UrlValidator urlValidator = new UrlValidator();
                 if (!urlValidator.isValid(templateUrl)) {
                     throw new IllegalArgumentException("templateUrl value is not a valid URL");
                 }
-                createRequest.setTemplateURL(templateUrl);
+                createRequestBuilder.templateURL(templateUrl);
             } else if (StringUtils.isNotEmpty(templateBody)) {
-                createRequest.setTemplateURL(templateBody);
+                createRequestBuilder.templateBody(templateBody);
             } else {
                 throw new IllegalArgumentException("templateUrl or templateBody should be specified");
             }
 
-            final AmazonCloudFormation stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
+            final CloudFormationClient stackBuilder = CloudFormationClientBuilder.getCloudFormationClient(identity, credential, proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs, region);
 
-            final CreateStackResult createStackResult = stackBuilder.createStack(createRequest);
+            final CreateStackResponse createStackResult = stackBuilder.createStack(createRequestBuilder.build());
             final String createStackResultAsString = StringUtils.defaultIfEmpty(createStackResult.toString(),"");
 
             final ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            final String createStackResultAsJson = ow.writeValueAsString(createStackResult);
+            final String createStackResultAsJson = ow.writeValueAsString(Map.of("stackId", createStackResult.stackId()));
 
             final HashMap<String, String> results = new HashMap();
             results.put(RETURN_CODE, SUCCESS_RETURN_CODE);
@@ -165,10 +151,10 @@ public class CreateStackAction {
         for (final String line : parameters.split(StringUtils.LF)) {
             final ParametersLine paramLine = new ParametersLine(line);
             if (paramLine.isValid()) {
-                final Parameter parameter = new Parameter();
-                parameter.setParameterKey(paramLine.getKey());
-                parameter.setParameterValue(paramLine.getValue());
-                parametersList.add(parameter);
+                parametersList.add(Parameter.builder()
+                        .parameterKey(paramLine.getKey())
+                        .parameterValue(paramLine.getValue())
+                        .build());
             }
         }
         return parametersList;

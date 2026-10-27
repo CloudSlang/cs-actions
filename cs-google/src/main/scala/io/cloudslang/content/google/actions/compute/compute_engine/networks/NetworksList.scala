@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -22,8 +22,8 @@ package io.cloudslang.content.google.actions.compute.compute_engine.networks
 import java.util
 
 import com.google.api.services.compute.model.Network
-import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
-import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
+import io.cloudslang.content.annotations.{Action, Output, Param, Response}
+import io.cloudslang.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.networks.NetworkService
@@ -129,7 +129,7 @@ class NetworksList {
       val credential = GoogleAuth.fromAccessToken(accessToken)
 
       val resultList = NetworkService.list(httpTransport, jsonFactory, credential, projectId, filterOpt, orderByOpt)
-        .map { network: Network => if (prettyPrint) network.toPrettyString else network.toString }
+        .map { (network: Network) => if (prettyPrint) network.toPrettyString else network.toString }
         .mkString(SQR_LEFT_BRACKET, if (prettyPrint) COMMA_NEW_LINE else COMMA, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)
     } catch {

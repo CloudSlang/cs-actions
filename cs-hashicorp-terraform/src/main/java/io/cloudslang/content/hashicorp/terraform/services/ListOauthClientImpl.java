@@ -6,8 +6,8 @@ import java.util.Map;
 
 import io.cloudslang.content.hashicorp.terraform.entities.ListOAuthClientInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
-import org.apache.http.client.utils.URIBuilder;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import org.apache.hc.core5.net.URIBuilder;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.jetbrains.annotations.NotNull;
 import static io.cloudslang.content.hashicorp.terraform.services.HttpCommons.setCommonHttpInputs;
@@ -18,7 +18,7 @@ import static io.cloudslang.content.hashicorp.terraform.utils.Constants.Common.*
 public class ListOauthClientImpl {
     @NotNull
     public static Map<String, String> listOAuthClient(@NotNull final ListOAuthClientInputs listOAuthInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformHttpClientInputs httpClientInputs = new TerraformHttpClientInputs();
         final TerraformCommonInputs commonInputs = listOAuthInputs.getCommonInputs();
         httpClientInputs.setUrl(listOAuthClientUrl(commonInputs.getOrganizationName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -27,7 +27,7 @@ public class ListOauthClientImpl {
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, commonInputs);
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

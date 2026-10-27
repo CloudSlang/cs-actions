@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -20,8 +20,8 @@ package io.cloudslang.content.google.actions.databases.sql.instances
 import java.util
 
 import com.google.api.services.sqladmin.model.DatabaseInstance
-import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
-import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
+import io.cloudslang.content.annotations.{Action, Output, Param, Response}
+import io.cloudslang.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.databases.sql.instances.SQLDatabaseInstanceService
@@ -91,7 +91,7 @@ class ListSQLInstances {
       val instancesDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 
       val sqlInstances = SQLDatabaseInstanceService.list(httpTransport, jsonFactory, credential, projectId, filterOpt)
-        .map { dbInstance: DatabaseInstance => if (prettyPrint) dbInstance.toPrettyString else dbInstance.toString }
+        .map { (dbInstance: DatabaseInstance) => if (prettyPrint) dbInstance.toPrettyString else dbInstance.toString }
         .mkString(SQR_LEFT_BRACKET, instancesDelimiter, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(sqlInstances)
     } catch {

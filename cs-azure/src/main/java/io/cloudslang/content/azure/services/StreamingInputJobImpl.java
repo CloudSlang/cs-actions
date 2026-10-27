@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -22,12 +22,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.azure.entities.CreateStreamingInputJobInputs;
 import io.cloudslang.content.azure.entities.models.streamanalytics.CreateStreamingInputJobRequestBody;
 import io.cloudslang.content.azure.utils.HttpUtils;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.azure.utils.AzureHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONArray;
-
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.azure.utils.Constants.Common.ANONYMOUS;
@@ -55,7 +54,7 @@ public class StreamingInputJobImpl {
     @NotNull
     public static Map<String, String> CreateInputJob(@NotNull final CreateStreamingInputJobInputs createStreamingInputJobInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getCreateInputStreamingJobUrl(createStreamingInputJobInputs.getAzureCommonInputs().getSubscriptionId(), createStreamingInputJobInputs.getAzureCommonInputs().getResourceGroupName(),
                 createStreamingInputJobInputs.getJobName(), createStreamingInputJobInputs.getInputName(), createStreamingInputJobInputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -65,7 +64,7 @@ public class StreamingInputJobImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, createStreamingInputJobInputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(createStreamingInputJobInputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(createStreamingInputJobRequestBody(createStreamingInputJobInputs));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
 
     }
 
@@ -107,9 +106,7 @@ public class StreamingInputJobImpl {
         properties.setDatasource(datasource);
         storage.setAccountName(inputs.getAccountName());
         storage.setAccountKey(inputs.getAccountKey());
-        JSONArray json = new JSONArray();
-        json.add(storage);
-        subproperties.setStrogeaccounts(json);
+        subproperties.setStrogeaccounts(List.of(storage));
         datasource.setProperties(subproperties);
         subproperties.setContainer(inputs.getContainerName());
         subproperties.setPathPattern(PATH_PATTERN);

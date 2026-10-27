@@ -1,6 +1,6 @@
 package io.cloudslang.content.redhat.entities;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 

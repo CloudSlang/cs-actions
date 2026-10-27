@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -23,7 +23,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.services.HttpClientService.*;
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
 import static io.cloudslang.content.office365.utils.Constants.ZERO;
 import static io.cloudslang.content.office365.utils.HttpUtils.*;
 import static io.cloudslang.content.office365.utils.Outputs.CommonOutputs.DOCUMENT;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,14 +16,15 @@
 
 package io.cloudslang.content.abbyy.http;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.abbyy.constants.HttpClientOutputNames;
 import io.cloudslang.content.abbyy.entities.requests.HttpClientRequest;
 import io.cloudslang.content.abbyy.entities.responses.HttpClientResponse;
 import io.cloudslang.content.abbyy.exceptions.HttpClientException;
 import io.cloudslang.content.constants.ReturnCodes;
-import io.cloudslang.content.httpclient.actions.HttpClientAction;
+import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.httpclient.services.HttpClientService;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -96,7 +97,7 @@ public class HttpClientTest {
     private static final GlobalSessionObject httpClientPoolingConnectionManager = null;
     @Mock
     private HttpClientRequest httpRequestMock;
-    private MockedConstruction<HttpClientAction> actionConstruction;
+    private org.mockito.MockedStatic<HttpClientService> httpClientServiceMock;
     private MockedConstruction<HttpClientResponse.Builder> builderConstruction;
     private Map<String, String> rawResponse;
 
@@ -104,8 +105,9 @@ public class HttpClientTest {
     @BeforeEach
     public void setUp() {
         mockHttpClientRequest();
-        actionConstruction = mockConstruction(HttpClientAction.class, withSettings().defaultAnswer(invocation ->
-                "execute".equals(invocation.getMethod().getName()) ? rawResponse : RETURNS_DEFAULTS.answer(invocation)));
+        httpClientServiceMock = mockStatic(HttpClientService.class);
+        httpClientServiceMock.when(() -> HttpClientService.execute(any(HttpClientInputs.class)))
+                .thenAnswer(invocation -> rawResponse);
         builderConstruction = mockConstruction(HttpClientResponse.Builder.class, withSettings().defaultAnswer(invocation ->
                 "build".equals(invocation.getMethod().getName()) ? null : invocation.getMock()));
     }
@@ -113,7 +115,7 @@ public class HttpClientTest {
     @AfterEach
     public void tearDown() {
         builderConstruction.close();
-        actionConstruction.close();
+        httpClientServiceMock.close();
     }
 
 
@@ -138,20 +140,55 @@ public class HttpClientTest {
         HttpClient.execute(httpRequestMock);
 
         //Assert
-        HttpClientAction httpClientActionMock = actionConstruction.constructed().get(0);
+        org.mockito.ArgumentCaptor<HttpClientInputs> inputsCaptor = org.mockito.ArgumentCaptor.forClass(HttpClientInputs.class);
+        httpClientServiceMock.verify(() -> HttpClientService.execute(inputsCaptor.capture()));
+        HttpClientInputs inputs = inputsCaptor.getValue();
         HttpClientResponse.Builder httpClientResponseBuilderSpy = builderConstruction.constructed().get(0);
-        verify(httpClientActionMock).execute(eq(url), eq(tlsVersion), eq(allowedCyphers), eq(authType), eq(preemptiveAuth.toString()),
-                eq(username), eq(password), eq(kerberosConfigFile), eq(kerberosLoginConfFile), eq(kerberosSkipPortForLookup),
-                eq(proxyHost), eq(proxyPort.toString()), eq(proxyUsername), eq(proxyPassword), eq(trustAllRoots.toString()), eq(x509HostnameVerifier),
-                eq(trustKeystore), eq(trustPassword), eq(keystore), eq(keystorePassword), eq(connectTimeout.toString()), eq(socketTimeout.toString()), eq(executionTimeout.toString()),
-                eq(useCookies.toString()), eq(keepAlive.toString()), eq(connectionsMaxPerRoute.toString()), eq(connectionsMaxTotal.toString()), eq(headers),
-                eq(responseCharacterSet), eq(destinationFile.toAbsolutePath().toString()), eq(followedRedirects.toString()), eq(queryParams),
-                eq(queryParamsAreURLEncoded.toString()), eq(queryParamsAreFormEncoded.toString()), eq(formParams), eq(formParamsAreURLEncoded.toString()),
-                eq(sourceFile.toAbsolutePath().toString()), eq(body), eq(contentType), eq(requestCharacterSet), eq(multipartBodies),
-                eq(multipartBodiesContentType), eq(multipartFiles), eq(multipartFilesContentType),
-                eq(multipartValuesAreURLEncoded.toString()), eq(chunkedRequestEntity.toString()), eq(method), eq(httpClientCookieSession),
-                eq(httpClientPoolingConnectionManager)
-        );
+        org.junit.jupiter.api.Assertions.assertEquals(url, inputs.getUrl());
+        org.junit.jupiter.api.Assertions.assertEquals(method, inputs.getMethod());
+        org.junit.jupiter.api.Assertions.assertEquals(tlsVersion, inputs.getTlsVersion());
+        org.junit.jupiter.api.Assertions.assertEquals(allowedCyphers, inputs.getAllowedCiphers());
+        org.junit.jupiter.api.Assertions.assertEquals(authType, inputs.getAuthType());
+        org.junit.jupiter.api.Assertions.assertEquals(preemptiveAuth.toString(), inputs.getPreemptiveAuth());
+        org.junit.jupiter.api.Assertions.assertEquals(username, inputs.getUsername());
+        org.junit.jupiter.api.Assertions.assertEquals(password, inputs.getPassword());
+        org.junit.jupiter.api.Assertions.assertEquals(proxyHost, inputs.getProxyHost());
+        org.junit.jupiter.api.Assertions.assertEquals(proxyPort.toString(), inputs.getProxyPort());
+        org.junit.jupiter.api.Assertions.assertEquals(proxyUsername, inputs.getProxyUsername());
+        org.junit.jupiter.api.Assertions.assertEquals(proxyPassword, inputs.getProxyPassword());
+        org.junit.jupiter.api.Assertions.assertEquals(trustAllRoots.toString(), inputs.getTrustAllRoots());
+        org.junit.jupiter.api.Assertions.assertEquals(x509HostnameVerifier, inputs.getX509HostnameVerifier());
+        org.junit.jupiter.api.Assertions.assertEquals(trustKeystore, inputs.getTrustKeystore());
+        org.junit.jupiter.api.Assertions.assertEquals(trustPassword, inputs.getTrustPassword());
+        org.junit.jupiter.api.Assertions.assertEquals(keystore, inputs.getKeystore());
+        org.junit.jupiter.api.Assertions.assertEquals(keystorePassword, inputs.getKeystorePassword());
+        org.junit.jupiter.api.Assertions.assertEquals(connectTimeout.toString(), inputs.getConnectTimeout());
+        org.junit.jupiter.api.Assertions.assertEquals(socketTimeout.toString(), inputs.getResponseTimeout());
+        org.junit.jupiter.api.Assertions.assertEquals(executionTimeout.toString(), inputs.getExecutionTimeout());
+        org.junit.jupiter.api.Assertions.assertEquals(useCookies.toString(), inputs.getUseCookies());
+        org.junit.jupiter.api.Assertions.assertEquals(keepAlive.toString(), inputs.getKeepAlive());
+        org.junit.jupiter.api.Assertions.assertEquals(connectionsMaxPerRoute.toString(), inputs.getConnectionsMaxPerRoute());
+        org.junit.jupiter.api.Assertions.assertEquals(connectionsMaxTotal.toString(), inputs.getConnectionsMaxTotal());
+        org.junit.jupiter.api.Assertions.assertEquals(headers, inputs.getHeaders());
+        org.junit.jupiter.api.Assertions.assertEquals(responseCharacterSet, inputs.getResponseCharacterSet());
+        org.junit.jupiter.api.Assertions.assertEquals(destinationFile.toAbsolutePath().toString(), inputs.getDestinationFile());
+        org.junit.jupiter.api.Assertions.assertEquals(followedRedirects.toString(), inputs.getFollowRedirects());
+        org.junit.jupiter.api.Assertions.assertEquals(queryParams, inputs.getQueryParams());
+        org.junit.jupiter.api.Assertions.assertEquals(queryParamsAreURLEncoded.toString(), inputs.getQueryParamsAreURLEncoded());
+        org.junit.jupiter.api.Assertions.assertEquals(queryParamsAreFormEncoded.toString(), inputs.getQueryParamsAreFormEncoded());
+        org.junit.jupiter.api.Assertions.assertEquals(formParams, inputs.getFormParams());
+        org.junit.jupiter.api.Assertions.assertEquals(formParamsAreURLEncoded.toString(), inputs.getFormParamsAreURLEncoded());
+        org.junit.jupiter.api.Assertions.assertEquals(sourceFile.toAbsolutePath().toString(), inputs.getSourceFile());
+        org.junit.jupiter.api.Assertions.assertEquals(body, inputs.getBody());
+        org.junit.jupiter.api.Assertions.assertEquals(contentType, inputs.getContentType());
+        org.junit.jupiter.api.Assertions.assertEquals(requestCharacterSet, inputs.getRequestCharacterSet());
+        org.junit.jupiter.api.Assertions.assertEquals(multipartBodies, inputs.getMultipartBodies());
+        org.junit.jupiter.api.Assertions.assertEquals(multipartBodiesContentType, inputs.getMultipartBodiesContentType());
+        org.junit.jupiter.api.Assertions.assertEquals(multipartFiles, inputs.getMultipartFiles());
+        org.junit.jupiter.api.Assertions.assertEquals(multipartFilesContentType, inputs.getMultipartFilesContentType());
+        org.junit.jupiter.api.Assertions.assertEquals(multipartValuesAreURLEncoded.toString(), inputs.getMultipartValuesAreURLEncoded());
+        org.junit.jupiter.api.Assertions.assertSame(httpClientCookieSession, inputs.getCookieStoreSessionObject());
+        org.junit.jupiter.api.Assertions.assertSame(httpClientPoolingConnectionManager, inputs.getConnectionPoolSessionObject());
 
         verify(httpClientResponseBuilderSpy).returnResult(returnResult);
         verify(httpClientResponseBuilderSpy).exception(exception);

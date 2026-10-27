@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,36 +12,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Copyright 2019-2024 Open Text
- * This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
  
 
 
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.model.Stack;
-import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
-import com.amazonaws.services.servicecatalog.model.UpdateProvisionedProductResult;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.Stack;
+import software.amazon.awssdk.services.servicecatalog.ServiceCatalogClient;
+import software.amazon.awssdk.services.servicecatalog.model.DescribeRecordResponse;
+import software.amazon.awssdk.services.servicecatalog.model.UpdateProvisionedProductResponse;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Descriptions;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.validators.Validator;
@@ -159,25 +145,25 @@ public class UpdateProvisionedProduct {
 
         try {
             //The client
-            final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
+            final ServiceCatalogClient awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, regionVal, asyncImp);
             //The result
-            final UpdateProvisionedProductResult result = AmazonServiceCatalogService.updateProvisionedProduct(acceptedLanguageVal, pathId,
+            final UpdateProvisionedProductResponse result = AmazonServiceCatalogService.updateProvisionedProduct(acceptedLanguageVal, pathId,
                     productId, provisionedProductId, toArrayOfUpdateParameters(provisioningParameters, delimiterVal, usePreviousValueImp),
                     provisionedProductName, provisioningArtifactId, updateToken, awsServiceCatalog);
-            String updateStatus = result.getRecordDetail().getStatus();
+            String updateStatus = result.recordDetail().statusAsString();
             while (UPDATE_STATUSES.contains(updateStatus)) {
                 Thread.sleep(pollingIntervalImp);
-                updateStatus = getUpdatedProductStatus(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+                updateStatus = getUpdatedProductStatus(result.recordDetail().recordId(), awsServiceCatalog);
             }
             if (updateStatus.equals(FAILED)) {
-                final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
-                throw new RuntimeException(UPDATE_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
+                final DescribeRecordResponse recordResult = AmazonServiceCatalogService.describeRecord(result.recordDetail().recordId(), awsServiceCatalog);
+                throw new RuntimeException(UPDATE_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.recordDetail().recordErrors().toString());
             }
 
-            final AmazonCloudFormation awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
+            final CloudFormationClient awsCloudFormation = CloudFormationClientBuilder.getCloudFormationClient(identity, credential,
                     proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutVal, execTimeoutVal, regionVal);
-            final String cloudFormationStackName = getCloudFormationStackName(result.getRecordDetail().getRecordId(), awsServiceCatalog, pollingIntervalImp);
+            final String cloudFormationStackName = getCloudFormationStackName(result.recordDetail().recordId(), awsServiceCatalog, pollingIntervalImp);
             List<Stack> stacks = describeCloudFormationStack(cloudFormationStackName, awsCloudFormation);
             String stackOutputs = getStackOutputsToJson(getStack(stacks));
             String stackResources = getStackResourcesToJson(describeStackResourcesResult(cloudFormationStackName, awsCloudFormation));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -18,7 +18,7 @@
 
 package io.cloudslang.content.mail.services;
 
-import com.sun.mail.smtp.SMTPMessage;
+import org.eclipse.angus.mail.smtp.SMTPMessage;
 import io.cloudslang.content.mail.constants.SecurityConstants;
 import io.cloudslang.content.mail.entities.SendMailInput;
 import org.junit.jupiter.api.AfterEach;
@@ -54,9 +54,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static com.sun.mail.smtp.SMTPMessage.NOTIFY_DELAY;
-import static com.sun.mail.smtp.SMTPMessage.NOTIFY_FAILURE;
-import static com.sun.mail.smtp.SMTPMessage.NOTIFY_SUCCESS;
+import static org.eclipse.angus.mail.smtp.SMTPMessage.NOTIFY_DELAY;
+import static org.eclipse.angus.mail.smtp.SMTPMessage.NOTIFY_FAILURE;
+import static org.eclipse.angus.mail.smtp.SMTPMessage.NOTIFY_SUCCESS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;

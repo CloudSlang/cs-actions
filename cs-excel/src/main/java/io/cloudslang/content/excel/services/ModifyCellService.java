@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -123,7 +123,7 @@ public class ModifyCellService {
                 } else {
                     //if the cell needs to be modified is in formula type,
                     if (cell.getCellType() == CellType.FORMULA) {
-                        cell.setCellType(CellType.STRING);
+                        cell.setCellFormula(null);
                     }
                     try {
                         double valueNumeric = Double.parseDouble(dataList.get(i).trim());

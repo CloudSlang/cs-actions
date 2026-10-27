@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.cloudslang.content.httpclient.services.HttpClientService.*;
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.ZERO;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getQueryParams;
 import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.DOCUMENT;

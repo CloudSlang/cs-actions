@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.office365.services;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.office365.entities.Office365HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.CreateUserInputs;
 import io.cloudslang.content.office365.entities.DeleteUserInputs;
@@ -28,7 +28,7 @@ import io.cloudslang.content.office365.entities.Office365CommonInputs;
 import io.cloudslang.content.office365.utils.PopulateUpdateUserBody;
 import io.cloudslang.content.office365.utils.PopulateUserBody;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -41,7 +41,7 @@ public class UserServiceImpl {
 
     @NotNull
     public static Map<String, String> createUser(@NotNull final CreateUserInputs createUserInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
         httpClientInputs.setUrl(MANAGE_USER_REQUEST_URL);
 
@@ -57,12 +57,12 @@ public class UserServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> listUsers(@NotNull final CreateUserInputs createUserInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
         httpClientInputs.setUrl(MANAGE_USER_REQUEST_URL);
 
@@ -81,12 +81,12 @@ public class UserServiceImpl {
             httpClientInputs.setQueryParams(createUserInputs.getoDataQuery());
         }
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getUser(@NotNull final GetUserInputs getUserInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = getUserInputs.getCommonInputs();
         httpClientInputs.setUrl(getUserUrl(commonInputs.getUserPrincipalName(), commonInputs.getUserId()));
 
@@ -105,7 +105,7 @@ public class UserServiceImpl {
             httpClientInputs.setQueryParams(getUserInputs.getoDataQuery());
         }
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
@@ -120,7 +120,7 @@ public class UserServiceImpl {
 
     @NotNull
     public static Map<String, String> updateUser(@NotNull final CreateUserInputs createUserInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = createUserInputs.getCommonInputs();
         httpClientInputs.setUrl(updateUserUrl(createUserInputs.getCommonInputs().getUserPrincipalName(), createUserInputs.getCommonInputs().getUserId()));
 
@@ -136,7 +136,7 @@ public class UserServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     private static String updateUserUrl(@NotNull final String userPrincipalNameToUpdate, @NotNull final String userIdToUpdate) throws Exception {
@@ -149,7 +149,7 @@ public class UserServiceImpl {
 
     @NotNull
     public static Map<String, String> deleteUser(@NotNull final DeleteUserInputs deleteUserInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
         final Office365CommonInputs commonInputs = deleteUserInputs.getCommonInputs();
         httpClientInputs.setUrl(getDeleteUserUrl(deleteUserInputs));
 
@@ -164,7 +164,7 @@ public class UserServiceImpl {
         httpClientInputs.setResponseCharacterSet(commonInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(commonInputs.getAuthToken()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

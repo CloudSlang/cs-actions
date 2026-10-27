@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -25,7 +25,7 @@ import io.cloudslang.content.dropbox.entities.inputs.InputsWrapper;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderActions.CREATE_FOLDER;
 import static io.cloudslang.content.dropbox.entities.constants.Constants.FolderActions.DELETE_FILE_OR_FOLDER;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.http.client.methods.HttpPost.METHOD_NAME;
+import static io.cloudslang.content.httpclient.utils.Constants.POST;
 
 /**
  * Created by TusaM
@@ -36,7 +36,7 @@ public class FolderPayloadBuilder {
 
     public static String getFolderPayload(InputsWrapper wrapper) {
         String action = wrapper.getCommonInputs().getAction();
-        if (METHOD_NAME.equalsIgnoreCase(wrapper.getHttpClientInputs().getMethod())) {
+        if (POST.equalsIgnoreCase(wrapper.getHttpClientInputs().getMethod())) {
             switch (action) {
                 case CREATE_FOLDER:
                     return GSON.toJson(new FolderHelper().getCreateFolderPayload(wrapper), FolderPayload.class);

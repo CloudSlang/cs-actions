@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,9 +16,9 @@
 
 package io.cloudslang.content.json.actions;
 
-import com.hp.oo.sdk.content.annotations.*;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.*;
-import com.hp.oo.sdk.content.plugin.*;
+import io.cloudslang.content.annotations.*;
+import io.cloudslang.content.plugin.ActionMetadata.*;
+import io.cloudslang.content.plugin.*;
 import io.cloudslang.content.constants.*;
 import io.cloudslang.content.json.services.*;
 import io.cloudslang.content.json.utils.*;
@@ -28,7 +28,7 @@ import java.util.*;
 import static io.cloudslang.content.constants.ResponseNames.*;
 import static io.cloudslang.content.json.utils.Constants.ArrayIteratorAction.*;
 import static io.cloudslang.content.json.utils.Descriptions.ArrayIteratorDescription.*;
-import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
+import io.cloudslang.content.plugin.StepSerializableSessionObject;
 
 public class ArrayIteratorAction {
 

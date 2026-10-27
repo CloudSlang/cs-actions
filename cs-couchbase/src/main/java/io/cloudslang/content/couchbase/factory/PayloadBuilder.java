@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -21,7 +21,7 @@ import io.cloudslang.content.couchbase.entities.inputs.InputsWrapper;
 import io.cloudslang.content.couchbase.factory.buckets.BucketsHelper;
 import io.cloudslang.content.couchbase.factory.cluster.ClusterHelper;
 import io.cloudslang.content.couchbase.factory.nodes.NodesHelper;
-import org.apache.http.client.methods.HttpPost;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.POST_METHOD;
 
 import static io.cloudslang.content.couchbase.entities.constants.Constants.BucketActions.CREATE_OR_EDIT_BUCKET;
 import static io.cloudslang.content.couchbase.entities.constants.Constants.ClusterActions.REBALANCING_NODES;
@@ -39,20 +39,20 @@ public class PayloadBuilder {
     }
 
     public static void buildPayload(InputsWrapper wrapper) {
-        if (HttpPost.METHOD_NAME.equalsIgnoreCase(wrapper.getHttpClientInputs().getMethod())) {
+        if (POST_METHOD.equalsIgnoreCase(wrapper.getHttpClientInputs().getMethod())) {
             switch (wrapper.getCommonInputs().getAction()) {
                 case CREATE_OR_EDIT_BUCKET:
-                    wrapper.getHttpClientInputs().setBody(new BucketsHelper().getCreateBucketPayload(wrapper));
+                    wrapper.setBody(new BucketsHelper().getCreateBucketPayload(wrapper));
                     break;
                 case FAIL_OVER_NODE:
                 case GRACEFUL_FAIL_OVER_NODE:
-                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getFailOverNodePayloadString(wrapper));
+                    wrapper.setBody(new NodesHelper().getFailOverNodePayloadString(wrapper));
                     break;
                 case REBALANCING_NODES:
-                    wrapper.getHttpClientInputs().setBody(new ClusterHelper().getRebalancingNodesPayload(wrapper));
+                    wrapper.setBody(new ClusterHelper().getRebalancingNodesPayload(wrapper));
                     break;
                 case SET_RECOVERY_TYPE:
-                    wrapper.getHttpClientInputs().setBody(new NodesHelper().getRecoveryTypePayloadString(wrapper));
+                    wrapper.setBody(new NodesHelper().getRecoveryTypePayloadString(wrapper));
                     break;
                 default:
                     break;

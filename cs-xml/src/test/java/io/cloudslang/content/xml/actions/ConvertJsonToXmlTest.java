@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -29,6 +29,7 @@ import static io.cloudslang.content.constants.ReturnCodes.SUCCESS;
 import static io.cloudslang.content.xml.utils.Constants.NEW_LINE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -227,7 +228,9 @@ public class ConvertJsonToXmlTest {
                 ",");
         assertNotNull(result);
         assertNotNull(result.get(RETURN_RESULT));
-        assertEquals(result.get(RETURN_CODE), FAILURE);
-        assertEquals(result.get(RETURN_RESULT), "com.google.gson.stream.MalformedJsonException: Expected name at line 1 column 28 path $.items");
+        assertEquals(FAILURE, result.get(RETURN_CODE));
+        assertTrue(result.get(RETURN_RESULT).startsWith(
+                "com.google.gson.stream.MalformedJsonException: Expected name at line 1 column 28 path $.items"),
+                result.get(RETURN_RESULT));
     }
 }

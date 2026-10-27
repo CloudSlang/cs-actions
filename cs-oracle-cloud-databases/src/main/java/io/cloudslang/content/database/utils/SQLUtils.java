@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -11,15 +11,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 package io.cloudslang.content.database.utils;
 
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.StepSerializableSessionObject;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -114,7 +114,7 @@ public class SQLUtils {
     public static String processDumpException(SQLException sqlException) throws SQLException {
         final String sqlState = sqlException.getSQLState();
 
-        if (sqlState != null && StringUtils.equalsIgnoreCase(sqlState, "s1000")) {
+        if (sqlState != null && Strings.CI.equals(sqlState, "s1000")) {
             SQLException f = sqlException;
             StringBuilder s = new StringBuilder();
             s.append(f.getMessage());
@@ -122,7 +122,7 @@ public class SQLUtils {
                 s.append("\n").append(f.getMessage());
             }
             String str = s.toString();
-            if (StringUtils.containsIgnoreCase(str, "dump is complete"))
+            if (Strings.CI.contains(str, "dump is complete"))
                 return str;
         }
         throw sqlException;
@@ -137,14 +137,14 @@ public class SQLUtils {
      */
     public static String processLoadException(SQLException e) throws SQLException {
         final String sqlState = e.getSQLState();
-        if (sqlState != null && StringUtils.equalsIgnoreCase(sqlState,"s1000")) {
+        if (sqlState != null && Strings.CI.equals(sqlState, "s1000")) {
             SQLException f = e;
             StringBuilder s = new StringBuilder();
             s.append(f.getMessage());
             while ((f = f.getNextException()) != null)
                 s.append("\n").append(f.getMessage());
             String str = s.toString();
-            if (StringUtils.containsIgnoreCase(str, "load is complete"))
+            if (Strings.CI.contains(str, "load is complete"))
                 return str;
         }
         throw e;

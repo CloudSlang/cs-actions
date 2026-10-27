@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,38 +12,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Copyright 2019-2024 Open Text
- * This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
  
 
 
 package io.cloudslang.content.amazon.actions.lambda;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.lambda.AWSLambdaAsyncClient;
-import com.amazonaws.services.lambda.AWSLambdaAsyncClientBuilder;
-import com.amazonaws.services.lambda.model.InvokeRequest;
-import com.amazonaws.services.lambda.model.InvokeResult;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.SdkBytes;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.lambda.LambdaClient;
+import software.amazon.awssdk.services.lambda.model.InvokeRequest;
+import software.amazon.awssdk.services.lambda.model.InvokeResponse;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.utils.AmazonWebServiceClientUtil;
 import io.cloudslang.content.amazon.utils.DefaultValues;
@@ -115,23 +101,20 @@ public class InvokeLambdaAction {
         execTimeoutMs = defaultIfBlank(execTimeoutMs, DefaultValues.EXEC_TIMEOUT);
         qualifier = defaultIfBlank(qualifier, DefaultValues.DEFAULT_FUNCTION_QUALIFIER);
 
-        ClientConfiguration lambdaClientConf = AmazonWebServiceClientUtil.getClientConfiguration(proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs, execTimeoutMs);
-
-        AWSLambdaAsyncClient client = (AWSLambdaAsyncClient) AWSLambdaAsyncClientBuilder.standard()
-                .withClientConfiguration(lambdaClientConf)
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(identity, credential)))
-                .withRegion(region)
-                .build();
-
-        InvokeRequest invokeRequest = new InvokeRequest()
-                .withFunctionName(function)
-                .withQualifier(qualifier)
-                .withPayload(payload)
-                .withSdkClientExecutionTimeout(Integer.parseInt(execTimeoutMs));
-
         try {
-            InvokeResult invokeResult = client.invoke(invokeRequest);
-            return OutputUtilities.getSuccessResultsMap(new String(invokeResult.getPayload().array()));
+            try (LambdaClient client = LambdaClient.builder()
+                    .region(Region.of(region))
+                    .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(identity, credential)))
+                    .httpClientBuilder(AmazonWebServiceClientUtil.getHttpClientBuilder(
+                            proxyHost, proxyPort, proxyUsername, proxyPassword, connectTimeoutMs))
+                    .overrideConfiguration(AmazonWebServiceClientUtil.getClientOverrideConfiguration(execTimeoutMs))
+                    .build()) {
+                InvokeRequest.Builder request = InvokeRequest.builder().functionName(function).qualifier(qualifier);
+                if (payload != null) {
+                    request.payload(SdkBytes.fromUtf8String(payload));
+                }
+                return OutputUtilities.getSuccessResultsMap(client.invoke(request.build()).payload().asUtf8String());
+            }
         } catch (Exception e) {
             return OutputUtilities.getFailureResultsMap(e);
         }

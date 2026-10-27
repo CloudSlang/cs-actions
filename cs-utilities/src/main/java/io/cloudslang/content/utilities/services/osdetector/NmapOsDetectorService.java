@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
 import static io.cloudslang.content.utils.OtherUtilities.isValidIpPort;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -41,11 +41,11 @@ public class CouchbaseService {
             throws Exception {
         InputsWrapper wrapper = buildWrapper(httpClientInputs, commonInputs, builders);
 
-        httpClientInputs.setUrl(buildUrl(wrapper));
+        wrapper.setUrl(buildUrl(wrapper));
 
         buildHeaders(wrapper);
         buildPayload(wrapper);
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(wrapper.getHttpClientInputs());
     }
 }

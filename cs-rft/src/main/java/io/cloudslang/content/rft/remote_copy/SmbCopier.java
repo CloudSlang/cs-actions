@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -26,172 +26,106 @@ import com.hierynomus.smbj.auth.AuthenticationContext;
 import com.hierynomus.smbj.connection.Connection;
 import com.hierynomus.smbj.session.Session;
 import com.hierynomus.smbj.share.DiskShare;
-import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.smb.SmbFile;
-import jcifs.smb.SmbFileInputStream;
-import jcifs.smb.SmbFileOutputStream;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 
 public class SmbCopier extends SimpleCopier {
 
-    private String sourceFileName;
     private String host;
     private String domain = "";
     private String username;
     private String password;
-    private DiskShare share;
 
-    private static void inputStreamToOutputStream(InputStream in, OutputStream out)
-            throws IOException {
-        byte[] buf = new byte[1024000];
-        try {
-            int byteData = buf.length;
-            while (true) {
-                byteData = in.read(buf, 0, byteData);
-                if (byteData == -1)
-                    break;
-                out.write(buf, 0, byteData);
-            }
-
-        } finally {
-            if (in != null) in.close();
-            if (out != null) out.close();
+    private static void inputStreamToOutputStream(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024 * 1024];
+        int bytesRead;
+        while ((bytesRead = in.read(buffer)) != -1) {
+            out.write(buffer, 0, bytesRead);
         }
     }
 
     @Override
     protected IReader getFile(String source) throws Exception {
-        File tempFile;
-        tempFile = File.createTempFile("SMBCopy", ".tmp");
-
+        File tempFile = File.createTempFile("SMBCopy", ".tmp");
         getFile(source, tempFile);
-        return new SimpleReader(sourceFileName, tempFile);
+        return new SimpleReader(getSimpleFileName(source), tempFile);
     }
 
     @Override
     protected void getFile(String source, File destination) throws Exception {
-        if (protocol.equalsIgnoreCase("smb3")) {
-            String[] folders = getFormattedPathSMB2(source).split("\\\\");
-            String sambaPath = folders[0];
-
-            SmbConfig cfg = SmbConfig.builder().build();
-            SMBClient client = new SMBClient(cfg);
-            Connection connection = client.connect(host);
-            Session session = connection.authenticate(new AuthenticationContext(username, password.toCharArray(), domain));
-            share = (DiskShare) session.connectShare(sambaPath);
-
-            StringBuilder filePath = new StringBuilder();
-            for (int i = 1; i < folders.length - 1; i++) {
-                filePath.append(folders[i]);
-                filePath.append("\\\\");
+        SmbPath smbPath = parsePath(source);
+        try (SMBClient client = new SMBClient(SmbConfig.builder().build());
+             Connection connection = client.connect(host);
+             Session session = connection.authenticate(
+                     new AuthenticationContext(username, password.toCharArray(), domain));
+             DiskShare share = (DiskShare) session.connectShare(smbPath.shareName())) {
+            if (!share.fileExists(smbPath.relativePath())) {
+                throw new FileNotFoundException("The specified file doesn't exist: " + source);
             }
-            filePath.append(folders[folders.length - 1]);
-
-            com.hierynomus.smbj.share.File f = null;
-            if (share.fileExists(filePath.toString())) {
-                f = share.openFile(filePath.toString(),
-                        new HashSet<>(Arrays.asList(AccessMask.GENERIC_ALL)),
-                        new HashSet<>(Arrays.asList(FileAttributes.FILE_ATTRIBUTE_NORMAL)),
-                        SMB2ShareAccess.ALL,
-                        SMB2CreateDisposition.FILE_OPEN,
-                        new HashSet<>(Arrays.asList(SMB2CreateOptions.FILE_DIRECTORY_FILE)));
+            try (com.hierynomus.smbj.share.File smbFile = share.openFile(
+                    smbPath.relativePath(),
+                    EnumSet.of(AccessMask.GENERIC_READ),
+                    EnumSet.of(FileAttributes.FILE_ATTRIBUTE_NORMAL),
+                    SMB2ShareAccess.ALL,
+                    SMB2CreateDisposition.FILE_OPEN,
+                    EnumSet.of(SMB2CreateOptions.FILE_NON_DIRECTORY_FILE));
+                 InputStream smbInputStream = smbFile.getInputStream();
+                 FileOutputStream fileOutputStream = new FileOutputStream(destination)) {
+                inputStreamToOutputStream(smbInputStream, fileOutputStream);
             }
-            if (f == null) throw new RuntimeException("The specified file doesn't exist.");
-            InputStream smbInputStream = f.getInputStream();
-            FileOutputStream fileOutputStream = new FileOutputStream(destination);
-            inputStreamToOutputStream(smbInputStream, fileOutputStream);
-            f.close();
-            connection.close();
-
-        } else {
-            String fileUrl = "smb://" + host + "/" + getFormattedPath(source);
-            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(domain,
-                    username, password);
-            SmbFile smbFile = new SmbFile(fileUrl, auth);
-            SmbFileInputStream smbInputStream = new SmbFileInputStream(smbFile);
-            FileOutputStream fileOutputStream = new FileOutputStream(destination);
-            inputStreamToOutputStream(smbInputStream, fileOutputStream);
-            if (sourceFileName == null)
-                sourceFileName = getSimpleFileName(source);
         }
     }
 
-    private String getFormattedPath(String path) {
-        return path.replaceFirst("\\:", "\\$").replaceAll("\\\\", "/");
-    }
-
-    private String getFormattedPathSMB2(String path) {
-        return path.replaceAll("/", "\\\\");
+    private SmbPath parsePath(String path) {
+        String[] segments = Arrays.stream(path.replace('/', '\\').split("\\\\"))
+                .filter(segment -> !segment.isEmpty())
+                .toArray(String[]::new);
+        if (segments.length < 2) {
+            throw new IllegalArgumentException("The SMB path must include a share and a file path.");
+        }
+        return new SmbPath(segments[0], String.join("\\", Arrays.copyOfRange(segments, 1, segments.length)));
     }
 
     @Override
     protected void putFile(IReader sourceFile, String destination) throws Exception {
-        if (protocol.equalsIgnoreCase("smb3")) {
-            String[] folders = destination.replaceAll("/", "\\\\").split("\\\\");
-            String sambaPath = folders[0];
-
-            SmbConfig cfg = SmbConfig.builder().build();
-            SMBClient client = new SMBClient(cfg);
-            Connection connection = client.connect(host);
-            Session session = connection.authenticate(new AuthenticationContext(username, password.toCharArray(), domain));
-
-            share = (DiskShare) session.connectShare(sambaPath);
-            StringBuilder filePath = new StringBuilder();
-            for (int i = 1; i < folders.length - 1; i++) {
-                filePath.append(folders[i]);
-                if (!share.folderExists(filePath.toString()))
-                    share.mkdir(filePath.toString());
-                filePath.append("\\\\");
-            }
-            String fileName = folders[folders.length - 1];
-            filePath.append(fileName);
-
-            com.hierynomus.smbj.share.File f;
-            if (!share.fileExists(filePath.toString())) {
-                f = share.openFile(filePath.toString(),
-                        new HashSet<>(Arrays.asList(AccessMask.GENERIC_ALL)),
-                        new HashSet<>(Arrays.asList(FileAttributes.FILE_ATTRIBUTE_NORMAL)),
-                        SMB2ShareAccess.ALL,
-                        SMB2CreateDisposition.FILE_CREATE,
-                        new HashSet<>(Arrays.asList(SMB2CreateOptions.FILE_DIRECTORY_FILE)));
-            } else {
-                f = share.openFile(filePath.toString(),
-                        new HashSet<>(Arrays.asList(AccessMask.GENERIC_ALL)),
-                        new HashSet<>(Arrays.asList(FileAttributes.FILE_ATTRIBUTE_NORMAL)),
-                        SMB2ShareAccess.ALL,
-                        SMB2CreateDisposition.FILE_OVERWRITE_IF,
-                        new HashSet<>(Arrays.asList(SMB2CreateOptions.FILE_DIRECTORY_FILE)));
-            }
-            if (f == null) throw new Exception("The file creation failed.");
-
-            InputStream fis = new FileInputStream(sourceFile.getFile());
-            OutputStream smbOutputStream = f.getOutputStream();
-
-            if (!fileName.contains(".txt")) {
-                byte[] buf = new byte[1024000];
-                int i;
-                while ((i = fis.read(buf)) != -1) {
-                    smbOutputStream.write(buf, 0, i);
+        SmbPath smbPath = parsePath(destination);
+        String[] pathSegments = smbPath.relativePath().split("\\\\");
+        String fileName = pathSegments[pathSegments.length - 1];
+        StringBuilder directoryPath = new StringBuilder();
+        try (SMBClient client = new SMBClient(SmbConfig.builder().build());
+             Connection connection = client.connect(host);
+             Session session = connection.authenticate(
+                     new AuthenticationContext(username, password.toCharArray(), domain));
+             DiskShare share = (DiskShare) session.connectShare(smbPath.shareName())) {
+            for (int i = 0; i < pathSegments.length - 1; i++) {
+                if (directoryPath.length() > 0) {
+                    directoryPath.append('\\');
                 }
-                fis.close();
-                smbOutputStream.close();
-            } else {
-                inputStreamToOutputStream(fis, smbOutputStream);
+                directoryPath.append(pathSegments[i]);
+                if (!share.folderExists(directoryPath.toString())) {
+                    share.mkdir(directoryPath.toString());
+                }
             }
-            f.close();
-            connection.close();
 
-        } else {
-            String fileUrl = "smb://" + host + "/" + getFormattedPath(destination);
-            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(domain,
-                    username, password);
-            SmbFile smbFile = new SmbFile(fileUrl, auth);
-            SmbFileOutputStream smbOs = new SmbFileOutputStream(smbFile);
-            FileInputStream fis = new FileInputStream(sourceFile.getFile());
-            inputStreamToOutputStream(fis, smbOs);
+            try (com.hierynomus.smbj.share.File smbFile = share.openFile(
+                    smbPath.relativePath(),
+                    EnumSet.of(AccessMask.GENERIC_WRITE),
+                    EnumSet.of(FileAttributes.FILE_ATTRIBUTE_NORMAL),
+                    SMB2ShareAccess.ALL,
+                    SMB2CreateDisposition.FILE_OVERWRITE_IF,
+                    EnumSet.of(SMB2CreateOptions.FILE_NON_DIRECTORY_FILE));
+                 FileInputStream fileInputStream = new FileInputStream(sourceFile.getFile());
+                 OutputStream smbOutputStream = smbFile.getOutputStream()) {
+                inputStreamToOutputStream(fileInputStream, smbOutputStream);
+            }
         }
     }
 
@@ -207,5 +141,8 @@ public class SmbCopier extends SimpleCopier {
         this.username = username;
         this.password = password;
 
+    }
+
+    private record SmbPath(String shareName, String relativePath) {
     }
 }

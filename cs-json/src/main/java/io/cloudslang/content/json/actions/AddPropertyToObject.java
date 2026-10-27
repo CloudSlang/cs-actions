@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,10 +16,11 @@
 
 package io.cloudslang.content.json.actions;
 
-import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.databind.*;
-import com.hp.oo.sdk.content.annotations.*;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.*;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.*;
+import tools.jackson.databind.json.JsonMapper;
+import io.cloudslang.content.annotations.*;
+import io.cloudslang.content.plugin.ActionMetadata.*;
 import io.cloudslang.content.constants.*;
 import io.cloudslang.content.json.entities.*;
 import io.cloudslang.content.json.services.*;
@@ -38,12 +39,9 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 public class AddPropertyToObject {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-
-    public AddPropertyToObject() {
-        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-    }
+    private final ObjectMapper objectMapper = JsonMapper.builder()
+            .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
+            .build();
 
 
     /**

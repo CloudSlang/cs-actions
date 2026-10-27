@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -18,7 +18,7 @@
 
 package io.cloudslang.content.mail.services;
 
-import com.sun.mail.smtp.SMTPMessage;
+import org.eclipse.angus.mail.smtp.SMTPMessage;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.*;
@@ -62,9 +62,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.sun.mail.smtp.SMTPMessage.NOTIFY_DELAY;
-import static com.sun.mail.smtp.SMTPMessage.NOTIFY_FAILURE;
-import static com.sun.mail.smtp.SMTPMessage.NOTIFY_SUCCESS;
+import static org.eclipse.angus.mail.smtp.SMTPMessage.NOTIFY_DELAY;
+import static org.eclipse.angus.mail.smtp.SMTPMessage.NOTIFY_FAILURE;
+import static org.eclipse.angus.mail.smtp.SMTPMessage.NOTIFY_SUCCESS;
 
 /**
  * Created by giloan on 10/30/2014.

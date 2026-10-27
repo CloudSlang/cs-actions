@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,20 +19,20 @@ package io.cloudslang.content.dca.actions.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.dca.utils.Validator;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.dca.models.DcaHttpClientInputs;
 
 import java.util.Map;
 
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
@@ -47,8 +47,8 @@ import static io.cloudslang.content.dca.utils.InputNames.*;
 import static io.cloudslang.content.dca.utils.InputNames.REFRESH_TOKEN;
 import static io.cloudslang.content.dca.utils.OutputNames.*;
 import static io.cloudslang.content.dca.utils.Utilities.*;
-import static io.cloudslang.content.httpclient.services.HttpClientService.STATUS_CODE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
+import static io.cloudslang.content.dca.utils.DcaHttpClientInputNames.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static io.cloudslang.content.utils.OutputUtilities.getSuccessResultsMap;
 import static java.lang.Integer.parseInt;
@@ -118,7 +118,7 @@ public class GetResource {
             return getFailureResultsMap(validator.getErrors());
         }
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final DcaHttpClientInputs httpClientInputs = new DcaHttpClientInputs();
 
         httpClientInputs.setUrl(getDcaResourceUrl(protocol, host, port, resourceUuid));
 
@@ -138,7 +138,7 @@ public class GetResource {
         try {
             final ObjectMapper mapper = new ObjectMapper();
 
-            final Map<String, String> httpClientResult = new HttpClientService().execute(httpClientInputs);
+            final Map<String, String> httpClientResult = HttpClientService.execute(httpClientInputs.build());
 
             final String resourceJson = httpClientResult.get(RETURN_RESULT);
 

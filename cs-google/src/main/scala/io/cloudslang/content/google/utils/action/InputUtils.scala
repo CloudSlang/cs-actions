@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -27,5 +27,5 @@ import org.apache.commons.lang3.StringUtils.isEmpty
 object InputUtils {
   def verifyEmpty(value: String): Option[String] = if (isEmpty(value)) None else Some(value)
 
-  def convertSecondsToMilli(value: Double): Long = (value * 1000 ceil) toLong
+  def convertSecondsToMilli(value: Double): Long = math.ceil(value * 1000).toLong
 }

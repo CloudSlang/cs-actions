@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -36,8 +36,8 @@ public class NodeHeadersBuilder {
     public static void setNodeHeaders(InputsWrapper wrapper) {
         switch (wrapper.getCommonInputs().getAction()) {
             default:
-                wrapper.getHttpClientInputs().setHeaders(ALL_TYPE_HEADER);
-                wrapper.getHttpClientInputs().setContentType(FORM_URL_ENCODED);
+                wrapper.setHeaders(ALL_TYPE_HEADER);
+                wrapper.setContentType(FORM_URL_ENCODED);
         }
     }
 }

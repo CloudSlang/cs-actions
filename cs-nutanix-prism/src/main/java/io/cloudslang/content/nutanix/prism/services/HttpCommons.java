@@ -2,8 +2,8 @@
 
 package io.cloudslang.content.nutanix.prism.services;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixCommonInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixHttpClientInputs;
 import org.jetbrains.annotations.NotNull;
 
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.CHANGEIT;
@@ -13,7 +13,7 @@ import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.*;
 public class HttpCommons {
 
     @NotNull
-    static void setCommonHttpInputs(@NotNull final HttpClientInputs httpClientInputs,
+    static void setCommonHttpInputs(@NotNull final NutanixHttpClientInputs httpClientInputs,
                                     @NotNull final NutanixCommonInputs commonInputs) {
         setProxy(httpClientInputs,
                 commonInputs.getProxyHost(),

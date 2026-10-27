@@ -2,10 +2,10 @@
 
 package io.cloudslang.content.nutanix.prism.services;
 
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.NutanixGetTaskDetailsInputs;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public class TaskImpl {
     @NotNull
     public static Map<String, String> getTaskDetails(@NotNull final NutanixGetTaskDetailsInputs nutanixGetTaskDetailsInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final NutanixHttpClientInputs httpClientInputs = new NutanixHttpClientInputs();
         httpClientInputs.setUrl(getTaskDetailsURL(nutanixGetTaskDetailsInputs));
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setMethod(GET);
@@ -30,7 +30,7 @@ public class TaskImpl {
         httpClientInputs.setContentType(APPLICATION_API_JSON);
         httpClientInputs.setQueryParams(getTaskDetailsQueryParams(nutanixGetTaskDetailsInputs.getIncludeSubtasksInfo()));
         setCommonHttpInputs(httpClientInputs, nutanixGetTaskDetailsInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

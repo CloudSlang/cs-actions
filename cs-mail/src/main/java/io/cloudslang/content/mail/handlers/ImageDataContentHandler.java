@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -24,7 +24,7 @@ import java.io.OutputStream;
 
 /**
  * Minimal DataContentHandler for image/* types that streams bytes directly.
- * This serves as a fallback when com.sun.mail handlers are not present at runtime.
+ * This serves as a fallback when Angus Mail handlers are not present at runtime.
  */
 public class ImageDataContentHandler implements DataContentHandler {
 

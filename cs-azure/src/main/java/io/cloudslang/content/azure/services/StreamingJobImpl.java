@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -20,6 +20,10 @@ package io.cloudslang.content.azure.services;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.ToNumberPolicy;
+import com.google.gson.reflect.TypeToken;
 import io.cloudslang.content.azure.entities.AzureCommonInputs;
 import io.cloudslang.content.azure.entities.CreateStreamingJobInputs;
 import io.cloudslang.content.azure.entities.GetStreamingJobInputs;
@@ -27,14 +31,11 @@ import io.cloudslang.content.azure.entities.StartStreamingJobInputs;
 import io.cloudslang.content.azure.entities.models.streamanalytics.CreateStreamingJobRequestBody;
 import io.cloudslang.content.azure.entities.models.streamanalytics.StartStreamingJobRequestBody;
 import io.cloudslang.content.azure.utils.HttpUtils;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.azure.utils.AzureHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
+import java.lang.reflect.Type;
 import java.util.Map;
 
 import static io.cloudslang.content.azure.utils.Constants.Common.ANONYMOUS;
@@ -55,11 +56,15 @@ import static io.cloudslang.content.azure.utils.HttpUtils.setAPIVersion;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class StreamingJobImpl {
+    private static final Type TAGS_TYPE = new TypeToken<Map<String, Object>>() { }.getType();
+    private static final Gson TAGS_GSON = new GsonBuilder()
+            .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+            .create();
 
     @NotNull
     public static Map<String, String> createStreamingJob(@NotNull final CreateStreamingJobInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
                 inputs.getAzureCommonInputs().getJobName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -69,13 +74,13 @@ public class StreamingJobImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(createStreamingJobRequestBody(inputs));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> startStreamingJob(@NotNull final StartStreamingJobInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getStartStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
                 inputs.getAzureCommonInputs().getJobName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -85,13 +90,13 @@ public class StreamingJobImpl {
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
         httpClientInputs.setQueryParams(setAPIVersion(inputs.getAzureCommonInputs().getApiVersion()));
         httpClientInputs.setBody(StartStreamingJobRequestBody(inputs));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> stopStreamingJob(@NotNull final AzureCommonInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getStopStreamingJobUrl(inputs.getSubscriptionId(), inputs.getResourceGroupName(),
                 inputs.getJobName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -102,13 +107,13 @@ public class StreamingJobImpl {
         httpClientInputs.setBody(EMPTY_JSON);
         httpClientInputs.setQueryParams(setAPIVersion(inputs.getApiVersion()));
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getStreamingJob(@NotNull final GetStreamingJobInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getCreateStreamingJobUrl(inputs.getAzureCommonInputs().getSubscriptionId(), inputs.getAzureCommonInputs().getResourceGroupName(),
                 inputs.getAzureCommonInputs().getJobName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -123,7 +128,7 @@ public class StreamingJobImpl {
         }
 
 
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
@@ -177,7 +182,6 @@ public class StreamingJobImpl {
     private static String createStreamingJobRequestBody(@NotNull final CreateStreamingJobInputs inputs) throws Exception {
         CreateStreamingJobRequestBody createStreamingJobRequestBody = new CreateStreamingJobRequestBody();
         createStreamingJobRequestBody.setLocation(inputs.getLocation());
-        JSONParser jsonParser = new JSONParser();
         CreateStreamingJobRequestBody.Properties properties = new CreateStreamingJobRequestBody.Properties();
         CreateStreamingJobRequestBody.SKU sku = new CreateStreamingJobRequestBody.SKU();
         sku.setName(inputs.getSkuName());
@@ -189,7 +193,7 @@ public class StreamingJobImpl {
         properties.setOutputErrorPolicy(inputs.getOutputErrorPolicy());
         properties.setSku(sku);
         if (!isEmpty(inputs.getTags())) {
-            createStreamingJobRequestBody.setTags(stringToJSON(jsonParser, inputs.getTags()));
+            createStreamingJobRequestBody.setTags(stringToJSON(inputs.getTags()));
         }
         createStreamingJobRequestBody.setProperties(properties);
 
@@ -213,10 +217,8 @@ public class StreamingJobImpl {
         return createInstanceMapper.writeValueAsString(startStreamingJobRequestBody);
     }
 
-    private static JSONObject stringToJSON(JSONParser jsonParser, String property) throws ParseException {
-        if (!isEmpty(property))
-            return (JSONObject) jsonParser.parse(property);
-        return new JSONObject();
+    private static Map<String, Object> stringToJSON(String property) {
+        return TAGS_GSON.fromJson(property, TAGS_TYPE);
     }
 
 }

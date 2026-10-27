@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,12 +19,12 @@
 
 package io.cloudslang.content.utilities.actions;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.entities.InputDefaults;
@@ -45,20 +45,20 @@ import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.entities.InputDefaults.X_509_HOSTNAME_VERIFIER;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.AUTH_TYPE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KERBEROS_CONFIG_FILE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KERBEROS_LOGIN_CONFIG_FILE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KERBEROS_SKIP_PORT_CHECK;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.AUTH_TYPE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_HOST;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_PORT;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.PROXY_USERNAME;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
+import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.KERBEROS_CONFIG_FILE;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.KERBEROS_LOGIN_CONFIG_FILE;
+import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.KERBEROS_SKIP_PORT_CHECK;
 import static io.cloudslang.content.ssh.utils.Constants.ALLOWED_CIPHERS;
 import static io.cloudslang.content.ssh.utils.Constants.DEFAULT_CONNECT_TIMEOUT;
 import static io.cloudslang.content.ssh.utils.Constants.DEFAULT_KNOWN_HOSTS_PATH;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -18,12 +18,12 @@
 
 package io.cloudslang.content.couchbase.actions.buckets;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.couchbase.entities.inputs.BucketInputs;
 import io.cloudslang.content.couchbase.entities.inputs.CommonInputs;
@@ -42,24 +42,24 @@ import static io.cloudslang.content.couchbase.entities.constants.Constants.Bucke
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.BucketInputs.BUCKET_NAME;
 import static io.cloudslang.content.couchbase.entities.constants.Inputs.CommonInputs.ENDPOINT;
 import static io.cloudslang.content.couchbase.utils.InputsUtil.getHttpClientInputs;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.CONNECT_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEEP_ALIVE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.KEYSTORE_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_HOST;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_PORT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.PROXY_USERNAME;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.SOCKET_TIMEOUT;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_ALL_ROOTS;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_KEYSTORE;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.TRUST_PASSWORD;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USE_COOKIES;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.USERNAME;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.X509_HOSTNAME_VERIFIER;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.CONNECT_TIMEOUT;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.KEYSTORE;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.KEEP_ALIVE;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.KEYSTORE_PASSWORD;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PASSWORD;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PROXY_HOST;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PROXY_PASSWORD;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PROXY_PORT;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.PROXY_USERNAME;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.SOCKET_TIMEOUT;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.TRUST_ALL_ROOTS;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.TRUST_KEYSTORE;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.TRUST_PASSWORD;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.USE_COOKIES;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.USERNAME;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.X509_HOSTNAME_VERIFIER;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
-import static org.apache.http.client.methods.HttpDelete.METHOD_NAME;
+import static io.cloudslang.content.couchbase.entities.constants.HttpClientInputNames.DELETE_METHOD;
 
 /**
  * Created by TusaM
@@ -173,7 +173,7 @@ public class DeleteBucket {
         try {
             final HttpClientInputs httpClientInputs = getHttpClientInputs(username, password, proxyHost, proxyPort,
                     proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword,
-                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, METHOD_NAME);
+                    keystore, keystorePassword, connectTimeout, socketTimeout, useCookies, keepAlive, DELETE_METHOD);
 
             final CommonInputs commonInputs = new CommonInputs.Builder()
                     .withAction(DELETE_BUCKET)

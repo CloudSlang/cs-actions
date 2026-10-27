@@ -1,8 +1,8 @@
 package io.cloudslang.content.redhat.services;
 
 import com.google.gson.*;
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
-import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.httpclient.actions.HttpClientPostAction;
 import io.cloudslang.content.redhat.entities.HttpInput;
 import com.google.gson.JsonPrimitive;

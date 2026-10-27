@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -20,8 +20,8 @@ import io.cloudslang.content.utilities.entities.RandomPasswordGeneratorInputs;
 import io.cloudslang.content.utilities.util.randomPasswordGenerator.Characters;
 import io.cloudslang.content.utilities.util.randomPasswordGenerator.SpecialCharacters;
 import org.jetbrains.annotations.NotNull;
-import org.passay.CharacterRule;
-import org.passay.PasswordGenerator;
+import org.passay.generate.PasswordGenerator;
+import org.passay.rule.CharacterRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,9 @@ public class RandomPasswordGeneratorImpl {
     @NotNull
     public static String generatePassword(RandomPasswordGeneratorInputs randomPasswordGeneratorInputs) throws Exception {
         List<CharacterRule> rules = generatePasswordRules(randomPasswordGeneratorInputs);
-        PasswordGenerator passwordGenerator = new PasswordGenerator();
-        return passwordGenerator.generatePassword(Integer.parseInt(randomPasswordGeneratorInputs.getPasswordLength()), rules);
+        return new PasswordGenerator(Integer.parseInt(randomPasswordGeneratorInputs.getPasswordLength()), rules)
+                .generate()
+                .toString();
     }
 
     private static List<CharacterRule> generatePasswordRules(RandomPasswordGeneratorInputs randomPasswordGeneratorInputs) {

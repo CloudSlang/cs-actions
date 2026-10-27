@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
@@ -29,7 +30,7 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
-import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import io.cloudslang.content.plugin.GlobalSessionObject;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelShell;
@@ -155,7 +156,8 @@ public class SSHServiceImpl implements SSHService {
 
         if (identityKey == null) {
             // use the password
-            session.setPassword(details.getPassword());
+            String password = details.getPassword();
+            session.setPassword(password == null ? null : password.getBytes(StandardCharsets.UTF_8));
         } else {
             // or use the OpenSSH private key file or string
             IdentityKeyUtils.setIdentity(jsch, identityKey);

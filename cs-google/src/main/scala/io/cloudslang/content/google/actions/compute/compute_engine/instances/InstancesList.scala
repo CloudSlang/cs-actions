@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -22,8 +22,8 @@ package io.cloudslang.content.google.actions.compute.compute_engine.instances
 import java.util
 
 import com.google.api.services.compute.model.Instance
-import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
-import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
+import io.cloudslang.content.annotations.{Action, Output, Param, Response}
+import io.cloudslang.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.compute.compute_engine.instances.InstanceService
@@ -136,7 +136,7 @@ class InstancesList {
       val instanceDelimiter = if (prettyPrint) COMMA_NEW_LINE else COMMA
 
       val resultList = InstanceService.list(httpTransport, jsonFactory, credential, projectId, zone, filterOpt, orderByOpt)
-        .map { instance: Instance => if (prettyPrint) instance.toPrettyString else instance.toString }
+        .map { (instance: Instance) => if (prettyPrint) instance.toPrettyString else instance.toString }
         .mkString(SQR_LEFT_BRACKET, instanceDelimiter, SQR_RIGHT_BRACKET)
       getSuccessResultsMap(resultList)
     } catch {

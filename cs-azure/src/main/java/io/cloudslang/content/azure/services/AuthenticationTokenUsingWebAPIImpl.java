@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -19,9 +19,9 @@ package io.cloudslang.content.azure.services;
 
 import io.cloudslang.content.azure.entities.AuthorizationTokenUsingWebAPIInputs;
 import io.cloudslang.content.azure.utils.HttpUtils;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.azure.utils.AzureHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -33,14 +33,14 @@ public class AuthenticationTokenUsingWebAPIImpl {
     @NotNull
     public static Map<String, String> getAuthToken(@NotNull final AuthorizationTokenUsingWebAPIInputs inputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final AzureHttpClientInputs httpClientInputs = new AzureHttpClientInputs();
         httpClientInputs.setUrl(getAuthTokenUrl(inputs.getTenantId()));
         httpClientInputs.setAuthType(ANONYMOUS);
         httpClientInputs.setMethod(POST);
         httpClientInputs.setContentType(AUTHENTICATION_TOKEN_CONTENT_TYPE);
         HttpUtils.setCommonHttpInputs(httpClientInputs, inputs.getAzureCommonInputs());
         httpClientInputs.setBody(HttpUtils.setAuthenticationBody(inputs.getClientId(), inputs.getClientSecret(), inputs.getResource()));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

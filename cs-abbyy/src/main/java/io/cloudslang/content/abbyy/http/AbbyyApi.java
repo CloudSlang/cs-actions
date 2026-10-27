@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -26,7 +26,7 @@ import io.cloudslang.content.abbyy.entities.responses.HttpClientResponse;
 import io.cloudslang.content.abbyy.exceptions.AbbyySdkException;
 import io.cloudslang.content.abbyy.exceptions.ClientSideException;
 import io.cloudslang.content.abbyy.exceptions.HttpClientException;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -122,7 +122,8 @@ public class AbbyyApi {
     public AbbyyResponse getTaskStatus(@NotNull AbbyyInput abbyyInput, @NotNull String taskId) throws Exception {
         String url = new URIBuilder()
                 .setScheme(abbyyInput.getLocationId().getProtocol())
-                .setHost(String.format(Urls.HOST_TEMPLATE, abbyyInput.getLocationId(), Endpoints.GET_TASK_STATUS))
+                .setHost(String.format("%s.ocrsdk.com", abbyyInput.getLocationId()))
+                .setPath("/" + Endpoints.GET_TASK_STATUS)
                 .addParameter(QueryParams.TASK_ID, taskId)
                 .build().toString();
 

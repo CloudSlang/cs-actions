@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -41,6 +41,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -61,6 +62,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
 
 /**
  * Created by Mihai Tusa.
@@ -77,22 +79,22 @@ public class QueryApiExecutorTest {
 
     private QueryApiExecutor toTest;
     private MockedConstruction<AmazonSignatureService> amazonSignatureConstruction;
-    private MockedConstruction<HttpClientService> httpClientConstruction;
+    private MockedStatic<HttpClientService> httpClientServiceMock;
 
     @BeforeEach
     public void init() throws Exception {
         amazonSignatureConstruction = mockConstruction(AmazonSignatureService.class, (mock, context) ->
                 when(mock.signRequestHeaders(any(InputsWrapper.class), anyMap(), anyMap()))
                         .thenReturn(authorizationHeaderMock));
-        httpClientConstruction = mockConstruction(HttpClientService.class, (mock, context) ->
-                when(mock.execute(any(HttpClientInputs.class))).thenReturn(null));
+        httpClientServiceMock = mockStatic(HttpClientService.class);
+        httpClientServiceMock.when(() -> HttpClientService.execute(any(HttpClientInputs.class))).thenReturn(null);
         toTest = new QueryApiExecutor();
         addCommonMocksForQueryApi();
     }
 
     @AfterEach
     public void tearDown() {
-        httpClientConstruction.close();
+        httpClientServiceMock.close();
         amazonSignatureConstruction.close();
         toTest = null;
     }
@@ -686,7 +688,7 @@ public class QueryApiExecutorTest {
                 () -> toTest.execute(getCommonInputs("", ""), getCustomInputs(), getVolumeInputs(), getNetworkInputs(false)));
 
         assertEquals(0, amazonSignatureConstruction.constructed().size());
-        assertEquals(0, httpClientConstruction.constructed().size());
+        httpClientServiceMock.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), never());
     }
 
     @Test
@@ -705,10 +707,9 @@ public class QueryApiExecutorTest {
 
     private void runCommonVerifiersForQueryApi() throws Exception {
         assertEquals(1, amazonSignatureConstruction.constructed().size());
-        assertEquals(1, httpClientConstruction.constructed().size());
-        verify(httpClientConstruction.constructed().get(0), times(1)).execute(any(HttpClientInputs.class));
+        httpClientServiceMock.verify(() -> HttpClientService.execute(any(HttpClientInputs.class)), times(1));
         verifyNoMoreInteractions(amazonSignatureConstruction.constructed().get(0));
-        verifyNoMoreInteractions(httpClientConstruction.constructed().get(0));
+        httpClientServiceMock.verifyNoMoreInteractions();
     }
 
     private StorageInputs getStorageInputs() {

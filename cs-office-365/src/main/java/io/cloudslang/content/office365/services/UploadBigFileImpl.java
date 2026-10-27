@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -17,25 +17,25 @@
 
 package io.cloudslang.content.office365.services;
 
-import com.azure.core.credential.TokenCredential;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.microsoft.graph.authentication.TokenCredentialAuthProvider;
-import com.microsoft.graph.httpcore.HttpClients;
+import com.microsoft.graph.core.models.UploadResult;
+import com.microsoft.graph.core.requests.BaseGraphRequestAdapter;
+import com.microsoft.graph.core.tasks.LargeFileUploadTask;
 import com.microsoft.graph.models.FileAttachment;
 import com.microsoft.graph.models.UploadSession;
-import com.microsoft.graph.requests.GraphServiceClient;
-import com.microsoft.graph.tasks.LargeFileUploadResult;
-import com.microsoft.graph.tasks.LargeFileUploadTask;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import com.microsoft.kiota.authentication.AnonymousAuthenticationProvider;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.office365.entities.AddAttachmentInputs;
+import io.cloudslang.content.office365.entities.Office365HttpClientInputs;
 import okhttp3.*;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
@@ -44,7 +44,9 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.EXCEPTION;
@@ -58,7 +60,7 @@ public class UploadBigFileImpl {
 
     public static String createUploadSession(@NotNull final AddAttachmentInputs addAttachmentInputs) throws Exception {
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final Office365HttpClientInputs httpClientInputs = new Office365HttpClientInputs();
 
         httpClientInputs.setUrl(addBigAttachmentUrl(addAttachmentInputs.getMessageId()));
 
@@ -77,8 +79,7 @@ public class UploadBigFileImpl {
                 addAttachmentInputs.getContentBytes(),
                 Files.size(Paths.get(addAttachmentInputs.getFilePath()))));
 
-        UploadSession uploadSession = new UploadSession();
-        uploadSession.uploadUrl = getUploadUrl(new HttpClientService().execute(httpClientInputs));
+        UploadSession uploadSession = getUploadSession(HttpClientService.execute(httpClientInputs.build()));
         return uploadFileChunk(addAttachmentInputs, uploadSession);
     }
 
@@ -90,11 +91,31 @@ public class UploadBigFileImpl {
     }
 
     @NotNull
-    private static String getUploadUrl(Map<String, String> createSessionResult) {
-        if (Integer.parseInt(createSessionResult.get(STATUS_CODE)) >= 200 && Integer.parseInt(createSessionResult.get(STATUS_CODE)) < 300)
-            return new JsonParser().parse(createSessionResult.get(RETURN_RESULT)).getAsJsonObject().get(UPLOAD_SESSION_URL).getAsString();
-        else
+    static UploadSession getUploadSession(Map<String, String> createSessionResult) {
+        int statusCode = Integer.parseInt(createSessionResult.get(STATUS_CODE));
+        if (statusCode < 200 || statusCode >= 300) {
             throw new RuntimeException(createSessionResult.get(EXCEPTION));
+        }
+
+        JsonObject sessionResponse = JsonParser.parseString(createSessionResult.get(RETURN_RESULT)).getAsJsonObject();
+        UploadSession uploadSession = new UploadSession();
+        uploadSession.setUploadUrl(sessionResponse.get(UPLOAD_SESSION_URL).getAsString());
+
+        JsonArray nextExpectedRanges = sessionResponse.getAsJsonArray("nextExpectedRanges");
+        if (nextExpectedRanges == null || nextExpectedRanges.isEmpty()) {
+            throw new IllegalArgumentException("The upload session response does not contain nextExpectedRanges");
+        }
+        List<String> ranges = new ArrayList<>(nextExpectedRanges.size());
+        for (JsonElement range : nextExpectedRanges) {
+            ranges.add(range.getAsString());
+        }
+        uploadSession.setNextExpectedRanges(ranges);
+
+        JsonElement expirationDateTime = sessionResponse.get("expirationDateTime");
+        if (expirationDateTime != null && !expirationDateTime.isJsonNull()) {
+            uploadSession.setExpirationDateTime(OffsetDateTime.parse(expirationDateTime.getAsString()));
+        }
+        return uploadSession;
     }
 
     private static String uploadFileChunk(@NotNull final AddAttachmentInputs addAttachmentInputs, UploadSession uploadSession) throws Exception {
@@ -144,33 +165,23 @@ public class UploadBigFileImpl {
         if (proxyAuthenticator != null)
             httpClientBuilder.proxyAuthenticator(proxyAuthenticator);
 
-        TokenCredential tokenCredential = new AuthTokenCredential(addAttachmentInputs.getCommonInputs().getAuthToken());
-        final TokenCredentialAuthProvider tokenCredAuthProvider = new TokenCredentialAuthProvider(Arrays.asList(DEFAULT_SCOPE), tokenCredential);
+        final BaseGraphRequestAdapter requestAdapter = new BaseGraphRequestAdapter(
+                new AnonymousAuthenticationProvider(),
+                uploadSession.getUploadUrl(),
+                httpClientBuilder.build());
 
-        final GraphServiceClient<Request> graphClient = GraphServiceClient
-                .builder()
-                .authenticationProvider(tokenCredAuthProvider)
-                .httpClient(httpClientBuilder.build())
-                .buildClient();
-
-        InputStream fileStream = Files.newInputStream(Paths.get(addAttachmentInputs.getFilePath()));
-
-        //Used for logging the upload of chunks
-//        IProgressCallback callback = new IProgressCallback() {
-//            @Override
-//            // Called after each slice of the file is uploaded
-//            public void progress(final long current, final long max) {
-//                System.out.println(
-//                        String.format("Uploaded %d bytes of %d total bytes", current, max)
-//                );
-//            }
-//        };
-
-        LargeFileUploadTask<FileAttachment> uploadTask =
-                new LargeFileUploadTask<>
-                        (uploadSession, graphClient, fileStream, Files.size(Paths.get(addAttachmentInputs.getFilePath())), FileAttachment.class);
-// Do the upload
-        LargeFileUploadResult<FileAttachment> result = uploadTask.upload(0, null, null);
-        return result.location;
+        try (InputStream fileStream = Files.newInputStream(Paths.get(addAttachmentInputs.getFilePath()))) {
+            LargeFileUploadTask<FileAttachment> uploadTask = new LargeFileUploadTask<>(
+                    requestAdapter,
+                    uploadSession,
+                    fileStream,
+                    Files.size(Paths.get(addAttachmentInputs.getFilePath())),
+                    FileAttachment::createFromDiscriminatorValue);
+            UploadResult<FileAttachment> result = uploadTask.upload();
+            if (result.location == null) {
+                throw new IllegalStateException("The large attachment upload completed without a location");
+            }
+            return result.location.toString();
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -12,34 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Copyright 2019-2024 Open Text
- * This program and the accompanying materials
- * are made available under the terms of the Apache License v2.0 which accompany this distribution.
- *
- * The Apache License is available at
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
 
 
 
 package io.cloudslang.content.amazon.actions.servicecatalog;
 
-import com.amazonaws.services.servicecatalog.AWSServiceCatalog;
-import com.amazonaws.services.servicecatalog.model.DescribeRecordResult;
-import com.amazonaws.services.servicecatalog.model.TerminateProvisionedProductResult;
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import software.amazon.awssdk.services.servicecatalog.ServiceCatalogClient;
+import software.amazon.awssdk.services.servicecatalog.model.DescribeRecordResponse;
+import software.amazon.awssdk.services.servicecatalog.model.TerminateProvisionedProductResponse;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
+import io.cloudslang.content.plugin.ActionMetadata.MatchType;
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.validators.Validator;
 import io.cloudslang.content.amazon.factory.ServiceCatalogClientBuilder;
@@ -128,24 +114,24 @@ public class UnprovisionProductAction {
 
         try {
 
-            final AWSServiceCatalog awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
+            final ServiceCatalogClient awsServiceCatalog = ServiceCatalogClientBuilder.getServiceCatalogClientBuilder(identity, credential,
                     proxyHost, proxyPortImp, proxyUsername, proxyPassword, connectTimeoutImp, execTimeoutImp, regionVal, asyncImp);
 
-            final TerminateProvisionedProductResult result = AmazonServiceCatalogService.terminateProvisionedProduct(acceptLanguageVal, ignoreErrorsImp, provisionedProductId, provisionedProductName, terminateToken, awsServiceCatalog);
+            final TerminateProvisionedProductResponse result = AmazonServiceCatalogService.terminateProvisionedProduct(acceptLanguageVal, ignoreErrorsImp, provisionedProductId, provisionedProductName, terminateToken, awsServiceCatalog);
 
-            String undeployStatus = result.getRecordDetail().getStatus();
+            String undeployStatus = result.recordDetail().statusAsString();
 
             while (UPDATE_STATUSES.contains(undeployStatus)) {
                 Thread.sleep(pollingIntervalImp);
-                undeployStatus = getUpdatedProductStatus(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+                undeployStatus = getUpdatedProductStatus(result.recordDetail().recordId(), awsServiceCatalog);
             }
             if (undeployStatus.equals(SUCCEEDED)) {
                 return getSuccessResultsMap(result.toString());
             }
 
-            final DescribeRecordResult recordResult = AmazonServiceCatalogService.describeRecord(result.getRecordDetail().getRecordId(), awsServiceCatalog);
+            final DescribeRecordResponse recordResult = AmazonServiceCatalogService.describeRecord(result.recordDetail().recordId(), awsServiceCatalog);
 
-            throw new RuntimeException(UNPROVISION_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.getRecordDetail().getRecordErrors().toString());
+            throw new RuntimeException(UNPROVISION_PROVISIONED_PRODUCT_FAILED_REASON + recordResult.recordDetail().recordErrors().toString());
         } catch (Exception e) {
             return getFailureResultsMap(e);
         }

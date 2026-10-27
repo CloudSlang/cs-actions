@@ -3,7 +3,7 @@ package io.cloudslang.content.oracle.oci.services.models.instances;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.json.simple.JSONObject;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -14,11 +14,11 @@ public class CreateInstanceRequestBody {
     String availabilityDomain;
     CreateVnicDetails createVnicDetails;
     String dedicatedVmHostId;
-    JSONObject definedTags;
+    ObjectNode definedTags;
     String displayName;
-    JSONObject extendedMetadata;
+    ObjectNode extendedMetadata;
     String faultDomain;
-    JSONObject freeformTags;
+    ObjectNode freeformTags;
     String ipxeScript;
     boolean isPvEncryptionInTransitEnabled;
     String launchMode;
@@ -68,11 +68,11 @@ public class CreateInstanceRequestBody {
         this.dedicatedVmHostId = dedicatedVmHostId;
     }
 
-    public JSONObject getDefinedTags() {
+    public ObjectNode getDefinedTags() {
         return definedTags;
     }
 
-    public void setDefinedTags(JSONObject definedTags) {
+    public void setDefinedTags(ObjectNode definedTags) {
         this.definedTags = definedTags;
     }
 
@@ -84,11 +84,11 @@ public class CreateInstanceRequestBody {
         this.displayName = displayName;
     }
 
-    public JSONObject getExtendedMetadata() {
+    public ObjectNode getExtendedMetadata() {
         return extendedMetadata;
     }
 
-    public void setExtendedMetadata(JSONObject extendedMetadata) {
+    public void setExtendedMetadata(ObjectNode extendedMetadata) {
         this.extendedMetadata = extendedMetadata;
     }
 
@@ -100,11 +100,11 @@ public class CreateInstanceRequestBody {
         this.faultDomain = faultDomain;
     }
 
-    public JSONObject getFreeformTags() {
+    public ObjectNode getFreeformTags() {
         return freeformTags;
     }
 
-    public void setFreeformTags(JSONObject freeformTags) {
+    public void setFreeformTags(ObjectNode freeformTags) {
         this.freeformTags = freeformTags;
     }
 
@@ -223,9 +223,9 @@ public class CreateInstanceRequestBody {
     public class CreateVnicDetails {
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         boolean assignPublicIp;
-        JSONObject definedTags;
+        ObjectNode definedTags;
         String displayName;
-        JSONObject freeformTags;
+        ObjectNode freeformTags;
         String hostnameLabel;
         String[] nsgIds;
         String privateIp;
@@ -240,11 +240,11 @@ public class CreateInstanceRequestBody {
             this.assignPublicIp = assignPublicIp;
         }
 
-        public JSONObject getDefinedTags() {
+        public ObjectNode getDefinedTags() {
             return definedTags;
         }
 
-        public void setDefinedTags(JSONObject definedTags) {
+        public void setDefinedTags(ObjectNode definedTags) {
             this.definedTags = definedTags;
         }
 
@@ -256,11 +256,11 @@ public class CreateInstanceRequestBody {
             this.displayName = displayName;
         }
 
-        public JSONObject getFreeformTags() {
+        public ObjectNode getFreeformTags() {
             return freeformTags;
         }
 
-        public void setFreeformTags(JSONObject freeformTags) {
+        public void setFreeformTags(ObjectNode freeformTags) {
             this.freeformTags = freeformTags;
         }
 

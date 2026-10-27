@@ -4,14 +4,14 @@ package io.cloudslang.content.nutanix.prism.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAttachDisksInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDetachDisksInputs;
 import io.cloudslang.content.nutanix.prism.exceptions.NutanixDetachDiskException;
 import io.cloudslang.content.nutanix.prism.services.models.disks.AttachDisksRequestBody;
 import io.cloudslang.content.nutanix.prism.services.models.disks.DetachDisksRequestBody;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -162,7 +162,7 @@ public class DiskImpl {
     @NotNull
     public static Map<String, String> detachDisks(@NotNull final NutanixDetachDisksInputs nutanixDetachDisksInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final NutanixHttpClientInputs httpClientInputs = new NutanixHttpClientInputs();
         httpClientInputs.setUrl(detachDisksURL(nutanixDetachDisksInputs));
         httpClientInputs.setAuthType(BASIC);
         httpClientInputs.setMethod(POST);
@@ -173,13 +173,13 @@ public class DiskImpl {
         httpClientInputs.setPassword(nutanixDetachDisksInputs.getCommonInputs().getPassword());
         httpClientInputs.setContentType(APPLICATION_API_JSON);
         setCommonHttpInputs(httpClientInputs, nutanixDetachDisksInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> AttachDisk(@NotNull final NutanixAttachDisksInputs nutanixAttachDisksInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final NutanixHttpClientInputs httpClientInputs = new NutanixHttpClientInputs();
         httpClientInputs.setUrl(AttachDisksURL(nutanixAttachDisksInputs));
 
         httpClientInputs.setAuthType(BASIC);
@@ -191,7 +191,7 @@ public class DiskImpl {
         httpClientInputs.setPassword(nutanixAttachDisksInputs.getCommonInputs().getPassword());
         httpClientInputs.setContentType(APPLICATION_API_JSON);
         setCommonHttpInputs(httpClientInputs, nutanixAttachDisksInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

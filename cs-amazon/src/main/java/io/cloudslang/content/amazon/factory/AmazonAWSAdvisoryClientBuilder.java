@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -14,76 +14,43 @@
  */
 package io.cloudslang.content.amazon.factory;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.costexplorer.AWSCostExplorer;
-import com.amazonaws.services.costexplorer.AWSCostExplorerClientBuilder;
-import com.amazonaws.services.support.AWSSupport;
-import com.amazonaws.services.support.AWSSupportClientBuilder;
-import org.apache.commons.lang3.StringUtils;
+import io.cloudslang.content.amazon.utils.AmazonWebServiceClientUtil;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
+import software.amazon.awssdk.services.support.SupportClient;
 
 public class AmazonAWSAdvisoryClientBuilder {
-    public static AWSSupport getAWSAdvisorSupportClientBuilder(
-            String accessKeyId,
-            String secretAccessKey,
-            String proxyHost,
-            Integer proxyPort,
-            String proxyUsername,
-            String proxyPassword,
-            Integer connectTimeoutMs,
-            Integer executionTimeoutMs,
-            String region) {
-
-        ClientConfiguration clientConfiguration = new ClientConfiguration();
-        clientConfiguration.setConnectionTimeout(connectTimeoutMs);
-        clientConfiguration.setClientExecutionTimeout(executionTimeoutMs);
-
-        if (!StringUtils.isEmpty(proxyHost)) {
-            clientConfiguration.setProxyHost(proxyHost);
-            clientConfiguration.setProxyPort(proxyPort);
-            if (!StringUtils.isEmpty(proxyUsername)) {
-                clientConfiguration.setProxyUsername(proxyUsername);
-                clientConfiguration.setProxyPassword(proxyPassword);
-            }
-        }
-        return AWSSupportClientBuilder.standard()
-                .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))
-                .withClientConfiguration(clientConfiguration)
+    public static SupportClient getAWSAdvisorSupportClientBuilder(
+            String accessKeyId, String secretAccessKey, String proxyHost, Integer proxyPort,
+            String proxyUsername, String proxyPassword, Integer connectTimeoutMs,
+            Integer executionTimeoutMs, String region) {
+        return SupportClient.builder()
+                .region(Region.of(region))
+                .credentialsProvider(credentials(accessKeyId, secretAccessKey))
+                .httpClientBuilder(AmazonWebServiceClientUtil.getHttpClientBuilder(proxyHost,
+                        proxyPort == null ? null : proxyPort.toString(), proxyUsername, proxyPassword,
+                        connectTimeoutMs.toString()))
+                .overrideConfiguration(AmazonWebServiceClientUtil.getClientOverrideConfiguration(executionTimeoutMs.toString()))
                 .build();
     }
 
-
-    public static AWSCostExplorer getAWSCostExplorerClientBuilder(
-            String accessKeyId,
-            String secretAccessKey,
-            String proxyHost,
-            Integer proxyPort,
-            String proxyUsername,
-            String proxyPassword,
-            Integer connectTimeoutMs,
-            Integer executionTimeoutMs,
-            String region) {
-
-        ClientConfiguration clientConfiguration = new ClientConfiguration();
-        clientConfiguration.setConnectionTimeout(connectTimeoutMs);
-        clientConfiguration.setClientExecutionTimeout(executionTimeoutMs);
-
-        if (!StringUtils.isEmpty(proxyHost)) {
-            clientConfiguration.setProxyHost(proxyHost);
-            clientConfiguration.setProxyPort(proxyPort);
-            if (!StringUtils.isEmpty(proxyUsername)) {
-                clientConfiguration.setProxyUsername(proxyUsername);
-                clientConfiguration.setProxyPassword(proxyPassword);
-            }
-        }
-
-        return AWSCostExplorerClientBuilder.standard()
-                .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey)))
-                .withClientConfiguration(clientConfiguration)
+    public static CostExplorerClient getAWSCostExplorerClientBuilder(
+            String accessKeyId, String secretAccessKey, String proxyHost, Integer proxyPort,
+            String proxyUsername, String proxyPassword, Integer connectTimeoutMs,
+            Integer executionTimeoutMs, String region) {
+        return CostExplorerClient.builder()
+                .region(Region.of(region))
+                .credentialsProvider(credentials(accessKeyId, secretAccessKey))
+                .httpClientBuilder(AmazonWebServiceClientUtil.getHttpClientBuilder(proxyHost,
+                        proxyPort == null ? null : proxyPort.toString(), proxyUsername, proxyPassword,
+                        connectTimeoutMs.toString()))
+                .overrideConfiguration(AmazonWebServiceClientUtil.getClientOverrideConfiguration(executionTimeoutMs.toString()))
                 .build();
     }
 
+    private static StaticCredentialsProvider credentials(String accessKeyId, String secretAccessKey) {
+        return StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey));
+    }
 }

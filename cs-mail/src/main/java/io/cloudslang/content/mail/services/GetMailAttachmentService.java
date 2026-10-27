@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.mail.services;
 
-import com.sun.mail.util.ASCIIUtility;
+import org.eclipse.angus.mail.util.ASCIIUtility;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.mail.constants.MimeTypes;
 import io.cloudslang.content.mail.constants.SecurityConstants;

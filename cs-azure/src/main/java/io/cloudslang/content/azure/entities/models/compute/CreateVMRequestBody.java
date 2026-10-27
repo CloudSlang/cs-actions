@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -33,18 +33,18 @@ public class CreateVMRequestBody {
 
     CreateVMRequestBody.Plan plan;
 
-    CreateVMRequestBody.Properties Properties;
+    CreateVMRequestBody.Properties properties;
 
     @JsonCreator
     public CreateVMRequestBody() {
     }
 
     public CreateVMRequestBody.Properties getProperties() {
-        return Properties;
+        return properties;
     }
 
     public void setProperties(CreateVMRequestBody.Properties properties) {
-        Properties = properties;
+        this.properties = properties;
     }
 
     public String getId() {

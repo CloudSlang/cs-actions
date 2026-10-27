@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -24,14 +24,13 @@ import java.net.{InetSocketAddress, Proxy}
 import com.google.api.client.http.javanet.NetHttpTransport
 import org.junit.Test
 import org.specs2.matcher.JUnitShouldMatchers
-import org.specs2.mock.MockitoMocker
 
 
 /**
   * Created by victor on 2/25/17.
   */
 
-class HttpTransportUtilsTest extends JUnitShouldMatchers with MockitoMocker {
+class HttpTransportUtilsTest extends JUnitShouldMatchers {
 
   @Test
   def netHttpTransportValid(): Unit = {

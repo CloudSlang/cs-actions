@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -22,9 +22,9 @@ package io.cloudslang.content.google.actions.authentication
 import java.nio.charset.StandardCharsets
 import java.util
 
-import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
-import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
-import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType
+import io.cloudslang.content.annotations.{Action, Output, Param, Response}
+import io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL
+import io.cloudslang.content.plugin.ActionMetadata.ResponseType
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.utils.Constants.NEW_LINE

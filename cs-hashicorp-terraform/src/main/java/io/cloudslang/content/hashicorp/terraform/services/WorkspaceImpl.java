@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformCommonInputs;
 import io.cloudslang.content.hashicorp.terraform.entities.TerraformWorkspaceInputs;
 import io.cloudslang.content.hashicorp.terraform.services.models.workspace.CreateWorkspaceRequestBody;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.hashicorp.terraform.entities.TerraformHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class WorkspaceImpl {
     @NotNull
     public static Map<String, String> createWorkspace(@NotNull final TerraformWorkspaceInputs createWorkspaceInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformHttpClientInputs httpClientInputs = new TerraformHttpClientInputs();
         httpClientInputs.setUrl(createWorkspaceUrl(createWorkspaceInputs.getCommonInputs().getOrganizationName()));
         setCommonHttpInputs(httpClientInputs, createWorkspaceInputs.getCommonInputs());
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -42,13 +42,13 @@ public class WorkspaceImpl {
         }
         httpClientInputs.setResponseCharacterSet(createWorkspaceInputs.getCommonInputs().getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(createWorkspaceInputs.getCommonInputs().getAuthToken()));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> deleteWorkspace(@NotNull final TerraformWorkspaceInputs deleteWorkspaceInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformHttpClientInputs httpClientInputs = new TerraformHttpClientInputs();
         httpClientInputs.setUrl(getWorkspaceDetailsUrl(deleteWorkspaceInputs.getCommonInputs().getOrganizationName(),
                 deleteWorkspaceInputs.getWorkspaceName()));
         setCommonHttpInputs(httpClientInputs, deleteWorkspaceInputs.getCommonInputs());
@@ -57,13 +57,13 @@ public class WorkspaceImpl {
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         httpClientInputs.setResponseCharacterSet(deleteWorkspaceInputs.getCommonInputs().getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(deleteWorkspaceInputs.getCommonInputs().getAuthToken()));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> listWorkspaces(@NotNull final TerraformCommonInputs listWorkspacesInputs)
             throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformHttpClientInputs httpClientInputs = new TerraformHttpClientInputs();
         httpClientInputs.setUrl(createWorkspaceUrl(listWorkspacesInputs.getOrganizationName()));
         setCommonHttpInputs(httpClientInputs, listWorkspacesInputs);
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -73,13 +73,13 @@ public class WorkspaceImpl {
                 listWorkspacesInputs.getPageSize()));
         httpClientInputs.setResponseCharacterSet(listWorkspacesInputs.getResponseCharacterSet());
         httpClientInputs.setHeaders(getAuthHeaders(listWorkspacesInputs.getAuthToken()));
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull
     public static Map<String, String> getWorkspaceDetails(@NotNull final TerraformWorkspaceInputs
                                                                   getWorkspaceDetailsInputs) throws Exception {
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final TerraformHttpClientInputs httpClientInputs = new TerraformHttpClientInputs();
         httpClientInputs.setUrl(getWorkspaceDetailsUrl(getWorkspaceDetailsInputs.getCommonInputs().getOrganizationName()
                 , getWorkspaceDetailsInputs.getWorkspaceName()));
         httpClientInputs.setAuthType(ANONYMOUS);
@@ -87,7 +87,7 @@ public class WorkspaceImpl {
         httpClientInputs.setHeaders(getAuthHeaders(getWorkspaceDetailsInputs.getCommonInputs().getAuthToken()));
         httpClientInputs.setContentType(APPLICATION_VND_API_JSON);
         setCommonHttpInputs(httpClientInputs, getWorkspaceDetailsInputs.getCommonInputs());
-        return new HttpClientService().execute(httpClientInputs);
+        return HttpClientService.execute(httpClientInputs.build());
     }
 
     @NotNull

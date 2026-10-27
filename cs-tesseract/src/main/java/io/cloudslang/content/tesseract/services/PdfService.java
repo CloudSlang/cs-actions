@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -81,7 +82,7 @@ public class PdfService {
     private static List<File> convertPdfToImage(File file, String destination, String dpi, String fromPage,
                                                 String toPage, String pageIndex) throws Exception {
         if (file.exists()) {
-            PDDocument doc = PDDocument.load(file);
+            PDDocument doc = Loader.loadPDF(file);
             PDFRenderer renderer = new PDFRenderer(doc);
             List<File> fileList = new ArrayList<>();
 
@@ -136,4 +137,3 @@ public class PdfService {
         fileList.add(fileTemp);
     }
 }
-

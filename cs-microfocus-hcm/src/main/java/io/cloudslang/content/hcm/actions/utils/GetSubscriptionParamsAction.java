@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -17,16 +17,16 @@
 
 package io.cloudslang.content.hcm.actions.utils;
 
-import com.hp.oo.sdk.content.annotations.Action;
-import com.hp.oo.sdk.content.annotations.Output;
-import com.hp.oo.sdk.content.annotations.Param;
-import com.hp.oo.sdk.content.annotations.Response;
+import io.cloudslang.content.annotations.Action;
+import io.cloudslang.content.annotations.Output;
+import io.cloudslang.content.annotations.Param;
+import io.cloudslang.content.annotations.Response;
 import io.cloudslang.content.constants.ResponseNames;
-import io.cloudslang.content.httpclient.entities.HttpClientInputs;
+import io.cloudslang.content.hcm.utils.HcmHttpClientInputs;
 
 import java.util.Map;
 
-import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static io.cloudslang.content.constants.BooleanValues.TRUE;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;
@@ -39,7 +39,7 @@ import static io.cloudslang.content.hcm.utils.Descriptions.Common.*;
 import static io.cloudslang.content.hcm.utils.Descriptions.GetSubscriptionParams.*;
 import static io.cloudslang.content.hcm.utils.OutputNames.PARAM_LIST;
 import static io.cloudslang.content.hcm.utils.Utilities.setInput;
-import static io.cloudslang.content.httpclient.entities.HttpClientInputs.*;
+import static io.cloudslang.content.hcm.utils.HcmHttpClientInputNames.*;
 import static io.cloudslang.content.utils.OutputUtilities.getFailureResultsMap;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
@@ -85,7 +85,7 @@ public class GetSubscriptionParamsAction {
         final String trustAllRoots = defaultIfEmpty(trustAllRootsInp, DEFAULT_TRUST_ALL_ROOTS);
         final String x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifierInp, DEFAULT_X_509_HOSTNAME_VERIFIER);
 
-        final HttpClientInputs httpClientInputs = new HttpClientInputs();
+        final HcmHttpClientInputs httpClientInputs = new HcmHttpClientInputs();
 
         setInput(httpClientInputs, url, authType, username, password, connectTimeout, socketTimeout, useCookies,
                 keepAlive, queryParams, CONTENT_TYPE, TRUE, GET, proxyHost, proxyPort, proxyUsername, proxyPassword,

@@ -2,7 +2,7 @@
 
 package io.cloudslang.content.hashicorp.terraform.utils;
 
-import com.hp.oo.sdk.content.plugin.SessionResource;
+import io.cloudslang.content.plugin.SessionResource;
 
 import java.util.Map;
 

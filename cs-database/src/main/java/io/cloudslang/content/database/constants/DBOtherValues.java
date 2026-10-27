@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2024 Open Text
+ * Copyright 2026-2027 Open Text
  * This program and the accompanying materials
  * are made available under the terms of the Apache License v2.0 which accompany this distribution.
  *
@@ -55,12 +55,12 @@ public class DBOtherValues {
     public static final Integer DEFAULT_PORT_PSQL = 5432;
     public static final Integer DEFAULT_PORT_CUSTOM = DEFAULT_PORT_ORACLE;
 
-    public static final String ORACLE_JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";
+    public static final String ORACLE_JDBC_DRIVER = "oracle.jdbc.OracleDriver";
     public static final String SQLSERVER_JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     public static final String SYBASE_JTDS_DRIVER = "net.sourceforge.jtds.jdbc.Driver";
     public static final String NETCOOL_DRIVER = "com.sybase.jdbc3.jdbc.SybDriver";
     public static final String DB2_DRIVER = "com.ibm.db2.jcc.DB2Driver";
-    public static final String MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    public static final String MYSQL_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     public static final String POSTGRESQL_DRIVER = "org.postgresql.Driver";
     public static final String MSSQL_FILE_DRIVER = "sqljdbc_auth.dll";
     public static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
