@@ -16,6 +16,9 @@
 
 package io.cloudslang.content.json.actions;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.hp.oo.sdk.content.annotations.Action;
 import com.hp.oo.sdk.content.annotations.Output;
 import com.hp.oo.sdk.content.annotations.Param;
@@ -29,12 +32,13 @@ import io.cloudslang.content.json.entities.AddObjectToArrayInput;
 import io.cloudslang.content.json.services.AddObjectToArrayService;
 import io.cloudslang.content.json.utils.Constants;
 import io.cloudslang.content.utils.OutputUtilities;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
+import java.util.Set;
 
 public class AddObjectToArrayAction {
 
+        private static final Set<String> SENSITIVE_KEYS = Set.of("password", "token", "apiKey");
     private final AddObjectToArrayService service = new AddObjectToArrayService();
 
 
@@ -53,12 +57,14 @@ public class AddObjectToArrayAction {
      * @param index   The index (-n < i < n) in the array in which the value will be inserted.
      *                If an index is not specified, then the element will be appended to the end of the array.
      * @return a map containing the output of the operations. Keys present in the map are:
-     * <br><b>returnResult</b> - The element of the array at specified index.
+        * <br><b>returnResult</b> - The updated array, with values of password, token and apiKey fields
+        * recursively replaced with ******. Matching is case-sensitive and downstream data is also redacted.
      * If the operation failed, this field will contain an error message.
      * <br><b>returnCode</b> - The returnCode of the operation: 0 for success, -1 for failure.
      * <br><b>exception</b> - The exception message if the operation goes to failure.
      */
-    @Action(name = "Add Object to Array",
+            @Action(name = "Add Object to Array",
+                description = "Insert a JSON element into an array. Values of password, token and apiKey fields are automatically replaced with ****** recursively, using case-sensitive matching. The returned JSON and downstream data are permanently redacted regardless of input sensitivity flags.",
             outputs = {
                     @Output(OutputNames.RETURN_CODE),
                     @Output(OutputNames.RETURN_RESULT),
@@ -79,9 +85,31 @@ public class AddObjectToArrayAction {
                     .element(element)
                     .index(index)
                     .build();
-            return this.service.execute(input);
+            Map<String, String> results = this.service.execute(input);
+            if (ReturnCodes.SUCCESS.equals(results.get(OutputNames.RETURN_CODE))) {
+                JsonElement result = new JsonParser().parse(results.get(OutputNames.RETURN_RESULT));
+                redact(result);
+                results.put(OutputNames.RETURN_RESULT, result.toString());
+            }
+            return results;
         } catch (Exception ex) {
-            return OutputUtilities.getFailureResultsMap(ex);
+            return OutputUtilities.getFailureResultsMap("Unable to add object to array. Verify the JSON inputs and index. Error details suppressed to protect sensitive data.");
+        }
+    }
+
+    private void redact(JsonElement element) {
+        if (element.isJsonObject()) {
+            for (Map.Entry<String, JsonElement> entry : element.getAsJsonObject().entrySet()) {
+                if (SENSITIVE_KEYS.contains(entry.getKey())) {
+                    entry.setValue(new JsonPrimitive("******"));
+                } else {
+                    redact(entry.getValue());
+                }
+            }
+        } else if (element.isJsonArray()) {
+            for (JsonElement child : element.getAsJsonArray()) {
+                redact(child);
+            }
         }
     }
 }
