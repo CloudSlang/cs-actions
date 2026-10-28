@@ -75,7 +75,7 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.12</score-content-sdk.version>
         <commons-collection.version>4.6.0</commons-collection.version>
-        <cs-commons.version>0.0.15-SNAPSHOT</cs-commons.version>
+        <cs-commons.version>0.0.15</cs-commons.version>
         <cs-xml.version>0.0.29-SNAPSHOT</cs-xml.version>
         <cs-httpclient-commons.version>0.0.32-SNAPSHOT</cs-httpclient-commons.version>
         <jackson.version>2.22.4</jackson.version>
