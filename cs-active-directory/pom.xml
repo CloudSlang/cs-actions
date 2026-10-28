@@ -78,7 +78,7 @@
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.12</score-content-sdk.version>
-        <cs-commons.version>0.0.15-SNAPSHOT</cs-commons.version>
+        <cs-commons.version>0.0.15</cs-commons.version>
         <junit.version>4.13.2</junit.version>
         <pdfbox.version>2.0.31</pdfbox.version>
         <!--Misc properties-->
