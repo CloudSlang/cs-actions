@@ -16,8 +16,8 @@
 
 package io.cloudslang.content.abbyy.http;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.SerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.abbyy.constants.HttpClientOutputNames;
 import io.cloudslang.content.abbyy.entities.requests.HttpClientRequest;
 import io.cloudslang.content.abbyy.entities.responses.HttpClientResponse;

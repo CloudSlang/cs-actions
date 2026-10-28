@@ -16,8 +16,8 @@
 
 package io.cloudslang.content.abbyy.entities.requests;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.SerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 
 import java.nio.file.Path;
 

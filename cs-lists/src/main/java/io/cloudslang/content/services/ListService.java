@@ -17,8 +17,8 @@
 
 package io.cloudslang.content.services;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.StepSerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.exceptions.IteratorProcessorException;
 import io.cloudslang.content.utils.IteratorProcessor;
 

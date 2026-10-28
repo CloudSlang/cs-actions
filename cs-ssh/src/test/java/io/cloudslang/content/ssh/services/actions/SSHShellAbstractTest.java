@@ -19,8 +19,8 @@
 
 package io.cloudslang.content.ssh.services.actions;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.SessionResource;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 import io.cloudslang.content.ssh.entities.IdentityKey;
 import io.cloudslang.content.ssh.entities.KeyData;
 import io.cloudslang.content.ssh.entities.KeyFile;

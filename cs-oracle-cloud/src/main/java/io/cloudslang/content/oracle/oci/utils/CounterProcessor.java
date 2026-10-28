@@ -3,7 +3,7 @@
 
 package io.cloudslang.content.oracle.oci.utils;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.oracle.oci.exceptions.CounterImplException;
 
 import java.util.HashMap;

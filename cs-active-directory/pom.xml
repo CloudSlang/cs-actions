@@ -77,7 +77,7 @@
         <maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <!--Dependencies versions-->
-        <score-content-sdk.version>1.10.12</score-content-sdk.version>
+        <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <cs-commons.version>0.0.15</cs-commons.version>
         <junit.version>4.13.2</junit.version>
         <pdfbox.version>2.0.31</pdfbox.version>
@@ -91,7 +91,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.cloudslang.content</groupId>
+            <groupId>com.hp.score.sdk</groupId>
             <artifactId>score-content-sdk</artifactId>
             <version>${score-content-sdk.version}</version>
         </dependency>

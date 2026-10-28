@@ -18,8 +18,8 @@
 
 package io.cloudslang.content.httpclient.entities;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.SerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 
 /**
  * User: davidmih

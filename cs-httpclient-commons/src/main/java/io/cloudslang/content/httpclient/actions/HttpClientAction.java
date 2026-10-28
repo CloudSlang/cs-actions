@@ -14,9 +14,9 @@
  */
 
 package io.cloudslang.content.httpclient.actions;
-import io.cloudslang.content.annotations.*;
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.SerializableSessionObject;
+import com.hp.oo.sdk.content.annotations.*;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
@@ -28,9 +28,9 @@ import io.cloudslang.content.utils.StringUtilities;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
-import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.constants.OutputNames.*;
 import static io.cloudslang.content.constants.ResponseNames.FAILURE;
 import static io.cloudslang.content.constants.ResponseNames.SUCCESS;

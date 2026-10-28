@@ -18,7 +18,7 @@ package io.cloudslang.content.json.entities;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 

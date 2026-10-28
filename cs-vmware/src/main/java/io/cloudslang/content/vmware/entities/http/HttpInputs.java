@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.vmware.entities.http;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utils.BooleanUtilities;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.utils.InputUtils;

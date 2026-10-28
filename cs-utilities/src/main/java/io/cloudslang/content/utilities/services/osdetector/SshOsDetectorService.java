@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.utilities.services.osdetector;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.ssh.entities.SSHConnection;
 import io.cloudslang.content.ssh.entities.SSHShellInputs;
 import io.cloudslang.content.ssh.services.actions.ScoreSSHShellCommand;

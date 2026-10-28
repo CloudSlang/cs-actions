@@ -3,7 +3,7 @@
 
 package io.cloudslang.content.hashicorp.terraform.utils;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.hashicorp.terraform.exceptions.CounterImplException;
 
 import java.util.HashMap;

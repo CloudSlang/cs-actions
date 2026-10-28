@@ -2,7 +2,7 @@
 
 package io.cloudslang.content.nutanix.prism.services;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.nutanix.prism.exceptions.CounterImplException;
 import io.cloudslang.content.nutanix.prism.utils.CounterProcessor;
 

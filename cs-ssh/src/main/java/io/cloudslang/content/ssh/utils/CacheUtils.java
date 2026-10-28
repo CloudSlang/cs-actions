@@ -19,8 +19,8 @@
 
 package io.cloudslang.content.ssh.utils;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.SessionResource;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 import io.cloudslang.content.ssh.entities.SSHConnection;
