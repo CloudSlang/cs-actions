@@ -54,10 +54,14 @@ import static io.cloudslang.content.database.constants.DBOtherValues.NETCOOL_DB_
 import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBOtherValues.ORACLE_JDBC_DRIVER;
 import static io.cloudslang.content.database.constants.DBOtherValues.POSTGRES_DB_TYPE;
+import static io.cloudslang.content.database.constants.DBOtherValues.SQLSERVER_JDBC_DRIVER;
 import static io.cloudslang.content.database.constants.DBOtherValues.SYBASE_DB_TYPE;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_FORWARD_ONLY;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_SCROLL_INSENSITIVE;
 import static io.cloudslang.content.database.constants.DBOtherValues.TYPE_SCROLL_SENSITIVE;
+import static io.cloudslang.content.database.utils.Constants.AUTH_SQL;
+import static io.cloudslang.content.database.utils.Constants.AUTH_WINDOWS;
+import static io.cloudslang.content.database.utils.Constants.JTDS_JDBC_DRIVER;
 import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.CUSTOM;
 import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.DB2;
 import static io.cloudslang.content.database.services.dbconnection.DBConnectionManager.DBType.MSSQL;
@@ -72,6 +76,7 @@ import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbEnumForTy
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbType;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getDbUrls;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrDefaultDBClass;
+import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrDefaultDBClassMSSQLQuery;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrDefaultDBPoolingProperties;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrDefaultDBPort;
 import static io.cloudslang.content.database.utils.SQLInputsUtils.getOrDefaultGlobalSessionObj;
@@ -118,6 +123,11 @@ public class SQLInputsUtilsTest {
     }
 
     @Test
+    public void getOrDefaultDBClassMSSQLDefaultsToMicrosoftDriver() {
+        assertEquals(SQLSERVER_JDBC_DRIVER, getOrDefaultDBClass(EMPTY, MSSQL_DB_TYPE));
+    }
+
+    @Test
     public void getOrDefaultDBClassEmptyDbType() throws Exception {
         assertThat(getOrDefaultDBClass(EMPTY, EMPTY), is(EMPTY));
     }
@@ -125,6 +135,21 @@ public class SQLInputsUtilsTest {
     @Test
     public void getOrDefaultDBClassDefault() throws Exception {
         assertThat(getOrDefaultDBClass("a", ORACLE_DB_TYPE), is("a"));
+    }
+
+    @Test
+    public void getOrDefaultDBClassMSSQLQueryDefaultsToMicrosoftDriverForWindowsAuthentication() {
+        assertEquals(SQLSERVER_JDBC_DRIVER, getOrDefaultDBClassMSSQLQuery(EMPTY, MSSQL_DB_TYPE, AUTH_WINDOWS));
+    }
+
+    @Test
+    public void getOrDefaultDBClassMSSQLQueryDefaultsToMicrosoftDriverForSqlAuthentication() {
+        assertEquals(SQLSERVER_JDBC_DRIVER, getOrDefaultDBClassMSSQLQuery(EMPTY, MSSQL_DB_TYPE, AUTH_SQL));
+    }
+
+    @Test
+    public void getOrDefaultDBClassMSSQLQueryPreservesExplicitDriver() {
+        assertEquals(JTDS_JDBC_DRIVER, getOrDefaultDBClassMSSQLQuery(JTDS_JDBC_DRIVER, MSSQL_DB_TYPE, AUTH_WINDOWS));
     }
 
     //GlobalSessionObject was implemented
