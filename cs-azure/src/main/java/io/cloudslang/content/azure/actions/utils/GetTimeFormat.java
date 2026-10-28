@@ -17,10 +17,10 @@
 
 package io.cloudslang.content.azure.actions.utils;
 
-import io.cloudslang.content.annotations.Action;
-import io.cloudslang.content.annotations.Output;
-import io.cloudslang.content.annotations.Param;
-import io.cloudslang.content.annotations.Response;
+import com.hp.oo.sdk.content.annotations.Action;
+import com.hp.oo.sdk.content.annotations.Output;
+import com.hp.oo.sdk.content.annotations.Param;
+import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.azure.services.GetTimeFormatImpl;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.utils.StringUtilities;
@@ -28,9 +28,9 @@ import io.cloudslang.content.utils.StringUtilities;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
-import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.azure.utils.Constants.GetTimeFormatConstants.*;
 import static io.cloudslang.content.azure.utils.Constants.NEW_LINE;
 import static io.cloudslang.content.azure.utils.Constants.SchedulerTimeConstants.TIME_ZONE;

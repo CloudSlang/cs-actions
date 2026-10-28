@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.utilities.entities;
 
-import io.cloudslang.content.plugin.StepSerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.utilities.exceptions.CounterImplException;
 
 public class CounterImpl {

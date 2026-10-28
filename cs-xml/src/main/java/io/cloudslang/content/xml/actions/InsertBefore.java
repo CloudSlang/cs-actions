@@ -17,10 +17,10 @@
 
 package io.cloudslang.content.xml.actions;
 
-import io.cloudslang.content.annotations.Action;
-import io.cloudslang.content.annotations.Output;
-import io.cloudslang.content.annotations.Param;
-import io.cloudslang.content.annotations.Response;
+import com.hp.oo.sdk.content.annotations.Action;
+import com.hp.oo.sdk.content.annotations.Output;
+import com.hp.oo.sdk.content.annotations.Param;
+import com.hp.oo.sdk.content.annotations.Response;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.xml.entities.inputs.CommonInputs;
 import io.cloudslang.content.xml.entities.inputs.CustomInputs;
@@ -28,7 +28,7 @@ import io.cloudslang.content.xml.services.InsertBeforeService;
 
 import java.util.Map;
 
-import static io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
 import static io.cloudslang.content.constants.OutputNames.RETURN_CODE;
 import static io.cloudslang.content.constants.OutputNames.RETURN_RESULT;
 import static io.cloudslang.content.constants.ReturnCodes.FAILURE;

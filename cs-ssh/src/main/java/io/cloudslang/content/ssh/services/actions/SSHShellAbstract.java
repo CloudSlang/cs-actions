@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.ssh.services.actions;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ReturnCodes;
 import io.cloudslang.content.ssh.entities.KeyFile;

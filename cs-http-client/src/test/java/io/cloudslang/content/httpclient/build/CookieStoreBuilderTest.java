@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.httpclient.build;
 
-import io.cloudslang.content.plugin.SerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.junit.jupiter.api.BeforeEach;

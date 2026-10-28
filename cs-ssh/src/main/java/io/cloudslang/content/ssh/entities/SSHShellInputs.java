@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.ssh.entities;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.ssh.utils.Constants;
 import io.cloudslang.content.ssh.utils.StringUtils;
 import org.apache.commons.lang3.BooleanUtils;

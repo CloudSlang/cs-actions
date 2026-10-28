@@ -19,7 +19,7 @@
 
 package io.cloudslang.content.ssh.services;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 import io.cloudslang.content.ssh.entities.CommandResult;

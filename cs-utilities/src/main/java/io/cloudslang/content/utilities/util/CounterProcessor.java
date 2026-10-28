@@ -17,7 +17,7 @@
 
 package io.cloudslang.content.utilities.util;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
 import io.cloudslang.content.utilities.exceptions.CounterImplException;
 
 import java.util.HashMap;

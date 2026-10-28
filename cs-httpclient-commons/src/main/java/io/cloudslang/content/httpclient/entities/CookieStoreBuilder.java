@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.httpclient.entities;
 
-import io.cloudslang.content.plugin.SerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
 import org.apache.hc.client5.http.cookie.CookieStore;
 

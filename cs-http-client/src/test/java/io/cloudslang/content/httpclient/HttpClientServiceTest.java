@@ -20,7 +20,7 @@
 package io.cloudslang.content.httpclient;
 
 
-import io.cloudslang.content.plugin.SerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.SerializableSessionObject;
 import io.cloudslang.content.httpclient.components.HttpComponents;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;

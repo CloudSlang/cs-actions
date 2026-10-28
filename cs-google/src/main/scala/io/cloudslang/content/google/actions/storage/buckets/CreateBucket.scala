@@ -20,8 +20,8 @@ package io.cloudslang.content.google.actions.storage.buckets
 
 import java.util
 
-import io.cloudslang.content.annotations.{Action, Output, Param, Response}
-import io.cloudslang.content.plugin.ActionMetadata.{MatchType, ResponseType}
+import com.hp.oo.sdk.content.annotations.{Action, Output, Param, Response}
+import com.hp.oo.sdk.content.plugin.ActionMetadata.{MatchType, ResponseType}
 import io.cloudslang.content.constants.OutputNames.{EXCEPTION, RETURN_CODE, RETURN_RESULT}
 import io.cloudslang.content.constants.{ResponseNames, ReturnCodes}
 import io.cloudslang.content.google.services.storage.buckets.BucketService

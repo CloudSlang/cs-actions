@@ -19,12 +19,12 @@ package io.cloudslang.content.amazon.actions.servicecatalog;
 
 import software.amazon.awssdk.services.servicecatalog.ServiceCatalogClient;
 import software.amazon.awssdk.services.servicecatalog.model.DescribeProvisionedProductResponse;
-import io.cloudslang.content.annotations.Action;
-import io.cloudslang.content.annotations.Output;
-import io.cloudslang.content.annotations.Param;
-import io.cloudslang.content.annotations.Response;
-import io.cloudslang.content.plugin.ActionMetadata.MatchType;
-import io.cloudslang.content.plugin.ActionMetadata.ResponseType;
+import com.hp.oo.sdk.content.annotations.Action;
+import com.hp.oo.sdk.content.annotations.Output;
+import com.hp.oo.sdk.content.annotations.Param;
+import com.hp.oo.sdk.content.annotations.Response;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
+import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
 import io.cloudslang.content.amazon.entities.constants.Outputs;
 import io.cloudslang.content.amazon.entities.validators.Validator;
 import io.cloudslang.content.amazon.factory.ServiceCatalogClientBuilder;

@@ -19,10 +19,10 @@
 
 package io.cloudslang.content.azure.actions.utils;
 
-import io.cloudslang.content.annotations.Action;
-import io.cloudslang.content.annotations.Output;
-import io.cloudslang.content.annotations.Param;
-import io.cloudslang.content.annotations.Response;
+import com.hp.oo.sdk.content.annotations.Action;
+import com.hp.oo.sdk.content.annotations.Output;
+import com.hp.oo.sdk.content.annotations.Param;
+import com.hp.oo.sdk.content.annotations.Response;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import io.cloudslang.content.azure.entities.AuthorizationTokenInputs;
 import io.cloudslang.content.azure.services.AuthorizationTokenImpl;
@@ -33,9 +33,9 @@ import io.cloudslang.content.utils.StringUtilities;
 import java.util.List;
 import java.util.Map;
 
-import static io.cloudslang.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
-import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.ERROR;
-import static io.cloudslang.content.plugin.ActionMetadata.ResponseType.RESOLVED;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType.COMPARE_EQUAL;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.ERROR;
+import static com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType.RESOLVED;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.LOGIN_AUTHORITY;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.CLIENT_ID;
 import static io.cloudslang.content.azure.utils.AuthorizationInputNames.PASSWORD;

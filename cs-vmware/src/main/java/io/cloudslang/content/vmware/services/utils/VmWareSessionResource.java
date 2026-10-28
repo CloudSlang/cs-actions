@@ -16,7 +16,7 @@
 
 package io.cloudslang.content.vmware.services.utils;
 
-import io.cloudslang.content.plugin.SessionResource;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 import io.cloudslang.content.vmware.connection.Connection;
 import org.jetbrains.annotations.NotNull;
 

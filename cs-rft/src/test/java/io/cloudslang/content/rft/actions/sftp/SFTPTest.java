@@ -15,8 +15,8 @@
 
 package io.cloudslang.content.rft.actions.sftp;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.SessionResource;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 import io.cloudslang.content.rft.entities.sftp.SFTPCommonInputs;
 import io.cloudslang.content.rft.entities.sftp.SFTPConnection;
 import io.cloudslang.content.rft.services.SFTPCopier;

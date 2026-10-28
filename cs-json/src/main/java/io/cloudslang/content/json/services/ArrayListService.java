@@ -14,7 +14,7 @@
  */
 
 package io.cloudslang.content.json.services;
-import io.cloudslang.content.plugin.StepSerializableSessionObject;
+import com.hp.oo.sdk.content.plugin.StepSerializableSessionObject;
 import io.cloudslang.content.json.utils.*;
 
 import java.util.*;

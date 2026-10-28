@@ -16,7 +16,7 @@
 package io.cloudslang.content.json.utils;
 
 import com.google.gson.*;
-import io.cloudslang.content.plugin.*;
+import com.hp.oo.sdk.content.plugin.*;
 import io.cloudslang.content.utils.*;
 
 import java.io.Serializable;

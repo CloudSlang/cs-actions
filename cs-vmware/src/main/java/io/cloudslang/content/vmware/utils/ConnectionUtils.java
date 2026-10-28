@@ -16,8 +16,8 @@
 
 package io.cloudslang.content.vmware.utils;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.SessionResource;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 import io.cloudslang.content.vmware.connection.Connection;
 import io.cloudslang.content.vmware.connection.impl.BasicConnection;
 import io.cloudslang.content.vmware.services.utils.VmWareSessionResource;

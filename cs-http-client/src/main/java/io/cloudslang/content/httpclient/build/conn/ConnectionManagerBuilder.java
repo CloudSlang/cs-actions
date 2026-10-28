@@ -19,8 +19,8 @@
 
 package io.cloudslang.content.httpclient.build.conn;
 
-import io.cloudslang.content.plugin.GlobalSessionObject;
-import io.cloudslang.content.plugin.SessionResource;
+import com.hp.oo.sdk.content.plugin.GlobalSessionObject;
+import com.hp.oo.sdk.content.plugin.SessionResource;
 import io.cloudslang.content.httpclient.entities.HttpClientInputs;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.config.Registry;
