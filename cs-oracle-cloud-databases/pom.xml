@@ -101,7 +101,7 @@
 
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc11</artifactId>
+            <artifactId>ojdbc17</artifactId>
             <version>23.26.3.0.0</version>
         </dependency>
 <!--        Oracle PKI to access Oracle Wallets from Java-->

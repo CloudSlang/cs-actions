@@ -324,6 +324,7 @@
         <module>cs-commons</module>
         <module>cs-couchbase</module>
         <module>cs-database</module>
+        <module>cs-date-time</module>
         <module>cs-dropbox</module>
         <module>cs-excel</module>
         <module>cs-filesystem</module>
