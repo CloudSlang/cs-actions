@@ -16,19 +16,16 @@
 package io.cloudslang.content.winrm.service;
 
 import io.cloudslang.content.winrm.entities.WinRMInputs;
-import io.cloudsoft.winrm4j.client.WinRmClientContext;
-import io.cloudsoft.winrm4j.winrm.WinRmTool;
-import io.cloudsoft.winrm4j.winrm.WinRmToolResponse;
-import org.apache.http.client.config.AuthSchemes;
-import org.apache.http.conn.ssl.DefaultHostnameVerifier;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import io.cloudslang.content.winrm.client.AuthenticationScheme;
+import io.cloudslang.content.winrm.client.WinRmClient;
+import io.cloudslang.content.winrm.client.WinRmResponse;
+import org.apache.hc.client5.http.ssl.DefaultHostnameVerifier;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 
 import javax.net.ssl.*;
-import javax.xml.bind.DatatypeConverter;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -36,6 +33,7 @@ import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OutputNames.STDERR;
@@ -94,12 +92,12 @@ public class WinRMService {
         }
 
 
-        WinRmTool.Builder builder;
+        WinRmClient.Builder builder;
 
         if (winRMInputs.getDomain().isEmpty())
-            builder = WinRmTool.Builder.builder(winRMInputs.getHost(), winRMInputs.getUsername(), winRMInputs.getPassword());
+            builder = WinRmClient.builder(winRMInputs.getHost(), winRMInputs.getUsername(), winRMInputs.getPassword());
         else
-            builder = WinRmTool.Builder.builder(winRMInputs.getHost(), winRMInputs.getDomain(), winRMInputs.getUsername(), winRMInputs.getPassword());
+            builder = WinRmClient.builder(winRMInputs.getHost(), winRMInputs.getDomain(), winRMInputs.getUsername(), winRMInputs.getPassword());
         builder.authenticationScheme(authScheme(winRMInputs.getAuthType()))
                 .port(Integer.parseInt(winRMInputs.getPort()))
                 .useHttps(useHttps)
@@ -153,26 +151,19 @@ public class WinRMService {
             }
         }
 
-        WinRmToolResponse res;
-        WinRmClientContext context = null;
-        try {
-            context = WinRmClientContext.newInstance();
-            WinRmTool tool = builder.context(context).build();
-            //Setting operation timeout
-            long userTimeout = winRMInputs.getOperationTimeout() * 1000L;
-            tool.setOperationTimeout(userTimeout);
+        WinRmClient client = builder
+                //Setting operation timeout
+                .operationTimeout(winRMInputs.getOperationTimeout() * 1000L)
+                .build();
 
-            if (winRMInputs.getCommandType().equalsIgnoreCase(CMD))
-                res = tool.executeCommand(winRMInputs.getCommand());
-            else {
-                if (winRMInputs.getConfigurationName().isEmpty())
-                    res = tool.executePs(winRMInputs.getCommand());
-                else
-                    res = tool.executeCommand(compilePs(winRMInputs.getCommand(), winRMInputs.getConfigurationName()), new StringWriter(), new StringWriter());
-            }
-        } finally {
-            if (context != null)
-                context.shutdown();
+        WinRmResponse res;
+        if (winRMInputs.getCommandType().equalsIgnoreCase(CMD))
+            res = client.executeCommand(winRMInputs.getCommand());
+        else {
+            if (winRMInputs.getConfigurationName().isEmpty())
+                res = client.executePs(winRMInputs.getCommand());
+            else
+                res = client.executeCommand(compilePs(winRMInputs.getCommand(), winRMInputs.getConfigurationName()));
         }
 
         Map<String, String> results;
@@ -189,24 +180,12 @@ public class WinRMService {
 
     private static String compilePs(String psScript, String configurationName) {
         byte[] cmd = psScript.getBytes(StandardCharsets.UTF_16LE);
-        String arg = DatatypeConverter.printBase64Binary(cmd);
+        String arg = Base64.getEncoder().encodeToString(cmd);
         return "powershell -ConfigurationName " + configurationName + " -encodedcommand " + arg;
     }
 
-    private static String authScheme(String authScheme) {
-        String authType = authScheme;
-        switch (authType.toLowerCase()) {
-            case "basic":
-                authType = AuthSchemes.BASIC;
-                break;
-            case "ntlm":
-                authType = AuthSchemes.NTLM;
-                break;
-            case "kerberos":
-                authType = AuthSchemes.KERBEROS;
-                break;
-        }
-        return authType;
+    private static AuthenticationScheme authScheme(String authScheme) {
+        return AuthenticationScheme.fromString(authScheme);
     }
 
     private static String tlsVersion(String tlsVersion) {
