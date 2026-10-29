@@ -209,7 +209,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-httpclient-commons</artifactId>
-            <version>0.0.32-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
         <!-- Testing dependencies -->
