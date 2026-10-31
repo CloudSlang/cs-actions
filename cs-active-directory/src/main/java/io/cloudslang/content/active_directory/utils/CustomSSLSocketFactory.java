@@ -23,9 +23,8 @@ import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.List;
-
-import static io.cloudslang.content.active_directory.constants.Constants.ENABLED_PROTOCOLS;
 
 public class CustomSSLSocketFactory extends SSLSocketFactory {
     private static boolean trustAllRoots;
@@ -146,7 +145,7 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
                 trustManagerFactory.init(keyStore);
                 TrustManager[] tm = trustManagerFactory.getTrustManagers();
                 // Initialize SSLContext
-                SSLContext sslContext = SSLContext.getInstance(tlsVersion);
+                SSLContext sslContext = SSLContext.getInstance("TLS");
                 sslContext.init(km, tm, new SecureRandom());
                 return sslContext.getSocketFactory();
             } catch (Exception e) {
@@ -154,7 +153,7 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
             }
         } else {
             try {
-                SSLContext sslContext = SSLContext.getInstance(tlsVersion);
+                SSLContext sslContext = SSLContext.getInstance("TLS");
                 sslContext.init(null, new TrustManager[]{getTrustAllRoots()}, new SecureRandom());
                 return sslContext.getSocketFactory();
             } catch (Exception e) {
@@ -224,8 +223,6 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
             SSLSocket socket = null;
             //Overlay the tunnel socket with SSL.
             socket = (SSLSocket) socketFactory.createSocket(tunnel, host, port, true);
-            //Register a callback for handshaking completion event
-            socket.startHandshake();
             return socket;
         }
         return socketFactory.createSocket(host, port);
@@ -234,7 +231,9 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
     private Socket configureSSLSocket(Socket socket) {
         SSLSocket sslSocket = (SSLSocket) socket;
         sslSocket.setEnabledCipherSuites(allowedCiphers.toArray(new String[0]));
-        sslSocket.setEnabledProtocols(ENABLED_PROTOCOLS);
+        sslSocket.setEnabledProtocols(Arrays.stream(tlsVersion.split(","))
+                .map(String::trim)
+                .toArray(String[]::new));
         return sslSocket;
     }
 
