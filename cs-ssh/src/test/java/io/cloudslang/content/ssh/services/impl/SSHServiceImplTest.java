@@ -128,6 +128,32 @@ public class SSHServiceImplTest {
     }
 
     @Test
+    public void testDefaultCiphersIncludeModernAndLegacyAlgorithms() throws Exception {
+        try (MockedConstruction<JSch> ignored = Mockito.mockConstruction(JSch.class,
+                (mock, context) -> when(mock.getSession(USERNAME, HOST, PORT)).thenReturn(sessionMock))) {
+            new SSHServiceImpl(CONNECTION_DETAILS, null,
+                    new KnownHostsFile(KNOWN_HOSTS_PATH, KNOWN_HOSTS_POLICY),
+                    CONNECT_TIMEOUT, false, null, "");
+        }
+
+        String clientToServerCiphers = JSch.getConfig("cipher.c2s");
+        String serverToClientCiphers = JSch.getConfig("cipher.s2c");
+        assertEquals(clientToServerCiphers, serverToClientCiphers);
+        assertTrue(clientToServerCiphers.contains("chacha20-poly1305@openssh.com"));
+        assertTrue(clientToServerCiphers.contains("aes256-gcm@openssh.com"));
+        assertTrue(clientToServerCiphers.contains("aes128-gcm@openssh.com"));
+        assertTrue(clientToServerCiphers.contains("aes128-ctr"));
+        assertTrue(clientToServerCiphers.contains("aes128-cbc"));
+        assertTrue(clientToServerCiphers.contains("3des-ctr"));
+        assertTrue(clientToServerCiphers.contains("3des-cbc"));
+        assertTrue(clientToServerCiphers.contains("blowfish-cbc"));
+        assertTrue(clientToServerCiphers.contains("aes192-ctr"));
+        assertTrue(clientToServerCiphers.contains("aes192-cbc"));
+        assertTrue(clientToServerCiphers.contains("aes256-ctr"));
+        assertTrue(clientToServerCiphers.contains("aes256-cbc"));
+    }
+
+    @Test
     public void testRunShellCommand() throws Exception {
         SSHService sshService = prepareRunShellCommandTest();
         CommandResult commandResult = sshService.runShellCommand("ls", "UTF-8", true, CONNECT_TIMEOUT, COMMAND_TIMEOUT, AGENT_FORWARDING_FALSE);

@@ -63,7 +63,7 @@ public class SSHServiceImpl implements SSHService {
     private static final String KNOWN_HOSTS_ALLOW = "allow";
     private static final String KNOWN_HOSTS_STRICT = "strict";
     private static final String KNOWN_HOSTS_ADD = "add";
-    private static final String ALLOWED_CIPHERS = "aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
+    private static final String ALLOWED_CIPHERS = "chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes128-ctr,aes128-cbc,3des-ctr,3des-cbc,blowfish-cbc,aes192-ctr,aes192-cbc,aes256-ctr,aes256-cbc";
     private static final String KEX = ",curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group18-sha512,diffie-hellman-group16-sha512,diffie-hellman-group14-sha256,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1";
     private static final String ADDITIONAL_HOST_KEY_ALGORITHMS = ",ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa,ssh-dss";
     private static final String ADDITIONAL_PUBKEY_ALGORITHMS = ",ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa,ssh-dss";
