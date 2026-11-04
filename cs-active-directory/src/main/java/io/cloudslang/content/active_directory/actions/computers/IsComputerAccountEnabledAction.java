@@ -35,7 +35,7 @@ import static io.cloudslang.content.active_directory.constants.Constants.*;
 import static io.cloudslang.content.active_directory.constants.Descriptions.Common.*;
 import static io.cloudslang.content.active_directory.constants.Descriptions.GetComputerAccountOU.SUCCESS_DESC;
 import static io.cloudslang.content.active_directory.constants.Descriptions.IsComputerAccountEnabled.*;
-import static io.cloudslang.content.active_directory.constants.TlsVersions.TLSv1_2;
+import static io.cloudslang.content.active_directory.constants.TlsVersions.TLSv1_3;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class IsComputerAccountEnabledAction {
@@ -58,22 +58,10 @@ public class IsComputerAccountEnabledAction {
      * @param tlsVersion           The version of TLS to use. The value of this input will be ignored if "protocol"
      *                             is set to "HTTP". This capability is provided “as is”, please see product documentation
      *                             for further information.
-     *                             Valid values: TLSv1, TLSv1.1, TLSv1.2.
-     *                             Default value: TLSv1.2.
-     * @param allowedCiphers       A list of ciphers to use. The value of this input will be ignored if 'tlsVersion' does
-     *                             not contain 'TLSv1.2'. This capability is provided “as is”, please see product documentation
-     *                             for further security considerations. In order to connect successfully to the target host,
-     *                             it should accept at least one of the following ciphers. If this is not the case, it is
-     *                             the user's responsibility to configure the host accordingly or to update the list of
-     *                             allowed ciphers.
-     *                             Default value: TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
-     *                             TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-     *                             TLS_DHE_RSA_WITH_AES_256_CBC_SHA256, TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
-     *                             TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
-     *                             TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-     *                             TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-     *                             TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_AES_256_CBC_SHA256,
-     *                             TLS_RSA_WITH_AES_128_CBC_SHA256.
+     *                             Valid values: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.
+     *                             Default value: TLSv1.3.
+     * @param allowedCiphers       Comma-separated cipher suites to enable.
+     *                             Valid values and TLS-specific defaults are listed in ALLOWED_CIPHERS_DESC.
      * @param trustAllRoots        Specifies whether to enable weak security over SSL. A SSL certificate is trusted
      *                             even if no trusted certification authority issued it.
      *                             Valid values: true, false.
@@ -137,7 +125,7 @@ public class IsComputerAccountEnabledAction {
 
         protocol = defaultIfEmpty(protocol, HTTPS);
         proxyPort = defaultIfEmpty(proxyPort, DEFAULT_PROXY_PORT);
-        tlsVersion = defaultIfEmpty(tlsVersion, TLSv1_2);
+        tlsVersion = defaultIfEmpty(tlsVersion, TLSv1_3);
         allowedCiphers = defaultIfEmpty(allowedCiphers, ALLOWED_CIPHERS_LIST);
         x509HostnameVerifier = defaultIfEmpty(x509HostnameVerifier, STRICT);
         trustAllRoots = defaultIfEmpty(trustAllRoots, BOOLEAN_FALSE);
