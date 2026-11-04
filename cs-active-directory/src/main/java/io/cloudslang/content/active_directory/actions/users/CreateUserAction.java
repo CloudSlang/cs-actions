@@ -78,7 +78,7 @@ public class CreateUserAction {
      * @param tlsVersion           The version of TLS to use. The value of this input will be ignored if "protocol"
      *                             is set to "HTTP". This capability is provided “as is”, please see product documentation
      *                             for further information.
-     *                             Valid values: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3.
+     *                             Valid values: TLSv1.2, TLSv1.3.
      *                             Default value: TLSv1.3.
      * @param allowedCiphers       Comma-separated cipher suites to enable.
      *                             Valid values and TLS-specific defaults are listed in ALLOWED_CIPHERS_DESC.

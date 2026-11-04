@@ -26,7 +26,7 @@ public class Descriptions {
         public static final String PASSWORD_DESC = "The password of the user to connect to Active Directory.";
         public static final String TLS_VERSION_DESC = "The version of TLS to use. The value of this input will be ignored if 'protocol'" +
                 "is set to 'HTTP'. This capability is provided “as is”, please see product documentation for further information." +
-                "Valid values: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3." +
+                "Valid values: TLSv1.2, TLSv1.3." +
                 "Default value: TLSv1.3.";
         public static final String ALLOWED_CIPHERS_DESC = "Comma-separated cipher suites to enable. Only suites supported by the selected TLS version and Java runtime can be negotiated.\n" +
                 "Valid values: cipher suite names supported by the selected TLS version and Java runtime.\n" +
