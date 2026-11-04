@@ -85,7 +85,8 @@
         <!--Dependencies versions-->
         <score-content-sdk.version>1.10.11</score-content-sdk.version>
         <cs-commons.version>0.0.15</cs-commons.version>
-        <cs-ssh.version>1.0.0</cs-ssh.version>
+        <cs-ssh.version>1.0.1</cs-ssh.version>
+        <cs-powershell.version>1.0.1</cs-powershell.version>
         <junit-jupiter.version>6.1.3</junit-jupiter.version>
         <mockito.version>5.24.0</mockito.version>
         <pdfbox.version>3.0.8</pdfbox.version>
@@ -112,7 +113,7 @@
         <dependency>
             <groupId>io.cloudslang.content</groupId>
             <artifactId>cs-powershell</artifactId>
-            <version>1.0.0</version>
+            <version>${cs-powershell.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
