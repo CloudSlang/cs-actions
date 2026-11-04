@@ -26,9 +26,6 @@ public class PowerShellHttpClientInputs {
     private String username = "";
     private String password = "";
     private String authType = ANONYMOUS;
-    private String kerberosConfFile = "";
-    private String kerberosLoginConfFile = "";
-    private String kerberosSkipPortForLookup = BOOLEAN_TRUE;
     private String proxyHost = "";
     private String proxyPort = "";
     private String proxyUsername = "";
@@ -47,9 +44,6 @@ public class PowerShellHttpClientInputs {
     public void setUsername(String value) { username = defaultIfEmpty(value, ""); }
     public void setPassword(String value) { password = defaultIfEmpty(value, ""); }
     public void setAuthType(String value) { authType = defaultIfEmpty(value, ANONYMOUS); }
-    public void setKerberosConfFile(String value) { kerberosConfFile = defaultIfEmpty(value, ""); }
-    public void setKerberosLoginConfFile(String value) { kerberosLoginConfFile = defaultIfEmpty(value, ""); }
-    public void setKerberosSkipPortCheck(String value) { kerberosSkipPortForLookup = defaultIfEmpty(value, BOOLEAN_TRUE); }
     public void setTrustAllRoots(String value) { trustAllRoots = defaultIfEmpty(value, BOOLEAN_FALSE); }
     public void setX509HostnameVerifier(String value) { x509HostnameVerifier = defaultIfEmpty(value, STRICT); }
     public void setProxyHost(String value) { proxyHost = defaultIfEmpty(value, ""); }
@@ -69,15 +63,6 @@ public class PowerShellHttpClientInputs {
     public String getBody() { return body; }
 
     public HttpClientInputs build() {
-        if ("KERBEROS".equalsIgnoreCase(authType)) {
-            if (!kerberosConfFile.isEmpty()) {
-                System.setProperty("java.security.krb5.conf", kerberosConfFile);
-            }
-            if (!kerberosLoginConfFile.isEmpty()) {
-                System.setProperty("java.security.auth.login.config", kerberosLoginConfFile);
-            }
-            System.setProperty("javax.security.auth.useSubjectCredsOnly", "false");
-        }
         return HttpClientInputs.builder()
                 .url(url).authType(authType).preemptiveAuth(BOOLEAN_FALSE)
                 .username(username).password(password).method(method).body(body)

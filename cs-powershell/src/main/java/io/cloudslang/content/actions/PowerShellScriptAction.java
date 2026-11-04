@@ -131,9 +131,6 @@ public class PowerShellScriptAction {
             @Param(value = X509_HOSTNAME_VERIFIER) String x509HostnameVerifier,
             @Param(value = TRUST_KEYSTORE) String trustKeystore,
             @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
-            @Param(value = KERBEROS_CONFIG_FILE) String kerberosConfFile,
-            @Param(value = KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
-            @Param(value = KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
             @Param(value = KEYSTORE) String keystore,
             @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
             @Param(value = MAX_ENVELOP_SIZE) String maxEnvelopeSize,
@@ -153,9 +150,6 @@ public class PowerShellScriptAction {
                     .withAuthType(authType)
                     .withScript(script)
                     .withConfigurationName(configurationName)
-                    .withKerberosConfFile(kerberosConfFile)
-                    .withKerberosLoginConfFile(kerberosLoginConfFile)
-                    .withKerberosSkipPortForLookup(kerberosSkipPortForLookup)
                     .withProxyHost(proxyHost)
                     .withProxyPort(proxyPort)
                     .withProxyUsername(proxyUsername)

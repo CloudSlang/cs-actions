@@ -58,9 +58,6 @@ public class PowerShellScriptActionTest {
     private static final String EXCEPTION = "exception";
     private static final String RETURN_CODE_FAILURE = "-1";
     private static final String BASIC_AUTH_TYPE = "Basic";
-    private static final String KERBEROS_CONF_FILE = "/kerberosConfFile";
-    private static final String KERBEROS_LOGIN_CONF_FILE = "/kerberosLoginConfFile";
-    private static final String KERBEROS_SKIP_PORT_FOR_LOOKUP = "true";
 
     private PowerShellScriptAction powerShellScriptAction;
 
@@ -77,7 +74,7 @@ public class PowerShellScriptActionTest {
                 (service, context) -> configureSuccess(service))) {
 
             Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, PORT, HTTPS, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
-                    PROXY_USER, PASS, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
+                    PROXY_USER, PASS, Boolean.TRUE.toString(), X_509_HOSTNAME_VERIFIER_STRICT, TRUST_KEYSTORE, PASS, KEYSTORE, PASS,
                     MAX_ENVELOPE_SIZE, SCRIPT, EMPTY_STRING, MODULES, WINRM_LOCALE_EN_US, OPERATION_TIMEOUT);
 
             verify(construction.constructed().get(0)).execute(any(WSManRequestInputs.class));
@@ -93,7 +90,7 @@ public class PowerShellScriptActionTest {
                 (service, context) -> configureSuccess(service))) {
 
             Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
-                    PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
+                    PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KEYSTORE, PASS,
                     EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
             verify(construction.constructed().get(0)).execute(any(WSManRequestInputs.class));
@@ -109,7 +106,7 @@ public class PowerShellScriptActionTest {
                 (service, context) -> doThrow(new RuntimeException(EXCEPTION_MESSAGE)).when(service).execute(any(WSManRequestInputs.class)))) {
 
             Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, BASIC_AUTH_TYPE, PASS, PROXY_HOST, PROXY_PORT,
-                    PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
+                    PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KEYSTORE, PASS,
                     EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
             assertTrue(result.get(EXCEPTION).contains(EXCEPTION_MESSAGE));
@@ -125,7 +122,7 @@ public class PowerShellScriptActionTest {
                 (service, context) -> when(service.execute(any(WSManRequestInputs.class))).thenReturn(resultMock))) {
 
             Map<String, String> result = powerShellScriptAction.execute(LOCALHOST, EMPTY_STRING, EMPTY_STRING, USER, PASS, BASIC_AUTH_TYPE, PROXY_HOST, PROXY_PORT,
-                    PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KERBEROS_CONF_FILE, KERBEROS_LOGIN_CONF_FILE, KERBEROS_SKIP_PORT_FOR_LOOKUP, KEYSTORE, PASS,
+                    PROXY_USER, PASS, EMPTY_STRING, EMPTY_STRING, TRUST_KEYSTORE, PASS, KEYSTORE, PASS,
                     EMPTY_STRING, SCRIPT, EMPTY_STRING, MODULES, EMPTY_STRING, EMPTY_STRING);
 
             verify(construction.constructed().get(0)).execute(any(WSManRequestInputs.class));

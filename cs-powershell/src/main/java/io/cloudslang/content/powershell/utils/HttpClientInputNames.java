@@ -29,9 +29,6 @@ public final class HttpClientInputNames {
     public static final String TRUST_PASSWORD = "trustPassword";
     public static final String KEYSTORE = "keystore";
     public static final String KEYSTORE_PASSWORD = "keystorePassword";
-    public static final String KERBEROS_CONFIG_FILE = "kerberosConfFile";
-    public static final String KERBEROS_LOGIN_CONFIG_FILE = "kerberosLoginConfFile";
-    public static final String KERBEROS_SKIP_PORT_CHECK = "kerberosSkipPortForLookup";
 
     private HttpClientInputNames() {
     }

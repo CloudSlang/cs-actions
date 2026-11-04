@@ -142,9 +142,6 @@ public class WSManRemoteShellService {
         httpClientInputs.setUsername(wsManRequestInputs.getUsername());
         httpClientInputs.setPassword(wsManRequestInputs.getPassword());
         httpClientInputs.setAuthType(wsManRequestInputs.getAuthType());
-        httpClientInputs.setKerberosConfFile(wsManRequestInputs.getKerberosConfFile());
-        httpClientInputs.setKerberosLoginConfFile(wsManRequestInputs.getKerberosLoginConfFile());
-        httpClientInputs.setKerberosSkipPortCheck(wsManRequestInputs.getKerberosSkipPortForLookup());
         httpClientInputs.setTrustAllRoots(wsManRequestInputs.getTrustAllRoots());
         httpClientInputs.setX509HostnameVerifier(wsManRequestInputs.getX509HostnameVerifier());
         httpClientInputs.setProxyHost(wsManRequestInputs.getProxyHost());

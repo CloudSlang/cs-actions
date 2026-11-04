@@ -69,48 +69,41 @@ public class OsDetectorTest {
 
     @Test
     public void testDefaultValues() throws Exception {
-        osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "");
-
+        executeWithDefaults(HOST, "", "", "");
         verify(detectorConstruction.constructed().get(0)).detectOs(getInputsWithDefault());
     }
 
     @Test
     public void testWithInvalidHost() throws Exception {
-        Map<String, String> actualResult = osDetector.execute("!@#$%^&*()__+{>", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> actualResult = executeWithDefaults("!@#$%^&*()__+{>", "", "", "");
 
         performFailureChecks(actualResult, "The 'host' input must be an must be localhost or an internet domain name or an internet address.");
     }
 
     @Test
     public void testWithInvalidProxyPort() throws Exception {
-        Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "mynmap", "", "", "");
+        Map<String, String> actualResult = executeWithDefaults(HOST, "mynmap", "", "");
 
         performFailureChecks(actualResult, "The 'nmapPath' input must be an absolute path or the string 'nmap'.");
     }
 
     @Test
     public void testWithInvalidNmapArguments() throws Exception {
-        Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "!@#*^@$(#!^)", "", "");
+        Map<String, String> actualResult = executeWithDefaults(HOST, "", "!@#*^@$(#!^)", "");
 
         performFailureChecks(actualResult, "The 'nmapArguments' input contains illegal characters. To perform a weaker validation set the value 'permissive' for the input 'nmapValidator'.");
     }
 
     @Test
     public void testWithInvalidNmapValidatorLevel() throws Exception {
-        Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "invalid", "");
+        Map<String, String> actualResult = executeWithDefaults(HOST, "", "", "invalid");
 
         performFailureChecks(actualResult, "The value provided for 'nmapValidator' in invalid. Valid values are: restrictive, permissive.");
     }
 
     @Test
     public void testWithInvalidNmapValidatorLevel1() throws Exception {
-        Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "!@&^FE*!H)!JA(", "permissive", "");
+        Map<String, String> actualResult = executeWithDefaults(HOST, "", "!@&^FE*!H)!JA(", "permissive");
 
         performFailureChecks(actualResult, "The 'nmapArguments' input contains the following illegal characters: *&()!.");
     }
@@ -123,8 +116,7 @@ public class OsDetectorTest {
 
         detectionResult = returnedOsDetails;
 
-        Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> actualResult = executeWithDefaults(HOST, "", "", "");
 
         assertEquals("-1", actualResult.get("returnCode"));
         assertEquals("Unable to detect the operating system.", actualResult.get("returnResult"));
@@ -149,8 +141,7 @@ public class OsDetectorTest {
         detectionResult = returnedOsDetails;
         operatingSystemFound = true;
 
-        Map<String, String> actualResult = osDetector.execute(HOST, "", "", "", "", "", "", "", "", "", "", "", "",
-                "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+        Map<String, String> actualResult = executeWithDefaults(HOST, "", "", "");
 
         assertEquals("0", actualResult.get("returnCode"));
         assertEquals("Successfully detected the operating system.", actualResult.get("returnResult"));
@@ -172,6 +163,13 @@ public class OsDetectorTest {
         assertNull(actualResult.get("osVersion"));
         assertNull(actualResult.get("osCommands"));
         assertThat(actualResult.get("exception").contains(expectedMessage));
+    }
+
+    private Map<String, String> executeWithDefaults(String host, String nmapPath, String nmapArguments, String nmapValidator) throws Exception {
+        return osDetector.execute(host,
+                "", "", "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", "", "", "",
+                "", "", "", "", "", nmapPath, nmapArguments, nmapValidator, "");
     }
 
     private OsDetectorInputs getInputsWithDefault() {
@@ -203,9 +201,6 @@ public class OsDetectorTest {
                 .withX509HostnameVerifier("strict")
                 .withTrustKeystore("")
                 .withTrustPassword("")
-                .withKerberosConfFile("")
-                .withKerberosLoginConfFile("")
-                .withKerberosSkipPortForLookup("")
                 .withKeystore("")
                 .withKeystorePassword("")
                 .withWinrmLocale("en-US")
