@@ -49,9 +49,6 @@ public class OsDetectorInputs {
     private final String x509HostnameVerifier;
     private final String trustKeystore;
     private final String trustPassword;
-    private final String kerberosConfFile;
-    private final String kerberosLoginConfFile;
-    private final String kerberosSkipPortForLookup;
     private final String keystore;
     private final String keystorePassword;
     private final String winrmLocale;
@@ -87,9 +84,6 @@ public class OsDetectorInputs {
         this.x509HostnameVerifier = builder.x509HostnameVerifier;
         this.trustKeystore = builder.trustKeystore;
         this.trustPassword = builder.trustPassword;
-        this.kerberosConfFile = builder.kerberosConfFile;
-        this.kerberosLoginConfFile = builder.kerberosLoginConfFile;
-        this.kerberosSkipPortForLookup = builder.kerberosSkipPortForLookup;
         this.keystore = builder.keystore;
         this.keystorePassword = builder.keystorePassword;
         this.winrmLocale = builder.winrmLocale;
@@ -191,18 +185,6 @@ public class OsDetectorInputs {
         return trustPassword;
     }
 
-    public String getKerberosConfFile() {
-        return kerberosConfFile;
-    }
-
-    public String getKerberosLoginConfFile() {
-        return kerberosLoginConfFile;
-    }
-
-    public String getKerberosSkipPortForLookup() {
-        return kerberosSkipPortForLookup;
-    }
-
     public String getKeystore() {
         return keystore;
     }
@@ -260,9 +242,6 @@ public class OsDetectorInputs {
                 Objects.equals(x509HostnameVerifier, that.x509HostnameVerifier) &&
                 Objects.equals(trustKeystore, that.trustKeystore) &&
                 Objects.equals(trustPassword, that.trustPassword) &&
-                Objects.equals(kerberosConfFile, that.kerberosConfFile) &&
-                Objects.equals(kerberosLoginConfFile, that.kerberosLoginConfFile) &&
-                Objects.equals(kerberosSkipPortForLookup, that.kerberosSkipPortForLookup) &&
                 Objects.equals(keystore, that.keystore) &&
                 Objects.equals(keystorePassword, that.keystorePassword) &&
                 Objects.equals(winrmLocale, that.winrmLocale) &&
@@ -275,8 +254,8 @@ public class OsDetectorInputs {
     public int hashCode() {
         return Objects.hash(host, port, username, password, nmapTimeout, nmapPath, nmapArguments, nmapValidator, privateKeyFile,
                 privateKeyData, knownHostsPolicy, knownHostsPath, allowedCiphers, agentForwarding, protocol, authType, proxyHost,
-                proxyPort, proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, kerberosConfFile,
-                kerberosLoginConfFile, kerberosSkipPortForLookup, keystore, keystorePassword, winrmLocale, powerShellTimeout, sshTimeout, sshConnectTimeout);
+                proxyPort, proxyUsername, proxyPassword, trustAllRoots, x509HostnameVerifier, trustKeystore, trustPassword, keystore,
+                keystorePassword, winrmLocale, powerShellTimeout, sshTimeout, sshConnectTimeout);
     }
 
     public static class Builder {
@@ -304,9 +283,6 @@ public class OsDetectorInputs {
         private String x509HostnameVerifier;
         private String trustKeystore;
         private String trustPassword;
-        private String kerberosConfFile;
-        private String kerberosLoginConfFile;
-        private String kerberosSkipPortForLookup;
         private String keystore;
         private String keystorePassword;
         private String winrmLocale;
@@ -431,21 +407,6 @@ public class OsDetectorInputs {
 
         public Builder withTrustPassword(String trustPassword) {
             this.trustPassword = trustPassword;
-            return this;
-        }
-
-        public Builder withKerberosConfFile(String kerberosConfFile) {
-            this.kerberosConfFile = kerberosConfFile;
-            return this;
-        }
-
-        public Builder withKerberosLoginConfFile(String kerberosLoginConfFile) {
-            this.kerberosLoginConfFile = kerberosLoginConfFile;
-            return this;
-        }
-
-        public Builder withKerberosSkipPortForLookup(String kerberosSkipPortForLookup) {
-            this.kerberosSkipPortForLookup = kerberosSkipPortForLookup;
             return this;
         }
 

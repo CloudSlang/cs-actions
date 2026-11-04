@@ -31,9 +31,6 @@ public class WSManRequestInputs {
     private final String username;
     private final String password;
     private final String authType;
-    private final String kerberosConfFile;
-    private final String kerberosLoginConfFile;
-    private final String kerberosSkipPortForLookup;
     private final String proxyHost;
     private final String proxyPort;
     private final String proxyUsername;
@@ -58,9 +55,6 @@ public class WSManRequestInputs {
         this.username = builder.username;
         this.password = builder.password;
         this.authType = builder.authType;
-        this.kerberosConfFile = builder.kerberosConfFile;
-        this.kerberosLoginConfFile = builder.kerberosLoginConfFile;
-        this.kerberosSkipPortForLookup = builder.kerberosSkipPortForLookup;
         this.proxyHost = builder.proxyHost;
         this.proxyPort = builder.proxyPort;
         this.proxyUsername = builder.proxyUsername;
@@ -101,18 +95,6 @@ public class WSManRequestInputs {
 
     public String getAuthType() {
         return authType;
-    }
-
-    public String getKerberosConfFile() {
-        return kerberosConfFile;
-    }
-
-    public String getKerberosLoginConfFile() {
-        return kerberosLoginConfFile;
-    }
-
-    public String getKerberosSkipPortForLookup() {
-        return kerberosSkipPortForLookup;
     }
 
     public String getProxyHost() {
@@ -186,9 +168,6 @@ public class WSManRequestInputs {
         private String username;
         private String password;
         private String authType;
-        private String kerberosConfFile;
-        private String kerberosLoginConfFile;
-        private String kerberosSkipPortForLookup;
         private String proxyHost;
         private String proxyPort;
         private String proxyUsername;
@@ -315,21 +294,6 @@ public class WSManRequestInputs {
         public WSManRequestInputsBuilder withAuthType(String authType) {
             authType = StringUtils.isBlank(authType) ? InputDefaults.AUTH_TYPE.getValue() : authType;
             this.authType = authType;
-            return this;
-        }
-
-        public WSManRequestInputsBuilder withKerberosConfFile(String kerberosConfFile) {
-            this.kerberosConfFile = kerberosConfFile;
-            return this;
-        }
-
-        public WSManRequestInputsBuilder withKerberosLoginConfFile(String kerberosLoginConfFile) {
-            this.kerberosLoginConfFile = kerberosLoginConfFile;
-            return this;
-        }
-
-        public WSManRequestInputsBuilder withKerberosSkipPortForLookup(String kerberosSkipPortForLookup) {
-            this.kerberosSkipPortForLookup = kerberosSkipPortForLookup;
             return this;
         }
 

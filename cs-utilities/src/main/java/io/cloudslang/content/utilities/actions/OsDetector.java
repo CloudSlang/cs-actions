@@ -56,9 +56,6 @@ import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_ALL
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_KEYSTORE;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.TRUST_PASSWORD;
 import static io.cloudslang.content.httpclient.utils.Inputs.HTTPInputs.X509_HOSTNAME_VERIFIER;
-import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.KERBEROS_CONFIG_FILE;
-import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.KERBEROS_LOGIN_CONFIG_FILE;
-import static io.cloudslang.content.utilities.entities.constants.OsDetectorConstants.KERBEROS_SKIP_PORT_CHECK;
 import static io.cloudslang.content.ssh.utils.Constants.ALLOWED_CIPHERS;
 import static io.cloudslang.content.ssh.utils.Constants.DEFAULT_CONNECT_TIMEOUT;
 import static io.cloudslang.content.ssh.utils.Constants.DEFAULT_KNOWN_HOSTS_PATH;
@@ -181,20 +178,6 @@ public class OsDetector {
      *                                      Format of the keystore is Java KeyStore (JKS).
      * @param keystorePassword              The password associated with the KeyStore file. If trustAllRoots is false and keystore
      *                                      is empty, keystorePassword default will be supplied (For PowerShell detection).
-     * @param kerberosConfFile              A krb5.conf file with content similar to the one in the examples (where you
-     *                                      replace CONTOSO.COM with your domain and 'ad.contoso.com' with your kdc FQDN).
-     *                                      This configures the Kerberos mechanism required by the Java GSS-API methods
-     *                                      (For PowerShell detection).
-     *                                      Example: http://web.mit.edu/kerberos/krb5-1.4/krb5-1.4.4/doc/krb5-admin/krb5.conf.html
-     * @param kerberosLoginConfFile         A login.conf file needed by the JAAS framework with the content similar to the one in examples
-     *                                      (For PowerShell detection).
-     *                                      Example: http://docs.oracle.com/javase/7/docs/jre/api/security/jaas/spec/com/sun/security/auth/module/Krb5LoginModule.html
-     *                                      Examples: com.sun.security.jgss.initiate {com.sun.security.auth.module.Krb5LoginModule
-     *                                            required principal=Administrator doNotPrompt=true useKeyTab=true
-     *                                            keyTab="file:/C:/Users/Administrator.CONTOSO/krb5.keytab";};
-     * @param kerberosSkipPortForLookup     Do not include port in the key distribution center database lookup (For PowerShell detection).
-     *                                      Default value: true
-     *                                      Valid values: true, false
      * @param winrmLocale                   The WinRM locale to use (For PowerShell detection).
      *                                      Default value: en-US
      * @param powerShellTimeout             Defines the OperationTimeout value in seconds to indicate that the clients expect a
@@ -269,9 +252,6 @@ public class OsDetector {
                                        @Param(value = TRUST_PASSWORD, encrypted = true) String trustPassword,
                                        @Param(KEYSTORE) String keystore,
                                        @Param(value = KEYSTORE_PASSWORD, encrypted = true) String keystorePassword,
-                                       @Param(KERBEROS_CONFIG_FILE) String kerberosConfFile,
-                                       @Param(KERBEROS_LOGIN_CONFIG_FILE) String kerberosLoginConfFile,
-                                       @Param(KERBEROS_SKIP_PORT_CHECK) String kerberosSkipPortForLookup,
                                        @Param(WINRM_LOCALE) String winrmLocale,
                                        @Param(POWERSHELL_OPERATION_TIMEOUT) String powerShellTimeout,
 
@@ -309,9 +289,6 @@ public class OsDetector {
                     .withX509HostnameVerifier(defaultIfEmpty(x509HostnameVerifier, X_509_HOSTNAME_VERIFIER.getValue()))
                     .withTrustKeystore(trustKeystore)
                     .withTrustPassword(trustPassword)
-                    .withKerberosConfFile(kerberosConfFile)
-                    .withKerberosLoginConfFile(kerberosLoginConfFile)
-                    .withKerberosSkipPortForLookup(kerberosSkipPortForLookup)
                     .withKeystore(keystore)
                     .withKeystorePassword(keystorePassword)
                     .withWinrmLocale(defaultIfEmpty(winrmLocale, InputDefaults.WINRM_LOCALE.getValue()))
