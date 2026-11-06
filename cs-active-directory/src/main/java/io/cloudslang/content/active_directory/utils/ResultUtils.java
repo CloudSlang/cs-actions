@@ -45,6 +45,10 @@ public final class ResultUtils {
     }
 
     public static String replaceInvalidXMLCharacters(String s) {
+        if (s == null) {
+            return s;
+        }
+
         List<String> list = new ArrayList();
         list.add("\u0000");
 
@@ -54,6 +58,15 @@ public final class ResultUtils {
         }
 
         return s;
+    }
+
+    public static Map<String, String> fromThrowable(Throwable t) {
+        Map<String, String> results = createNewResultsEmptyMap();
+
+        results.put(OutputNames.RETURN_RESULT, t.getMessage() != null ? t.getMessage() : t.toString());
+        results.put(OutputNames.EXCEPTION, ExceptionUtils.getStackTrace(t));
+        results.put(OutputNames.RETURN_CODE, ReturnCodes.FAILURE);
+        return results;
     }
 
 }

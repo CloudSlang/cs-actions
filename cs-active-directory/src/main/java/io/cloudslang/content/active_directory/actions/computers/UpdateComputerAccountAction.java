@@ -164,8 +164,8 @@ public class UpdateComputerAccountAction {
                 .delimiter(delimiter);
 
             return new UpdateComputerAccountService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        } catch (Throwable t) {
+            return ResultUtils.fromThrowable(t);
         }
     }
 }

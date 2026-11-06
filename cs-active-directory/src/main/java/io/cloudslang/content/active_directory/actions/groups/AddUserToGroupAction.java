@@ -159,8 +159,8 @@ public class AddUserToGroupAction {
                 .timeout(timeout);
         try {
             return new AddUserToGroupService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        } catch (Throwable t) {
+            return ResultUtils.fromThrowable(t);
         }
     }
 }

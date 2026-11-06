@@ -15,23 +15,16 @@
 
 package io.cloudslang.content.active_directory.utils;
 
-import org.apache.hc.client5.http.ssl.DefaultHostnameVerifier;
-import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
-
 import javax.naming.Context;
 import javax.naming.InvalidNameException;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
-import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
-import javax.naming.ldap.StartTlsRequest;
-import javax.naming.ldap.StartTlsResponse;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
-import java.io.IOException;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -58,20 +51,21 @@ public class LDAPQuery {
         String x509HostnameVerifierStr = hostnameVerifier.toLowerCase(Locale.ROOT);
 
         switch (x509HostnameVerifierStr) {
-            case "strict":
-                return new DefaultHostnameVerifier();
-            case "browser_compatible":
-                DefaultHostnameVerifier strictVerifier = new DefaultHostnameVerifier();
-                return (hostname, session) -> strictVerifier.verify(hostname, session)
-                        || matchesBrowserCompatibleHostname(hostname, session);
             case "allow_all":
-                return NoopHostnameVerifier.INSTANCE;
+                return (hostname, session) -> true;
+            case "browser_compatible":
+                return (hostname, session) -> matchesHostname(hostname, session, true);
+            case "strict":
             default:
-                return new DefaultHostnameVerifier();
+                return (hostname, session) -> matchesHostname(hostname, session, false);
         }
     }
 
-    private static boolean matchesBrowserCompatibleHostname(String hostname, SSLSession session) {
+    // Verifies the server hostname against the peer certificate's SAN DNS entries (falling back to
+    // the CN only when no DNS SANs are present, per RFC 2818). This is implemented using only JDK
+    // classes (no org.apache.hc.client5 HostnameVerifier) so the LDAP actions do not depend on
+    // slf4j-api being present on the classpath.
+    private static boolean matchesHostname(String hostname, SSLSession session, boolean allowMultiLevelWildcard) {
         try {
             java.security.cert.Certificate[] peerCertificates = session.getPeerCertificates();
             if (peerCertificates.length == 0 || !(peerCertificates[0] instanceof X509Certificate)) {
@@ -87,7 +81,7 @@ public class LDAPQuery {
                             && Integer.valueOf(2).equals(subjectAlternativeName.get(0))
                             && subjectAlternativeName.get(1) instanceof String) {
                         hasDnsName = true;
-                        if (matchesMultiLevelWildcard(hostname, (String) subjectAlternativeName.get(1))) {
+                        if (matchesCertificateName(hostname, (String) subjectAlternativeName.get(1), allowMultiLevelWildcard)) {
                             return true;
                         }
                     }
@@ -101,7 +95,7 @@ public class LDAPQuery {
             for (Rdn rdn : subject.getRdns()) {
                 if ("CN".equalsIgnoreCase(rdn.getType())
                         && rdn.getValue() instanceof String
-                        && matchesMultiLevelWildcard(hostname, (String) rdn.getValue())) {
+                        && matchesCertificateName(hostname, (String) rdn.getValue(), allowMultiLevelWildcard)) {
                     return true;
                 }
             }
@@ -109,6 +103,32 @@ public class LDAPQuery {
             return false;
         }
         return false;
+    }
+
+    private static boolean matchesCertificateName(String hostname, String certificateName, boolean allowMultiLevelWildcard) {
+        if (certificateName.equalsIgnoreCase(hostname)) {
+            return true;
+        }
+        return allowMultiLevelWildcard
+                ? matchesMultiLevelWildcard(hostname, certificateName)
+                : matchesSingleLevelWildcard(hostname, certificateName);
+    }
+
+    // Strict (RFC 2818) wildcard matching: "*.foo.com" matches "a.foo.com" but not "a.b.foo.com".
+    private static boolean matchesSingleLevelWildcard(String hostname, String certificateName) {
+        if (!certificateName.startsWith("*.")) {
+            return false;
+        }
+
+        String suffix = certificateName.substring(2).toLowerCase(Locale.ROOT);
+        String normalizedHostname = hostname.toLowerCase(Locale.ROOT);
+        if (!suffix.contains(".")
+                || normalizedHostname.length() <= suffix.length() + 1
+                || !normalizedHostname.endsWith("." + suffix)) {
+            return false;
+        }
+        String wildcardMatch = normalizedHostname.substring(0, normalizedHostname.length() - suffix.length() - 1);
+        return !wildcardMatch.isEmpty() && !wildcardMatch.contains(".");
     }
 
     private static boolean matchesMultiLevelWildcard(String hostname, String certificateName) {
@@ -228,6 +248,7 @@ public class LDAPQuery {
         CustomSSLSocketFactory.setProxyPort(proxyPort);
         CustomSSLSocketFactory.setProxyUsername(proxyUsername);
         CustomSSLSocketFactory.setProxyPassword(proxyPassword);
+        CustomSSLSocketFactory.setHostnameVerifier(x509HostnameVerifier(x509HostnameVerifier));
 
         Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -241,15 +262,11 @@ public class LDAPQuery {
         ///******* VERY IMPORTANT LINE - the parameter is the fully qualified name of your socket factory class *********/
         env.put("java.naming.ldap.factory.socket", "io.cloudslang.content.active_directory.utils.CustomSSLSocketFactory");
 
-        DirContext ctx = new InitialLdapContext(env, null);
-        StartTlsResponse tls = (StartTlsResponse) ((InitialLdapContext) ctx).extendedOperation(new StartTlsRequest());
-        tls.setHostnameVerifier(x509HostnameVerifier(x509HostnameVerifier));
-        try {
-            tls.negotiate();
-        } catch (IOException e) {
-            throw new NamingException(e.getMessage());
-        }
-
+        // The "ldaps://" scheme already negotiates TLS implicitly (on port 636 by default).
+        // Issuing a StartTLS extended operation on top of this already-secured connection
+        // causes Active Directory to reject it with "TLS or SSL already in effect", so the
+        // connection is returned as-is; hostname verification is performed by the custom
+        // socket factory instead (see CustomSSLSocketFactory.setHostnameVerifier above).
         return new InitialDirContext(env);
     }
 

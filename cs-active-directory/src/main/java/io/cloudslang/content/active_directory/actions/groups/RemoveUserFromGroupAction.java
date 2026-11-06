@@ -159,8 +159,8 @@ public class RemoveUserFromGroupAction {
                 .timeout(timeout);
         try {
             return new RemoveUserFromGroupService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        } catch (Throwable t) {
+            return ResultUtils.fromThrowable(t);
         }
     }
 }

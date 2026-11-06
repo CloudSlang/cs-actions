@@ -168,8 +168,8 @@ public class DeleteGroupAction {
                 .timeout(timeout);
         try {
             return new DeleteGroupService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        } catch (Throwable t) {
+            return ResultUtils.fromThrowable(t);
         }
     }
 }

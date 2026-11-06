@@ -150,8 +150,8 @@ public class GetComputerAccountOUAction {
                 .timeout(timeout);
         try {
             return new GetComputerAccountOUService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        } catch (Throwable t) {
+            return ResultUtils.fromThrowable(t);
         }
     }
 }
