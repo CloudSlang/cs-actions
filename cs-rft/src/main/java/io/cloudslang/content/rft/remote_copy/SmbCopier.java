@@ -138,9 +138,30 @@ public class SmbCopier extends SimpleCopier {
     public void setCredentials(String host, int port, String username, String password) throws UnsupportedOperationException {
         Address address = new Address(host, port);
         this.host = address.getBareHost();
-        this.username = username;
+        SmbCredentials credentials = parseUsername(username);
+        this.domain = credentials.domain();
+        this.username = credentials.username();
         this.password = password;
 
+    }
+
+    static SmbCredentials parseUsername(String username) {
+        if (username == null) {
+            return new SmbCredentials("", null);
+        }
+
+        int separator = username.indexOf('\\');
+        if (separator < 0) {
+            return new SmbCredentials("", username);
+        }
+        if (separator == 0 || separator == username.length() - 1 || username.indexOf('\\', separator + 1) >= 0) {
+            throw new IllegalArgumentException("SMB3 username must use the DOMAIN\\username format.");
+        }
+
+        return new SmbCredentials(username.substring(0, separator), username.substring(separator + 1));
+    }
+
+    record SmbCredentials(String domain, String username) {
     }
 
     private record SmbPath(String shareName, String relativePath) {
