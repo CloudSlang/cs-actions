@@ -497,11 +497,8 @@ public class SendMailInput implements MailInput {
         public SendMailInput build() throws Exception {
             SendMailInput input = new SendMailInput();
 
-            try {
-                input.htmlEmail = Boolean.parseBoolean(htmlEmail);
-            } catch (Exception ex) {
-                input.htmlEmail = false;
-            }
+            String normalizedHtmlEmail = StringUtils.trimToNull(htmlEmail);
+            input.htmlEmail = normalizedHtmlEmail == null || Boolean.parseBoolean(normalizedHtmlEmail);
 
             try {
                 input.readReceipt = Boolean.parseBoolean(readReceipt);
@@ -540,8 +537,6 @@ public class SendMailInput implements MailInput {
             input.contentTransferEncoding = StringUtils.isEmpty(contentTransferEncoding) ?
                     Encodings.QUOTED_PRINTABLE :
                     contentTransferEncoding;
-
-            input.htmlEmail = (htmlEmail != null && htmlEmail.equalsIgnoreCase(String.valueOf(true)));
 
             input.readReceipt = (readReceipt != null && readReceipt.equalsIgnoreCase(String.valueOf(true)));
 
