@@ -113,7 +113,7 @@ public class SendMailService {
             }
 
             // Construct the message
-            MimeMultipart multipart = new MimeMultipart(MimeTypes.MULTIPART_MIXED);
+            MimeMultipart multipart = new MimeMultipart("mixed");
             String encoding = Encodings.BASE64;
             if (StringUtils.isNotBlank(input.getContentTransferEncoding()) &&
                     !Encodings.QUOTED_PRINTABLE.equalsIgnoreCase(input.getContentTransferEncoding())) {
@@ -122,7 +122,7 @@ public class SendMailService {
 
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
             if (input.isHtmlEmail()) {
-                MimeMultipart relatedMultipart = new MimeMultipart(MimeTypes.MULTIPART_RELATED);
+                MimeMultipart relatedMultipart = new MimeMultipart("related");
                 boolean hasInlineImages = processHTMLBodyWithBASE64Images(relatedMultipart);
                 mimeBodyPart.setContent(input.getBody(), MimeTypes.TEXT_HTML + ";charset=" + input.getCharacterSet());
                 mimeBodyPart.setDisposition(Part.INLINE);

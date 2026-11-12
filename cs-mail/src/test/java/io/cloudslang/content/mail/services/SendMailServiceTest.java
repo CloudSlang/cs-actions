@@ -195,6 +195,7 @@ public class SendMailServiceTest {
 
     private Map<String, String> executeWithMockitoMocks(SendMailService service, SendMailInput input,
                                                          boolean fileExists, boolean fileReadable) throws Exception {
+                List<Object> multipartSubtypes = new ArrayList<>();
         try (MockedStatic<Session> sessions = Mockito.mockStatic(Session.class);
              MockedStatic<Transport> transportStatic = Mockito.mockStatic(Transport.class);
              MockedStatic<Files> files = Mockito.mockStatic(Files.class);
@@ -210,7 +211,9 @@ public class SendMailServiceTest {
                      });
              MockedConstruction<MimeMultipart> multiparts = Mockito.mockConstruction(MimeMultipart.class,
                      (mock, context) -> {
-                         if ("multipart/mixed".equals(context.arguments().get(0))) {
+                         Object subtype = context.arguments().get(0);
+                         multipartSubtypes.add(subtype);
+                         if ("mixed".equals(subtype)) {
                              mimeMultipartMock = mock;
                          } else {
                              relatedMimeMultipartMock = mock;
@@ -238,6 +241,9 @@ public class SendMailServiceTest {
             doReturn(fileExists).when(fileMock).exists();
             doReturn(mockPath).when(fileMock).toPath();
             Map<String, String> result = service.execute(input);
+            assertEquals("mixed", multipartSubtypes.get(0));
+            assertTrue(multipartSubtypes.stream()
+                    .allMatch(subtype -> List.of("mixed", "related").contains(subtype)));
             constructedBodyParts = new ArrayList<>(bodyParts.constructed());
             constructedAddresses = new ArrayList<>(internetAddresses.constructed());
             constructedDataSources = new ArrayList<>(dataSources.constructed());
@@ -354,6 +360,7 @@ public class SendMailServiceTest {
         assertTrue(constructedBodyParts.stream().anyMatch(part -> mockingDetails(part).getInvocations().stream()
                 .anyMatch(invocation -> invocation.getMethod().getName().equals("setContent")
                         && invocation.getArgument(0).equals(BODY))));
+        assertBodyContentType("text/html;charset=UTF-8");
         verify(transportMock).close();
     }
 
@@ -388,6 +395,22 @@ public class SendMailServiceTest {
         assertTrue(constructedBodyParts.stream().anyMatch(part -> mockingDetails(part).getInvocations().stream()
                 .anyMatch(invocation -> invocation.getMethod().getName().equals("setContent")
                         && invocation.getArgument(0).equals(BODY))));
+        assertBodyContentType("text/html;charset=UTF-8");
+    }
+
+    @Test
+    public void testExecuteSendsPlainTextWhenHtmlEmailIsFalse() throws Exception {
+        inputBuilder.hostname(SMTP_HOSTANME)
+                .port(PORT)
+                .from(FROM)
+                .to(TO)
+                .subject(SUBJECT)
+                .body(BODY)
+                .htmlEmail("false");
+
+        executeWithMockitoMocks(sendMailService, inputBuilder.build(), true, true);
+
+        assertBodyContentType("text/plain;charset=UTF-8");
     }
 
     /**
@@ -551,6 +574,13 @@ public class SendMailServiceTest {
 
         verifyCommons();
     }
+
+        private void assertBodyContentType(String expectedContentType) {
+                assertTrue(constructedBodyParts.stream().anyMatch(part -> mockingDetails(part).getInvocations().stream()
+                                .anyMatch(invocation -> invocation.getMethod().getName().equals("setContent")
+                                                && BODY.equals(invocation.getArgument(0))
+                                                && expectedContentType.equals(invocation.getArgument(1)))));
+        }
 
     private void verifyCommons() throws Exception {
         verify(propertiesMock).put(eq(SMTP_HOST_CONFIG), eq(SMTP_HOSTANME));

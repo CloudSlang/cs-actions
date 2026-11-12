@@ -265,7 +265,7 @@ public class CreateGroupInput implements CreateGroupInputInterface {
 
             input.groupCommonName = buildGroupCommonName(groupCommonName, true);
 
-            input.groupType = buildUserPassword(groupType);
+            input.groupType = defaultIfEmpty(groupType, "");
 
             input.sAMAccountName = buildSAMAccountNameRequired(sAMAccountName, true);
 

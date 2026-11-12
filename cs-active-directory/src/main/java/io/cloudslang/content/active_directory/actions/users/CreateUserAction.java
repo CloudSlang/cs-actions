@@ -182,8 +182,8 @@ public class CreateUserAction {
                 .timeout(timeout);
         try {
             return new CreateUserService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        } catch (Throwable t) {
+            return ResultUtils.fromThrowable(t);
         }
     }
 }

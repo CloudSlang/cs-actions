@@ -158,8 +158,8 @@ public class AuthenticateUserAction {
                 .timeout(timeout);
         try {
             return new AuthenticateUserService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        } catch (Throwable t) {
+            return ResultUtils.fromThrowable(t);
         }
     }
 }

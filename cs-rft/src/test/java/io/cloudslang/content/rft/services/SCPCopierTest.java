@@ -148,6 +148,14 @@ public class SCPCopierTest {
     }
 
     @Test
+    public void getFileNameFromPathSupportsWindowsAndUnixSeparators() {
+        assertEquals("SCPCopy123.tmp", SCPCopier.getFileNameFromPath(
+                "C:\\Program Files\\Micro Focus\\Operations Orchestration Designer\\SCPCopy123.tmp"));
+        assertEquals("SCPCopy123.tmp", SCPCopier.getFileNameFromPath(
+                "/tmp/Operations Orchestration Designer/SCPCopy123.tmp"));
+    }
+
+    @Test
     public void copyFromRemoteToLocal() throws Exception {
         try (MockedConstruction<JSch> jschConstruction = mockJSch()) {
             prepareChannel();

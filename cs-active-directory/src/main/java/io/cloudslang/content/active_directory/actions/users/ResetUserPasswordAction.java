@@ -165,8 +165,8 @@ public class ResetUserPasswordAction {
                 .timeout(timeout);
         try {
             return new ResetUserPasswordService().execute(inputBuilder.build());
-        } catch (Exception e) {
-            return ResultUtils.fromException(e);
+        } catch (Throwable t) {
+            return ResultUtils.fromThrowable(t);
         }
     }
 }

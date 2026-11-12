@@ -38,6 +38,7 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
     private static List<String> allowedCiphers;
     private static Exception exception;
     private static boolean useHttps = true;
+    private static HostnameVerifier hostnameVerifier;
     private SSLSocketFactory socketFactory;
 
     public CustomSSLSocketFactory() {
@@ -102,6 +103,10 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
 
     public static void setAllowedCiphers(List<String> allowedCiphers) {
         CustomSSLSocketFactory.allowedCiphers = allowedCiphers;
+    }
+
+    public static void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+        CustomSSLSocketFactory.hostnameVerifier = hostnameVerifier;
     }
 
     private static TrustManager getTrustAllRoots() {
@@ -175,7 +180,7 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
     @Override
     public Socket createSocket(Socket socket, String s, int i, boolean b) throws IOException {
         Socket newSocket = socketFactory.createSocket(socket, s, i, b);
-        configureSSLSocket(newSocket);
+        configureSSLSocket(newSocket, s);
         return newSocket;
     }
 
@@ -183,28 +188,28 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
     public Socket createSocket(String s, int i) throws IOException, UnknownHostException {
         Socket socket = localCreateSocket(s, i);
         if (useHttps)
-            return configureSSLSocket(socket);
+            return configureSSLSocket(socket, s);
         return socket;
     }
 
     @Override
     public Socket createSocket(String s, int i, InetAddress inetAddress, int i1) throws IOException, UnknownHostException {
         Socket newSocket = socketFactory.createSocket(s, i, inetAddress, i1);
-        configureSSLSocket(newSocket);
+        configureSSLSocket(newSocket, s);
         return newSocket;
     }
 
     @Override
     public Socket createSocket(InetAddress inetAddress, int i) throws IOException {
         Socket newSocket = socketFactory.createSocket(inetAddress, i);
-        configureSSLSocket(newSocket);
+        configureSSLSocket(newSocket, inetAddress.getHostName());
         return newSocket;
     }
 
     @Override
     public Socket createSocket(InetAddress inetAddress, int i, InetAddress inetAddress1, int i1) throws IOException {
         Socket newSocket = socketFactory.createSocket(inetAddress, i, inetAddress1, i1);
-        configureSSLSocket(newSocket);
+        configureSSLSocket(newSocket, inetAddress.getHostName());
         return newSocket;
     }
 
@@ -228,12 +233,22 @@ public class CustomSSLSocketFactory extends SSLSocketFactory {
         return socketFactory.createSocket(host, port);
     }
 
-    private Socket configureSSLSocket(Socket socket) {
+    private Socket configureSSLSocket(Socket socket, String hostname) throws IOException {
         SSLSocket sslSocket = (SSLSocket) socket;
         sslSocket.setEnabledCipherSuites(allowedCiphers.toArray(new String[0]));
         sslSocket.setEnabledProtocols(Arrays.stream(tlsVersion.split(","))
                 .map(String::trim)
                 .toArray(String[]::new));
+        if (hostnameVerifier != null) {
+            // Since the connection is already secured implicitly (e.g. "ldaps://"), hostname
+            // verification is performed here, right after the TLS handshake, instead of relying
+            // on a subsequent StartTLS negotiation (which AD rejects on an already-TLS channel).
+            sslSocket.startHandshake();
+            SSLSession session = sslSocket.getSession();
+            if (!hostnameVerifier.verify(hostname, session)) {
+                throw new SSLPeerUnverifiedException("Hostname verification failed for host: " + hostname);
+            }
+        }
         return sslSocket;
     }
 

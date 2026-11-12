@@ -332,14 +332,10 @@ public class SCPService {
                 }
             }
 
-            // send "C0644 filesize filename", where filename should not include '/'
+            // Send only the local file name, not its path.
             long filesize = _lfile.length();
             command = "C0644 " + filesize + " ";
-            if (srcPath.lastIndexOf('/') > 0) {
-                command += srcPath.substring(srcPath.lastIndexOf('/') + 1);
-            } else {
-                command += srcPath;
-            }
+            command += _lfile.getName();
 
             command += "\n";
             out.write(command.getBytes());
@@ -476,5 +472,4 @@ public class SCPService {
         return b;
     }
 }
-
 

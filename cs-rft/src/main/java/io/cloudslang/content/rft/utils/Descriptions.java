@@ -67,7 +67,8 @@ public class Descriptions {
     public static class RemoteCopyDescriptions {
         public static final String SRC_HOST_DESC = "The host where the source file is located.";
         public static final String SRC_PORT_DESC = "The port for connecting to the source host.";
-        public static final String SRC_USERNAME_DESC = "The username for connecting to the host of the source file.";
+        public static final String SRC_USERNAME_DESC = "The username for connecting to the host of the source file. " +
+                "For SMB3 domain accounts, use DOMAIN\\username.";
         public static final String SRC_PASSWORD_DESC = "The password for connecting to the host of the source file.";
         public static final String SRC_PRIVATE_KEY_FILE_DESC = "Absolute path of the private key file for public/private" +
                 " key authentication on the source host.";
@@ -81,7 +82,8 @@ public class Descriptions {
                 "Examples: UTF-8, EUC-JP, SJIS.";
         public static final String DEST_HOST_DESC = "The destination host of the transferred file.";
         public static final String DEST_PORT_DESC = "The port for connecting to the destination host.";
-        public static final String DEST_USERNAME_DESC = "The username for connecting to the destination host.";
+        public static final String DEST_USERNAME_DESC = "The username for connecting to the destination host. " +
+                "For SMB3 domain accounts, use DOMAIN\\username.";
         public static final String DEST_PASSWORD_DESC = "The password for connecting to the destination host.";
         public static final String DEST_PRIVATE_KEY_FILE_DESC = "Absolute path of the private key file for public/private" +
                 " key authentication on the destination host.";
