@@ -29,8 +29,6 @@ import java.security.Provider;
 import java.security.Security;
 import java.util.Locale;
 
-import static io.cloudslang.content.rft.utils.Constants.BACKSLASH;
-
 /**
  * Date: 7/30/2015
  *
@@ -130,12 +128,7 @@ public class SCPCopier {
 
             long filesize = srcFile.length();
             command = "C0644 " + filesize + " ";
-
-            if (srcPath.lastIndexOf(BACKSLASH) > 0) {
-                command += srcPath.substring(srcPath.lastIndexOf(BACKSLASH) + 1);
-            } else {
-                command += srcPath;
-            }
+            command += getFileNameFromPath(srcPath);
             command += "\n";
             out.write(command.getBytes());
             out.flush();
@@ -180,6 +173,11 @@ public class SCPCopier {
                 removeSecurityProvider();
             }
         }
+    }
+
+    static String getFileNameFromPath(String path) {
+        int lastSeparatorIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+        return path.substring(lastSeparatorIndex + 1);
     }
 
     protected boolean copyFromRemoteToLocal(String srcPath, String destPath){
