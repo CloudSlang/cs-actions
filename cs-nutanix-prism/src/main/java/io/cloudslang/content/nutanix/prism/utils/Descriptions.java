@@ -199,6 +199,19 @@ public class Descriptions {
         public static final String LOGICAL_TIMESTAMP_DESC = "The virtual logical timestamp of the virtual machine.";
     }
 
+    public static class Snapshot {
+        public static final String CREATE_SNAPSHOT_OPERATION_DESC = "Creates a crash-consistent snapshot of a virtual " +
+                "machine. This asynchronous operation returns a task UUID.";
+        public static final String DELETE_SNAPSHOT_OPERATION_DESC = "Deletes a snapshot. This asynchronous operation " +
+                "returns a task UUID.";
+        public static final String SNAPSHOT_NAME_DESC = "Name of the snapshot to create.";
+        public static final String SNAPSHOT_UUID_DESC = "UUID of the snapshot. Required when deleting; optional when " +
+                "creating to make the request idempotent.";
+        public static final String VM_LOGICAL_TIMESTAMP_DESC = "Logical timestamp of the VM for consistency checking.";
+        public static final String SNAPSHOT_LOGICAL_TIMESTAMP_DESC = "Logical timestamp of the snapshot for consistency " +
+                "checking.";
+    }
+
     public static class SetVMPowerState {
         public static final String SET_VM_POWER_STATE_OPERATION_DESC = "Set power state of a virtual machine." +
                 "If the virtual machine is being powered on and no host is specified, the scheduler will pick the " +
@@ -269,6 +282,16 @@ public class Descriptions {
                 "creates with thin provision. Provide a list of comma separated boolean values.";
         public static final String IS_FLASH_MODE_ENABLED_LIST_DESC = "If the value is 'true' then flash mode will be " +
                 "enabled for the particular disk. Provide a list of comma separated boolean values.";
+    }
+
+    public static class UpdateDisk {
+        public static final String UPDATE_DISK_OPERATION_DESC = "Expands the size of an existing virtual machine disk.";
+        public static final String VM_DISK_UUID_DESC = "UUID of the virtual disk to update.";
+        public static final String DEVICE_BUS_DESC = "Disk device bus. Valid values: sata, scsi, ide, pci.";
+        public static final String DEVICE_INDEX_DESC = "Device index of the virtual disk.";
+        public static final String STORAGE_CONTAINER_UUID_DESC = "UUID of the disk's storage container.";
+        public static final String VM_DISK_SIZE_GIB_DESC = "Target disk size in GiB. The size must be a positive " +
+                "integer and larger than the current disk size.";
     }
 
     public static class DeleteNIC {

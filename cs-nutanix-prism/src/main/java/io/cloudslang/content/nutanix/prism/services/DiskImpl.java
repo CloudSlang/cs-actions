@@ -8,13 +8,17 @@ import io.cloudslang.content.nutanix.prism.entities.NutanixHttpClientInputs;
 import io.cloudslang.content.httpclient.services.HttpClientService;
 import io.cloudslang.content.nutanix.prism.entities.NutanixAttachDisksInputs;
 import io.cloudslang.content.nutanix.prism.entities.NutanixDetachDisksInputs;
+import io.cloudslang.content.nutanix.prism.entities.NutanixUpdateDiskInputs;
 import io.cloudslang.content.nutanix.prism.exceptions.NutanixDetachDiskException;
 import io.cloudslang.content.nutanix.prism.services.models.disks.AttachDisksRequestBody;
 import io.cloudslang.content.nutanix.prism.services.models.disks.DetachDisksRequestBody;
+import io.cloudslang.content.nutanix.prism.services.models.disks.UpdateDiskRequestBody;
 import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 
 import static io.cloudslang.content.nutanix.prism.services.HttpCommons.setCommonHttpInputs;
@@ -22,8 +26,10 @@ import static io.cloudslang.content.nutanix.prism.utils.Constants.AttachDisksCon
 import static io.cloudslang.content.nutanix.prism.utils.Constants.Common.*;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.DetachDisksConstants.DETACH_DISKS_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.Constants.GetVMDetailsConstants.GET_VM_DETAILS_PATH;
+import static io.cloudslang.content.nutanix.prism.utils.Constants.UpdateDiskConstants.UPDATE_DISK_PATH;
 import static io.cloudslang.content.nutanix.prism.utils.HttpUtils.getUriBuilder;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class DiskImpl {
 
@@ -192,6 +198,91 @@ public class DiskImpl {
         httpClientInputs.setContentType(APPLICATION_API_JSON);
         setCommonHttpInputs(httpClientInputs, nutanixAttachDisksInputs.getCommonInputs());
         return HttpClientService.execute(httpClientInputs.build());
+    }
+
+    @NotNull
+    public static Map<String, String> updateDisk(@NotNull final NutanixUpdateDiskInputs inputs) throws Exception {
+        final NutanixHttpClientInputs httpClientInputs = new NutanixHttpClientInputs();
+        httpClientInputs.setBody(updateDiskBody(inputs));
+        httpClientInputs.setUrl(updateDiskURL(inputs));
+        httpClientInputs.setAuthType(BASIC);
+        httpClientInputs.setMethod(PUT);
+        httpClientInputs.setUsername(inputs.getCommonInputs().getUsername());
+        httpClientInputs.setPassword(inputs.getCommonInputs().getPassword());
+        httpClientInputs.setContentType(APPLICATION_API_JSON);
+        setCommonHttpInputs(httpClientInputs, inputs.getCommonInputs());
+        return HttpClientService.execute(httpClientInputs.build());
+    }
+
+    @NotNull
+    public static String updateDiskBody(@NotNull final NutanixUpdateDiskInputs inputs) throws Exception {
+        requireValue(inputs.getVmUUID(), "vmUUID");
+        requireValue(inputs.getVmDiskUUID(), "vmDiskUUID");
+        requireValue(inputs.getStorageContainerUUID(), "storageContainerUUID");
+
+        final String deviceBus = requireValue(inputs.getDeviceBus(), "deviceBus").toLowerCase(Locale.ROOT);
+        if (!Arrays.asList("sata", "scsi", "ide", "pci").contains(deviceBus)) {
+            throw new IllegalArgumentException("deviceBus must be one of sata, scsi, ide, pci");
+        }
+
+        final int deviceIndex;
+        try {
+            deviceIndex = Integer.parseInt(inputs.getDeviceIndex());
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("deviceIndex must be a non-negative integer", exception);
+        }
+        if (deviceIndex < 0) {
+            throw new IllegalArgumentException("deviceIndex must be a non-negative integer");
+        }
+
+        final long sizeGiB;
+        try {
+            sizeGiB = Long.parseLong(inputs.getVmDiskSizeGiB());
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("vmDiskSizeGiB must be a positive integer", exception);
+        }
+        if (sizeGiB <= 0) {
+            throw new IllegalArgumentException("vmDiskSizeGiB must be a positive integer");
+        }
+        final long sizeBytes = Math.multiplyExact(sizeGiB, 1024L * 1024L * 1024L);
+
+        final UpdateDiskRequestBody requestBody = new UpdateDiskRequestBody();
+        final UpdateDiskRequestBody.DiskAddress diskAddress = new UpdateDiskRequestBody.DiskAddress();
+        diskAddress.setVmDiskUUID(inputs.getVmDiskUUID());
+        diskAddress.setDeviceIndex(deviceIndex);
+        diskAddress.setDeviceBus(deviceBus);
+
+        final UpdateDiskRequestBody.VMDiskCreate vmDiskCreate = new UpdateDiskRequestBody.VMDiskCreate();
+        vmDiskCreate.setStorageContainerUUID(inputs.getStorageContainerUUID());
+        vmDiskCreate.setSize(sizeBytes);
+
+        final UpdateDiskRequestBody.VMDisk vmDisk = new UpdateDiskRequestBody.VMDisk();
+        vmDisk.setDiskAddress(diskAddress);
+        vmDisk.setFlashModeEnabled(false);
+        vmDisk.setCdrom(false);
+        vmDisk.setEmpty(false);
+        vmDisk.setVmDiskCreate(vmDiskCreate);
+
+        final ArrayList<UpdateDiskRequestBody.VMDisk> vmDisks = new ArrayList<>();
+        vmDisks.add(vmDisk);
+        requestBody.setVmDisks(vmDisks);
+        return new ObjectMapper().writeValueAsString(requestBody);
+    }
+
+    private static String requireValue(String value, String inputName) {
+        if (isBlank(value)) {
+            throw new IllegalArgumentException(inputName + " cannot be null or empty");
+        }
+        return value;
+    }
+
+    @NotNull
+    public static String updateDiskURL(@NotNull final NutanixUpdateDiskInputs inputs) throws Exception {
+        final URIBuilder uriBuilder = getUriBuilder(inputs.getCommonInputs());
+        final String path = API + inputs.getCommonInputs().getAPIVersion()
+                + GET_VM_DETAILS_PATH + PATH_SEPARATOR + inputs.getVmUUID() + UPDATE_DISK_PATH;
+        uriBuilder.setPath(path);
+        return uriBuilder.build().toURL().toString();
     }
 
     @NotNull

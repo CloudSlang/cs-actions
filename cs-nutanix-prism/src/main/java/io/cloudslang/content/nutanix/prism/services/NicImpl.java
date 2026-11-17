@@ -56,7 +56,7 @@ public class NicImpl {
         httpClientInputs.setUsername(nutanixDeleteNICInputs.getCommonInputs().getUsername());
         httpClientInputs.setPassword(nutanixDeleteNICInputs.getCommonInputs().getPassword());
         httpClientInputs.setContentType(APPLICATION_API_JSON);
-        if (isEmpty(nutanixDeleteNICInputs.getVmLogicalTimestamp())) {
+        if (!isEmpty(nutanixDeleteNICInputs.getVmLogicalTimestamp())) {
             httpClientInputs.setQueryParams(getQueryParams(nutanixDeleteNICInputs.getVmLogicalTimestamp()));
         }
         setCommonHttpInputs(httpClientInputs, nutanixDeleteNICInputs.getCommonInputs());

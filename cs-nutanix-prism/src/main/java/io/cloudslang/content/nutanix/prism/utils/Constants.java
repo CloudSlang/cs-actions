@@ -91,6 +91,12 @@ public class Constants {
         public static final String TASK_UUID_PATH = "task_uuid";
     }
 
+    public static class UpdateDiskConstants {
+        public static final String UPDATE_DISK_OPERATION_NAME = "Update Disk";
+        public static final String UPDATE_DISK_PATH = "/disks/update";
+        public static final String TASK_UUID_PATH = "task_uuid";
+    }
+
     public static class DeleteNICConstants {
         public static final String DELETE_NIC_OPERATION_NAME = "Delete NIC";
         public static final String DELETE_NIC_PATH = "/nics/";
@@ -122,6 +128,14 @@ public class Constants {
         public static final String DELETE_VM_OPERATION_NAME = "Delete VM";
         public static final String DELETE_SNAPSHOTS = "delete_snapshots=";
         public static final String LOGICAL_TIMESTAMP = "logical_timestamp=";
+    }
+
+    public static class SnapshotConstants {
+        public static final String CREATE_SNAPSHOT_OPERATION_NAME = "Create Snapshot";
+        public static final String DELETE_SNAPSHOT_OPERATION_NAME = "Delete Snapshot";
+        public static final String SNAPSHOTS_PATH = "/snapshots";
+        public static final String LOGICAL_TIMESTAMP_QUERY_PARAM = "logical_timestamp=";
+        public static final String TASK_UUID_PATH = "task_uuid";
     }
 
     public static class SetVMPowerStateConstants {

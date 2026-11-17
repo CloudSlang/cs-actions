@@ -67,6 +67,14 @@ public class Inputs extends InputNames {
         public static final String LOGICAL_TIMESTAMP = "logicalTimestamp";
     }
 
+    public static class SnapshotInputs {
+        public static final String VM_UUID = "vmUUID";
+        public static final String SNAPSHOT_NAME = "snapshotName";
+        public static final String SNAPSHOT_UUID = "snapshotUUID";
+        public static final String VM_LOGICAL_TIMESTAMP = "vmLogicalTimestamp";
+        public static final String LOGICAL_TIMESTAMP = "logicalTimestamp";
+    }
+
     public static class SetVMPowerStateInputs {
         public static final String HOST_UUID = "hostUUID";
         public static final String POWER_STATE = "powerState";
@@ -99,6 +107,14 @@ public class Inputs extends InputNames {
         public static final String IS_THIN_PROVISIONED_LIST = "isThinProvisionedList";
         public static final String IS_FLASH_MODE_ENABLED_LIST = "isFlashModeEnabledList";
 
+    }
+
+    public static class UpdateDiskInputs {
+        public static final String VM_DISK_UUID = "vmDiskUUID";
+        public static final String DEVICE_BUS = "deviceBus";
+        public static final String DEVICE_INDEX = "deviceIndex";
+        public static final String STORAGE_CONTAINER_UUID = "storageContainerUUID";
+        public static final String VM_DISK_SIZE_GIB = "vmDiskSizeGiB";
     }
 
     public static class DeleteNICInputs {
