@@ -28,6 +28,7 @@ import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONO
 import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONPATH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by victor on 9/12/16.
@@ -65,6 +66,16 @@ public class JsonPathQueryTest {
     }
 
     @Test
+    public void executeMalformedJsonObject() {
+        final String malformedJson = "{\"store\":{\"book\":[{\"category\":\"reference\",\"author\":\"Nigel Rees\",\"price\":8.95}}}";
+        final Map<String, String> resultMap = jsonPathQuery.execute(malformedJson, "$.store.book[*].author");
+
+        assertEquals(resultMap.get(OutputNames.RETURN_CODE), ReturnCodes.FAILURE);
+        assertEquals(resultMap.get(OutputNames.RETURN_RESULT), INVALID_JSONOBJECT);
+        assertTrue(resultMap.get(OutputNames.EXCEPTION).contains("InvalidJsonException"));
+    }
+
+    @Test
     public void executeInvalidJsonPath() {
         final Map<String, String> resultMap = jsonPathQuery.execute("{'a':'b', 'a1':'b1', 'a1':'b1'}", null);
         assertEquals(resultMap.get(OutputNames.RETURN_CODE), ReturnCodes.FAILURE);
@@ -77,5 +88,13 @@ public class JsonPathQueryTest {
         final Map<String, String> resultMap = jsonPathQuery.execute(BOOKSTORE_JSON, "$..book[?(@.price <= $['expensive'])]");
         assertEquals(resultMap.get(OutputNames.RETURN_CODE), ReturnCodes.SUCCESS);
         assertEquals(resultMap.get(OutputNames.RETURN_RESULT), "[{\"title\":\"Sayings of the Century\",\"price\":8.95},{\"title\":\"Moby Dick\",\"price\":8.99}]");
+    }
+
+    @Test
+    public void executeJsonPathFunctionReturningNumber() {
+        final Map<String, String> resultMap = jsonPathQuery.execute("{\"store\":{\"book\":[1,2,3,4]}}", "$..book.length()");
+
+        assertEquals(resultMap.get(OutputNames.RETURN_CODE), ReturnCodes.SUCCESS);
+        assertEquals(resultMap.get(OutputNames.RETURN_RESULT), "4");
     }
 }

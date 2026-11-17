@@ -19,6 +19,7 @@
 package io.cloudslang.content.json.services;
 
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -51,11 +52,14 @@ import static io.cloudslang.content.json.utils.Constants.InputNames.EMPTY_STRING
  */
 public class JsonService {
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     @NotNull
     public static JsonNode evaluateJsonPathQuery(@Nullable final String jsonObject, @Nullable final String jsonPath) {
         final DocumentContext jsonContext = JsonUtils.getValidJsonContext(jsonObject);
         final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
-        return jsonContext.read(path);
+        final Object result = jsonContext.read(path);
+        return OBJECT_MAPPER.valueToTree(result);
     }
 
 

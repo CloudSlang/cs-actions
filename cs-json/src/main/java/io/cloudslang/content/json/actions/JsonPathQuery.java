@@ -24,6 +24,7 @@ import com.hp.oo.sdk.content.annotations.Param;
 import com.hp.oo.sdk.content.annotations.Response;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.MatchType;
 import com.hp.oo.sdk.content.plugin.ActionMetadata.ResponseType;
+import com.jayway.jsonpath.InvalidJsonException;
 import io.cloudslang.content.constants.OutputNames;
 import io.cloudslang.content.constants.ResponseNames;
 import io.cloudslang.content.constants.ReturnCodes;
@@ -34,6 +35,7 @@ import io.cloudslang.content.utils.OutputUtilities;
 import java.util.Map;
 
 import static io.cloudslang.content.constants.OtherValues.NULL_STRING;
+import static io.cloudslang.content.json.utils.JsonExceptionValues.INVALID_JSONOBJECT;
 
 /**
  * Created by victor on 06.09.2016.
@@ -67,6 +69,8 @@ public class JsonPathQuery {
                 return OutputUtilities.getSuccessResultsMap(jsonNode.toString());
             }
             return OutputUtilities.getSuccessResultsMap(NULL_STRING);
+        } catch (InvalidJsonException exception) {
+            return OutputUtilities.getFailureResultsMap(INVALID_JSONOBJECT, exception);
         } catch (Exception exception) {
             return OutputUtilities.getFailureResultsMap(exception);
         }
