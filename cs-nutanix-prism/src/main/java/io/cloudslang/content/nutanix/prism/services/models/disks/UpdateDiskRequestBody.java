@@ -1,3 +1,17 @@
+/*
+ * Copyright 2026-2027 Open Text
+ * This program and the accompanying materials
+ * are made available under the terms of the Apache License v2.0 which accompany this distribution.
+ *
+ * The Apache License is available at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.cloudslang.content.nutanix.prism.services.models.disks;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,10 +21,6 @@ import java.util.List;
 public class UpdateDiskRequestBody {
     @JsonProperty("vm_disks")
     private List<VMDisk> vmDisks;
-
-    public List<VMDisk> getVmDisks() {
-        return vmDisks;
-    }
 
     public void setVmDisks(List<VMDisk> vmDisks) {
         this.vmDisks = vmDisks;
@@ -28,40 +38,20 @@ public class UpdateDiskRequestBody {
         @JsonProperty("vm_disk_create")
         private VMDiskCreate vmDiskCreate;
 
-        public DiskAddress getDiskAddress() {
-            return diskAddress;
-        }
-
         public void setDiskAddress(DiskAddress diskAddress) {
             this.diskAddress = diskAddress;
-        }
-
-        public boolean isFlashModeEnabled() {
-            return flashModeEnabled;
         }
 
         public void setFlashModeEnabled(boolean flashModeEnabled) {
             this.flashModeEnabled = flashModeEnabled;
         }
 
-        public boolean isCdrom() {
-            return cdrom;
-        }
-
         public void setCdrom(boolean cdrom) {
             this.cdrom = cdrom;
         }
 
-        public boolean isEmpty() {
-            return empty;
-        }
-
         public void setEmpty(boolean empty) {
             this.empty = empty;
-        }
-
-        public VMDiskCreate getVmDiskCreate() {
-            return vmDiskCreate;
         }
 
         public void setVmDiskCreate(VMDiskCreate vmDiskCreate) {
@@ -77,24 +67,12 @@ public class UpdateDiskRequestBody {
         @JsonProperty("device_bus")
         private String deviceBus;
 
-        public String getVmDiskUUID() {
-            return vmDiskUUID;
-        }
-
         public void setVmDiskUUID(String vmDiskUUID) {
             this.vmDiskUUID = vmDiskUUID;
         }
 
-        public int getDeviceIndex() {
-            return deviceIndex;
-        }
-
         public void setDeviceIndex(int deviceIndex) {
             this.deviceIndex = deviceIndex;
-        }
-
-        public String getDeviceBus() {
-            return deviceBus;
         }
 
         public void setDeviceBus(String deviceBus) {
@@ -108,16 +86,8 @@ public class UpdateDiskRequestBody {
         @JsonProperty("size")
         private long size;
 
-        public String getStorageContainerUUID() {
-            return storageContainerUUID;
-        }
-
         public void setStorageContainerUUID(String storageContainerUUID) {
             this.storageContainerUUID = storageContainerUUID;
-        }
-
-        public long getSize() {
-            return size;
         }
 
         public void setSize(long size) {
