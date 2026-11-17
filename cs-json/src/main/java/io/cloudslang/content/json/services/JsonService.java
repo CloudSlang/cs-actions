@@ -52,12 +52,14 @@ import static io.cloudslang.content.json.utils.Constants.InputNames.EMPTY_STRING
  */
 public class JsonService {
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     @NotNull
     public static JsonNode evaluateJsonPathQuery(@Nullable final String jsonObject, @Nullable final String jsonPath) {
         final DocumentContext jsonContext = JsonUtils.getValidJsonContext(jsonObject);
         final JsonPath path = JsonUtils.getValidJsonPath(jsonPath);
         final Object result = jsonContext.read(path);
-        return new ObjectMapper().valueToTree(result);
+        return OBJECT_MAPPER.valueToTree(result);
     }
 
 
