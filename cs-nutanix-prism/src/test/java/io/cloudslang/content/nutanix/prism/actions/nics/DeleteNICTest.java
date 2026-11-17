@@ -1,0 +1,47 @@
+package io.cloudslang.content.nutanix.prism.actions.nics;
+
+import io.cloudslang.content.nutanix.prism.actions.NutanixActionTestSupport;
+import io.cloudslang.content.nutanix.prism.entities.NutanixDeleteNICInputs;
+import io.cloudslang.content.nutanix.prism.services.NicImpl;
+import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+
+import static io.cloudslang.content.constants.OutputNames.*;
+import static io.cloudslang.content.httpclient.utils.Outputs.HTTPClientOutputs.STATUS_CODE;
+import static io.cloudslang.content.nutanix.prism.services.NicImpl.deleteNic;
+import static io.cloudslang.content.nutanix.prism.utils.Outputs.CommonOutputs.TASK_UUID;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+
+class DeleteNICTest extends NutanixActionTestSupport {
+    @Test
+    void mapsSuccessfulAPIResponseToTaskUUID() {
+        final Map<String, String> result = execute("202", "{\"task_uuid\":\"task-delete-nic\"}", "42");
+
+        assertTaskSuccess(result, "task-delete-nic");
+    }
+
+    @Test
+    void mapsAPIFailureToActionFailure() {
+        final Map<String, String> result = execute("404", "{\"message\":\"NIC not found\"}", null);
+
+        assertEquals("-1", result.get(RETURN_CODE));
+        assertEquals("404", result.get(STATUS_CODE));
+        assertTrue(result.get(EXCEPTION).contains("NIC not found"));
+        assertNull(result.get(TASK_UUID));
+    }
+
+    private Map<String, String> execute(String statusCode, String body, String timestamp) {
+        return executeWithMockedService(NicImpl.class,
+                service -> service.when(() -> deleteNic(any(NutanixDeleteNICInputs.class)))
+                        .thenReturn(serviceResponse(statusCode, body)),
+                () -> new DeleteNIC().execute(
+                        "prism-host", null, "username", "password", "vm-1",
+                        "00:11:22:33:44:55", timestamp, null, null, null,
+                        null, null, null, null, null, null, null, null,
+                        null, null, null),
+                service -> service.verify(() -> deleteNic(any(NutanixDeleteNICInputs.class)), times(1)));
+    }
+}
