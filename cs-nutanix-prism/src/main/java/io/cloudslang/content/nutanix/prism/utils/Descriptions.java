@@ -299,13 +299,9 @@ public class Descriptions {
     }
 
     public static class UpdateDisk {
-        public static final String UPDATE_DISK_OPERATION_DESC = "Expands the size of an existing virtual machine disk.";
+        public static final String UPDATE_DISK_OPERATION_DESC = "Updates the size of an existing virtual machine disk.";
         public static final String VM_DISK_UUID_DESC = "UUID of the virtual disk to update.";
-        public static final String DEVICE_BUS_DESC = "Disk device bus. Valid values: sata, scsi, ide, pci.";
-        public static final String DEVICE_INDEX_DESC = "Device index of the virtual disk.";
-        public static final String STORAGE_CONTAINER_UUID_DESC = "UUID of the disk's storage container.";
-        public static final String VM_DISK_SIZE_GIB_DESC = "Target disk size in GiB. The size must be a positive " +
-                "integer and larger than the current disk size.";
+        public static final String VM_DISK_SIZE_GIB_DESC = "Target disk size in GiB. The size must be a positive integer.";
     }
 
     public static class DeleteNIC {

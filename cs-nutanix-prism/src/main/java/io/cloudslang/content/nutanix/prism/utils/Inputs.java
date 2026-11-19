@@ -125,9 +125,6 @@ public class Inputs extends InputNames {
 
     public static class UpdateDiskInputs {
         public static final String VM_DISK_UUID = "vmDiskUUID";
-        public static final String DEVICE_BUS = "deviceBus";
-        public static final String DEVICE_INDEX = "deviceIndex";
-        public static final String STORAGE_CONTAINER_UUID = "storageContainerUUID";
         public static final String VM_DISK_SIZE_GIB = "vmDiskSizeGiB";
     }
 

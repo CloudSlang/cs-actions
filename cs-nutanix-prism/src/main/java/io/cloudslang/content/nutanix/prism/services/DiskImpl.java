@@ -31,8 +31,6 @@ import org.apache.hc.core5.net.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Map;
 
 import static io.cloudslang.content.nutanix.prism.services.HttpCommons.setCommonHttpInputs;
@@ -232,23 +230,6 @@ public class DiskImpl {
     public static String updateDiskBody(@NotNull final NutanixUpdateDiskInputs inputs) throws Exception {
         requireValue(inputs.getVmUUID(), "vmUUID");
         requireValue(inputs.getVmDiskUUID(), "vmDiskUUID");
-        requireValue(inputs.getStorageContainerUUID(), "storageContainerUUID");
-
-        final String deviceBus = requireValue(inputs.getDeviceBus(), "deviceBus").toLowerCase(Locale.ROOT);
-        if (!Arrays.asList("sata", "scsi", "ide", "pci").contains(deviceBus)) {
-            throw new IllegalArgumentException("deviceBus must be one of sata, scsi, ide, pci");
-        }
-
-        final int deviceIndex;
-        try {
-            deviceIndex = Integer.parseInt(inputs.getDeviceIndex());
-        } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("deviceIndex must be a non-negative integer", exception);
-        }
-        if (deviceIndex < 0) {
-            throw new IllegalArgumentException("deviceIndex must be a non-negative integer");
-        }
-
         final long sizeGiB;
         try {
             sizeGiB = Long.parseLong(inputs.getVmDiskSizeGiB());
@@ -263,18 +244,12 @@ public class DiskImpl {
         final UpdateDiskRequestBody requestBody = new UpdateDiskRequestBody();
         final UpdateDiskRequestBody.DiskAddress diskAddress = new UpdateDiskRequestBody.DiskAddress();
         diskAddress.setVmDiskUUID(inputs.getVmDiskUUID());
-        diskAddress.setDeviceIndex(deviceIndex);
-        diskAddress.setDeviceBus(deviceBus);
 
         final UpdateDiskRequestBody.VMDiskCreate vmDiskCreate = new UpdateDiskRequestBody.VMDiskCreate();
-        vmDiskCreate.setStorageContainerUUID(inputs.getStorageContainerUUID());
         vmDiskCreate.setSize(sizeBytes);
 
         final UpdateDiskRequestBody.VMDisk vmDisk = new UpdateDiskRequestBody.VMDisk();
         vmDisk.setDiskAddress(diskAddress);
-        vmDisk.setFlashModeEnabled(false);
-        vmDisk.setCdrom(false);
-        vmDisk.setEmpty(false);
         vmDisk.setVmDiskCreate(vmDiskCreate);
 
         final ArrayList<UpdateDiskRequestBody.VMDisk> vmDisks = new ArrayList<>();

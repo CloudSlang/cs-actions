@@ -79,10 +79,6 @@ public class UpdateDisk {
             @Param(value = PASSWORD, encrypted = true, required = true, description = PASSWORD_DESC) String password,
             @Param(value = VM_UUID, required = true, description = VM_UUID_DESC) String vmUUID,
             @Param(value = VM_DISK_UUID, required = true, description = VM_DISK_UUID_DESC) String vmDiskUUID,
-            @Param(value = DEVICE_BUS, required = true, description = DEVICE_BUS_DESC) String deviceBus,
-            @Param(value = DEVICE_INDEX, required = true, description = DEVICE_INDEX_DESC) String deviceIndex,
-            @Param(value = STORAGE_CONTAINER_UUID, required = true,
-                    description = STORAGE_CONTAINER_UUID_DESC) String storageContainerUUID,
             @Param(value = VM_DISK_SIZE_GIB, required = true,
                     description = VM_DISK_SIZE_GIB_DESC) String vmDiskSizeGiB,
             @Param(value = API_VERSION, description = API_VERSION_DESC) String apiVersion,
@@ -127,9 +123,6 @@ public class UpdateDisk {
             final Map<String, String> result = updateDisk(NutanixUpdateDiskInputs.builder()
                     .vmUUID(vmUUID)
                     .vmDiskUUID(vmDiskUUID)
-                    .deviceBus(deviceBus)
-                    .deviceIndex(deviceIndex)
-                    .storageContainerUUID(storageContainerUUID)
                     .vmDiskSizeGiB(vmDiskSizeGiB)
                     .commonInputs(NutanixCommonInputs.builder()
                             .hostname(hostname)

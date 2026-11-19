@@ -66,7 +66,7 @@ class UpdateDiskTest extends NutanixActionTestSupport {
         final Map<String, String> result = executeWithoutServiceCall(DiskImpl.class,
                 () -> new UpdateDisk().execute(
                         "prism-host", null, "username", "password", "vm-1", "disk-1",
-                        "scsi", "1", "container-1", "10",
+                        "10",
                         null, null, "invalid-port", null, null, null, null, null, null,
                         null, null, null, null, null),
                 service -> service.verify(() -> updateDisk(any(NutanixUpdateDiskInputs.class)), never()));
@@ -94,7 +94,7 @@ class UpdateDiskTest extends NutanixActionTestSupport {
     private Map<String, String> executeAction() {
         return new UpdateDisk().execute(
                 "prism-host", null, "username", "password", "vm-1", "disk-1",
-                "scsi", "1", "container-1", "10",
+                "10",
                 null, null, null, null, null, null, null, null, null,
                 null, null, null, null, null);
     }

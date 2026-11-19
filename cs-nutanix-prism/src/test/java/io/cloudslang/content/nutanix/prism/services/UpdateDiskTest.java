@@ -30,10 +30,8 @@ class UpdateDiskTest extends NutanixOperationTestSupport {
         final HttpClientInputs request = invokeAndCapture(() -> updateDisk(inputs));
 
         assertRequest(request, "PUT", "https://myhost:9440/api/nutanix/v2.0/vms/vm-123/disks/update");
-        assertJsonEquals("{\"vm_disks\":[{\"disk_address\":{\"vmdisk_uuid\":\"disk-123\"," +
-                "\"device_index\":1,\"device_bus\":\"scsi\"},\"flash_mode_enabled\":false," +
-                "\"is_cdrom\":false,\"is_empty\":false,\"vm_disk_create\":" +
-                "{\"storage_container_uuid\":\"container-1\",\"size\":10737418240}}]}", request.getBody());
+        assertJsonEquals("{\"vm_disks\":[{\"disk_address\":{\"vmdisk_uuid\":\"disk-123\"}," +
+                "\"vm_disk_create\":{\"size\":10737418240}}]}", request.getBody());
     }
 
     @Test
@@ -51,8 +49,15 @@ class UpdateDiskTest extends NutanixOperationTestSupport {
     }
 
     @Test
-    void rejectsUnsupportedDeviceBus() {
-        final NutanixUpdateDiskInputs inputs = updateDiskInputs().deviceBus("usb").build();
+    void rejectsMissingDiskUUID() {
+        final NutanixUpdateDiskInputs inputs = updateDiskInputs().vmDiskUUID("").build();
+
+        assertThrows(IllegalArgumentException.class, () -> updateDiskBody(inputs));
+    }
+
+    @Test
+    void rejectsMissingVmUUID() {
+        final NutanixUpdateDiskInputs inputs = updateDiskInputs().vmUUID("").build();
 
         assertThrows(IllegalArgumentException.class, () -> updateDiskBody(inputs));
     }
@@ -61,9 +66,6 @@ class UpdateDiskTest extends NutanixOperationTestSupport {
         return NutanixUpdateDiskInputs.builder()
                 .vmUUID("vm-123")
                 .vmDiskUUID("disk-123")
-                .deviceBus("scsi")
-                .deviceIndex("1")
-                .storageContainerUUID("container-1")
                 .vmDiskSizeGiB("10")
                 .commonInputs(commonInputs);
     }
