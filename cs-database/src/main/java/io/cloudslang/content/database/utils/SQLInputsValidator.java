@@ -43,7 +43,7 @@ import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
  */
 public class SQLInputsValidator {
 
-    private static final List<String> NO_EMPTY_DATABASE = Arrays.asList(SYBASE_DB_TYPE, MSSQL_DB_TYPE, NETCOOL_DB_TYPE);
+    private static final List<String> NO_EMPTY_DATABASE = Arrays.asList(SYBASE_DB_TYPE, NETCOOL_DB_TYPE);
     private static final List<String> AUTH_TYPES = Arrays.asList(AUTH_WINDOWS, AUTH_SQL);
 
     public static List<String> validateSqlCommandInputs(String dbServerName, String dbType, String username, String password, String instance, String dbPort,
